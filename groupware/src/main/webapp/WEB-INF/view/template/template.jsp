@@ -15,8 +15,15 @@
 </style>
 
 <div id="test" style="width:100%; height:600px; ">
+
+	<%-- 상단 대표글씨 --%>
+	<div style="clear: both; margin: 10px 0px 15px 10px;">
+		<span class="glyphicon glyphicon-th-list" style="font-size: 28px; margin-left: 10px;"></span>
+		<span style="font-size: 30px;">&nbsp;테스트</span><br>
+		<div style="clear: both; width: 300px; height: 1px; border-bottom: 3px solid black;"></div>
+	</div>
 	
-	<%-- --%>
+	<%-- 목록 --%>
 	<table id="tb" style="width: 1000px;"><%-- 테이블 길이 수정 가능 --%>
 		<tr>
 			<td id="count" colspan="2">
@@ -71,6 +78,8 @@
 		<input type="text" class="searchBox">		<%-- 입력창 --%>
 		
 		<button type="button" class="btn">검색</button>		<%-- 버튼 --%>
+		<br>
+		<button type="button" class="btn">테스트12</button>		<%-- 버튼 --%>
 	</div>
 	
 </div>
