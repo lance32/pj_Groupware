@@ -1,0 +1,64 @@
+@charset "UTF-8";
+
+/* 리스트 */
+#tb {
+	border-spacing: 0px; 
+	border-collapse: collapse;
+	margin: 0px auto; 
+}
+#count {
+	font-size: 14px;
+	padding-left: 5px;
+}
+#tb .cf {
+	height:30px;
+	text-align: center;
+	font-weight: 300;
+	color: #DFE0E2;
+	background: #848484;
+	border-bottom: 1px solid #D8D8D8;
+}
+#tb .tr{
+	height: 25px;
+	border-bottom: 1px solid #D8D8D8;
+}
+#tb .tr td{
+	text-align: center;
+}
+#pagingTd {
+	padding-top: 10px;
+}
+
+/* 버튼 */
+.btn{
+	width: 50px; height: 30px;
+	background: #337ab7;
+	color: #E3E5E6;
+	margin-bottom: 5px;
+}
+.btn:active, .btn:focus, .btn:hover {
+	background: #0A68B0;
+    color: #ffffff;
+}
+
+/* 검색창 */
+.searchBox{
+	height: 30px;
+    border:1px solid #C4C6C7;
+    padding:3px 5px;
+    border-radius:3px;
+    background-color:#ffffff;
+    font-family:"Malgun Gothic", "맑은 고딕", NanumGothic, 나눔고딕, 돋움, sans-serif;
+    margin-bottom: 3px;
+}
+.searchBox[readonly] {
+	background-color:#eeeeee;
+}
+
+/* 검색조건 선택 박스 */
+.selectBox{
+	height: 30px;
+	border:1px solid #C4C6C7;
+    padding:3px 5px;
+    border-radius:4px;
+}
