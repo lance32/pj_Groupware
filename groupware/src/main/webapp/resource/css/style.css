@@ -1,5 +1,28 @@
 @charset "UTF-8";
 
+
+/* 사이드바 프로필 밑 버튼 (div class="tabsTop" 안에 넣어야함.) */
+.tabsTop{
+	text-align: center;
+	width: 100%
+}
+.sideBtn{
+	width: 100%;
+	height: 45px;
+	border-radius: 5px;
+	background: #337ab7;
+	color: #E3E5E6;
+	border: 1px solid #A3CDE9;
+	outline: 0;
+	margin-bottom: 20px;
+	font-size: 20px;
+	overflow: hidden;
+}
+.sideBtn:hover{
+	color: #ffffff;
+}
+
+
 /* 리스트 */
 #tb {
 	border-spacing: 0px; 
@@ -11,15 +34,16 @@
 	padding-left: 5px;
 }
 #tb .cf {
-	height:30px;
+	height:37px;
 	text-align: center;
+	font-size: 17px;
 	font-weight: 300;
 	color: #DFE0E2;
 	background: #848484;
 	border-bottom: 1px solid #D8D8D8;
 }
 #tb .tr{
-	height: 25px;
+	height: 35px;
 	border-bottom: 1px solid #D8D8D8;
 }
 #tb .tr td{
@@ -31,7 +55,8 @@
 
 /* 버튼 */
 .btn{
-	width: 50px; height: 30px;
+	width: auto; 
+	height: 30px;
 	background: #337ab7;
 	color: #E3E5E6;
 	margin-bottom: 5px;

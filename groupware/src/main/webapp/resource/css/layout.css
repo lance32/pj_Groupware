@@ -167,15 +167,13 @@ body{
 	
 	.sidetable{
 	 width: 100%;
-	 margin-bottom: 80px;
+	 margin-bottom: 30px;
 	 border:2px solid gray; 
 	 height: 200px;
-	 
-	
 	}
 	
 	/*sidetabs 우선 사용안함*/
-	.sidetabs{
+	.sidetabs123{
 		padding-top:10px;
 		width:18%;
 		font-size: 18px;

@@ -12,5 +12,6 @@ main
 쪽지
 메시지
 미확인 결재
-
-
+<br>
+<br>
+&gt;<a href="<%=cp%>/template/template"> 목록,버튼 견본 </a>&lt;
