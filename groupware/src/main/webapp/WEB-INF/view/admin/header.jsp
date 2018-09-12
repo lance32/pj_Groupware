@@ -20,7 +20,7 @@
 				<li><a href="#">동호회</a></li>
 			</ul></li>
 		<li><a href="#">메일</a></li>
-		<li><a href="#">쪽지</a></li>
+		<li><a href="<%=cp%>/message/msgWrite">쪽 지</a></li>
 		<li><a href="#">일정</a></li>
 		<li><a href="#">자원관리</a></li>
 		<li><a href="#">업무지원</a>
