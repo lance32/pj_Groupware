@@ -6,21 +6,21 @@
 	String cp=request.getContextPath();
 %>
 <div class="logo">
-	<a href="#"><img src="<%=cp%>/resource/images/home.png"/></a>
+	<a href="<%=cp%>/main"><img src="<%=cp%>/resource/images/home.png"/></a>
 </div>
 
 <div class="menu">
 	<ul class="nav">
 		<li><a href="#">전자 결재</a></li>
 		<li><a href="#">업무일지</a></li>
-		<li><a href="#">커뮤니티</a>
+		<li><a>커뮤니티</a>
 			<ul class="sub_menu">
-				<li><a href="#">채팅</a></li>
+				<li><a href="<%=cp%>/chat/chatList">채팅</a></li>
 				<li><a href="#">설문</a></li>
 				<li><a href="#">동호회</a></li>
 			</ul></li>
 		<li><a href="#">메일</a></li>
-		<li><a href="#">쪽지</a></li>
+		<li><a href="<%=cp%>/message/msgWrite">쪽지</a></li>
 		<li><a href="#">일정</a></li>
 		<li><a href="#">자원관리</a></li>
 		<li><a href="#">업무지원</a>
