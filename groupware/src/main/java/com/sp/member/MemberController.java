@@ -23,7 +23,7 @@ public class MemberController {
 	private BCryptPasswordEncoder bcryptEncoder;
 	
 	// 변경할 시작 부분 ----------------------------------------------------------------------
-	@RequestMapping(value="/member/login", method=RequestMethod.GET)
+	@RequestMapping(value="/login", method=RequestMethod.GET)
 	public String loginForm(String login_error, Model model) {
 		// 로그인 폼
 		if(login_error!=null) {
