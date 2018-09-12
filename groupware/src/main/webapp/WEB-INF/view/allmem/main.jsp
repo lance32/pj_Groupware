@@ -15,15 +15,10 @@
 </style>
 
 <div id="test" style="width:100%; height:600px; ">
-
-	<%-- 상단 대표글씨 --%>
-	<div style="clear: both; margin: 10px 0px 15px 10px;">
-		<span class="glyphicon glyphicon-th-list" style="font-size: 28px; margin-left: 10px;"></span>
-		<span style="font-size: 30px;">&nbsp;테스트</span><br>
-		<div style="clear: both; width: 300px; height: 1px; border-bottom: 3px solid black;"></div>
-	</div>
+	<h3> 사원조회</h3>
 	
-	<%-- 목록 --%>
+	
+	<%-- --%>
 	<table id="tb" style="width: 1000px;"><%-- 테이블 길이 수정 가능 --%>
 		<tr>
 			<td id="count" colspan="2">
@@ -34,30 +29,23 @@
 		
 		<tr class="cf">
 			<%-- 구분 폭 수정 가능 --%>
-			<td width="170">구분1</td>
-			<td width="auto" style="text-align: left;">구분2</td>
-			<td width="190">구분3</td>
-			<td width="150">구분4</td>
+			<td width="50">번호</td>
+			<td width="auto" style="text-align: left;">부서</td>
+			<td width="190">이름</td>
+			<td width="150">직위</td>
+			<td width="150">이메일</td>
+			<td width="150">전화번호</td>
 		</tr>
 		
 		<tr class="tr">
-			<td>항목1</td>
-			<td style="text-align: left;">1</td>
-			<td>2</td>
-			<td>3</td>
+			<td>1</td>
+			<td style="text-align: left;">영업부</td>
+			<td>김영균</td>
+			<td>사원</td>
+			<td>a@a.a</td>
+			<td>010-1111-1111</td>
 		</tr>
-		<tr class="tr">
-			<td>항목2</td>
-			<td style="text-align: left;">1</td>
-			<td>2</td>
-			<td>3</td>
-		</tr>
-		<tr class="tr">
-			<td>항목3</td>
-			<td style="text-align: left;">1</td>
-			<td>2</td>
-			<td>3</td>
-		</tr>
+	
 	</table>
 	<br>
 	<div id='paginate'>	<%-- MyUtil.java 안에 있음. ${paging}으로 써야됨. --%>
@@ -70,16 +58,17 @@
 	
 	<div style="text-align:center;">
 	
-		<select class="selectBox">				<%-- 선택박스  --%>
-			<option>테스트 옵션1</option>
-			<option>테스트 옵션2</option>
+		<select class="selectBox" name="searchKey">				<%-- 선택박스  --%>
+			<option value="name">이름</option>
+			<option value="department">부서</option>
+			<option value="spot">직위</option>
+			<option value="tel">휴대전화</option>
 		</select>
 		
-		<input type="text" class="searchBox">		<%-- 입력창 --%>
+		<input type="text" class="searchBox" name="searchValue">		<%-- 입력창 --%>
 		
 		<button type="button" class="btn">검색</button>		<%-- 버튼 --%>
-		<br>
-		<button type="button" class="btn">테스트12</button>		<%-- 버튼 --%>
+		<button type="button" onclick="javascript:location.href='<%=cp%>/allmem/created';">사원추가</button>
 	</div>
 	
 </div>

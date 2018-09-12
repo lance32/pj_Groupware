@@ -98,10 +98,10 @@ function sendOk(){
 		<td class="loginfont">LOGIN</td>
 		</tr>
 			<tr>
-				<td><input type="text" id="memberNum" name="memberNum" placeholder="ID:"></td>
+				<td><input type="text" id="memberNum" name="memberNum" placeholder="ID"></td>
 			</tr>
 			<tr>
-				<td><input type="password" id="pwd" name="pwd" placeholder="PWD:"></td>
+				<td><input type="password" id="pwd" name="pwd" placeholder="PassWord"></td>
 			</tr>
 			<tr>
 				<td><button type="button" onclick="sendOk()">LOGIN</button></td>

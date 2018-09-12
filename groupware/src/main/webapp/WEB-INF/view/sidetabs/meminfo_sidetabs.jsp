@@ -5,14 +5,6 @@
 <%
 	String cp=request.getContextPath();
 %>
-
-<style>
-
-
-</style>
-
-<div class="tabsTop"><button class="sideBtn">테스트 버튼</button></div>
-
 <table class="tabs">
 	<tr>
     	<th>테스트 사이드 탭1</th>
@@ -35,4 +27,5 @@
     <tr>
     	<td><a href="#">메뉴2</a></td>
     </tr>
+
 </table>

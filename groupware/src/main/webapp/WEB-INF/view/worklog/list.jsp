@@ -1,11 +1,10 @@
-<%@ page contentType="text/html; charset=UTF-8"%>
+<%@ page contentType="text/html; charset=EUC-KR"%>
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%
 	String cp=request.getContextPath();
 %>
-
 <style>
 #paginate{clear:both;text-align:center;height:28px;white-space:nowrap;}
 #paginate a {border:1px solid #ccc;height:28px;color:#000000;text-decoration:none;padding:4px 7px 4px 7px;margin-left:3px;line-height:normal;vertical-align:middle;outline:none;}
@@ -15,71 +14,62 @@
 </style>
 
 <div id="test" style="width:100%; height:600px; ">
-
-	<%-- ìƒë‹¨ ëŒ€í‘œê¸€ì”¨ --%>
-	<div style="clear: both; margin: 10px 0px 15px 10px;">
-		<span class="glyphicon glyphicon-th-list" style="font-size: 28px; margin-left: 10px;"></span>
-		<span style="font-size: 30px;">&nbsp;í…ŒìŠ¤íŠ¸</span><br>
-		<div style="clear: both; width: 300px; height: 1px; border-bottom: 3px solid black;"></div>
-	</div>
 	
-	<%-- ëª©ë¡ --%>
-	<table id="tb" style="width: 1000px;"><%-- í…Œì´ë¸” ê¸¸ì´ ìˆ˜ì • ê°€ëŠ¥ --%>
+	<%-- --%>
+	<table id="tb" style="width: 1000px;"><%-- Å×ÀÌºí ±æÀÌ ¼öÁ¤ °¡´É --%>
 		<tr>
 			<td id="count" colspan="2">
-				3ê°œ(1/1 í˜ì´ì§€)
+				3°³(1/1 ÆäÀÌÁö)
 			</td>
 			<td></td><td></td>
 		</tr>
 		
 		<tr class="cf">
-			<%-- êµ¬ë¶„ í­ ìˆ˜ì • ê°€ëŠ¥ --%>
-			<td width="170">êµ¬ë¶„1</td>
-			<td width="auto" style="text-align: left;">êµ¬ë¶„2</td>
-			<td width="190">êµ¬ë¶„3</td>
-			<td width="150">êµ¬ë¶„4</td>
+			<%-- ±¸ºĞ Æø ¼öÁ¤ °¡´É --%>
+			<td width="170">¹øÈ£</td>
+			<td width="auto" style="text-align: left;">Á¦¸ñ</td>
+			<td width="190">¼º¸í</td>
+			<td width="150">±â¾ÈÀÏ</td>
 		</tr>
 		
 		<tr class="tr">
-			<td>í•­ëª©1</td>
+			<td>Ç×¸ñ1</td>
 			<td style="text-align: left;">1</td>
 			<td>2</td>
 			<td>3</td>
 		</tr>
 		<tr class="tr">
-			<td>í•­ëª©2</td>
+			<td>Ç×¸ñ2</td>
 			<td style="text-align: left;">1</td>
 			<td>2</td>
 			<td>3</td>
 		</tr>
 		<tr class="tr">
-			<td>í•­ëª©3</td>
+			<td>Ç×¸ñ3</td>
 			<td style="text-align: left;">1</td>
 			<td>2</td>
 			<td>3</td>
 		</tr>
 	</table>
 	<br>
-	<div id='paginate'>	<%-- MyUtil.java ì•ˆì— ìˆìŒ. ${paging}ìœ¼ë¡œ ì¨ì•¼ë¨. --%>
-		<a href="#">ì²˜ìŒ</a>
+	<div id='paginate'>	<%-- MyUtil.java ¾È¿¡ ÀÖÀ½. ${paging}À¸·Î ½á¾ßµÊ. --%>
+		<a href="#">Ã³À½</a>
 		<span class="curBox">1</span>
 		<a href="#" class="numBox">2</a>
 		<a href="#" class="numBox">3</a>
-		<a href="#">ë‹¤ìŒ</a>
+		<a href="#">´ÙÀ½</a>
 	</div>
 	
 	<div style="text-align:center;">
 	
-		<select class="selectBox">				<%-- ì„ íƒë°•ìŠ¤  --%>
-			<option>í…ŒìŠ¤íŠ¸ ì˜µì…˜1</option>
-			<option>í…ŒìŠ¤íŠ¸ ì˜µì…˜2</option>
+		<select class="selectBox">				<%-- ¼±ÅÃ¹Ú½º  --%>
+			<option>Å×½ºÆ® ¿É¼Ç1</option>
+			<option>Å×½ºÆ® ¿É¼Ç2</option>
 		</select>
 		
-		<input type="text" class="searchBox">		<%-- ì…ë ¥ì°½ --%>
+		<input type="text" class="searchBox">		<%-- ÀÔ·ÂÃ¢ --%>
 		
-		<button type="button" class="btn">ê²€ìƒ‰</button>		<%-- ë²„íŠ¼ --%>
-		<br>
-		<button type="button" class="btn">í…ŒìŠ¤íŠ¸12</button>		<%-- ë²„íŠ¼ --%>
+		<button type="button" class="btn">°Ë»ö</button>		<%-- ¹öÆ° --%>
 	</div>
 	
 </div>
