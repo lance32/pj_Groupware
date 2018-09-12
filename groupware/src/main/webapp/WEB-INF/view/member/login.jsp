@@ -12,42 +12,53 @@
 <title>Insert title here</title>
 <link href="https://fonts.googleapis.com/css?family=Hi+Melody&amp;subset=korean" rel="stylesheet">
 
+<link href="https://fonts.googleapis.com/css?family=Allerta" rel="stylesheet">
 <style type="text/css">
-body {
-    background-color: lightblue;
+*{
+	margin :0px;
+	padding: 0px;
+	font-family: 'Allerta', sans-serif;
 }
 
-.loginstlye{
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%, -50%)
+.loginmain{
+	width: 100%;
+	min-height: 300px;
+	height: 300px;
+	margin-top: 15%;
+	margin-bottom: 10%;
+	background-image: url('<%=cp%>/resource/images/SUBBG.png');
+	background-repeat: no-repeat;
+    background-size: cover;
 }
 
-.loginstlye input{
-	width:300px;
+.loginfont{
+	color: white;
+	font-size: 70px;
+	font-weight:bold;
+	transform:translate(490%, 20%);
+	text-shadow: 1px 1px 0px #ffffff, 3px 3px 2px black;
+}
+
+.loginmain input{
+	width:200px;
     height:30px;
-    font-size:20px;
-    font-family: 'Hi Melody', cursive;
-    border-radius: 5px;
-    margin:2px 2px 0px 0px;
+    font-size: 20px;
+    border-radius: 7px;
+    margin:7px auto;
+    transform:translate(510%, 20%);
 }
 
-.loginstlye button{
-	width:304px;
+.loginmain button{
+	width:205px;
     height:40px;
-    font-size:25px;
-    color:tomato;
-    border-radius: 5px;
-    background:white;
+    background-color:white;
+    color:#464646;
+    font-size:23px;
     margin:5px auto;
-    font-family: 'Hi Melody', cursive;
+    transform:translate(508%, 20%);
 }
 
-.loginstlye img{
-	width:304px;
-    height:254px;
-}
+
 
 </style>
 
@@ -80,15 +91,24 @@ function sendOk(){
 </head>
 <body>
 
+<div class="loginmain" style="position: absolute">
 	<form name="loginForm" method="post">
-		<div class="loginstlye">
-              <img src="<%=cp%>/resource/images/home.png"><br>
-              <input type="text" id="memberNum" name="memberNum" placeholder="아이디"><br>
-              <input type="password" id="pwd" name="pwd" placeholder="비밀번호"><br>
-              <button type="button" onclick="sendOk()">로 그 인</button><br>
-              ${message}
-         </div>
+		<table class = "loginstyle">
+		<tr>
+		<td class="loginfont">LOGIN</td>
+		</tr>
+			<tr>
+				<td><input type="text" id="memberNum" name="memberNum" placeholder="ID:"></td>
+			</tr>
+			<tr>
+				<td><input type="password" id="pwd" name="pwd" placeholder="PWD:"></td>
+			</tr>
+			<tr>
+				<td><button type="button" onclick="sendOk()">LOGIN</button></td>
+			</tr>
+         </table>
 	</form>
+</div>
 	
 </body>
 </html>
