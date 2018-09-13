@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="workLog">
+
+	<!-- workLog INSERT -->
+	<insert id="insertWorkLog" parameterType="com.sp.workLog.WorkLog">
+		insert into(workLogNum, memberNum, subject, todayWork, nextdayWork, memo)
+			values(workLog_seq.nextval, #{memberNum}, #{subject}, #{todayWork}, #{nextdayWork}, #{memo,jdbcType=VARCHAR})
+	</insert>
+	
+	<!-- 검색 목록  -->
+	<sql id="where-list">
+		<if test="searchKey=='subject'">
+			INSTR(subject,#{searchValue})&gt;0
+		</if>
+		<if test="searchKey=='name'">
+			INSTR(name,#{searchValue})&gt;0
+		</if>
+		<if test="searchKey=='makeDate'">
+		TO_CHAR(makeDate,'YYYY-MM-DD')makeDate=#{searchValue}
+		OR TO_CHAR(makeDate,'YYYYMMDD')makeDate=#{searchValue}
+		</if>
+	</sql>
+	
+	<!-- 데이터 개수 (검색 포함) -->
+	<select id="dataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*),0) FROM workLog w JOIN member m ON w.memberNum=m.memberNum
+			JOIN department d on m.departmentNum = d.departmentNum
+		<where>
+	        <if test="searchValue != null and searchValue != '' ">
+	  	    	<include refid="where-list"/>
+	        </if>
+        </where>
+	</select>
+	
+	<!-- 리스트 (검색 포함) -->
+	<select id="listWorkLog" parameterType="map" resultType="com.sp.workLog.WorkLog">
+		SELECT * FROM( 
+		    SELECT ROWNUM rn, ss.* FROM(
+		        SELECT workLogNum, subject, name, departmentName, TO_CHAR(makeDate,'YYYY-MM-DD')makeDate 
+		        FROM workLog w JOIN member m ON w.memberNum = m.memberNum
+		        JOIN department d on m.departmentNum = d.departmentNum
+		        <where>
+			        <if test="searchValue != null and searchValue != '' ">
+			  	    	<include refid="where-list"/>
+			        </if>
+		        </where>
+		        ORDER BY workLogNum DESC
+		    )ss WHERE ROWNUM &lt;=#{end}
+		) WHERE rn &gt;=#{start}
+	
+	</select>
+	
+	
+</mapper>

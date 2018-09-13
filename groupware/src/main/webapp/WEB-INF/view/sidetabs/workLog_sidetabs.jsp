@@ -5,6 +5,10 @@
 <%
 	String cp=request.getContextPath();
 %>
+
+<style>
+</style>
+
 <table class="tabs">
 	<tr>
     	<th>업 무 일 지</th>
@@ -15,5 +19,4 @@
     <tr>
     	<td><a href="#">내 업무 일지함 ( 0 | 0 )</a></td>
     </tr>
-	<tr>
 </table>
