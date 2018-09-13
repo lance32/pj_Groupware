@@ -9,22 +9,22 @@
 	</insert>
 	
 	<sql id="where-list">
-	   <if test="searchKey=='name'">
-	        name=#{searchValue}
-	   </if>
-	   
-	   <if test="searchKey=='subject'">
+		<if test="searchKey=='subject'">
 	        INSTR(subject, #{searchValue}) &gt; 0
-	   </if>
+	   	</if>
 	   
-	   <if test="searchKey=='content'">
+	   	<if test="searchKey=='name'">
+	        INSTR(n.name, #{searchValue}) &gt; 0
+	   	</if>
+	   
+	   	<if test="searchKey=='content'">
 	        DBMS_LOB.INSTR(content, #{searchValue}) &gt; 0
-	   </if>
+	  	</if>
 	   
-	   <if test="searchKey=='created'">
-	        (TO_CHAR(created, 'YYYY-MM-DD') = #{searchValue}
-	          OR TO_CHAR(b.created, 'YYYYMMDD') = #{searchValue})
-	   </if>
+	   	<if test="searchKey=='created'">
+	        (TO_CHAR(n.created, 'YYYY-MM-DD') = #{searchValue}
+	          OR TO_CHAR(n.created, 'YYYYMMDD') = #{searchValue})
+	   	</if>
 	</sql>
 	
 	<select id="noticeCount" parameterType="map" resultType="Integer">
@@ -44,14 +44,18 @@
 					FROM notice n
 					LEFT OUTER JOIN member m ON n.memberNum = m.memberNum
 				<where>
-					<if test="searchValue != null and searchValue!=''">
+					<if test="searchValue != null and searchValue != ''">
 						<include refid="where-list"/>
 					</if>
 				</where>
 				ORDER BY notice DESC, num DESC
 			) tb WHERE ROWNUM &lt;= #{end}
 		)WHERE rnum &gt;= ${start}
-		
 	</select>
 	
+	<select id="readNotice" resultType="com.sp.notice.Notice" parameterType="Integer">
+        SELECT num, n.memberNum, n.name, subject, content, n.created, hitCount, notice, saveFilename, originalFilename
+           FROM notice n JOIN member m ON n.memberNum=m.memberNum 
+           WHERE num = #{num}
+    </select>
 </mapper>

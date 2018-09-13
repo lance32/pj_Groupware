@@ -5,8 +5,16 @@
 <%
 	String cp = request.getContextPath();
 %>
+
+<script>
+function searchList() {
+	var f=document.searchForm;
+	f.submit();
+}
+</script>
+
 <div style="clear: both; margin: 10px 0px 15px 10px;">
-	<span class="glyphicon glyphicon-th-list"
+	<span class="glyphicon glyphicon-bullhorn"
 		style="font-size: 28px; margin-left: 10px;"></span> <span
 		style="font-size: 30px;">&nbsp;공 지 사 항</span><br>
 	<div
@@ -15,45 +23,37 @@
 <br>
 <table id="tb" style="width: 85%;">
 	<tr>
-		<td id="count" colspan="2">3개(1/1 페이지)</td>
+		<td id="count" colspan="2">${dataCount }개(${page }/${total_page } 페이지)</td>
 		<td></td>
 		<td></td>
 	</tr>
 
 	<tr class="cf">
 		<td width="150">번호</td>
-		<td width="700" style="text-align: center;">제목</td>
+		<td width="500" style="text-align: center;">제목</td>
 		<td width="190">작성자</td>
-		<td width="150">작성일</td>
+		<td width="350">작성일</td>
 		<td width="100">조회수</td>
 	</tr>
-
-	<tr class="tr">
-		<td>항목1</td>
-		<td style="text-align: center;">1</td>
-		<td>2</td>
-		<td>3</td>
-		<td>4</td>
-	</tr>
-	<tr class="tr">
-		<td>항목2</td>
-		<td style="text-align: center;">1</td>
-		<td>2</td>
-		<td>3</td>
-		<td>4</td>
-	</tr>
-	<tr class="tr">
-		<td>항목3</td>
-		<td style="text-align: center;">1</td>
-		<td>2</td>
-		<td>3</td>
-		<td>4</td>
-	</tr>
-
+	<c:forEach var="dto" items="${list}">
+		<tr class="tr">
+			<td>${dto.num }</td>
+			<c:if test="${dto.notice == 1}">
+			<td style="text-align: center;"><a style="color: red;" href="${articleUrl}&num=${dto.num}">${dto.subject}</a></td>
+			</c:if>
+			<c:if test="${dto.notice == 0}">
+			<td style="text-align: center;"><a href="${articleUrl}&num=${dto.num}">${dto.subject}</a></td>
+			</c:if>
+			<td>${dto.name }</td>
+			<td>${dto.created }</td>
+			<td>${dto.hitCount }</td>
+		</tr>
+	</c:forEach>
 </table>
 <br>
 <div style="text-align: center;">
 	<form name="searchForm" action="<%=cp%>/notice/list" method="post">
+		${paging }
 		<button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/notice/list';">새 로 고 침</button>
    		<select name="searchKey" class="selectBox" style="margin-bottom: 5px;">
           	<option value="subject">제 목</option>

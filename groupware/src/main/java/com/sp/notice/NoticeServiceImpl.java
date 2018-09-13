@@ -36,14 +36,24 @@ public class NoticeServiceImpl implements NoticeService {
 
 	@Override
 	public List<Notice> listNotice(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Notice> list = null;
+		try {
+			list = dao.selectList("notice.listNotice", map);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return list;
 	}
 
 	@Override
 	public int dataCount(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		try {
+			result = dao.selectOne("notice.noticeCount", map);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
 	}
 
 	@Override
