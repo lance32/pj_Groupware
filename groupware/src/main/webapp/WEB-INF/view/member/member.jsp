@@ -18,7 +18,7 @@ select{
 }
 
 input{
-	height:28px;
+	height:30px;
 	border:1px solid e4e4e4;
 	border-radius: 5px;
 }
@@ -32,61 +32,43 @@ function memberOk() {
 	var f = document.memberForm;
 	var str;
 
-	str = f.userId.value;
+	str = f.memberNum.value;
 	str = str.trim();
 	if(!str) {
 		alert("아이디를 입력하세요. ");
-		f.userId.focus();
+		f.memberNum.focus();
 		return;
 	}
-	if(!/^[a-z][a-z0-9_]{4,9}$/i.test(str)) { 
+	if(!/^[0-9]{4,8}$/i.test(str)) { 
 		alert("아이디는 5~10자이며 첫글자는 영문자이어야 합니다.");
-		f.userId.focus();
+		f.memberNum.focus();
 		return;
 	}
-	f.userId.value = str;
+	f.memberNum.value = str;
 
-	str = f.userPwd.value;
-	str = str.trim();
-	if(!str) {
-		alert("패스워드를 입력하세요. ");
-		f.userPwd.focus();
-		return;
-	}
-	if(!/^(?=.*[a-z])(?=.*[!@#$%^*+=-]|.*[0-9]).{5,10}$/i.test(str)) { 
-		alert("패스워드는 5~10자이며 하나 이상의 숫자나 특수문자가 포함되어야 합니다.");
-		f.userPwd.focus();
-		return;
-	}
-	f.userPwd.value = str;
-
-	if(str!= f.userPwdCheck.value) {
-        alert("패스워드가 일치하지 않습니다. ");
-        f.userPwdCheck.focus();
-        return;
-	}
 	
-    str = f.userName.value;
+    str = f.name.value;
 	str = str.trim();
     if(!str) {
         alert("이름을 입력하세요. ");
-        f.userName.focus();
+        f.name.focus();
         return;
     }
-    f.userName.value = str;
+    f.name.value = str;
 
     str = f.birth.value;
 	str = str.trim();
-    if(!str || !isValidDateFormat(str)) {
+    if(!str) {
         alert("생년월일를 입력하세요[YYYY-MM-DD]. ");
         f.birth.focus();
         return;
     }
     
+    
     str = f.tel1.value;
 	str = str.trim();
     if(!str) {
-        alert("전화번호를 입력하세요. ");
+        alert("전화번호를 입력하세요.");
         f.tel1.focus();
         return;
     }
@@ -94,12 +76,12 @@ function memberOk() {
     str = f.tel2.value;
 	str = str.trim();
     if(!str) {
-        alert("전화번호를 입력하세요. ");
+        alert("전화번호를 입력하세요.");
         f.tel2.focus();
         return;
     }
     if(!/^(\d+)$/.test(str)) {
-        alert("숫자만 가능합니다. ");
+        alert("숫자만 가능합니다.");
         f.tel2.focus();
         return;
     }
@@ -107,13 +89,63 @@ function memberOk() {
     str = f.tel3.value;
 	str = str.trim();
     if(!str) {
-        alert("전화번호를 입력하세요. ");
+        alert("전화번호를 입력하세요.");
         f.tel3.focus();
         return;
     }
     if(!/^(\d+)$/.test(str)) {
-        alert("숫자만 가능합니다. ");
+        alert("숫자만 가능합니다.");
         f.tel3.focus();
+        return;
+    }
+    
+    str = f.departmentNum.value;
+	str = str.trim();
+    if(!str) {
+        alert("부서를 선택해주세요");
+        f.departmentNum.focus();
+        return;
+    }
+    
+    str = f.positionNum.value;
+	str = str.trim();
+    if(!str) {
+        alert("직급을 선택해주세요");
+        f.positionNum.focus();
+        return;
+    }
+
+    str = f.phone1.value;
+	str = str.trim();
+    if(!str) {
+        alert("휴대전화번호를 입력하세요.");
+        f.phone1.focus();
+        return;
+    }
+
+    str = f.phone2.value;
+	str = str.trim();
+    if(!str) {
+        alert("휴대전화번호를 입력하세요. ");
+        f.phone2.focus();
+        return;
+    }
+    if(!/^(\d+)$/.test(str)) {
+        alert("숫자만 가능합니다. ");
+        f.phone2.focus();
+        return;
+    }
+
+    str = f.phone3.value;
+	str = str.trim();
+    if(!str) {
+        alert("전화번호를 입력하세요. ");
+        f.phone3.focus();
+        return;
+    }
+    if(!/^(\d+)$/.test(str)) {
+        alert("숫자만 가능합니다. ");
+        f.phone3.focus();
         return;
     }
     
@@ -159,16 +191,16 @@ function changeEmail() {
     }
 }
 
-function userIdCheck() {
-	var str = $("#userId").val();
+function memberNumCheck() {
+	var str = $("#memberNum").val();
 	str = str.trim();
-	if(!/^[a-z][a-z0-9_]{4,9}$/i.test(str)) { 
-		$("#userId").focus();
+	if(!/^[0-9]{4,8}$/i.test(str)) { 
+		$("#memberNum").focus();
 		return;
 	}
 	
-	var url="<%=cp%>/member/userIdCheck";
-	var q="userId="+str;
+	var url="<%=cp%>/member/memberNumCheck";
+	var q="memberNum="+str;
 	
 	$.ajax({
 		type:"post"
@@ -178,13 +210,13 @@ function userIdCheck() {
 		,success:function(data) {
 			var p=data.passed;
 			if(p=="true") {
-				var s="<span style='color:blue;font-weight:bold;'>"+str+"</span> 아이디는 사용 가능합니다.";
-				$("#userId").parent().next(".help-block").html(s);
+				var s="<span style='color:blue;font-weight:bold;'>"+str+"</span> 사원번호는 사용 가능합니다.";
+				$("#memberNum").parent().next(".help-block").html(s);
 			} else {
-				var s="<span style='color:red;font-weight:bold;'>"+str+"</span> 아이디는 사용할 수 없습니다.";
-				$("#userId").parent().next(".help-block").html(s);
-				$("#userId").val("");
-				$("#userId").focus();
+				var s="<span style='color:red;font-weight:bold;'>"+str+"</span> 사원번호는 사용할 수 없습니다.";
+				$("#memberNum").parent().next(".help-block").html(s);
+				$("#memberNum").val("");
+				$("#memberNum").focus();
 			}
 		}
 	    ,error:function(e) {
@@ -197,7 +229,7 @@ function userIdCheck() {
 </script>
 <div class="body-container" style="width: 700px;">
     <div class="body-title">
-        <h3><span style="font-family: Webdings">2</span> ${mode=="created"?"회원 가입":"회원 정보 수정"} </h3>
+        <h3><span style="font-family: Webdings">2</span> ${mode=="created"?"사원 추가":"사원 정보 수정"} </h3>
     </div>
     
         <div>
@@ -209,10 +241,10 @@ function userIdCheck() {
 			      </td>
 			      <td style="padding: 0 0 15px 15px;">
 			        <p style="margin-top: 1px; margin-bottom: 5px;">
-			            <input type="text" name="userId" id="userId" value="${dto.userId}"
-                         onchange="userIdCheck();" style="width: 95%;" placeholder="사번은 년+월+입사순서입니다."
+			            <input type="text" name="memberNum" id="memberNum" value="${dto.memberNum}"
+                         onchange="memberNumCheck();" style="width: 95%;" placeholder="사번은 년+월+입사순서입니다."
                          ${mode=="update" ? "readonly='readonly' ":""}
-                         maxlength="15" class="boxTF" placeholder="아이디">
+                         maxlength="15" class="boxTF" placeholder="사원 번호">
 			        </p>
 			        <p class="help-block">사번은 8자 이며 모두 숫자로 구성되어야 합니다.</p>
 			      </td>
@@ -224,13 +256,68 @@ function userIdCheck() {
 			      </td>
 			      <td style="padding: 0 0 15px 15px;">
 			        <p style="margin-top: 1px; margin-bottom: 5px;">
-			            <input type="text" name="userName" value="${dto.userName}" maxlength="30" class="boxTF"
+			            <input type="text" name="name" value="${dto.name}" maxlength="30" class="boxTF"
 		                      style="width: 95%;"
 		                      ${mode=="update" ? "readonly='readonly' ":""}
 		                      placeholder="이름">
 			        </p>
 			      </td>
 			  </tr>
+			  
+			   <tr>
+			      <td width="100" valign="top" style="text-align: right; padding-top: 5px;">
+			            <label style="font-weight: 900;">부서</label>
+			      </td>
+			      <td style="padding: 0 0 15px 15px;">
+			        <p style="margin-top: 1px; margin-bottom: 5px;">
+			            <select class="selectField" id="departmentNum" name="departmentNum" >
+			                <option value="">선 택</option>
+			                <option value="13" ${dto.departmentNum=="13" ? "selected='selected'" : ""}>경영지원팀</option>
+			                <option value="14" ${dto.departmentNum=="14" ? "selected='selected'" : ""}>인사팀</option>
+			                <option value="15" ${dto.departmentNum=="15" ? "selected='selected'" : ""}>총무팀</option>
+			                <option value="16" ${dto.departmentNum=="16" ? "selected='selected'" : ""}>시설관리팀</option>
+			                <option value="17" ${dto.departmentNum=="17" ? "selected='selected'" : ""}>영업팀</option>
+			                <option value="18" ${dto.departmentNum=="18" ? "selected='selected'" : ""}>영업관리</option>
+			                <option value="19" ${dto.departmentNum=="19" ? "selected='selected'" : ""}>관리팀</option>
+			                <option value="20" ${dto.departmentNum=="20" ? "selected='selected'" : ""}>전산팀</option>
+			                <option value="21" ${dto.departmentNum=="21" ? "selected='selected'" : ""}>마케팅팀</option>
+			                <option value="22" ${dto.departmentNum=="22" ? "selected='selected'" : ""}>생산팀</option>
+			                <option value="23" ${dto.departmentNum=="23" ? "selected='selected'" : ""}>생산관리팀</option>
+			                <option value="24" ${dto.departmentNum=="24" ? "selected='selected'" : ""}>법무팀</option>
+			            </select>
+			         </p>
+			      </td>
+			  </tr>
+			  
+			  
+			  
+			   <tr>
+			      <td width="100" valign="top" style="text-align: right; padding-top: 5px;">
+			            <label style="font-weight: 900;">직급</label>
+			      </td>
+			      <td style="padding: 0 0 15px 15px;">
+			        <p style="margin-top: 1px; margin-bottom: 5px;">
+			            <select class="selectField" id="positionNum" name="positionNum" >
+			                <option value="">선 택</option>
+			                <option value="1" ${dto.positionNum=="1" ? "selected='selected'" : ""}>사장</option>
+			                <option value="2" ${dto.positionNum=="2" ? "selected='selected'" : ""}>부사장</option>
+			                <option value="3" ${dto.positionNum=="3" ? "selected='selected'" : ""}>전무</option>
+			                <option value="5" ${dto.positionNum=="5" ? "selected='selected'" : ""}>상무</option>
+			                <option value="6" ${dto.positionNum=="6" ? "selected='selected'" : ""}>이사</option>
+			                <option value="7" ${dto.positionNum=="7" ? "selected='selected'" : ""}>부장</option>
+			                <option value="8" ${dto.positionNum=="8" ? "selected='selected'" : ""}>차장</option>
+			                <option value="9" ${dto.positionNum=="9" ? "selected='selected'" : ""}>과장</option>
+			                <option value="10" ${dto.positionNum=="10" ? "selected='selected'" : ""}>대리</option>
+			                <option value="11" ${dto.positionNum=="11" ? "selected='selected'" : ""}>주임</option>
+			                <option value="12" ${dto.positionNum=="12" ? "selected='selected'" : ""}>사원</option>
+			            </select>
+			        </p>
+			      </td>
+			  </tr>
+			  
+			  
+			  
+				
 			
 			  <tr>
 			      <td width="100" valign="top" style="text-align: right; padding-top: 5px;">
@@ -268,11 +355,46 @@ function userIdCheck() {
 			  
 			  <tr>
 			      <td width="100" valign="top" style="text-align: right; padding-top: 5px;">
-			            <label style="font-weight: 900;">전화번호</label>
+			            <label style="font-weight: 900;">집 전화</label>
 			      </td>
 			      <td style="padding: 0 0 15px 15px;">
 			        <p style="margin-top: 1px; margin-bottom: 5px;">
 			            <select class="selectField" id="tel1" name="tel1" >
+			                <option value="">선 택</option>
+			                <option value="02" ${dto.tel1=="02" ? "selected='selected'" : ""}>02</option>
+			                <option value="031" ${dto.tel1=="031" ? "selected='selected'" : ""}>031</option>
+			                <option value="032" ${dto.tel1=="032" ? "selected='selected'" : ""}>032</option>
+			                <option value="033" ${dto.tel1=="033" ? "selected='selected'" : ""}>033</option>
+			                <option value="041" ${dto.tel1=="041" ? "selected='selected'" : ""}>041</option>
+			                <option value="042" ${dto.tel1=="042" ? "selected='selected'" : ""}>042</option>
+			                <option value="043" ${dto.tel1=="043" ? "selected='selected'" : ""}>043</option>
+			                <option value="044" ${dto.tel1=="044" ? "selected='selected'" : ""}>044</option>
+			                <option value="051" ${dto.tel1=="051" ? "selected='selected'" : ""}>051</option>
+			                <option value="052" ${dto.tel1=="052" ? "selected='selected'" : ""}>052</option>
+			                <option value="053" ${dto.tel1=="053" ? "selected='selected'" : ""}>053</option>
+			                <option value="054" ${dto.tel1=="054" ? "selected='selected'" : ""}>054</option>
+			                <option value="055" ${dto.tel1=="055" ? "selected='selected'" : ""}>055</option>
+			                <option value="061" ${dto.tel1=="061" ? "selected='selected'" : ""}>061</option>
+			                <option value="062" ${dto.tel1=="062" ? "selected='selected'" : ""}>062</option>
+			                <option value="063" ${dto.tel1=="063" ? "selected='selected'" : ""}>063</option>
+			                <option value="064" ${dto.tel1=="064" ? "selected='selected'" : ""}>064</option>
+			            </select>
+			            -
+			            <input type="text" name="tel2" value="${dto.tel2}" class="boxTF" maxlength="4">
+			            -
+			            <input type="text" name="tel3" value="${dto.tel3}" class="boxTF" maxlength="4">
+			        </p>
+			      </td>
+			  </tr>
+			  
+			  
+			  <tr>
+			      <td width="100" valign="top" style="text-align: right; padding-top: 5px;">
+			            <label style="font-weight: 900;">휴대전화</label>
+			      </td>
+			      <td style="padding: 0 0 15px 15px;">
+			        <p style="margin-top: 1px; margin-bottom: 5px;">
+			            <select class="selectField" id="phone1" name="phone1" >
 			                <option value="">선 택</option>
 			                <option value="010" ${dto.tel1=="010" ? "selected='selected'" : ""}>010</option>
 			                <option value="011" ${dto.tel1=="011" ? "selected='selected'" : ""}>011</option>
@@ -282,9 +404,9 @@ function userIdCheck() {
 			                <option value="019" ${dto.tel1=="019" ? "selected='selected'" : ""}>019</option>
 			            </select>
 			            -
-			            <input type="text" name="tel2" value="${dto.tel2}" class="boxTF" maxlength="4">
+			            <input type="text" name="phone2" value="${dto.tel2}" class="boxTF" maxlength="4">
 			            -
-			            <input type="text" name="tel3" value="${dto.tel3}" class="boxTF" maxlength="4">
+			            <input type="text" name="phone3" value="${dto.tel3}" class="boxTF" maxlength="4">
 			        </p>
 			      </td>
 			  </tr>
@@ -322,7 +444,7 @@ function userIdCheck() {
 			  <table style="width: 100%; margin: 0px auto; border-spacing: 0px;">
 			     <tr height="45"> 
 			      <td align="center" >
-			        <button type="button" name="sendButton" class="btn" onclick="memberOk();">${mode=="created"?"회원가입":"정보수정"}</button>
+			        <button type="button" name="sendButton" class="btn" onclick="memberOk();">${mode=="created"?"사원 추가":"정보수정"}</button>
 			        <button type="reset" class="btn">다시입력</button>
 			        <button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/allmem/main';">${mode=="created"?"가입취소":"수정취소"}</button>
 			      </td>

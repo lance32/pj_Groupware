@@ -9,7 +9,15 @@
             WHERE memberNum = #{memberNum}
     </select>
 
-
-
-
+<!--  2개 table 모두 한번에  회원 추가 update -->
+	<update id="insertMember" parameterType="com.sp.member.Member">
+		INSERT ALL
+			INTO member(memberNum,name,pwd,positionNum,departmentNum) 
+				 VALUES(#{memberNum},#{name},#{pwd},#{positionNum},#{departmentNum})
+			INTO memberauthority(memberNum,Authority) VALUES(#{memberNum},'ROLE_USER') 
+			INTO memberdetailinfo(memberNum,birth,email,tel,phone,zip,addr1,addr2)
+				 VALUES(#{memberNum},#{birth},#{email},#{tel},#{phone},
+				 #{zip,jdbcType=VARCHAR},#{addr1,jdbcType=VARCHAR},#{addr2,jdbcType=VARCHAR})
+			SELECT * FROM dual
+	</update>
 </mapper>
