@@ -1,19 +1,61 @@
 package com.sp.member;
 
 public class Member {
-	private String memberNum, name, pwd;
+	private String memberNum;
+	private String name;
+	private String pwd;
 	private String email;
 	private String tel;
 	private String birth;
 	private String phone;
 	private String zip;
-	private String addr1, addr2;
+	private String addr1;
+	private String addr2;
 	
 	private int status;
 	private int grants;
-	private String created, modified, last_login;
+	private String created;
+	private String modified;
+	private String last_login;
 	
 	private String authority;
+	
+	private int positionNum;			// 직급번호
+	private int departmentNum;			// 부서번호
+	private String positionName;		// 직급명
+	private String departmentName;		// 부서명
+
+	public int getPositionNum() {
+		return positionNum;
+	}
+
+	public void setPositionNum(int positionNum) {
+		this.positionNum = positionNum;
+	}
+
+	public int getDepartmentNum() {
+		return departmentNum;
+	}
+
+	public void setDepartmentNum(int departmentNum) {
+		this.departmentNum = departmentNum;
+	}
+
+	public String getPositionName() {
+		return positionName;
+	}
+
+	public void setPositionName(String positionName) {
+		this.positionName = positionName;
+	}
+
+	public String getDepartmentName() {
+		return departmentName;
+	}
+
+	public void setDepartmentName(String departmentName) {
+		this.departmentName = departmentName;
+	}
 
 	public String getMemberNum() {
 		return memberNum;
