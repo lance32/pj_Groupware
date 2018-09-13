@@ -9,7 +9,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Groupware Login</title>
 <link href="https://fonts.googleapis.com/css?family=Hi+Melody&amp;subset=korean" rel="stylesheet">
 
 <link href="https://fonts.googleapis.com/css?family=Allerta" rel="stylesheet">

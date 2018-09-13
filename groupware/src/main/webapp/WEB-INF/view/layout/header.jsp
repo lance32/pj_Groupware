@@ -6,7 +6,7 @@
 	String cp=request.getContextPath();
 %>
 <div class="logo">
-	<a href="#"><img src="<%=cp%>/resource/images/home.png"/></a>
+	<a href="<%=cp%>/main"><img src="<%=cp%>/resource/images/home.png"/></a>
 </div>
 
 <div class="menu">
