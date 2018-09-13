@@ -13,7 +13,7 @@
 	<ul class="nav">
 		<li><a href="#">전자 결재</a></li>
 		<li><a href="#">업무일지</a></li>
-		<li><a>커뮤니티</a>
+		<li><a style="cursor: pointer;">커뮤니티</a>
 			<ul class="sub_menu">
 				<li><a href="<%=cp%>/chat/chatList">채팅</a></li>
 				<li><a href="#">설문</a></li>

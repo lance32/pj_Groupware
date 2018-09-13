@@ -53,9 +53,9 @@
 
  	<!-- 웹소켓 환경 설정 -->
  	<websocket:handlers>
- 		<websocket:mapping handler="mySocketHandler" path="/chat.msg"/>
+ 		<websocket:mapping handler="SocketHandler" path="/chat.msg"/>
  	</websocket:handlers>
- 	<bean id="mySocketHandler" class="com.sp.chat.SocketHandler" />
+ 	<bean id="SocketHandler" class="com.sp.chat.SocketHandler" />
 
 	<!-- 파일 업로드 -->
     <bean id="multipartResolver"  class="org.springframework.web.multipart.commons.CommonsMultipartResolver">

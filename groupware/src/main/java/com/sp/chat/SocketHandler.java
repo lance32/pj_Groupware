@@ -23,12 +23,6 @@ import net.sf.json.JSONSerializer;
 public class SocketHandler extends TextWebSocketHandler{
 	private final Logger logger=LoggerFactory.getLogger(SocketHandler.class);
 	
-	// 채팅방 개설자가 따로 없음. 개설자가 나가도 채팅방 유지.(마지막한명이 나갈시 종료)
-	//채팅방 정보에는 제목과 (3/5) 이렇게 인원수만 표시
-	//채팅방 창을 새로 띄움. 다른작업 가능. 여러개 띄울수 있음.
-	
-	
-	
 	// 접속한 게스트 (접속아이디, 게스트정보)
 	private Map<String, GuestInfo> guestMap = new Hashtable<>();
 	//채팅방 정보 (개설아이디, 채팅방정보)

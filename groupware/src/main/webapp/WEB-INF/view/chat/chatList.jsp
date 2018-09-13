@@ -708,3 +708,6 @@ function writeToScreen(message) {
 	      </div>
     </div>    
 </div>
+
+<br>
+<a href="<%=cp%>/chat/chatList2">채팅리스트2</a>
