@@ -21,8 +21,7 @@
 		<!-- 모든 사용자 접근 허용 -->
 		
 		<intercept-url pattern="/index.jsp" access="permitAll"/>
-		<intercept-url pattern="/main" access="permitAll"/>
-		<intercept-url pattern="/member/login" access="permitAll"/>
+		<intercept-url pattern="/login" access="permitAll"/>
 		<intercept-url pattern="/member/member" access="permitAll"/>
 		<intercept-url pattern="/member/userIdCheck" access="permitAll"/>
 		<intercept-url pattern="/member/logout" access="permitAll"/>
@@ -30,13 +29,13 @@
 		
 		<intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')"/>
 		
-		<intercept-url pattern="/**" access="hasAnyRole('ROLE_USER')"/>
+		<intercept-url pattern="/**" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')"/>
 		
-		<form-login login-page="/member/login" 
+		<form-login login-page="/login" 
 					login-processing-url="/member/login_check"
 					username-parameter="memberNum"
 					password-parameter="pwd"
-					authentication-failure-url="/member/login?login_error"
+					authentication-failure-url="/login?login_error"
 					authentication-success-handler-ref="authenticationSuccessHandler"
 					default-target-url="/main"
 					always-use-default-target="true"

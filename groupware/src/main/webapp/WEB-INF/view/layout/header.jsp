@@ -6,7 +6,7 @@
 	String cp=request.getContextPath();
 %>
 <div class="logo">
-	<a href="<%=cp%>/main"><img src="<%=cp%>/resource/images/home.png"/></a>
+	<a href="#"><img src="<%=cp%>/resource/images/home.png"/></a>
 </div>
 
 <div class="menu">
@@ -30,8 +30,8 @@
 				<li><a href="#">급여조회</a></li>
 				<li><a href="#">증명서 발급</a></li>
 			</ul></li>
-		<li><a href="#">게시판</a></li>
-		<li><a href="#">전사 정보</a>
+		<li><a href="<%=cp%>/notice/list">게시판</a></li>
+		<li><a href="<%=cp%>/allmem/main">전사 정보</a>
 			<ul class="sub_menu">
 				<li><a href="#">사원조회</a></li>
 			</ul></li>
