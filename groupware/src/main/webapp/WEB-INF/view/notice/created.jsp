@@ -23,12 +23,12 @@ $(function(){
 </script>
 
 <div class="container">
-	<form name="noticeForm" method="post">
+	<form name="noticeForm" method="post" enctype="multipart/form-data">
 		<div class="row">
 			<div class="col-md-6">
 				<div class="form-group">
 					<label for="name">작성자</label>
-					<input type="text" class="form-control" name="name" disabled="disabled" value="${sessionScope.member.userName}">
+					<input type="text" class="form-control" name="name" readonly="readonly" value="${sessionScope.member.userName}">
 				</div>
 			</div>
 
@@ -36,9 +36,9 @@ $(function(){
 				<div class="form-group">
 					<label for="pass">공지여부</label><br>
 					<fieldset>
-						<input type="radio" name="emergency" value="0">
+						<input type="radio" name="notice" value="0">
 						<span style="font-size: 20px;">일반공지</span> &nbsp;&nbsp;&nbsp; 
-						<input type="radio" name="emergency" value="1">
+						<input type="radio" name="notice" value="1">
 						<span style="font-size: 20px;">긴급공지</span>
 					</fieldset>
 				</div>
@@ -61,10 +61,11 @@ $(function(){
 			<label for="File">파 일 첨 부</label> <input type="file" name="upload">
 		</div>
 
-		<div class="center-block" style='width: 200px'>
+		<div class="center-block" style='width: 300px'>
 			<button type="button" class="btn" id="btnSend">작 성 하 기</button>
 			<button type="reset" class="btn">다 시 쓰 기</button>
 			<button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/notice/list';">뒤 로 가 기</button>
 		</div>
+		
 	</form>
 </div>
