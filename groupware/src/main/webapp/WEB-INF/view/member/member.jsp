@@ -271,26 +271,15 @@ function memberNumCheck() {
 			      <td style="padding: 0 0 15px 15px;">
 			        <p style="margin-top: 1px; margin-bottom: 5px;">
 			            <select class="selectField" id="departmentNum" name="departmentNum" >
-			                <option value="">선 택</option>
-			                <option value="13" ${dto.departmentNum=="13" ? "selected='selected'" : ""}>경영지원팀</option>
-			                <option value="14" ${dto.departmentNum=="14" ? "selected='selected'" : ""}>인사팀</option>
-			                <option value="15" ${dto.departmentNum=="15" ? "selected='selected'" : ""}>총무팀</option>
-			                <option value="16" ${dto.departmentNum=="16" ? "selected='selected'" : ""}>시설관리팀</option>
-			                <option value="17" ${dto.departmentNum=="17" ? "selected='selected'" : ""}>영업팀</option>
-			                <option value="18" ${dto.departmentNum=="18" ? "selected='selected'" : ""}>영업관리</option>
-			                <option value="19" ${dto.departmentNum=="19" ? "selected='selected'" : ""}>관리팀</option>
-			                <option value="20" ${dto.departmentNum=="20" ? "selected='selected'" : ""}>전산팀</option>
-			                <option value="21" ${dto.departmentNum=="21" ? "selected='selected'" : ""}>마케팅팀</option>
-			                <option value="22" ${dto.departmentNum=="22" ? "selected='selected'" : ""}>생산팀</option>
-			                <option value="23" ${dto.departmentNum=="23" ? "selected='selected'" : ""}>생산관리팀</option>
-			                <option value="24" ${dto.departmentNum=="24" ? "selected='selected'" : ""}>법무팀</option>
+			               <option value="">선 택</option>
+			            <c:forEach var="map" items="${departmentList}">
+			                <option value="${map.DEPARTMENTNUM}" ${dto.departmentNum==map.DEPARTMENTNUM ? "selected='selected'" : ""}>${map.DEPARTMENTNAME}</option>
+			            </c:forEach>
 			            </select>
 			         </p>
 			      </td>
 			  </tr>
-			  
-			  
-			  
+
 			   <tr>
 			      <td width="100" valign="top" style="text-align: right; padding-top: 5px;">
 			            <label style="font-weight: 900;">직급</label>
@@ -299,26 +288,14 @@ function memberNumCheck() {
 			        <p style="margin-top: 1px; margin-bottom: 5px;">
 			            <select class="selectField" id="positionNum" name="positionNum" >
 			                <option value="">선 택</option>
-			                <option value="1" ${dto.positionNum=="1" ? "selected='selected'" : ""}>사장</option>
-			                <option value="2" ${dto.positionNum=="2" ? "selected='selected'" : ""}>부사장</option>
-			                <option value="3" ${dto.positionNum=="3" ? "selected='selected'" : ""}>전무</option>
-			                <option value="5" ${dto.positionNum=="5" ? "selected='selected'" : ""}>상무</option>
-			                <option value="6" ${dto.positionNum=="6" ? "selected='selected'" : ""}>이사</option>
-			                <option value="7" ${dto.positionNum=="7" ? "selected='selected'" : ""}>부장</option>
-			                <option value="8" ${dto.positionNum=="8" ? "selected='selected'" : ""}>차장</option>
-			                <option value="9" ${dto.positionNum=="9" ? "selected='selected'" : ""}>과장</option>
-			                <option value="10" ${dto.positionNum=="10" ? "selected='selected'" : ""}>대리</option>
-			                <option value="11" ${dto.positionNum=="11" ? "selected='selected'" : ""}>주임</option>
-			                <option value="12" ${dto.positionNum=="12" ? "selected='selected'" : ""}>사원</option>
+			               <c:forEach var="map" items="${positionList}">
+			               	 <option value="${map.POSITIONNUM}" ${dto.departmentNum==map.POSITIONNUM ? "selected='selected'" : ""}>${map.POSITIONNAME}</option>
+			               </c:forEach>
 			            </select>
 			        </p>
 			      </td>
 			  </tr>
-			  
-			  
-			  
-				
-			
+
 			  <tr>
 			      <td width="100" valign="top" style="text-align: right; padding-top: 5px;">
 			            <label style="font-weight: 900;">생년월일</label>
@@ -344,6 +321,7 @@ function memberNumCheck() {
 			                <option value="hanmail.net" ${dto.email2=="hanmail.net" ? "selected='selected'" : ""}>한 메일</option>
 			                <option value="hotmail.com" ${dto.email2=="hotmail.com" ? "selected='selected'" : ""}>핫 메일</option>
 			                <option value="gmail.com" ${dto.email2=="gmail.com" ? "selected='selected'" : ""}>지 메일</option>
+			                <option value="daum.net" ${dto.email2=="gmail.com" ? "selected='selected'" : ""}>다음 메일</option>
 			                <option value="direct">직접입력</option>
 			            </select>
 			            <input type="text" name="email1" value="${dto.email1}" size="13" maxlength="30"  class="boxTF">
@@ -446,7 +424,7 @@ function memberNumCheck() {
 			      <td align="center" >
 			        <button type="button" name="sendButton" class="btn" onclick="memberOk();">${mode=="created"?"사원 추가":"정보수정"}</button>
 			        <button type="reset" class="btn">다시입력</button>
-			        <button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/allmem/main';">${mode=="created"?"가입취소":"수정취소"}</button>
+			        <button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/member/main';">${mode=="created"?"가입취소":"수정취소"}</button>
 			      </td>
 			    </tr>
 			    <tr height="30">
