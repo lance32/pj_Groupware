@@ -2,6 +2,7 @@ package com.sp.workLog;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -78,8 +79,8 @@ public class WorkLogController {
 		
 		String cp=req.getContextPath();
 		String query="";
-		String listUrl=cp+"/worklog/list";
-		String articleUrl=cp+"/worklog/article?page="+current_page;
+		String listUrl=cp+"/workLog/list";
+		String articleUrl=cp+"/workLog/article?page="+current_page;
 		if(query.length()!=0) {
 			listUrl=listUrl+"?"+query;
 			articleUrl=articleUrl+"&"+query;
@@ -95,6 +96,39 @@ public class WorkLogController {
 		model.addAttribute("paging",paging);
 
 		return ".workLog.list";
+	}
+	
+	@RequestMapping(value="/workLog/article")
+	public String readWorkLog(@RequestParam(value="workLogNum") int workLogNum,
+			@RequestParam(defaultValue="subject")String searchKey,
+			@RequestParam(defaultValue="")String searchValue,
+			@RequestParam(value="page")String page,
+			Model model) throws Exception {
+	
+		
+		String query="page"+page;
+		searchValue=URLDecoder.decode(searchValue, "utf-8");
+		if(searchValue.length()!=0) {
+			query="&searchKey="+searchKey+"&searchValue="+URLEncoder.encode(searchValue, "utf-8");
+		}
+		
+
+		
+		WorkLog dto=service.readWorkLog(workLogNum);
+		if(dto==null) {
+			return "redirect:/workLog/list?"+query;
+		}
+		Map<String, Object> map = new HashMap<>();
+		
+		map.put("workLogNum", workLogNum);
+		map.put("searchKey", searchKey);
+		map.put("searchValue", searchValue);
+	
+		model.addAttribute("query",query);
+		model.addAttribute("dto",dto);
+		model.addAttribute("page",page);
+		
+		return ".workLog.article";
 	}
 }
 

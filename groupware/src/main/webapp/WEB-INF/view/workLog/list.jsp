@@ -35,7 +35,7 @@
 		<tr class="tr">
 			<td>${dto.listNum}</td>
 			<td>${dto.departmentName}</td>
-			<td style="text-align: left;">${dto.subject}</td>
+			<td style="text-align: left;"><a href="${articleUrl}&workLogNum=${dto.workLogNum}">${dto.subject}</a></td>
 			<td>${dto.makeDate}</td>
 		</tr>
 	</c:forEach>
@@ -53,10 +53,8 @@
 	
 		<select class="selectBox">				<%-- 선택박스  --%>
 			<option>제목</option>
-			<option>이름</option>
 			<option>기안일</option>
 		</select>
-		
 		<input type="text" class="searchBox">		<%-- 입력창 --%>
 		
 		<button type="button" class="btn">검색</button>		<%-- 버튼 --%>
