@@ -16,9 +16,9 @@
     	<td><a href="<%=cp%>/message/msgReceive">받은 쪽지(0/10)</a></td>
     </tr>
     <tr>
-    	<td><a href="#">보낸 쪽지 10</a></td>
+    	<td><a href="<%=cp%>/message/msgSend">보낸 쪽지 10</a></td>
     </tr>
     <tr>
-    	<td><a href="#">보관 쪽지 1</a></td>
+    	<td><a href="<%=cp%>/message/msgKeep">보관 쪽지 1</a></td>
     </tr>
 </table>

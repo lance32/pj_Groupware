@@ -10,7 +10,7 @@
     	<th>전사정보</th>
     </tr>
     <tr>
-    	<td><a href="#">사원 조회</a></td>
+    	<td><a href="<%=cp%>/member/main">사원 조회</a></td>
     </tr>
 	<tr>
     	<th>관리자</th>

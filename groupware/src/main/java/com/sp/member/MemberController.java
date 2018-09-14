@@ -33,6 +33,11 @@ public class MemberController {
 		return "/member/login";
 	}
 	// 변경할 끝 부분 ----------------------------------------------------------------------
+	@RequestMapping(value="/member/main")
+	public String memberList() {
+	
+		return ".member.main";
+	}
 
 	// 이 아래로는 그냥 붙여놓은 부분이라 필요한 부분 수정해서 써야합니다.
 	@RequestMapping(value="/member/member", method=RequestMethod.GET)
@@ -46,36 +51,38 @@ public class MemberController {
 	public String createdSubmit(Member member, Model model) throws Exception {
 		// 회원 가입
 		
+		
 		// 패스워드 암호화
-		String encPwd=bcryptEncoder.encode(member.getPwd());
+		String encPwd="1111";
+		encPwd=bcryptEncoder.encode(encPwd);
 		member.setPwd(encPwd);
 		
 		try {
-			//service.insertMember(member);
+			service.insertMember(member);
 		}catch(Exception e) {
-			model.addAttribute("message", "회원가입이 실패했습니다. 다른 아이디로 다시 가입하시기 바랍니다.");
-			model.addAttribute("mode", "created");
-			return ".member.member";
+//			model.addAttribute("message", "회원가입이 실패했습니다. 다른 아이디로 다시 가입하시기 바랍니다.");
+//			model.addAttribute("mode", "created");
+//			return ".member.member";
 		}
 		
-		StringBuffer sb=new StringBuffer();
-		sb.append(member.getName()+ "님의 회원 가입이 정상적으로 처리되었습니다.<br>");
-		sb.append("메인화면으로 이동하여 로그인 하시기 바랍니다.<br>");
+//		StringBuffer sb=new StringBuffer();
+//		sb.append(member.getName()+ "님의 회원 가입이 정상적으로 처리되었습니다.<br>");
+//		sb.append("로그인화면에서  로그인 하시기 바랍니다.<br>");
+//		
+//		model.addAttribute("title", "회원 가입");
+//		model.addAttribute("message", sb.toString());
 		
-		model.addAttribute("title", "회원 가입");
-		model.addAttribute("message", sb.toString());
-		
-		return ".member.complete";
+		return ".member.main";
 	}
 	
-	@RequestMapping(value="/member/userIdCheck")
+	@RequestMapping(value="/member/memberNumCheck")
 	@ResponseBody
-	public Map<String, Object> userIdCheck(
-			@RequestParam(value="userId") String userId
+	public Map<String, Object> memberNUmCheck(
+			@RequestParam(value="memberNum") String memberNum
 			) throws Exception {
 		// 아이디 중복 검사
 		
-		Member member = service.readMember(userId);
+		Member member = service.readMember(memberNum);
 		
 		String passed = "true";
 		if(member != null)

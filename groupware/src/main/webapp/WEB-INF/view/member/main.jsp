@@ -14,8 +14,21 @@
 #paginate .numBox {border:1px solid #ccc;height:28px;text-decoration:none;padding:4px 7px 4px 7px;margin-left:3px;line-height:normal;vertical-align:middle;}
 </style>
 
+<script type="text/javascript">
+function listSearch(){
+	
+	
+}
+</script>
+
+
 <div id="test" style="width:100%; height:600px; ">
-	<h3> 사원조회</h3>
+	<%-- 상단 대표글씨 --%>
+	<div style="clear: both; margin: 10px 0px 15px 10px;">
+		<span class="glyphicon glyphicon-th-list" style="font-size: 25px; margin-left: 10px;"></span>
+		<span style="font-size: 25px;">&nbsp;사원조회</span><br>
+		<div style="clear: both; width: 300px; height: 1px; border-bottom: 3px solid black;"></div>
+	</div>
 	
 	
 	<%-- --%>
@@ -57,7 +70,7 @@
 	</div>
 	
 	<div style="text-align:center;">
-	
+		<button type="button" class="btn">새로고침</button>
 		<select class="selectBox" name="searchKey">				<%-- 선택박스  --%>
 			<option value="name">이름</option>
 			<option value="department">부서</option>
@@ -65,10 +78,10 @@
 			<option value="tel">휴대전화</option>
 		</select>
 		
-		<input type="text" class="searchBox" name="searchValue">		<%-- 입력창 --%>
+		<input type="text" class="searchBox" name="searchValue" onclick="listSearch();">		<%-- 입력창 --%>
 		
 		<button type="button" class="btn">검색</button>		<%-- 버튼 --%>
-		<button type="button" onclick="javascript:location.href='<%=cp%>/allmem/created';">사원추가</button>
+		<button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/member/member';">사원추가</button>
 	</div>
 	
 </div>
