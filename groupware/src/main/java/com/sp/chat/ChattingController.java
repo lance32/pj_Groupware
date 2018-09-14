@@ -10,4 +10,8 @@ public class ChattingController {
 	public String chatList(){
 		return ".chat.chatList";
 	}
+	@RequestMapping(value="/chat/chatList2")
+	public String chatList2(){
+		return ".chat.chatList2";
+	}
 }

@@ -5,20 +5,18 @@
 <%
 	String cp=request.getContextPath();
 %>
+
+<style>
+</style>
+
 <table class="tabs">
 	<tr>
-    	<th>메인 사이드 탭1</th>
+    	<th>업 무 일 지</th>
     </tr>
     <tr>
-    	<td><a href="<%=cp%>/message/msgWrite">쪽지 쓰기</a></td>
+    	<td><a href="#">업무 일지함</a></td>
     </tr>
     <tr>
-    	<td><a href="<%=cp%>/message/msgReceive">받은 쪽지(0/10)</a></td>
-    </tr>
-    <tr>
-    	<td><a href="<%=cp%>/message/msgSend">보낸 쪽지 10</a></td>
-    </tr>
-    <tr>
-    	<td><a href="<%=cp%>/message/msgKeep">보관 쪽지 1</a></td>
+    	<td><a href="#">내 업무 일지함 ( 0 | 0 )</a></td>
     </tr>
 </table>

@@ -16,7 +16,7 @@
 <div id="test" style="width:100%; height:600px; ">
 	
 	<%-- --%>
-	<table id="tb" style="width: 1000px;"><%-- 테이블 길이 수정 가능 --%>
+	<table id="tb" style="width: 70%;"><%-- 테이블 길이 수정 가능 --%>
 		<tr>
 			<td id="count" colspan="2">
 				3개(1/1 페이지)
@@ -27,29 +27,18 @@
 		<tr class="cf">
 			<%-- 구분 폭 수정 가능 --%>
 			<td width="170">번호</td>
-			<td width="auto" style="text-align: left;">제목</td>
-			<td width="190">성명</td>
+			<td width="190">부서명</td>
+			<td width="auto" style="text-align: center;">업무제목</td>
 			<td width="150">기안일</td>
 		</tr>
-		
+	<c:forEach var = "dto" items = "${list}">
 		<tr class="tr">
-			<td>항목1</td>
-			<td style="text-align: left;">1</td>
-			<td>2</td>
-			<td>3</td>
+			<td>${dto.listNum}</td>
+			<td>${dto.departmentName}</td>
+			<td style="text-align: left;">${dto.subject}</td>
+			<td>${dto.makeDate}</td>
 		</tr>
-		<tr class="tr">
-			<td>항목2</td>
-			<td style="text-align: left;">1</td>
-			<td>2</td>
-			<td>3</td>
-		</tr>
-		<tr class="tr">
-			<td>항목3</td>
-			<td style="text-align: left;">1</td>
-			<td>2</td>
-			<td>3</td>
-		</tr>
+	</c:forEach>
 	</table>
 	<br>
 	<div id='paginate'>	<%-- MyUtil.java 안에 있음. ${paging}으로 써야됨. --%>
@@ -63,8 +52,9 @@
 	<div style="text-align:center;">
 	
 		<select class="selectBox">				<%-- 선택박스  --%>
-			<option>테스트 옵션1</option>
-			<option>테스트 옵션2</option>
+			<option>제목</option>
+			<option>이름</option>
+			<option>기안일</option>
 		</select>
 		
 		<input type="text" class="searchBox">		<%-- 입력창 --%>
