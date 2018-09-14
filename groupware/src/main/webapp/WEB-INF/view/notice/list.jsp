@@ -39,7 +39,7 @@ function searchList() {
 		<tr class="tr">
 			<td>${dto.num }</td>
 			<c:if test="${dto.notice == 1}">
-			<td style="text-align: center;"><a style="color: red;" href="${articleUrl}&num=${dto.num}">${dto.subject}</a></td>
+			<td style="text-align: center;"><a style="color: red;" href="${articleUrl}&num=${dto.num}">&lt; 긴급공지 &gt; ${dto.subject}</a></td>
 			</c:if>
 			<c:if test="${dto.notice == 0}">
 			<td style="text-align: center;"><a href="${articleUrl}&num=${dto.num}">${dto.subject}</a></td>
