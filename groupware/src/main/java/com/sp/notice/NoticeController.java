@@ -71,7 +71,7 @@ public class NoticeController {
 		String cp = req.getContextPath();
 		String listUrl = cp+"/notice/list";
 		String articleUrl = cp+"/notice/article?page="+current_page;
-		System.out.println("아티클 : " + articleUrl);
+		
 		if(searchValue.length() != 0) {
 			listUrl += "?searchKey="+searchKey+"&searchValue="+URLEncoder.encode(searchValue, "UTF-8");
 			articleUrl += "&searchKey="+searchKey+"&searchValue="+URLEncoder.encode(searchValue, "UTF-8");

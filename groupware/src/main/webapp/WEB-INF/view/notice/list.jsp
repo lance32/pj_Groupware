@@ -37,13 +37,13 @@ function searchList() {
 	</tr>
 	<c:forEach var="dto" items="${list}">
 		<tr class="tr">
-			<td>${dto.num }</td>
 			<c:if test="${dto.notice == 1}">
-			<td style="text-align: center;"><a style="color: red;" href="${articleUrl}&num=${dto.num}">&lt; 긴급공지 &gt; ${dto.subject}</a></td>
+				<td><span style="background-color: #ff0000;border-radius: 3px;color:#fff;padding: 2px;">긴 급 공 지</span></td>
 			</c:if>
 			<c:if test="${dto.notice == 0}">
-			<td style="text-align: center;"><a href="${articleUrl}&num=${dto.num}">${dto.subject}</a></td>
+				<td>${dto.num }</td>
 			</c:if>
+			<td style="text-align: center;"><a href="${articleUrl}&num=${dto.num}">${dto.subject}</a></td>
 			<td>${dto.name }</td>
 			<td>${dto.created }</td>
 			<td>${dto.hitCount }</td>

@@ -19,6 +19,17 @@ $(function(){
         $("form[name=noticeForm]").attr("action","<%=cp%>/notice/${mode}");
         $("form[name=noticeForm]").submit();
 	});
+	
+	$("#chkDelete").click(function(){
+		var num = "${dto.num}";
+		var page = "${page}";
+		var query = "num="+num+"&page="+page;
+		var url = "<%=cp%>/notice/deleteFile?"+query;
+		
+		if(confirm("정말 파일을 삭제 하시겠습니까? 수정을 취소하더라도 삭제 된 파일은 복구되지 않습니다.")){
+			location.href = url;
+		}
+	});
 });
 </script>
 
@@ -67,7 +78,7 @@ $(function(){
 				      <td style="padding-left:10px;"> 
 				          ${dto.originalFilename}
 				          <c:if test="${not empty dto.saveFilename}">
-				          		| <a href="<%=cp%>/notice/deleteFile?num=${dto.num}&page=${page}">파일삭제</a>
+				          		| <a id="chkDelete">파일삭제</a>
 				          </c:if>
 				       </td>
 				  </tr>
