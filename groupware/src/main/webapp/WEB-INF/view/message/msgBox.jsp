@@ -33,7 +33,7 @@
 	</div>
 	
 	<%-- 목록 --%>
-	<table id="tb" style="width: 1000px;"><%-- 테이블 길이 수정 가능 --%>
+	<table id="tb" style="width: 100%;"><%-- 테이블 길이 수정 가능 --%>
 		<tr>
 			<td id="count" colspan="2">
 				3개(1/1 페이지)
@@ -43,30 +43,26 @@
 		
 		<tr class="cf">
 			<%-- 구분 폭 수정 가능 --%>
-			<td width="170">구분1</td>
-			<td width="auto" style="text-align: left;">구분2</td>
-			<td width="190">구분3</td>
-			<td width="150">구분4</td>
+			<td width="50">&nbsp;</td>
+			<td width="200">보낸 사람</td>
+			<td width="auto" style="text-align: center;">내용</td>
+			<td width="200">발송시간</td>
+			<td width="200">확인시간</td>
 		</tr>
-		
-		<tr class="tr">
-			<td>항목1</td>
-			<td style="text-align: left;">1</td>
-			<td>2</td>
-			<td>3</td>
-		</tr>
-		<tr class="tr">
-			<td>항목2</td>
-			<td style="text-align: left;">1</td>
-			<td>2</td>
-			<td>3</td>
-		</tr>
-		<tr class="tr">
-			<td>항목3</td>
-			<td style="text-align: left;">1</td>
-			<td>2</td>
-			<td>3</td>
-		</tr>
+		<c:forEach var="dto" items="${list}">
+			<tr class="tr">
+				<td><input type="checkbox" id=""></td>
+				<c:if test="${msgType == 'send'}">
+					<td style="text-align: left;">${dto.toMemberName}</td>
+				</c:if>
+				<c:if test="${msgType != 'send'}">
+					<td style="text-align: left;">${dto.sendMemberName}</td>
+				</c:if>
+				<td style="text-align: left;">${dto.content}</td>
+				<td>${dto.sendTime}</td>
+				<td>${dto.readTime}</td>
+			</tr>
+		</c:forEach>
 	</table>
 	<br>
 	<div id='paginate'>	<%-- MyUtil.java 안에 있음. ${paging}으로 써야됨. --%>
