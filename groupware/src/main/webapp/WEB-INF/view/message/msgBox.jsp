@@ -44,8 +44,16 @@
 		<tr class="cf">
 			<%-- 구분 폭 수정 가능 --%>
 			<td width="50">&nbsp;</td>
-			<td width="200">보낸 사람</td>
-			<td width="auto" style="text-align: center;">내용</td>
+			<c:if test="${msgType == 'receive'}">
+				<td width="200" align="left">보낸 사람</td>
+			</c:if>
+			<c:if test="${msgType == 'send'}">
+				<td width="200" align="left">받는 사람</td>
+			</c:if>
+			<c:if test="${msgType == 'keep'}">
+				<td width="200" align="left">보낸(받는) 사람</td>
+			</c:if>
+			<td width="auto" align="left">제목</td>
 			<td width="200">발송시간</td>
 			<td width="200">확인시간</td>
 		</tr>
@@ -58,12 +66,13 @@
 				<c:if test="${msgType != 'send'}">
 					<td style="text-align: left;">${dto.sendMemberName}</td>
 				</c:if>
-				<td style="text-align: left;">${dto.content}</td>
+				<td style="text-align: left;"><a href="<%=cp%>/message/msgRead?msgNum=${dto.msgNum}&msgType=${msgType}&memberNum=${dto.sendMember}">${dto.subject}</a></td>
 				<td>${dto.sendTime}</td>
 				<td>${dto.readTime}</td>
 			</tr>
 		</c:forEach>
 	</table>
+	<div style="padding:5px 5px 5px 5px;"><button type="button">&nbsp;삭제&nbsp;</button>&nbsp;<button type="button">&nbsp;보관&nbsp;</button></div>
 	<br>
 	<div id='paginate'>	<%-- MyUtil.java 안에 있음. ${paging}으로 써야됨. --%>
 		<a href="#">처음</a>
@@ -74,10 +83,13 @@
 	</div>
 	
 	<div style="text-align:center;">
-	
-		<select class="selectBox">				<%-- 선택박스  --%>
-			<option>테스트 옵션1</option>
-			<option>테스트 옵션2</option>
+		<form name="searchForm" method="post" action="<%=cp%>/member/search">
+		<select class="selectBox" name="searchKey">				<%-- 선택박스  --%>
+			<option value="all">제목+내용</option>
+			<option value="subject">제목</option>
+			<option value="content">내용</option>
+			<option value="sendMember">보낸 사람</option>
+			<option value="receiveMember">받는 사람</option>
 		</select>
 		
 		<input type="text" class="searchBox">		<%-- 입력창 --%>
@@ -85,6 +97,7 @@
 		<button type="button" class="btn">검색</button>		<%-- 버튼 --%>
 		<br>
 		<button type="button" class="btn">테스트12</button>		<%-- 버튼 --%>
+		</form>
 	</div>
 	
 </div>

@@ -7,7 +7,7 @@
 %>
 <table class="tabs">
 	<tr>
-    	<th>메인 사이드 탭1</th>
+    	<th>쪽지</th>
     </tr>
     <tr>
     	<td><a href="<%=cp%>/message/msgWrite">쪽지 쓰기</a></td>

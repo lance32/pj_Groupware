@@ -32,14 +32,18 @@
 	<form name="msgWriteForm" method="post" action="<%=cp%>/message/msgWrite" >
 		<table style="width:100%; border-top: 2px solid #a1c9e4;">
 			<tr>
+				<td style="border-bottom: 1px dotted #dfdfdf; padding:5px; background: #f7f7f7; color: #595959; text-align:center; width: 15%;">제목</td>
+				<td style="background: #fff; width: 85%;"><input type="text" id="subject" name="subject" style="width: 80%; border: 1px solid #d7d7d7;"></td>
+			</tr>
+			<tr>
 				<td style="border-bottom: 1px dotted #dfdfdf; padding:5px; background: #f7f7f7; color: #595959; text-align:center; width: 15%;">받는이</td>
 				<td style="background: #fff; width: 85%;">
 					<span><input type="text" id="toMember" name="toMember" style="background: #fff; color: #333; width: 80%; border: 1px solid #d7d7d7;"></span>
-					<span><input type="button" id="" value="조직도"></span>
+					<span><input type="button" id="" value="&nbsp;조직도&nbsp;"></span>
 				</td>
 			</tr>
 			<tr>
-				<td colspan="2"><span><textarea id="content" name="content" rows="15" cols="45" style="width: 99%;"></textarea></span></td>
+				<td colspan="2"><div style="padding-top: 5px;"><textarea id="content" name="content" rows="15" cols="45" style="width: 99%;"></textarea></div></td>
 			</tr>
 		</table>
 		<span><input type="button" value="&nbsp;전송&nbsp;" onclick="send();"></span>
