@@ -8,7 +8,14 @@ public class Reply {
 	private String content;
 	private String created;
 	private int answer;
+	private int answerCount;
 	
+	public int getAnswerCount() {
+		return answerCount;
+	}
+	public void setAnswerCount(int answerCount) {
+		this.answerCount = answerCount;
+	}
 	public String getName() {
 		return name;
 	}

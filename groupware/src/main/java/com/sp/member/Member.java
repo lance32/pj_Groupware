@@ -1,6 +1,8 @@
 package com.sp.member;
 
 public class Member {
+	private int listmemberNum;
+	
 	private String memberNum, name, pwd;
 	private String email;
 	private String email1;
@@ -27,8 +29,27 @@ public class Member {
 	
 	private int departmentNum;
 	private int positionNum;
+	private String departmentName;
+	private String positionName;
 	
-	
+	public String getDepartmentName() {
+		return departmentName;
+	}
+	public void setDepartmentName(String departmentName) {
+		this.departmentName = departmentName;
+	}
+	public String getPositionName() {
+		return positionName;
+	}
+	public void setPositionName(String positionName) {
+		this.positionName = positionName;
+	}
+	public int getListmemberNum() {
+		return listmemberNum;
+	}
+	public void setListmemberNum(int listmemberNum) {
+		this.listmemberNum = listmemberNum;
+	}
 	public String getMemberNum() {
 		return memberNum;
 	}

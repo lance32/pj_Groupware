@@ -54,8 +54,15 @@ public class WorkLogServiceImpl implements WorkLogService{
 
 	@Override
 	public WorkLog readWorkLog(int workLogNum) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		WorkLog dto=null;
+		
+		try{
+			dto=dao.selectOne("workLog.readWorkLog", workLogNum);
+		} catch(Exception e) {
+			System.out.println(e.toString());
+		}
+		
+		return dto;
 	}
 
 	@Override

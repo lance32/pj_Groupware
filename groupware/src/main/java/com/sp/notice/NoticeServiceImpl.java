@@ -58,74 +58,147 @@ public class NoticeServiceImpl implements NoticeService {
 
 	@Override
 	public Notice readNotice(int num) {
-		// TODO Auto-generated method stub
-		return null;
+		Notice dto = null;
+		try {
+			dto = dao.selectOne("notice.readNotice", num);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return dto;
 	}
 
 	@Override
 	public int updateHitCount(int num) {
-		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		try {
+			result = dao.updateData("notice.updateHitCount", num);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
 	}
 
 	@Override
 	public Notice preReadNotice(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return null;
+		Notice dto = null;
+		try {
+			dto = dao.selectOne("notice.preReadNotice", map);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return dto;
 	}
 
 	@Override
 	public Notice nextReadNotice(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return null;
+		Notice dto = null;
+		try {
+			dto = dao.selectOne("notice.nextReadNotice", map);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return dto;
 	}
 
 	@Override
 	public int updateNotice(Notice dto, String pathname) {
-		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		try {
+			String saveFilename = fileManager.doFileUpload(dto.getUpload(), pathname);
+			if(saveFilename != null) {
+				if(dto.getSaveFilename() != null && dto.getSaveFilename().length() != 0)
+					fileManager.doFileDelete(dto.getSaveFilename(), pathname);
+				dto.setSaveFilename(saveFilename);
+				dto.setOriginalFilename(dto.getUpload().getOriginalFilename());
+			}
+			
+			dao.updateData("notice.updateNotice", dto);
+			result = 1;
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
 	}
 
 	@Override
-	public int deleteNotice(int num, String pathname, String memberNum) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int deleteNotice(int num, String pathname) {
+		int result = 0;
+		try {
+			if(pathname != null) {
+				fileManager.doFileDelete(pathname);
+			}
+			dao.deleteData("notice.deleteNotice", num);
+			result = 1;
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
 	}
 
 	@Override
 	public int insertReply(Reply dto) {
-		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		try {
+			result = dao.insertData("notice.insertReply", dto);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
 	}
 
 	@Override
 	public List<Reply> listReply(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Reply> list = null;
+		try {
+			list = dao.selectList("notice.listReply", map);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return list;
 	}
 
 	@Override
 	public int replyCount(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		try {
+			result = dao.selectOne("notice.replyCount", map);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
 	}
 
 	@Override
 	public int deleteReply(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		try {
+			result = dao.deleteData("notice.deleteReply", map);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
 	}
 
 	@Override
 	public List<Reply> listReplyAnswer(int answer) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Reply> list=null;
+		try {
+			list=dao.selectList("notice.listReplyAnswer", answer);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return list;
 	}
 
 	@Override
 	public int replyAnswerCount(int answer) {
-		// TODO Auto-generated method stub
-		return 0;
+		int result=0;
+		try {
+			result=dao.selectOne("notice.replyAnswerCount", answer);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
 	}
 
 }

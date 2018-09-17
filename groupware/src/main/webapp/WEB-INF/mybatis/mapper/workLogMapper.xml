@@ -14,9 +14,6 @@
 		<if test="searchKey=='subject'">
 			INSTR(subject,#{searchValue})&gt;0
 		</if>
-		<if test="searchKey=='name'">
-			INSTR(name,#{searchValue})&gt;0
-		</if>
 		<if test="searchKey=='makeDate'">
 		TO_CHAR(makeDate,'YYYY-MM-DD')makeDate=#{searchValue}
 		OR TO_CHAR(makeDate,'YYYYMMDD')makeDate=#{searchValue}
@@ -50,6 +47,15 @@
 		    )ss WHERE ROWNUM &lt;=#{end}
 		) WHERE rn &gt;=#{start}
 	
+	</select>
+	
+	<!-- 글읽기 -->
+	<select id="readWorkLog" resultType="com.sp.workLog.WorkLog" parameterType="Integer">
+		SELECT workLogNum, to_char(makeDate,'YYYY-MM-DD')makeDate, departmentName, name, subject, 
+		todayWork, nextdayWork, memo 
+		FROM workLog w JOIN member m ON w.memberNum =m.memberNum
+		JOIN department d on m.departmentNum = d.departmentNum
+		WHERE workLogNum = #{WorkLogNum}
 	</select>
 	
 	
