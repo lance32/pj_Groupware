@@ -13,7 +13,7 @@
 		<div style="clear: both; width: 300px; height: 1px; border-bottom: 3px solid black;"></div>
 	</div>
 	
-	<table style="width:100%; border-top: 2px solid #a1c9e4;">
+	<table style="width:100%; border-top: 2px solid #a1c9e4; border-bottom: 2px solid #a1c9e4;">
 		<tr>
 			<td style="border-bottom: 1px dotted #dfdfdf; padding:5px; background: #f7f7f7; color: #595959; text-align:center; width: 15%;">제목</td>
 			<td style="background: #fff; width: 85%;">${msg.subject}</td>
@@ -40,5 +40,10 @@
 			</td>
 		</tr>
 	</table>
+	<div style="padding-top: 5px;">
+		<button type="button" id="listBtn">&nbsp;리스트&nbsp;</button>&nbsp;
+		<button type="button" id="keepBtn">&nbsp;보관&nbsp;</button>&nbsp;
+		<button type="button" id="deleteBtn">&nbsp;삭제&nbsp;</button>
+	</div>
 
 </div>

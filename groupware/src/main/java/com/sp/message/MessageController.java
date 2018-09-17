@@ -1,6 +1,7 @@
 package com.sp.message;
 
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,9 +48,9 @@ public class MessageController {
 	}
 	
 	// 받은 쪽지
-	@RequestMapping(value="/message/msgReceive", method=RequestMethod.GET)
+	@RequestMapping(value="/message/msgReceive")
 	public String receiveList(
-			@RequestParam(value="page", defaultValue="1") String currentPage,
+			@RequestParam(value="page", defaultValue="1") int currentPage,
 			@RequestParam(value="searchKey", defaultValue="subject") String searchKey,
 			@RequestParam(value="searchValue", defaultValue="") String searchValue,
 			HttpServletRequest req,
@@ -66,51 +67,182 @@ public class MessageController {
 		map.put("searchKey", searchKey);
 		map.put("searchValue", searchValue);
 		
-		
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		map.put("memberNum", info.getUserId());
 		map.put("type", "receive");
 
 		dataCount = service.getDataCount(map);
-		
 		logger.info(">>>>>>>>>>> datacount : " + dataCount);
+		if (dataCount != 0)
+			totalPage = myUtil.pageCount(rows, dataCount);
+		
+		if (totalPage< currentPage)
+			currentPage = totalPage;
+		
+		int start = (currentPage - 1) * rows + 1;
+		int end = currentPage * rows;
+		map.put("start", start);
+		map.put("end", end);
 		
 		List<Message>list = service.listMessage(map);
+
+		String query = "";
+		String cp = req.getContextPath();
+		String listUrl = cp + "/message/msgReceive";
+		String articleUrl = cp + "/message/msgRead?page=" + currentPage;
+		if (searchValue.length() != 0) {
+			query = "searchKey=" + searchKey + "&searchValue=" + URLEncoder.encode(searchValue, "utf-8");
+		}
+		
+		if (query.length() != 0) {
+			listUrl = cp + "/message/msgRecevice?" + query;
+			articleUrl = cp + "/message/msgForm?page=" + currentPage + "&" + query;
+		}
+		
+		String paging = myUtil.paging(currentPage, totalPage, listUrl);
 		
 		model.addAttribute("msgType", "receive");
 		model.addAttribute("list", list);
+		model.addAttribute("articleUrl", articleUrl);
+		model.addAttribute("page", currentPage);
+		model.addAttribute("dataCount", dataCount);
+		model.addAttribute("totalPage", totalPage);
+		model.addAttribute("paging", paging);
 		
 		return ".message.msgBox";
 	}
 	
 	// 보낸 쪽지
-	@RequestMapping(value="/message/msgSend", method=RequestMethod.GET)
-	public String sendList(HttpSession session, Model model) throws Exception {
-		SessionInfo info = (SessionInfo)session.getAttribute("member");
+	@RequestMapping(value="/message/msgSend")
+	public String sendList(			
+			@RequestParam(value="page", defaultValue="1") int currentPage,
+			@RequestParam(value="searchKey", defaultValue="subject") String searchKey,
+			@RequestParam(value="searchValue", defaultValue="") String searchValue,
+			HttpServletRequest req,
+			Model model) throws Exception {
+		
+		int rows = 10;
+		int totalPage = 0;
+		int dataCount = 0;
+		
+		if (req.getMethod().equalsIgnoreCase("GET")) {
+			searchValue = URLDecoder.decode(searchValue, "utf-8");
+		}
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("type", "send");
+		map.put("searchKey", searchKey);
+		map.put("searchValue", searchValue);
+		
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		map.put("memberNum", info.getUserId());
+		map.put("type", "send");
+
+		dataCount = service.getDataCount(map);
+		logger.info(">>>>>>>>>>> datacount : " + dataCount);
+		if (dataCount != 0)
+			totalPage = myUtil.pageCount(rows, dataCount);
+		
+		if (totalPage< currentPage)
+			currentPage = totalPage;
+		
+		int start = (currentPage - 1) * rows + 1;
+		int end = currentPage * rows;
+		map.put("start", start);
+		map.put("end", end);
 		
 		List<Message>list = service.listMessage(map);
+
+		String query = "";
+		String cp = req.getContextPath();
+		String listUrl = cp + "/message/msgSend";
+		String articleUrl = cp + "/message/msgRead?page=" + currentPage;
+		if (searchValue.length() != 0) {
+			query = "searchKey=" + searchKey + "&searchValue=" + URLEncoder.encode(searchValue, "utf-8");
+		}
+		
+		if (query.length() != 0) {
+			listUrl = cp + "/message/msgSend?" + query;
+			articleUrl = cp + "/message/msgForm?page=" + currentPage + "&" + query;
+		}
+		
+		String paging = myUtil.paging(currentPage, totalPage, listUrl);
+		
 		model.addAttribute("msgType", "send");
 		model.addAttribute("list", list);
+		model.addAttribute("articleUrl", articleUrl);
+		model.addAttribute("page", currentPage);
+		model.addAttribute("dataCount", dataCount);
+		model.addAttribute("totalPage", totalPage);
+		model.addAttribute("paging", paging);
 		
 		return ".message.msgBox";
 	}
 	
 	// 보관 쪽지
-	@RequestMapping(value="/message/msgKeep", method=RequestMethod.GET)
-	public String list(HttpSession session, Model model) throws Exception {
-		SessionInfo info = (SessionInfo)session.getAttribute("member");
+	@RequestMapping(value="/message/msgKeep")
+	public String list(
+			@RequestParam(value="page", defaultValue="1") int currentPage,
+			@RequestParam(value="searchKey", defaultValue="subject") String searchKey,
+			@RequestParam(value="searchValue", defaultValue="") String searchValue,
+			HttpServletRequest req,
+			Model model) throws Exception {
+		
+		int rows = 10;
+		int totalPage = 0;
+		int dataCount = 0;
+		
+		if (req.getMethod().equalsIgnoreCase("GET")) {
+			searchValue = URLDecoder.decode(searchValue, "utf-8");
+		}
 		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("searchKey", searchKey);
+		map.put("searchValue", searchValue);
+		
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		map.put("memberNum", info.getUserId());
+		map.put("type", "keep");
+
+		dataCount = service.getDataCount(map);
+		logger.info(">>>>>>>>>>> datacount : " + dataCount);
+		if (dataCount != 0)
+			totalPage = myUtil.pageCount(rows, dataCount);
+		
+		if (totalPage< currentPage)
+			currentPage = totalPage;
+		
+		int start = (currentPage - 1) * rows + 1;
+		int end = currentPage * rows;
+		map.put("start", start);
+		map.put("end", end);
 		map.put("keep", 1);
 		
 		List<Message>list = service.listMessage(map);
-		model.addAttribute("list", list);
-		model.addAttribute("msgType", "keep");
+
+		String query = "";
+		String cp = req.getContextPath();
+		String listUrl = cp + "/message/msgKeep";
+		String articleUrl = cp + "/message/msgRead?page=" + currentPage;
+		if (searchValue.length() != 0) {
+			query = "searchKey=" + searchKey + "&searchValue=" + URLEncoder.encode(searchValue, "utf-8");
+		}
 		
+		if (query.length() != 0) {
+			listUrl = cp + "/message/msgKeep?" + query;
+			articleUrl = cp + "/message/msgForm?page=" + currentPage + "&" + query;
+		}
+		
+		String paging = myUtil.paging(currentPage, totalPage, listUrl);
+		
+		model.addAttribute("msgType", "keep");
+		model.addAttribute("list", list);
+		model.addAttribute("articleUrl", articleUrl);
+		model.addAttribute("page", currentPage);
+		model.addAttribute("dataCount", dataCount);
+		model.addAttribute("totalPage", totalPage);
+		model.addAttribute("paging", paging);
+
 		return ".message.msgBox";
 	}
 	
@@ -127,7 +259,7 @@ public class MessageController {
 			service.updateReadTime(msgNum);
 		
 		Message msg = service.readMessage(msgNum);
-		msg.setContent(myUtil.htmlSymbols(msg.getContent()));
+//		msg.setContent(myUtil.htmlSymbols(msg.getContent()));
 		
 		model.addAttribute("msgType", msgType);
 		model.addAttribute("msg", msg);

@@ -21,7 +21,7 @@
 		</if>
 		
 		<if test="searchKey == 'receiveMember'">
-			INSTR(receiveMember, #{receiveMember}) &gt;= 1
+			INSTR(toMember, #{toMember}) &gt;= 1
 		</if>
 	</sql>
 
@@ -32,32 +32,41 @@
 				<include refid="where-list"/>
 			</if>
 			<if test="type == 'receive'">
-				AND INSTR(sendMember, #{memberNum}) &gt;= 1
+				AND INSTR(toMember, #{memberNum}) &gt;= 1
 			</if>
 			<if test="type == 'send'">
 				AND INSTR(sendMember, #{memberNum}) &gt;= 1
 			</if>
 			<if test="type == 'keep'">
 				AND msgKeep = 1 
-				AND (INSTR(sendMember, #{memberNum}) &gt;= 1 OR INSTR(sendMember, #{memberNum}) &gt;= 1)
+				AND (INSTR(toMember, #{memberNum}) &gt;= 1 OR INSTR(sendMember, #{memberNum}) &gt;= 1)
 			</if>
 		</where>
 	</select>
 	
 	<select id="msgList" resultType="com.sp.message.Message" parameterType="map">
-		SELECT msgNum, subject, content, sendTime, readTime, msgKeep, sendMember, toMember, s.name sendMemberName, t.name toMemberName
-		FROM message m INNER JOIN member s ON m.sendMember = s.memberNum INNER JOIN member t ON m.toMember = t.memberNum
-		WHERE 
-		<if test="type == 'receive'">	<!-- 받은 쪽지 -->
-			toMember = #{memberNum}
-		</if>
-		<if test="type == 'send'">		<!-- 보낸 쪽지 -->
-			sendMember = #{memberNum} 
-		</if>
-		<if test="keep == 1">			<!-- 보관 -->
-			(sendMember = #{memberNum} OR toMember = #{memberNum})
-			AND msgKeep = 1
-		</if>
+		SELECT * FROM (
+			SELECT ROWNUM rnum, tb.* FROM (
+				SELECT msgNum, subject, content, sendTime, readTime, msgKeep, sendMember, toMember, s.name sendMemberName, t.name toMemberName
+				FROM message m INNER JOIN member s ON m.sendMember = s.memberNum INNER JOIN member t ON m.toMember = t.memberNum
+				<where>
+					<if test="searchValue != null and searchValue != ''">
+						<include refid="where-list" />
+					</if>
+					<if test="type == 'receive'">	<!-- 받은 쪽지 -->
+						AND toMember = #{memberNum}
+					</if>
+					<if test="type == 'send'">		<!-- 보낸 쪽지 -->
+						AND sendMember = #{memberNum} 
+					</if>
+					<if test="keep == 1">			<!-- 보관 -->
+						AND (sendMember = #{memberNum} OR toMember = #{memberNum})
+						AND msgKeep = 1
+					</if>
+				</where>
+				ORDER BY msgNum DESC
+			) tb WHERE ROWNUM &lt;= #{end}
+		) WHERE rnum &gt;= #{start}
 	</select>
 	
 	<select id="msgRead" resultType="com.sp.message.Message" parameterType="Integer">
@@ -72,7 +81,7 @@
 	</insert>
 	
 	<update id="msgUpdateReadTime" parameterType="Integer">
-		UPDATE message SET readTime = SYSDATE WHERE msgNum = #{msgNum}
+		UPDATE message SET readTime = SYSDATE WHERE msgNum = #{msgNum} AND readTime IS NULL
 	</update>
 	
 	<update id="msgSetMsgKeep" parameterType="map">
