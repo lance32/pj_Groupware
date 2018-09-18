@@ -64,6 +64,7 @@ $(function(){
         $("form[name=boardManageForm]").submit();
 	});
 });
+
 </script>
 
 <div style="clear: both; margin: 10px 0px 15px 10px;">
@@ -72,46 +73,50 @@ $(function(){
 	<div style="clear: both; width: 300px; height: 1px; border-bottom: 3px solid black;"></div>
 </div>
 <br>
+<p style="color: red;">${msg }</p>
 <div class="container">
   <form name="boardManageForm" method="post">
     <div class="form-group">
       <label for="boardName">게시판 제목</label>
-      <input type="text" class="form-control" placeholder="게시판 제목으로, 필수 입력 사항 입니다." name="boardName" style="width:70%;">
+      <input type="text" class="form-control" placeholder="게시판 제목으로, 필수 입력 사항 입니다." name="boardName" value="${dto.boardName }" style="width:70%;">
     </div>
 
     <div class="form-group">
       <label for="tableName">게시판 주소</label>
-      <input type="text" class="form-control" placeholder="2~20자 이내의 영어 소문자만 가능하며, 필수 입력 사항 입니다." name="tableName" style="width:70%;">
+      <input type="text" class="form-control" placeholder="2~20자 이내의 영어 소문자만 가능하며, 필수 입력 사항 입니다." name="tableName" value="${dto.tableName }" style="width:70%;">
     </div>
 
     <div class="form-group">
       <label for="permit">글쓰기 권한</label><br>
-      <input type="radio" name="permit" value="0">
+      <input type="radio" name="permit" value="0" ${dto.writePermit==0?"checked='checked';":"" }>
       <span style="font-size: 17px;">관 리 자</span> &nbsp;&nbsp;&nbsp; 
-      <input type="radio" name="permit" value="1">
+      <input type="radio" name="permit" value="1" ${dto.writePermit==1?"checked='checked';":"" }>
       <span style="font-size: 17px;">회 원</span> &nbsp;&nbsp;&nbsp; 
     </div>
     
     <div class="form-group">
       <label for="subMenu">메 뉴 위 치</label>
-      <input type="text" class="form-control" placeholder="숫자만 가능하며 화면 좌측의 메뉴에 위치할 인덱스(1부터 시작) 입니다." name="subMenu" style="width:70%;">
+      <input type="text" class="form-control" placeholder="숫자만 가능하며 화면 좌측의 메뉴에 위치할 인덱스(1부터 시작) 입니다." name="subMenu" value="${dto.subMenu }" style="width:70%;">
     </div>
 
    	<div class="form-group">
       <label for="leftMenu">사이드 메뉴</label>
-      <input type="text" class="form-control" placeholder="메뉴에 추가할 sidetabs 파일을 가진 폴더명(예:menu2)입니다." name="leftMenu" style="width:70%;">
+      <input type="text" class="form-control" placeholder="메뉴에 추가할 sidetabs 파일을 가진 폴더명(예:menu2)입니다." name="leftMenu" value="${dto.leftMenu }" style="width:70%;">
     </div>
 
    	<div class="form-group">
       <label for="tableName">게시판 옵션</label><br>
-		<span><input type="checkbox" name="canAnswer" value="1"> 답변형</span>&nbsp;&nbsp;&nbsp;
-		<span><input type="checkbox" name="canFile" value="1"> 파일첨부</span>&nbsp;&nbsp;&nbsp;
-		<span><input type="checkbox" name="canLike" value="1"> 게시글 추천</span>&nbsp;&nbsp;&nbsp;
-		<span><input type="checkbox" name="canReply" value="1"> 리플형</span>&nbsp;&nbsp;&nbsp;
-		<span><input type="checkbox" name="canReplyLike" value="1"> 리플 추천</span>
+		<span><input type="checkbox" name="canAnswer" value="1" ${dto.canAnswer==1?"checked='checked';":"" }> 답변형</span>&nbsp;&nbsp;&nbsp;
+		<span><input type="checkbox" name="canFile" value="1" ${dto.canFile==1?"checked='checked';":"" }> 파일첨부</span>&nbsp;&nbsp;&nbsp;
+		<span><input type="checkbox" name="canLike" value="1" ${dto.canLike==1?"checked='checked';":"" }> 게시글 추천</span>&nbsp;&nbsp;&nbsp;
+		<span><input type="checkbox" name="canReply" value="1" ${dto.canReply==1?"checked='checked';":"" }> 리플형</span>&nbsp;&nbsp;&nbsp;
+		<span><input type="checkbox" name="canReplyLike" value="1" ${dto.canReplyLike==1?"checked='checked';":"" }> 리플 추천</span>
     </div>
     
-    <button type="button" class="btn" id="btnCreateBoard">생 성 하 기</button>
+   	<c:if test="${mode=='update'}">
+   		<input type="hidden" name="boardNum" value="${dto.boardNum}">
+	</c:if>
+    <button type="button" class="btn" id="btnCreateBoard">${mode=='update'?'수정완료':'생성하기'}</button>
     <button type="reset" class="btn">초 기 화</button>
     <button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/boardManage/list';">돌 아 가 기</button>
   </form>
