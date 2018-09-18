@@ -1,8 +1,13 @@
 package com.sp.member;
 
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +19,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.sp.common.MyUtil;
+
+
 @Controller("member.memberController")
 public class MemberController {
 	@Autowired
@@ -21,6 +29,9 @@ public class MemberController {
 	
 	@Autowired
 	private BCryptPasswordEncoder bcryptEncoder;
+	
+	@Autowired
+	private MyUtil util;
 	
 	// 변경할 시작 부분 ----------------------------------------------------------------------
 	@RequestMapping(value="/login", method=RequestMethod.GET)
@@ -32,10 +43,86 @@ public class MemberController {
 		
 		return "/member/login";
 	}
+	
+	//최초 로그인 체크
+	@RequestMapping(value="/login", method=RequestMethod.POST)
+	public String firstLoginCheck(Member dto) {
+		
+		
+		return "";
+	}
 	// 변경할 끝 부분 ----------------------------------------------------------------------
 	@RequestMapping(value="/member/main")
-	public String memberList() {
-	
+	public String memberList(@RequestParam(value="page", defaultValue="1") int current_page,
+			@RequestParam(value="searchKey", defaultValue="subject") String searchKey,
+			@RequestParam(value="searchValue", defaultValue="") String searchValue,
+			HttpServletRequest req,
+			Model model) throws Exception{
+		
+		String cp=req.getContextPath();
+		
+		if(req.getMethod().equalsIgnoreCase("GET")) { // GET 방식인 경우
+			searchValue = URLDecoder.decode(searchValue, "utf-8");
+		}
+		
+		int rows = 10; // 한 화면에 보여주는 게시물 수
+		int total_page = 0;
+		int dataCount = 0;
+		
+        // 전체 페이지 수
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("searchKey", searchKey);
+        map.put("searchValue", searchValue);
+
+        dataCount = service.dataCount(map);
+        if(dataCount != 0)
+            total_page = util.pageCount(rows, dataCount) ;
+
+        // 다른 사람이 자료를 삭제하여 전체 페이지수가 변화 된 경우
+        if(total_page < current_page) 
+            current_page = total_page;
+
+        // 리스트에 출력할 데이터를 가져오기
+        int start = (current_page - 1) * rows + 1;
+        int end = current_page * rows;
+        map.put("start", start);
+        map.put("end", end);
+
+        // 글 리스트
+        List<Member> list = service.ListMember(map);
+
+        // 리스트의 번호
+        int listmemberNum, n = 0;
+        Iterator<Member> it=list.iterator();
+        while(it.hasNext()) {
+            Member data = it.next();
+            listmemberNum = dataCount - (start + n - 1);
+            data.setListmemberNum(listmemberNum);
+            n++;
+        }
+        
+        String query = "";
+        String listUrl = cp+"/member/main";
+        String articleUrl = cp+"/member/article?page=" + current_page;
+        if(searchValue.length()!=0) {
+        	query = "searchKey=" +searchKey + 
+        	         "&searchValue=" + URLEncoder.encode(searchValue, "utf-8");	
+        }
+        
+        if(query.length()!=0) {
+        	listUrl = cp+"/member/main?" + query;
+        	articleUrl = cp+"/member/article?page=" + current_page + "&"+ query;
+        }
+        
+        String paging = util.paging(current_page, total_page, listUrl);
+
+        model.addAttribute("list", list);
+        model.addAttribute("articleUrl", articleUrl);
+        model.addAttribute("page", current_page);
+        model.addAttribute("dataCount", dataCount);
+        model.addAttribute("total_page", total_page);
+        model.addAttribute("paging", paging);
+		
 		return ".member.main";
 	}
 
@@ -43,41 +130,48 @@ public class MemberController {
 	@RequestMapping(value="/member/member", method=RequestMethod.GET)
 	public String createdForm(Model model) throws Exception {
 		// 회원 가입 폼
+		
+		//부서,직급에 대한 정보를 가져와 리스트로 저장
+		List<Map<String, Object>> departmentList=service.departmentList();
+		List<Map<String, Object>> positionList=service.positionList();
+		
+		
+		model.addAttribute("departmentList",departmentList);
+		model.addAttribute("positionList",positionList);
 		model.addAttribute("mode", "created");
 		return ".member.member";
 	}
 
 	@RequestMapping(value="/member/member", method=RequestMethod.POST)
-	public String createdSubmit(Member member, Model model) throws Exception {
+	public String createdSubmit(Member dto, Model model) throws Exception {
 		// 회원 가입
-		
 		
 		// 패스워드 암호화
 		String encPwd="1111";
 		encPwd=bcryptEncoder.encode(encPwd);
-		member.setPwd(encPwd);
+		dto.setPwd(encPwd);
 		
 		try {
-			service.insertMember(member);
+			service.insertMember(dto);
 		}catch(Exception e) {
-//			model.addAttribute("message", "회원가입이 실패했습니다. 다른 아이디로 다시 가입하시기 바랍니다.");
-//			model.addAttribute("mode", "created");
-//			return ".member.member";
+			model.addAttribute("message", "회원가입이 실패했습니다. 다른 아이디로 다시 가입하시기 바랍니다.");
+			model.addAttribute("mode", "created");
+			return ".member.member";
 		}
 		
-//		StringBuffer sb=new StringBuffer();
-//		sb.append(member.getName()+ "님의 회원 가입이 정상적으로 처리되었습니다.<br>");
-//		sb.append("로그인화면에서  로그인 하시기 바랍니다.<br>");
-//		
-//		model.addAttribute("title", "회원 가입");
-//		model.addAttribute("message", sb.toString());
+		StringBuffer sb=new StringBuffer();
+		sb.append(dto.getName()+ "님의 회원 가입이 정상적으로 처리되었습니다.<br>");
+		sb.append("로그인화면에서  로그인 하시기 바랍니다.<br>");
+		
+		model.addAttribute("title", "회원 가입");
+		model.addAttribute("message", sb.toString());
 		
 		return ".member.main";
 	}
 	
 	@RequestMapping(value="/member/memberNumCheck")
 	@ResponseBody
-	public Map<String, Object> memberNUmCheck(
+	public Map<String, Object> memberNumCheck(
 			@RequestParam(value="memberNum") String memberNum
 			) throws Exception {
 		// 아이디 중복 검사
@@ -93,7 +187,8 @@ public class MemberController {
 		return map;
 	}
 	
-	@RequestMapping(value="/member/pwd", method=RequestMethod.GET)
+	//최초 로그인시 비밀번호 변경
+	@RequestMapping(value="/member/changepwd", method=RequestMethod.GET)
 	public String pwdForm(
 			String dropout,
 			Model model,

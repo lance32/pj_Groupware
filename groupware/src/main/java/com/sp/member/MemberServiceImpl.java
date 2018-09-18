@@ -1,5 +1,8 @@
 package com.sp.member;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,6 +55,59 @@ public class MemberServiceImpl implements MemberService {
 		}
 		
 	}
+
+	@Override
+	public void firstLoginMember(Member dto) throws Exception {
+		
+		
+	}
+
+	@Override
+	public int dataCount(Map<String, Object> map) {
+		int result =0;
+		
+		try {
+			result=dao.selectOne("member.dataCount", map);
+		} catch (Exception e) {
+		}
+		
+		return result;
+	}
+
+	@Override
+	public List<Member> ListMember(Map<String, Object> map) {
+		List<Member> listmember=null;
+		
+		try {
+			listmember=dao.selectList("member.listMember", map);
+		} catch (Exception e) {
+		}
+		return listmember;
+	}
+	//부서 DB 데이터 가져오기
+	@Override
+	public List<Map<String, Object>> departmentList() {
+		List<Map<String, Object>> departmentList=null;
+		try {
+			departmentList=dao.selectList("member.departmentList");
+			} catch (Exception e) {
+				
+			}
+		return departmentList;
+	}
+	//직급 DB 데이터 가져오기
+	@Override
+	public List<Map<String, Object>> positionList() {
+		List<Map<String, Object>> positionList=null;
+			try {
+				positionList=dao.selectList("member.positionList");
+			} catch (Exception e) {
+				
+			}
+			
+		return positionList;
+	}
+
 
 
 }

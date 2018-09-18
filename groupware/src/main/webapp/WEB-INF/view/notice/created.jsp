@@ -19,6 +19,17 @@ $(function(){
         $("form[name=noticeForm]").attr("action","<%=cp%>/notice/${mode}");
         $("form[name=noticeForm]").submit();
 	});
+	
+	$("#chkDelete").click(function(){
+		var num = "${dto.num}";
+		var page = "${page}";
+		var query = "num="+num+"&page="+page;
+		var url = "<%=cp%>/notice/deleteFile?"+query;
+		
+		if(confirm("정말 파일을 삭제 하시겠습니까? 수정을 취소하더라도 삭제 된 파일은 복구되지 않습니다.")){
+			location.href = url;
+		}
+	});
 });
 </script>
 
@@ -36,9 +47,9 @@ $(function(){
 				<div class="form-group">
 					<label for="pass">공지여부</label><br>
 					<fieldset>
-						<input type="radio" name="notice" value="0">
+						<input type="radio" name="notice" value="0" ${dto.notice == '0'?"checked='checked'":""}>
 						<span style="font-size: 20px;">일반공지</span> &nbsp;&nbsp;&nbsp; 
-						<input type="radio" name="notice" value="1">
+						<input type="radio" name="notice" value="1" ${dto.notice == '1'?"checked='checked'":""}>
 						<span style="font-size: 20px;">긴급공지</span>
 					</fieldset>
 				</div>
@@ -47,25 +58,43 @@ $(function(){
 
 		<div class="form-group">
 			<label for="subject">제 목</label>
-			<input type="text" class="form-control" name="subject" placeholder="제목을 입력하세요.">
+			<input type="text" class="form-control" name="subject" placeholder="제목을 입력하세요." value="${dto.subject}">
 		</div>
 
 
 		<div class="form-group">
 			<label for="content">내 용</label>
-			<textarea class="form-control" rows="20" name="content" style="resize: none;"></textarea>
+			<textarea class="form-control" rows="20" name="content" style="resize: none;">${dto.content }</textarea>
 
 		</div>
 
 		<div class="form-group">
 			<label for="File">파 일 첨 부</label> <input type="file" name="upload">
 		</div>
+		
+		<c:if test="${mode=='update'}">
+				  <tr align="left" height="40" style="border-bottom: 1px solid #cccccc;">
+				      <td width="100" bgcolor="#eeeeee" style="text-align: center;">첨부된파일</td>
+				      <td style="padding-left:10px;"> 
+				          ${dto.originalFilename}
+				          <c:if test="${not empty dto.saveFilename}">
+				          		| <a id="chkDelete">파일삭제</a>
+				          </c:if>
+				       </td>
+				  </tr>
+		</c:if>
 
 		<div class="center-block" style='width: 300px'>
-			<button type="button" class="btn" id="btnSend">작 성 하 기</button>
+			<button type="button" class="btn" id="btnSend">${mode=='update'?'수 정 완 료':'등 록 하 기'}</button>
 			<button type="reset" class="btn">다 시 쓰 기</button>
-			<button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/notice/list';">뒤 로 가 기</button>
+			<button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/notice/list';">${mode=='update'?'수 정 취 소':'뒤 로 가 기'}</button>
 		</div>
 		
+		<c:if test="${mode=='update'}">
+			<input type="hidden" name="num" value="${dto.num}">		
+			<input type="hidden" name="saveFilename" value="${dto.saveFilename}">
+			<input type="hidden" name="originalFilename" value="${dto.originalFilename}">
+			<input type="hidden" name="page" value="${page}">
+		</c:if>
 	</form>
 </div>
