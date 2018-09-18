@@ -12,6 +12,6 @@ public class ChattingController {
 	}
 	@RequestMapping(value="/chat/chatList2")
 	public String chatList2(){
-		return ".chat.chatList_2";
+		return ".chat.NewFile";
 	}
 }
