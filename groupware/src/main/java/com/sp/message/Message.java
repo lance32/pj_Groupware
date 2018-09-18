@@ -2,6 +2,7 @@ package com.sp.message;
 
 public class Message {
 	private int msgNum;
+	private String subject;
 	private String content;
 	private String sendTime;
 	private String readTime;
@@ -11,6 +12,12 @@ public class Message {
 	private String toMember;
 	private String toMemberName;
 	
+	public String getSubject() {
+		return subject;
+	}
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
 	public String getSendMemberName() {
 		return sendMemberName;
 	}
