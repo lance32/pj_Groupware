@@ -32,14 +32,21 @@
 				<include refid="where-list"/>
 			</if>
 			<if test="type == 'receive'">
+				AND msgKeep = 0 
 				AND INSTR(toMember, #{memberNum}) &gt;= 1
 			</if>
 			<if test="type == 'send'">
+				AND msgKeep = 0
 				AND INSTR(sendMember, #{memberNum}) &gt;= 1
 			</if>
 			<if test="type == 'keep'">
 				AND msgKeep = 1 
 				AND (INSTR(toMember, #{memberNum}) &gt;= 1 OR INSTR(sendMember, #{memberNum}) &gt;= 1)
+			</if>
+			<if test="type == 'unread'">
+				AND msgKeep = 0 
+				AND INSTR(toMember, #{memberNum}) &gt;= 1
+				AND readTime IS NULL
 			</if>
 		</where>
 	</select>
@@ -55,9 +62,11 @@
 					</if>
 					<if test="type == 'receive'">	<!-- 받은 쪽지 -->
 						AND toMember = #{memberNum}
+						AND msgKeep = 0
 					</if>
 					<if test="type == 'send'">		<!-- 보낸 쪽지 -->
 						AND sendMember = #{memberNum} 
+						AND msgKeep = 0
 					</if>
 					<if test="keep == 1">			<!-- 보관 -->
 						AND (sendMember = #{memberNum} OR toMember = #{memberNum})

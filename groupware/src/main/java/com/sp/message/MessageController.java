@@ -17,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sp.common.MyUtil;
 import com.sp.member.SessionInfo;
@@ -262,6 +263,7 @@ public class MessageController {
 //		msg.setContent(myUtil.htmlSymbols(msg.getContent()));
 		
 		model.addAttribute("msgType", msgType);
+		model.addAttribute("msgNum", msgNum);
 		model.addAttribute("msg", msg);
 		
 		return ".message.msgForm";
@@ -269,19 +271,61 @@ public class MessageController {
 	
 	// 쪽지 삭제
 	@RequestMapping(value="/message/msgDelete", method=RequestMethod.GET)
-	public String delete(@RequestParam(value="msgNum") int msgNum, @RequestParam(value="msgType") String msgType) throws Exception {
-		service.deleteMessage(msgNum);
+	public String delete(
+			@RequestParam(value="msgNum") Integer[] msgNum, 
+			@RequestParam(value="msgType") String msgType
+	) throws Exception {
+		for (int i = 0; i < msgNum.length; i++) {
+			service.deleteMessage(msgNum[i]);
+		}
 		
 		if (msgType.equalsIgnoreCase("send"))
 			return "redirect:/message/msgSend";
-		
-		return "redirect:/message/msgReceive";
+		else if (msgType.equalsIgnoreCase("receive"))
+			return "redirect:/message/msgReceive";
+		else 
+			return "redirect:/message/msgKeep";
 	}
 	
 	// 쪽지 보관
 	@RequestMapping(value="/message/setMsgKeep", method=RequestMethod.GET)
-	public String keep(@RequestParam(value="msgNum") int msgNum, @RequestParam(value="msgKeep") int msgKeep) throws Exception {
-		service.setMsgKeep(msgNum, msgKeep);
+	public String keep(
+			@RequestParam(value="msgNum") Integer[] msgNum, 
+			@RequestParam(value="msgKeep", defaultValue="1") int msgKeep
+		) throws Exception {
+		for (int i = 0; i < msgNum.length; i++) {
+			service.setMsgKeep(msgNum[i], msgKeep);
+		}
+		
 		return "redirect:/message/msgKeep";
+	}
+	
+	// 쪽지 카운트
+	@RequestMapping(value="/message/getMessageCount", method=RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> countMessage(HttpSession session) throws Exception {
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("memberNum", info.getUserId());
+		map.put("type", "send");
+		int send = service.getDataCount(map);
+		
+		map.put("type", "receive");
+		int receive = service.getDataCount(map);
+		
+		map.put("type", "keep");
+		int keep = service.getDataCount(map);
+		
+		map.put("type", "unread");
+		int unread = service.getDataCount(map);
+		
+		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("send", send);
+		model.put("receive", receive);
+		model.put("unread", unread);
+		model.put("keep", keep);
+		
+		
+		return model;
 	}
 }
