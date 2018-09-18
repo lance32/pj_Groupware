@@ -31,12 +31,12 @@ $(function() {
     	<td><a href="<%=cp%>/message/msgWrite">쪽지 쓰기</a></td>
     </tr>
     <tr>
-    	<td><a href="<%=cp%>/message/msgReceive" id="receive">받은 쪽지(0/10)</a></td>
+    	<td><a href="<%=cp%>/message/msgReceive" id="receive">받은 쪽지</a></td>
     </tr>
     <tr>
-    	<td><a href="<%=cp%>/message/msgSend" id="send">보낸 쪽지 10</a></td>
+    	<td><a href="<%=cp%>/message/msgSend" id="send">보낸 쪽지</a></td>
     </tr>
     <tr>
-    	<td><a href="<%=cp%>/message/msgKeep" id="keep">보관 쪽지 1</a></td>
+    	<td><a href="<%=cp%>/message/msgKeep" id="keep">보관 쪽지</a></td>
     </tr>
 </table>
