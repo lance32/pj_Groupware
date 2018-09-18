@@ -14,7 +14,7 @@ public interface MemberService {
 	
 	public List<Map<String, Object>> departmentList();
 	public List<Map<String, Object>> positionList();
-//	public void updateMember(Member dto) throws Exception;
+	public void updateMember(Member dto) throws Exception;
 //	public int updateLastLogin(String userId);
 //	
 //	public int deleteMember(String userId);

@@ -48,7 +48,7 @@ function searchMember(){
 	<table id="tb" style="width: 1000px;"><%-- 테이블 길이 수정 가능 --%>
 		<tr>
 			<td id="count" colspan="2">
-				3개(1/1 페이지)
+				${dataCount}개(${page}/${total_page} 페이지)
 			</td>
 			<td></td><td></td>
 		</tr>
@@ -82,11 +82,7 @@ function searchMember(){
 	</table>
 	<br>
 	<div id='paginate'>	<%-- MyUtil.java 안에 있음. ${paging}으로 써야됨. --%>
-		<a href="#">처음</a>
-		<span class="curBox">1</span>
-		<a href="#" class="numBox">2</a>
-		<a href="#" class="numBox">3</a>
-		<a href="#">다음</a>
+		${paging}
 	</div>
 	
 	<table id="tb" style="width: 1000px;">

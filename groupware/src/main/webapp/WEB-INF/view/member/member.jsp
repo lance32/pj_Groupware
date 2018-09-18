@@ -233,8 +233,17 @@ function memberNumCheck() {
     </div>
     
         <div>
-			<form name="memberForm" method="post">
+			<form name="memberForm" method="post" enctype="multipart/form-data">
+
 			  <table style="width: 100%; margin: 20px auto 0px; border-spacing: 0px;">
+			  <tr>
+			  	<td width="100" valign="top" style="text-align: right; padding-top: 5px;">
+    				<span>사용하실 증명사진을 입력해주세요</span>
+			  	</td>
+			  	<td style="padding: 0 0 15px 15px;">
+					<input type=file name="orginalFilename" id="orginalFilename">			  	
+			  	</td>
+			  </tr>
 			  <tr>
 			      <td width="100" valign="top" style="text-align: right; padding-top: 5px;">
 			            <label style="font-weight: 900;">사번</label>

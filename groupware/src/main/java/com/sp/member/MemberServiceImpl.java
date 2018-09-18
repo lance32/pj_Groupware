@@ -108,6 +108,12 @@ public class MemberServiceImpl implements MemberService {
 		return positionList;
 	}
 
+	@Override
+	public void updateMember(Member dto) throws Exception {
+		
+		
+	}
+
 
 
 }
