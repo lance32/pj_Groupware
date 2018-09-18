@@ -109,7 +109,7 @@ SELECT NVL(COUNT(*), 0) FROM tab WHERE tname=UPPER(#{value})
 
 <select id="listBoardManage"  resultType="com.sp.boardManage.BoardManage">
 	SELECT boardNum, tableName, boardName, writePermit, canAnswer, canReply, canFile, canLike, canReplyLike, leftMenu, subMenu 
-		FROM boardInfo ORDER BY boardNum DESC
+		FROM boardInfo ORDER BY subMenu ASC, boardNum DESC
 </select>
 
 <select id="readBoardManage1" resultType="com.sp.boardManage.BoardManage" parameterType="Integer">

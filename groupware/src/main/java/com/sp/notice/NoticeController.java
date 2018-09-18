@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.sp.boardManage.BoardManage;
+import com.sp.boardManage.BoardManageService;
 import com.sp.common.FileManager;
 import com.sp.common.MyUtil;
 import com.sp.member.SessionInfo;
@@ -29,6 +31,9 @@ public class NoticeController {
 
 	@Autowired
 	private NoticeService service;
+	
+	@Autowired
+	private BoardManageService mservice;
 	
 	@Autowired
 	private MyUtil util;
@@ -67,6 +72,7 @@ public class NoticeController {
 		paramMap.put("end", end);
 		
 		List<Notice> list = service.listNotice(paramMap);
+		List<BoardManage> boardList = mservice.listBoardManage();
 		
 		String cp = req.getContextPath();
 		String listUrl = cp+"/notice/list";
@@ -80,6 +86,7 @@ public class NoticeController {
 		String paging = util.paging(current_page, total_page, listUrl);
 		
 		model.addAttribute("list", list);
+		model.addAttribute("boardList", boardList);
 		model.addAttribute("page", current_page);
 		model.addAttribute("dataCount", dataCount);
 		model.addAttribute("total_page", total_page);

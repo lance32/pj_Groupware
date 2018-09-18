@@ -21,7 +21,7 @@
     </tr>
     <c:forEach var="dto" items="${list}">
 	    <tr>
-	    	<td><a href="<%=cp%>/cb_${dto.tableName}/list">${dto.boardName }</a></td>
+	    	<td><a href="<%=cp%>/${dto.tableName}/list">${dto.boardName }</a></td>
 	    </tr>
     </c:forEach>
 

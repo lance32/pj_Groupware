@@ -13,4 +13,4 @@ function searchList() {
 }
 </script>
 
-리 스 트
+댓 글 영 역

@@ -13,4 +13,4 @@ function searchList() {
 }
 </script>
 
-리 스 트
+게 시 물 조 회 화 면
