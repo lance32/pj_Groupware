@@ -14,7 +14,7 @@
     	<td><a href="<%=cp%>/boardManage/list">게시판 관리</a></td>
     </tr>
     <tr>
-    	<td><a href="#">메뉴2 ( 0 | 0 )</a></td>
+    	<td><a href="<%=cp%>/notice/list">공 지 사 항</a></td>
     </tr>
     <tr>
     	<td><a href="#">메뉴3 (0)</a></td>
