@@ -6,30 +6,32 @@
 	String cp=request.getContextPath();
 	String wsURL = "ws://"+request.getServerName()+":"+request.getServerPort()+cp+"/chat.msg";
 %>
-<style type="text/css">
 
+<style type="text/css">
 .chatRoom_ListItem{
-	height: 40px;
+	height: 50px; 
+	border: 2px solid #BDBDBD; 
+	background: #E6E6E6;
 	font-size: 17px;
-	border-bottom: 1px solid #E6E6E6;
 }
 	.chatRoom_ListItem:hover{
 		background: #D4E3EE;
 		cursor: pointer;
-		border: 1px solid #0F7ECE;
+		border: 2px solid #819FF7;
 	}
 .chatListItem_subject{
-	width:230px;
-	padding-left: 30px;
-	text-align: left;
+	padding-left: 10px; 
+	width: 250px;
 }
 .chatListItem_founder{
-	width: 150px;
+	width: 150px; 
+	text-align: center;
 }
 .chatListItem_number{
-	width: 118px;
+	width: 48px;
 }
 </style>
+
 <script type="text/javascript">
 jQuery(function(){
 	jQuery(".chatInfoBox").hide();
@@ -86,15 +88,35 @@ jQuery(function(){
 	function onError(evt) {
 		jQuery("#messageBox").html('Info: error');
 	}
+	
+	//개설된 채팅방이 없을경우
+	if(jQuery(".chatRoom_ListItem").length<=0){
+		jQuery("#chatRoom_List").append("<tr style='width:100%; height:50px; text-align:center; font-size: 17px; padding-top: 10px;'><td>개설된 채팅방이 없습니다.</td></tr>");
+	}
+	
+	//새로고침 버튼 클릭시
+	jQuery("#refreshRoomListBtn").click(function(){
+		jQuery("#chatRoom_List").empty();
+	    	var obj = {};
+	    	var jsonStr;
+	   	obj.type="refresh";
+	   	jsonStr = JSON.stringify(obj);
+	    	socket.send(jsonStr);
+	  	//개설된 채팅방이 없을경우
+		if(jQuery(".chatRoom_ListItem").length<=0){
+			jQuery("#chatRoom_List").append("<tr style='width:100%; height:50px; text-align:center; font-size: 17px; padding-top: 10px;'><td>개설된 채팅방이 없습니다.</td></tr>");
+		}
+	});
+	
 
 	
 	//채팅방 개설버튼 클릭시
 	jQuery("#addChatRoomBtn").click(function(){
 		jQuery("#addChatRoom-dialog").dialog({
 			modal: true,
-			  height: 400,
-			  width: 500,
-			  title: '채팅방 만들기',
+			  height: 320,
+			  width: 450,
+			  title: '채팅방 개설',
 			  buttons: {
 			       " 만들기 " : function() {
 						addChatRoom();		//채팅방 개설
@@ -115,16 +137,27 @@ jQuery(function(){
 		var subject=jQuery("#roomSubject").val().trim();
 		if(! subject) {
 			jQuery("#roomSubject").focus();
+			jQuery("#addErrorMsg").html("");
+			jQuery("#addErrorMsg").html("제목을 입력 하세요.");
 			return;
 		}
 		var maxNumber=jQuery("#roomMaxNumber").val().trim();
+		if(! maxNumber) {
+			jQuery("#roomMaxNumber").focus();
+			jQuery("#addErrorMsg").html("");
+			jQuery("#addErrorMsg").html("최대인원을 입력 하세요.");
+			return;
+		}
 		if(! /^(\d){1,2}$/g.test(maxNumber)) {
 			jQuery("#roomMaxNumber").focus();
+			jQuery("#addErrorMsg").html("");
+			jQuery("#addErrorMsg").html("최대인원은 숫자이어야 합니다.");
 			return;
 		}
 		if(parseInt(maxNumber)<2||parseInt(maxNumber)>20) {
-			alert("참여 인원은 2~20사이 입니다.");
 			jQuery("#roomMaxNumber").focus();
+			jQuery("#addErrorMsg").html("");
+			jQuery("#addErrorMsg").html("최대인원 2~20사이 입니다.");
 			return;
 		}
 		var obj = {};
@@ -143,23 +176,26 @@ jQuery(function(){
 	function roomProcerss(data) {
 		var cmd=data.cmd;
 		
-		if(cmd=="room-list") {
-		// 채팅방 목록을 받음 (메인 채팅방 목록에 리스트를 띄움.)
-			var roomId = data.roomId;
-			var founderName = data.founderName;
-			var subject = data.subject;
-			var maxNumber=data.maxNumber;
-			var number=data.number;
-			jQuery("#chatRoom_List").append("<tr class='chatRoom_ListItem' data-roomId='"+roomId+"'><td class='chatListItem_subject'>"+subject+"</td><td class='chatListItem_founder'>"+founderName+"</td><td class='chatListItem_number'>"+number+"/"+maxNumber+"</td></tr>	");
-
-		}else if(cmd=="add-ok") {
-		// 채팅방 개설 성공
+		if(cmd=="add-ok") {
+			// 채팅방 개설 성공
 			var roomId=data.roomId;
 			var subject=data.subject;
 			jQuery("#addChatRoom-dialog").dialog("close");
 			alert("채팅방이 개설되었습니다.");
 			
 			chatMsgProcerss(roomId, subject);
+			jQuery("#refreshRoomListBtn").click();
+			
+		}else if(cmd=="room-list") {
+		// 채팅방 목록을 받음 (메인 채팅방 목록에 리스트를 띄움.)
+			jQuery("#chatRoom_List").empty();
+			var roomId = data.roomId;
+			var founderName = data.founderName;
+			var subject = data.subject;
+			var maxNumber=data.maxNumber;
+			var number=data.number;
+			
+			jQuery("#chatRoom_List").append("<tr class='chatRoom_ListItem' data-roomId='"+roomId+"'><td class='chatListItem_subject'>"+subject+"</td><td class='chatListItem_founder'>"+founderName+"</td><td class='chatListItem_number'>"+number+"/"+maxNumber+"</td></tr><tr height='15px;'></tr>");
 			
 		}else if(cmd=="info") {
 		// 채팅방 상세정보를 받음
@@ -205,8 +241,10 @@ jQuery(function(){
 			var subject=data.subject;
 			
 			jQuery("#chatRoom_Info").empty();
+			jQuery(".chatInfoBox").hide();
 			jQuery(".chatRoom_List tr[data-roomId="+roomId+"] td").remove();
 			jQuery(".chatRoom_List tr[data-roomId="+roomId+"]").remove();
+			jQuery("#refreshRoomListBtn").click();
 		}
 	}
 	
@@ -245,12 +283,15 @@ jQuery(function(){
 	function chatMsgProcerss(roomId, subject) {
 		jQuery("#chatMsgContainer").empty();
 		jQuery("#chatRoomJoinList").empty();
-		jQuery("#chatRoomJoinList").append("<p>&nbsp;&nbsp;"+sessionUserName+"</p>");
-		  
+		jQuery("#chatMsgContainer").append("<p>"+sessionUserName+" 님이 입장했습니다.</p>");
+		jQuery("#chatRoomJoinList").append("<p style='color: #58ACFA'>&nbsp;&nbsp;"+sessionUserName+"</p>");
+	
 		jQuery('#chatting-dialog').dialog({
-			  modal: true,
-			  height: 570,
-			  width: 620,
+			  modal: false,
+			  minHeight: 665,
+			  minWidth: 620,
+			  maxHeight: 665,
+			  maxWidth: 620,
 			  title: subject,
 			  close: function(event, ui) {
 				  chatMsgClose(roomId);
@@ -270,6 +311,16 @@ jQuery(function(){
 		            sendOneMessage();
 		        }
 		  });
+		
+		//채팅방 나가기 버튼 클릭시
+		jQuery("#closeChatBtn").on("click",function(){
+			jQuery("#chatting-dialog").dialog("close");
+		});
+		
+		//채팅내용 지우기 버튼 클릭시
+		jQuery("#cleanChatBtn").on("click",function(){
+			jQuery("#chatMsgContainer").empty();
+		});
 	}
 	
 	// type:talk를 전송 받은 경우
@@ -281,14 +332,14 @@ jQuery(function(){
 			var guestList=data.guestList;
 			$.each(guestList, function(index, value){
 				var a=value.split(":");
-				$("#chatRoomJoinList").append("<p data-guestId='"+a[0]+"'>&nbsp;&nbsp;"+a[1]+"</p>");
+				$("#chatRoomJoinList").append("<p data-guestId='"+a[0]+"' style='cursor:pointer;'>&nbsp;&nbsp;"+a[1]+"</p>");
 			});
 			
 		} else if(cmd=="join-add") {
 		// 채팅방에 새로운 게스트가 입장한 경우
 			var guestId=data.guestId;
 			var userName=data.userName;
-			$("#chatRoomJoinList").append("<p data-guestId='"+guestId+"'>&nbsp;&nbsp;"+userName+"</p>");
+			$("#chatRoomJoinList").append("<p data-guestId='"+guestId+"' style='cursor:pointer;'>&nbsp;&nbsp;"+userName+"</p>");
 			
     		var s=userName+" 님이 입장했습니다.";
     		writeToScreen(s);
@@ -297,12 +348,11 @@ jQuery(function(){
 		// 채팅메시지를 받은 경우
 			var to=data.to;
 			var msg=data.message;
-			var senderId=data.senderId;
 			var senderName=data.senderName;
 			
-			var s;
+			var s="";
 			if(to=="one") {
-				s="[귓속말] ";
+				s="<span style='color: #BE81F7'>[귓속말]</span> ";
 			}
 			s+=senderName+"> "+msg;
 			
@@ -349,7 +399,7 @@ jQuery(function(){
         jsonStr = JSON.stringify(obj);
         socket.send(jsonStr);
         
-        writeToScreen(" 보냄> "+msg);
+        writeToScreen("<span style='color: #58ACFA'>보냄></span> "+msg);
         
         $("#chatRoomMsg").val("");
         $("#chatRoomMsg").focus();
@@ -362,15 +412,15 @@ jQuery(function(){
 		});
 			
 		$(this).addClass("selection");
-		var guestId = $(this).attr("data-guestId");
-		if(! guestId) return;
+		var guestName = $(this).text();
+		if(! guestName) return;
 		
 		// 귓속말 대화상자 열기
 		  $('#whisper-dialog').dialog({
 			  modal: true,
 			  height: 120,
 			  width: 300,
-			  title: '귓속말-'+guestId,
+			  title: '귓속말-'+guestName,
 			  close: function(event, ui) {
 				  $("#chatOneMsg").val("");
 			  }
@@ -388,6 +438,7 @@ jQuery(function(){
 		
 		var $p = $("#chatRoomJoinList .selection");
 		var guestId = $p.attr("data-guestId");
+		var guestName = $p.text();
 		
         var obj = {};
         var jsonStr;
@@ -399,7 +450,7 @@ jQuery(function(){
         jsonStr = JSON.stringify(obj);
         socket.send(jsonStr);
         
-        writeToScreen("[귓속말] 보냄 - "+guestId+"> "+msg);
+        writeToScreen("<span style='color: #BE81F7'>[귓속말] 보냄</span> - "+guestName+"> "+msg);
         
         $("#chatOneMsg").val("");
         $('#whisper-dialog').dialog("close");
@@ -439,52 +490,38 @@ function writeToScreen(message) {
 }
 </script>
 
-
 <div style="clear: both; margin: 10px 0px 40px 10px;">
-	<span class="glyphicon glyphicon-transfer"
-		style="font-size: 28px; margin-left: 10px;"></span> <span
-		style="font-size: 30px;">&nbsp;채팅</span><br>
-	<div
-		style="clear: both; width: 300px; height: 1px; border-bottom: 3px solid black;"></div>
+	<span class="glyphicon glyphicon-transfer" style="font-size: 28px; margin-left: 10px;"></span> 
+	<span style="font-size: 30px;">&nbsp;채팅</span><br>
+	<div style="clear: both; width: 300px; height: 1px; border-bottom: 3px solid black;"></div>
 </div>
 
-<div
-	style="width: 200px; height: 650px; margin-left: 15px; float: left; text-align: center; padding-top: 30px;">
-	<button type="button">새로고침</button>
-	<br>
-	<button type="button" id="addChatRoomBtn">채팅방 개설</button>
-	<div id="messageBox" style="text-align: left;"></div>
-</div>
-
-<div
-	style="width: 500px; height: 650px; border: 2px solid #BDBDBD; text-align: center; float: left;">
-	<table
-		style="border-spacing: 0px; border-collapse: collapse; margin: 0px auto;">
-		<tr height="50px;"
-			style="font-size: 20px; font-weight: 300; background: #A4A4A4;">
-			<td width="230px">채팅방 이름</td>
-			<td width="150px">개설자</td>
-			<td width="118px">참여인원수</td>
-		</tr>
-	</table>
-	<table id="chatRoom_List" style="border-spacing: 0px; border-collapse: collapse; margin: 0px auto;">
-
-	</table>
-</div>
-
-<div class="chatInfoBox"
-	style="width: 400px; height: 650px; border: 1px solid #BDBDBD; float: left; background: #FAFAFA;">
-	<div
-		style="float: left; width: 390px; height: 548px; padding-left: 10px;">
-		<p style="height: 40px; line-height: 40px; font-size: 17px; text-align: center; border-bottom: 1px solid #D8D8D8;">채팅방 정보</p>
-		<div id="chatRoom_Info" style="width: 100%"></div>
+<div style="clear:both; width: 100%; min-width:1550px; padding-left: 10%">
+	<div id="messageBox" style="clear:both; width: 100%; height: 40px; font-size: 20px; padding-left: 10px;"></div>
+		
+	<div style="width: 490px; height: 600px; float: left;">
+		<div style="width:480px; height: 55px; padding-top: 10px; padding-left: 5px;">
+			<button type="button" id="refreshRoomListBtn" class="btn" style="font-size: 16px;">새로고침</button>
+			<button type="button" id="addChatRoomBtn" class="btn" style="font-size: 16px;">채팅방 개설</button>
+		</div>
+		
+		<div style="clear:both; width: 490px; height: 500px; padding: 5px 0px 5px 10px; border: 1px solid #F2F2F2; overflow-y: scroll;">
+			<table  id="chatRoom_List" style="width: 100%;"></table>
+		</div>
 	</div>
-	<div style="width: 100%; height: 100px; text-align: center; float: left;">
-		<button id="chatRoom_join" value="" type="button" style="width: 350px; height: 60px; margin-top: 20px;">채팅방 입장하기</button>
-	</div>
+	
+	<div class="chatInfoBox" style="width: 480px; height: 545px; border: 1px solid #BDBDBD; float: left; background: #FAFAFA; margin: 10px 0px 0px 50px;">
+		<div style="float: left; width: 470px; height: 440px; padding-left: 10px;">
+			<p style="height: 40px; line-height: 40px; font-size: 18px; text-align: center; border-bottom: 1px solid #D8D8D8;">채팅방 정보</p>
+			<div id="chatRoom_Info" style="width: 100%; font-size: 16px;"></div>
+		</div>
+		<div style="width: 100%; height: 100px; text-align: center; float: left;">
+			<button id="chatRoom_join" class="btn" value="" type="button" style="width: 350px; height: 60px; margin-top: 20px; font-size: 20px;">채팅방 입장하기</button>
+		</div>
+	</div> 
 </div>
 
-<%-- modaless 로 만들기 --%>
+<%--  --%>
 
 <div id="addChatRoom-dialog" style="display: none; margin: 0px; padding: 0px; overflow: inherit;">
 	<table style="margin: 10px auto 0px; width: 100%; border-spacing: 0px;">
@@ -500,27 +537,34 @@ function writeToScreen(message) {
 			<td><input id='roomMaxNumber' type='text' class='boxTF'
 				style="width: 98%;" placeholder='접속 최대인원(2~20)'></td>
 		</tr>
+		<tr style="padding-top: 30px; height: 80px;"><td colspan="2" style="padding-left: 20px;">
+			<span id="addErrorMsg" style="color: #DF0101"></span>
+		</td></tr>
 	</table>
 </div>
 
-<div id="chatting-dialog" style="display: none; width: 600px; height: 550px; margin: 0px; padding: 0px;">
+<div id="chatting-dialog" style="display: none; min-width: 600px; height: 550px; margin: 10px; padding: 0px;">
 	<div style="width:400px; clear: both; float: left; height: 550px; border: 2px solid #D8D8D8">
-		<div style="width: 100%; height: 30px; padding-top: 10px; clear: both; border-bottom: 1px solid #E6E6E6">
+		<div style="width: 100%; height: 30px; padding-top: 5px; clear: both; border-bottom: 1px solid #E6E6E6">
 			<span style="font-weight: 600;">＞</span>
-	        <span style="font-weight: 600; font-family: 나눔고딕, 맑은 고딕, 돋움; color: #424951;">채팅 메시지</span>
-	    </div>
-		<div id="chatMsgContainer" style="height: 460px; border-bottom: 1px solid #E6E6E6"></div>
+	        	<span style="font-weight: 600; font-family: 나눔고딕, 맑은 고딕, 돋움; color: #424951;">채팅 메시지</span>
+	    	</div>
+		<div id="chatMsgContainer" style="width: 100%; height: 460px; border-bottom: 1px solid #E6E6E6; overflow-y: scroll; padding: 3px;"></div>
 		<div style="clear: both; padding-top: 10px; text-align: center;">
-	    	<input type="text" id="chatRoomMsg" style="width: 95%;" placeholder="채팅 메시지를 입력 하세요...">
+	    	<input type="text" id="chatRoomMsg" style="width: 95%; height:30px; border: none; border-bottom: 1px solid #0174DF" placeholder="채팅 메시지를 입력 하세요...">
 	    </div>
 	</div>
 	<div style="float: left; width: 14px; height: 550px;">&nbsp;</div>
-	<div style="width:180px; float: left; padding-top: 10px; height: 540px; border: 1px solid #D8D8D8">
-		<div style="clear: both; height: 30px; border-bottom: 1px solid #E6E6E6">
+	<div style="width:180px; float: left; height: 550px; border: 1px solid #D8D8D8">
+		<div style="clear: both; height: 30px; padding-top: 5px; border-bottom: 1px solid #E6E6E6;">
 	       	<span style="font-weight: 600;">＞</span>
-         	<span style="font-weight: 600; color: #424951;">접속자 리스트</span>
+         		<span style=" font-family: 나눔고딕, 맑은 고딕, 돋움; font-weight: 600; color: #424951;">접속자 리스트</span>
 	    </div>
-	    <div id="chatRoomJoinList"></div>
+	    <div id="chatRoomJoinList" style="padding-top: 5px;"></div>
+	</div>
+	<div style="clear: both; width: 600px; height: 40px; padding: 10px 10px 0px 3px;">
+		<button type="button" id="cleanChatBtn" class="btn">채팅내용 지우기</button>
+		<button type="button" id="closeChatBtn" class="btn" style="float: right;">채팅방 나가기</button>
 	</div>
 </div>
 
@@ -529,4 +573,6 @@ function writeToScreen(message) {
 		<input type="text" id="chatOneMsg" class="boxTF"  style="width: 99%;"  placeholder="귓속말을 입력 하세요...">
 	</div>
 </div>   
+
+
     

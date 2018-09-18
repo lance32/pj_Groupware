@@ -70,6 +70,9 @@ public class SocketHandler extends TextWebSocketHandler{
 		} else if(type.equals("talk")) {
 			// 채팅방 - 채팅
 			receiveTalk(session, jsonReceive);
+		}else if(type.equals("refresh")) {
+			// 새로고침 버튼 클릭되면
+			refreshRoomList(session, jsonReceive);
 		}
 	}
 	
@@ -92,6 +95,31 @@ public class SocketHandler extends TextWebSocketHandler{
 			guestMap.put(guestId, guestInfo);
 			
 			//채팅방 목록 전송
+			Iterator<String> it=roomMap.keySet().iterator();
+			while(it.hasNext()) {
+				String key=it.next();
+				RoomInfo roomInfo = roomMap.get(key);
+				
+				job=new JSONObject();
+				job.put("type", "room");
+				job.put("cmd", "room-list");
+				job.put("roomId", key);
+				job.put("subject", roomInfo.getSubject());
+				job.put("number", roomInfo.getGuestSet().size());
+				job.put("maxNumber", roomInfo.getMaxNumber());
+				job.put("founderName", roomInfo.getFounderName());
+				
+				sendOneMessage(job.toString(), session);
+			}
+		} catch (Exception e) {
+			this.logger.info(e.toString());
+		}
+	}
+	
+	protected void refreshRoomList(WebSocketSession session, JSONObject jsonReceive) {
+		//채팅방 목록 전송
+		JSONObject job;
+		try {
 			Iterator<String> it=roomMap.keySet().iterator();
 			while(it.hasNext()) {
 				String key=it.next();
@@ -321,7 +349,6 @@ public class SocketHandler extends TextWebSocketHandler{
 					job.put("type", "talk");
 					job.put("cmd", "chatMsg");
 					job.put("to", "all");
-					job.put("senderId", senderId);
 					job.put("senderName", senderName);
 					job.put("message", msg);
 					
@@ -338,7 +365,6 @@ public class SocketHandler extends TextWebSocketHandler{
 					job.put("type", "talk");
 					job.put("cmd", "chatMsg");
 					job.put("to", "one");
-					job.put("senderId", senderId);
 					job.put("senderName", senderName);
 					job.put("message", msg);
 					
