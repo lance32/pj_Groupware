@@ -30,7 +30,7 @@ function searchMember(){
 		<span style="font-size: 25px;">&nbsp;사원조회</span><br>
 		<div style="clear: both; width: 300px; height: 1px; border-bottom: 3px solid black;"></div>
 	</div>
-	<div style="width:1070px; text-align:right;">
+	<div style="width:100%; text-align:right;">
 	<form name="memberSearchForm" action="<%=cp%>/member/main" method="post">
 			<select class="selectBox" name="searchKey">				<%-- 선택박스  --%>
 				<option value="name">이름</option>
@@ -45,7 +45,7 @@ function searchMember(){
 		</form>
 	</div>
 	<%-- --%>
-	<table id="tb" style="width: 1000px;"><%-- 테이블 길이 수정 가능 --%>
+	<table id="tb" style="width: 100%;"><%-- 테이블 길이 수정 가능 --%>
 		<tr>
 			<td id="count" colspan="2">
 				${dataCount}개(${page}/${total_page} 페이지)
@@ -69,13 +69,15 @@ function searchMember(){
 		<c:forEach var="list" items="${list}">
 		<tr class="tr">
 			<td>${list.listmemberNum}</td>
-			<td style="text-align: center;">${list.departmentName }</td>
+			<td style="text-align: center;">${list.departmentName}</td>
 			<td>${list.positionName }</td>
 			<td>${list.created }</td>
-			<td>${list.name }</td>
+			<td>
+				<a href="${articleUrl}&memberNum=${list.memberNum}">${list.name}</a>
+			</td>
 			<td>${list.email}</td>
-			<td>${list.phone }</td>
-			<td>${list.tel }</td>
+			<td>${list.phone}</td>
+			<td>${list.tel}</td>
 		</tr>
 		</c:forEach>
 
@@ -85,7 +87,7 @@ function searchMember(){
 		${paging}
 	</div>
 	
-	<table id="tb" style="width: 1000px;">
+	<table id="tb" style="width: 100%; padding-top: 10px;">
 		<tr>
 			<td>
 			<button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/member/main';" >새로고침</button>
@@ -95,4 +97,5 @@ function searchMember(){
 			</td>
 		</tr>
 	</table>
+
 </div>

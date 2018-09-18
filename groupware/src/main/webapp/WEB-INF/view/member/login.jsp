@@ -57,8 +57,11 @@
     margin:5px auto;
     transform:translate(508%, 20%);
 }
-
-
+.errormessage{
+	width: 100%;
+	text-align: center;
+	font-size: 20px;
+}
 
 </style>
 
@@ -106,8 +109,15 @@ function sendOk(){
 					<input type="hidden" id="last_login" name="last_login" value="">
 				</td>
 			</tr>
+			
+			
+			
          </table>
 	</form>
+		<div class="errormessage">
+			<span style="color:red;">${message}</span>
+		</div>
+		  
 </div>
 	
 </body>

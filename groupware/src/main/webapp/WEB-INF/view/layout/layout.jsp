@@ -32,7 +32,7 @@
 <div class="container">
 
 	<div class="side">
-	    <tiles:insertAttribute name="side"/>
+	    <tiles:insertAttribute name="side" ignore="true"/>
 	    <div class="sidetabs">
 		   	<tiles:insertAttribute name="sidetabs"/>
 		</div>

@@ -6,7 +6,7 @@ import java.util.Map;
 public interface MemberService {
 	public Member readMember(String memberNum);
 	
-	public void insertMember(Member dto) throws Exception ;
+	public int insertMember(Member dto,String pathname) throws Exception ;
 	public void firstLoginMember(Member dto) throws Exception;
 	
 	public int dataCount(Map<String, Object> map);

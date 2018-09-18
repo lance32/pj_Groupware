@@ -164,7 +164,7 @@ function memberOk() {
         f.email2.focus();
         return;
     }
-
+	
     var mode="${mode}";
     
     if(mode=="created")
@@ -241,7 +241,7 @@ function memberNumCheck() {
     				<span>사용하실 증명사진을 입력해주세요</span>
 			  	</td>
 			  	<td style="padding: 0 0 15px 15px;">
-					<input type=file name="orginalFilename" id="orginalFilename">			  	
+					<input type=file name="upload">			  	
 			  	</td>
 			  </tr>
 			  <tr>

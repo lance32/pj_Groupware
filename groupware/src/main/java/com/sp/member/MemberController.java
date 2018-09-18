@@ -1,5 +1,6 @@
 package com.sp.member;
 
+import java.io.File;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.HashMap;
@@ -35,18 +36,20 @@ public class MemberController {
 	
 	// 변경할 시작 부분 ----------------------------------------------------------------------
 	@RequestMapping(value="/login", method=RequestMethod.GET)
-	public String loginForm(String login_error, Model model) {
+	public String loginForm(String login_error, HttpSession session, Model model) {
 		// 로그인 폼
 		if(login_error!=null) {
-			model.addAttribute("message","아이디 패스워드가 일치하지 않습니다.");
+			model.addAttribute("message","아이디 또는 패스워드가 일치하지 않습니다.");
 		}
+		
+		//SessionInfo info =(SessionInfo) session.getAttribute("member");
 		
 		return "/member/login";
 	}
 	
 	//최초 로그인 체크
 	@RequestMapping(value="/login", method=RequestMethod.POST)
-	public String firstLoginCheck(Member dto) {
+	public String firstLoginCheck(Member dto,HttpSession session) {
 		
 		
 		return "";
@@ -57,6 +60,7 @@ public class MemberController {
 			@RequestParam(value="searchKey", defaultValue="subject") String searchKey,
 			@RequestParam(value="searchValue", defaultValue="") String searchValue,
 			HttpServletRequest req,
+			HttpSession session,
 			Model model) throws Exception{
 		
 		String cp=req.getContextPath();
@@ -103,7 +107,7 @@ public class MemberController {
         
         String query = "";
         String listUrl = cp+"/member/main";
-        String articleUrl = cp+"/member/article?page=" + current_page;
+        String articleUrl = cp+"/member/memberinfo?page=" + current_page;
         if(searchValue.length()!=0) {
         	query = "searchKey=" +searchKey + 
         	         "&searchValue=" + URLEncoder.encode(searchValue, "utf-8");	
@@ -111,7 +115,7 @@ public class MemberController {
         
         if(query.length()!=0) {
         	listUrl = cp+"/member/main?" + query;
-        	articleUrl = cp+"/member/article?page=" + current_page + "&"+ query;
+        	articleUrl = cp+"/member/memberinfo?page=" + current_page + "&"+ query;
         }
         
         String paging = util.paging(current_page, total_page, listUrl);
@@ -129,7 +133,7 @@ public class MemberController {
 	// 이 아래로는 그냥 붙여놓은 부분이라 필요한 부분 수정해서 써야합니다.
 	@RequestMapping(value="/member/member", method=RequestMethod.GET)
 	public String createdForm(Model model) throws Exception {
-		// 회원 가입 폼
+		// 사원 추가 폼
 		
 		//부서,직급에 대한 정보를 가져와 리스트로 저장
 		List<Map<String, Object>> departmentList=service.departmentList();
@@ -143,18 +147,22 @@ public class MemberController {
 	}
 
 	@RequestMapping(value="/member/member", method=RequestMethod.POST)
-	public String createdSubmit(Member dto, Model model) throws Exception {
-		// 회원 가입
+	public String createdSubmit(Member dto, Model model,HttpSession session) throws Exception {
+		// 사원 추가
 		
 		// 패스워드 암호화
 		String encPwd="1111";
 		encPwd=bcryptEncoder.encode(encPwd);
 		dto.setPwd(encPwd);
 		
+		//사진 추가 
+		String root=session.getServletContext().getRealPath("/");
+		String pathname=root+"upload"+File.separator+"member";
+	
 		try {
-			service.insertMember(dto);
+			service.insertMember(dto, pathname);
 		}catch(Exception e) {
-			model.addAttribute("message", "회원가입이 실패했습니다. 다른 아이디로 다시 가입하시기 바랍니다.");
+			model.addAttribute("message", "회원가입이 실패했습니다. 다시 가입하시기 바랍니다.");
 			model.addAttribute("mode", "created");
 			return ".member.member";
 		}
@@ -166,7 +174,7 @@ public class MemberController {
 		model.addAttribute("title", "회원 가입");
 		model.addAttribute("message", sb.toString());
 		
-		return ".member.main";
+		return "redirect:/member/main";
 	}
 	
 	@RequestMapping(value="/member/memberNumCheck")
@@ -273,28 +281,50 @@ public class MemberController {
 		return ".member.pwd";
 	}
 	
-	// 수정완료
-	@RequestMapping(value="/member/update", 
-			method=RequestMethod.POST)
-	public String updateSubmit(
-			Member member,
-			Model model,
-			HttpSession session
-			) throws Exception {
+	@RequestMapping(value="/member/update", method=RequestMethod.GET)
+	public String updateForm(
+			@RequestParam String memberNum,
+			@RequestParam String page,
+			HttpSession session,
+			Model model) throws Exception {
 		SessionInfo info=(SessionInfo)session.getAttribute("member");
-		if(info==null) {
-			return "redirect:/member/login";
+		
+		Member dto = service.readMember(memberNum);
+		if(dto==null) {
+			return "redirect:/member/main?page="+page;
+		}
+
+		if(! info.getUserId().equals(dto.getMemberNum())) {
+			return "redirect:/member/main?page="+page;
 		}
 		
+		model.addAttribute("dto", dto);
+		model.addAttribute("mode", "update");
+		model.addAttribute("page", page);
+		
+		return ".member.created";
+	}
+
+	
+	
+	// 수정완료
+	@RequestMapping(value="/member/update", method=RequestMethod.POST)
+	public String updateSubmit(
+			Member dto,
+			HttpSession session,
+			Model model
+			) throws Exception {
+		SessionInfo info=(SessionInfo)session.getAttribute("member");
+		
 		// 패스워드 암호화
-		String encPwd=bcryptEncoder.encode(member.getPwd());
-		member.setPwd(encPwd);
+		String encPwd=bcryptEncoder.encode(dto.getPwd());
+		dto.setPwd(encPwd);
 		
 		
 		//service.updateMember(member);
 		
 		StringBuffer sb=new StringBuffer();
-		sb.append(member.getName()+ "님의 회원정보가 정상적으로 변경되었습니다.<br>");
+		sb.append(dto.getName()+ "님의 회원정보가 정상적으로 변경되었습니다.<br>");
 		sb.append("메인화면으로 이동 하시기 바랍니다.<br>");
 		
 		model.addAttribute("title", "회원 정보 수정");
@@ -302,6 +332,36 @@ public class MemberController {
 		
 		return ".member.complete";
 	}
+	
+	@RequestMapping(value="/member/memberinfo")
+	public String article( 
+			@RequestParam String memberNum,
+			@RequestParam(value="page") String page,
+			@RequestParam(value="searchKey", defaultValue="name") String searchKey,
+			@RequestParam(value="searchValue", defaultValue="") String searchValue,
+			Model model) throws Exception{
+		
+		searchValue = URLDecoder.decode(searchValue, "utf-8");
+		
+		String query="page="+page;
+		if(searchValue.length()!=0) {
+			query+="&searchKey="+searchKey+"&searchValue="+URLEncoder.encode(searchValue, "UTF-8");
+		}
+
+
+		// 해당 레코드 가져 오기
+		Member dto = service.readMember(memberNum);
+		if(dto==null)
+			return "redirect:/member/main?"+query;
+	
+		model.addAttribute("dto", dto);
+		model.addAttribute("page", page);
+		model.addAttribute("query", query);
+		model.addAttribute("member",dto);
+		
+		return ".member.memberinfo";
+	}
+	
 	
 	@RequestMapping(value="/member/noAuthorized")
 	public String noAuth() throws Exception{
@@ -312,6 +372,5 @@ public class MemberController {
 	public String expired() throws Exception{
 		return ".member.expired";
 	}
-	
 	
 }
