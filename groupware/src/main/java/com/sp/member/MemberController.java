@@ -55,6 +55,8 @@ public class MemberController {
 		return "";
 	}
 	// 변경할 끝 부분 ----------------------------------------------------------------------
+	
+	//멤버 리스트
 	@RequestMapping(value="/member/main")
 	public String memberList(@RequestParam(value="page", defaultValue="1") int current_page,
 			@RequestParam(value="searchKey", defaultValue="subject") String searchKey,
@@ -62,6 +64,12 @@ public class MemberController {
 			HttpServletRequest req,
 			HttpSession session,
 			Model model) throws Exception{
+			
+		
+		SessionInfo info=(SessionInfo) session.getAttribute("member");
+		if(info==null) {
+			return "member/login";
+		}
 		
 		String cp=req.getContextPath();
 		
@@ -92,7 +100,7 @@ public class MemberController {
         map.put("start", start);
         map.put("end", end);
 
-        // 글 리스트
+        // 멤버 리스트
         List<Member> list = service.ListMember(map);
 
         // 리스트의 번호
@@ -130,7 +138,7 @@ public class MemberController {
 		return ".member.main";
 	}
 
-	// 이 아래로는 그냥 붙여놓은 부분이라 필요한 부분 수정해서 써야합니다.
+	//사원 추가 폼
 	@RequestMapping(value="/member/member", method=RequestMethod.GET)
 	public String createdForm(Model model) throws Exception {
 		// 사원 추가 폼
@@ -145,7 +153,8 @@ public class MemberController {
 		model.addAttribute("mode", "created");
 		return ".member.member";
 	}
-
+	
+	//사원 추가
 	@RequestMapping(value="/member/member", method=RequestMethod.POST)
 	public String createdSubmit(Member dto, Model model,HttpSession session) throws Exception {
 		// 사원 추가
@@ -236,7 +245,7 @@ public class MemberController {
 		Member dto=service.readMember(info.getUserId());
 		if(dto==null) {
 			session.invalidate();
-			return "redirect:/";
+			return "redirect:/member/login";
 		}
 		
 		

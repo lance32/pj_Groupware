@@ -45,6 +45,7 @@ function searchMember(){
 		</form>
 	</div>
 	<%-- --%>
+	<form name="thismember" method="post">
 	<table id="tb" style="width: 100%;"><%-- 테이블 길이 수정 가능 --%>
 		<tr>
 			<td id="count" colspan="2">
@@ -86,6 +87,8 @@ function searchMember(){
 	<div id='paginate'>	<%-- MyUtil.java 안에 있음. ${paging}으로 써야됨. --%>
 		${paging}
 	</div>
+
+	</form>
 	
 	<table id="tb" style="width: 100%; padding-top: 10px;">
 		<tr>

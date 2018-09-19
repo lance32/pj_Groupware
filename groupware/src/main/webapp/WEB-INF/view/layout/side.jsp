@@ -53,4 +53,5 @@
 <td align="center"><a href="#">주소록</a></td>
 <td align="center"><a href="<%=cp%>/member/logout">로그아웃</a></td>
 </tr>
+
 </table>
