@@ -57,8 +57,11 @@
     margin:5px auto;
     transform:translate(508%, 20%);
 }
-
-
+.errormessage{
+	width: 100%;
+	text-align: center;
+	font-size: 20px;
+}
 
 </style>
 
@@ -71,7 +74,6 @@ function sendOk(){
 		alert("사번를 입력하세요")
 		f.memberNum.focus();
 		return;
-		
 	}
 	
 	str=f.pwd.value;
@@ -79,7 +81,6 @@ function sendOk(){
 		alert("비밀번호를 입력하세요")
 		f.pwd.focus();
 		return;
-		
 	}
 	
 	f.action="<%=cp%>/member/login_check";
@@ -104,10 +105,19 @@ function sendOk(){
 				<td><input type="password" id="pwd" name="pwd" placeholder="PassWord"></td>
 			</tr>
 			<tr>
-				<td><button type="button" onclick="sendOk()">LOGIN</button></td>
+				<td><button type="button" onclick="sendOk()">LOGIN</button>
+					<input type="hidden" id="last_login" name="last_login" value="">
+				</td>
 			</tr>
+			
+			
+			
          </table>
 	</form>
+		<div class="errormessage">
+			<span style="color:red;">${message}</span>
+		</div>
+		  
 </div>
 	
 </body>

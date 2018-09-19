@@ -44,6 +44,7 @@ public class SocketHandler extends TextWebSocketHandler{
 		removeGuest(session);
 		this.logger.info("remove session id: " + session.getId());
 	}
+	
 	@Override
 	public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
 	//클라이언트로부터 메시지가 도착했을때
@@ -69,6 +70,9 @@ public class SocketHandler extends TextWebSocketHandler{
 		} else if(type.equals("talk")) {
 			// 채팅방 - 채팅
 			receiveTalk(session, jsonReceive);
+		}else if(type.equals("refresh")) {
+			// 새로고침 버튼 클릭되면
+			refreshRoomList(session, jsonReceive);
 		}
 	}
 	
@@ -76,15 +80,18 @@ public class SocketHandler extends TextWebSocketHandler{
 	public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
 	}
 	
+	
+	
 	protected void connectServer(WebSocketSession session, JSONObject jsonReceive) {
 	//처음 접속하면 사용자 정보 저장
 		JSONObject job;
 		try {
 			String guestId = jsonReceive.getString("guestId");
+			String userName =jsonReceive.getString("userName");
 			
 			GuestInfo guestInfo=new GuestInfo();
 			guestInfo.setSession(session);
-			
+			guestInfo.setUserName(userName);;
 			guestMap.put(guestId, guestInfo);
 			
 			//채팅방 목록 전송
@@ -98,6 +105,9 @@ public class SocketHandler extends TextWebSocketHandler{
 				job.put("cmd", "room-list");
 				job.put("roomId", key);
 				job.put("subject", roomInfo.getSubject());
+				job.put("number", roomInfo.getGuestSet().size());
+				job.put("maxNumber", roomInfo.getMaxNumber());
+				job.put("founderName", roomInfo.getFounderName());
 				
 				sendOneMessage(job.toString(), session);
 			}
@@ -106,6 +116,32 @@ public class SocketHandler extends TextWebSocketHandler{
 		}
 	}
 	
+	protected void refreshRoomList(WebSocketSession session, JSONObject jsonReceive) {
+		//채팅방 목록 전송
+		JSONObject job;
+		try {
+			Iterator<String> it=roomMap.keySet().iterator();
+			while(it.hasNext()) {
+				String key=it.next();
+				RoomInfo roomInfo = roomMap.get(key);
+				
+				job=new JSONObject();
+				job.put("type", "room");
+				job.put("cmd", "room-list");
+				job.put("roomId", key);
+				job.put("subject", roomInfo.getSubject());
+				job.put("number", roomInfo.getGuestSet().size());
+				job.put("maxNumber", roomInfo.getMaxNumber());
+				job.put("founderName", roomInfo.getFounderName());
+				
+				sendOneMessage(job.toString(), session);
+			}
+		} catch (Exception e) {
+			this.logger.info(e.toString());
+		}
+	}
+	
+	// type:room
 	protected void receiveRoom(WebSocketSession session, JSONObject jsonReceive) {
 		String cmd=jsonReceive.getString("cmd");
 		if(cmd==null) {
@@ -114,62 +150,60 @@ public class SocketHandler extends TextWebSocketHandler{
 		JSONObject job;
 		try {
 			if(cmd.equals("add")) {
-			//채팅방 개설
-				String roomId=jsonReceive.getString("roomId");
-				String subject=jsonReceive.getString("subject");
-				int maxNumber=Integer.parseInt(jsonReceive.getString("maxNumber"));
-				String userName=jsonReceive.getString("userName");
+				// 채팅방 개설
+				String roomId = jsonReceive.getString("roomId");
+				String subject = jsonReceive.getString("subject");
+				int maxNumber = Integer.parseInt(jsonReceive.getString("maxNumber"));
+				String founderName = jsonReceive.getString("founderName");
+
+				GuestInfo guestInfo = guestMap.get(roomId);
 				
-				GuestInfo guestInfo=guestMap.get(roomId);
-				if(guestInfo==null) {
+				if (guestInfo == null) {
 					return;
 				}
-				//개설자가 입력한 채팅방의 정보
-				RoomInfo roomInfo=new RoomInfo();
+				// 개설자가 입력한 채팅방의 정보
+				RoomInfo roomInfo = new RoomInfo();
 				roomInfo.setSubject(subject);
 				roomInfo.setMaxNumber(maxNumber);
-				roomInfo.setUserName(userName);
+				roomInfo.setFounderName(founderName);
 				roomInfo.getGuestSet().add(roomId);
 				roomMap.put(roomId, roomInfo);
-				
-				//참여자 목록에 개설자 추가
-				guestInfo.setUserName(userName);
+
+				// 참여자 목록에 개설자 추가
+				guestInfo.setUserName(founderName);
 				guestInfo.setRoom(roomInfo);
-				
-				//개설자에게 개설 성공여부 전송
-				job=new JSONObject();
+
+				// 개설자에게 개설 성공여부 전송
+				job = new JSONObject();
 				job.put("type", "room");
 				job.put("cmd", "add-ok");
 				job.put("roomId", roomId);
 				job.put("subject", subject);
 				job.put("maxNumber", maxNumber);
+
 				sendOneMessage(job.toString(), session);
-				
-				//개설된 채팅방의 정보를 전체 사용자에게 전송
-				job=new JSONObject();
+
+				// 개설된 채팅방의 정보를 전체 사용자에게 전송
+				job = new JSONObject();
 				job.put("type", "room");
 				job.put("cmd", "room-list");
-				job.put("roomId", roomId);	//개설자의 아이디
+				job.put("roomId", roomId); // 개설자의 아이디
+				job.put("number", roomInfo.getGuestSet().size());
+				job.put("maxNumber", roomInfo.getMaxNumber());
 				job.put("subject", roomInfo.getSubject());
-				
-				//sendAll...
+				job.put("founderName", roomInfo.getFounderName());
+
+				sendAllMessage(job.toString(), roomId);
+
 			} else if(cmd.equals("closed")){
-			//채팅방 삭제(개설자가 채팅방에서 나가면..)
-				String roomId="";//getGuestId(...
+			//채팅방 삭제(마지막 한명이 채팅방을 나가면)
+				String roomId= jsonReceive.getString("roomId");
 				RoomInfo roomInfo=roomMap.get(roomId);
 				if(roomInfo==null) {
 					return;
 				}
 				String subject=roomInfo.getSubject();
-				
-				//접속자에게 채팅방 삭제 알림.
-				job=new JSONObject();
-				job.put("type", "talk");          // 상태:대화중
-				job.put("cmd", "closed");      // 채팅방 종료
-				job.put("roomId", roomId);  // 채팅방 개설자 아이디
-				job.put("subject", subject);   // 채팅방 제목
-				sendRoomMessage(job.toString(),  roomInfo.getGuestSet(), roomId);
-				
+			
 				//접속자들에게 채팅방 정보 지우기
 				for(String guest:roomInfo.getGuestSet()) {
 					GuestInfo gi=guestMap.get(guest);
@@ -251,16 +285,16 @@ public class SocketHandler extends TextWebSocketHandler{
 				job.put("type", "talk");
 				job.put("cmd", "join-add");
 				job.put("guestId", guestId);
-				job.put("nickName", guestInfo.getUserName());
+				job.put("userName", guestInfo.getUserName());
 				sendRoomMessage(job.toString(), roomInfo.getGuestSet(), guestId);
 				
 			} else if(cmd.equals("info")) {
-			// 채팅방 정보 전송하기(채팅방 제목을 클릭한 경우)        *****수정
-				
+			// 채팅방 정보 전송하기(채팅방 제목을 클릭한 경우)
 				String roomId = jsonReceive.getString("roomId");
 				RoomInfo roomInfo=roomMap.get(roomId);
-				if(roomInfo==null) return;
-				
+				if(roomInfo==null) {
+					return;
+				}
 				List<String> list=new ArrayList<>();
 				for(String u:roomInfo.getGuestSet()) {
 					if(guestMap.get(u)==null) continue;
@@ -272,9 +306,10 @@ public class SocketHandler extends TextWebSocketHandler{
 				job.put("type", "room");
 				job.put("cmd", "info");
 				job.put("roomId", roomId);
-				job.put("nickName", roomInfo.getUserName());
+				job.put("founderName", roomInfo.getFounderName());
 				job.put("number", roomInfo.getGuestSet().size());
-				job.put("maximum", roomInfo.getUserName());
+				job.put("maxNumber", roomInfo.getMaxNumber());
+				job.put("subject", roomInfo.getSubject());
 				JSONArray jarr=new JSONArray();
 				jarr.addAll(list);
 				job.put("guestList", jarr);
@@ -314,7 +349,6 @@ public class SocketHandler extends TextWebSocketHandler{
 					job.put("type", "talk");
 					job.put("cmd", "chatMsg");
 					job.put("to", "all");
-					job.put("senderId", senderId);
 					job.put("senderName", senderName);
 					job.put("message", msg);
 					
@@ -331,7 +365,6 @@ public class SocketHandler extends TextWebSocketHandler{
 					job.put("type", "talk");
 					job.put("cmd", "chatMsg");
 					job.put("to", "one");
-					job.put("senderId", senderId);
 					job.put("senderName", senderName);
 					job.put("message", msg);
 					
@@ -339,14 +372,26 @@ public class SocketHandler extends TextWebSocketHandler{
 				}
 				
 			} else if(cmd.equals("leave")) {
-				// 채팅방에서 나간 경우(채팅방을 개설하지 않은 게스트)
+				// 채팅방에서 나간 경우
+				String roomId = jsonReceive.getString("roomId");
+				RoomInfo roomInfo2=roomMap.get(roomId);
 				
+				if(roomInfo2.getGuestSet().size()<=1) {
+				//마지막 한사람이 나갔을경우	
+					job=new JSONObject();
+					job.put("type", "talk");
+					job.put("cmd", "closed");
+					job.put("roomId", roomId);
+					
+					sendOneMessage(job.toString(), session);
+					return;
+				}
 				// 채팅방에서 나간 사실을 다른 사용자에게 전송
 				job=new JSONObject();
 				job.put("type", "talk");
 				job.put("cmd", "leave");
 				job.put("guestId", senderId);
-				job.put("nickName", senderName);
+				job.put("userName", senderName);
 				
 				sendRoomMessage(job.toString(), roomInfo.getGuestSet(), senderId);
 				
@@ -444,7 +489,6 @@ public class SocketHandler extends TextWebSocketHandler{
 				break;
 			}
 		}
-		
 		return guestId;
 	}
 	
@@ -459,60 +503,24 @@ public class SocketHandler extends TextWebSocketHandler{
 		if(guetInfo==null) return;
 		RoomInfo roomInfo=guetInfo.getRoom();
 		
-		try {
-			if(roomMap.containsKey(guestId)) {
-				// 채팅룸 개설자의 연결이 종료 된 경우
-				if(roomInfo!=null) {
-					// 채팅방에 참여중인 사용자에게 채팅방 closed 사실을 알림
-					job=new JSONObject();
-					job.put("type", "talk");          // 상태:대화중
-					job.put("cmd", "closed");      // 채팅방 종료
-					job.put("roomId", guestId);  // 채팅방 개설 아이디
-					job.put("subject", roomInfo.getSubject());  // 채팅방 제목
-					sendRoomMessage(job.toString(),  roomInfo.getGuestSet(), guestId);
-					
-					for(String guest:roomInfo.getGuestSet()) {
-						GuestInfo gi=guestMap.get(guest);
-						if(gi!=null) {
-							gi.setRoom(null);
-						}
-					}
-					
-					// 모든 사용자에게 채팅방 closed 사실을 알림
-					job=new JSONObject();
-					job.put("type", "room");
-					job.put("cmd", "closed");    // 채팅방 종료
-					job.put("roomId", guestId);
-					job.put("subject", roomInfo.getSubject());
-					sendAllMessage(job.toString(), guestId);
-				}
+		try {	
+			// 채팅방에 참여중인 경우
+			if(roomInfo!=null) {
+				// 채팅방의 다른 게스트에게 채팅방을 나간 사실을 알려줌
+				job=new JSONObject();
+				job.put("type", "talk");      // 상태:대화중
+				job.put("cmd", "leave");    // 룸나감
+				job.put("guestId", guestId);
+				job.put("userName", guetInfo.getUserName());
+				sendRoomMessage(job.toString(),  roomInfo.getGuestSet(), guestId);
 				
-				// 채팅방 정보 삭제
-				roomMap.remove(guestId);
-				
-			} else {
-				// 채팅방 개설자가 아닌 게스트의 연결이 종료 된 경우
-				
-				// 채팅방에 참여중인 경우
-				if(roomInfo!=null) {
-					// 채팅방의 다른 게스트에게 채팅방을 나간 사실을 알려줌
-					job=new JSONObject();
-					job.put("type", "talk");      // 상태:대화중
-					job.put("cmd", "leave");    // 룸나감
-					job.put("guestId", guestId);
-					job.put("nickName", guetInfo.getUserName());
-					sendRoomMessage(job.toString(),  roomInfo.getGuestSet(), guestId);
-					
-					// 채팅방에서 삭제
-					roomInfo.getGuestSet().remove(guestId);
-				}
+				// 채팅방에서 삭제
+				roomInfo.getGuestSet().remove(guestId);
 			}
-			
 			try {
 				guetInfo.getSession().close();
 			} catch (Exception e) {
 			}
-			
 			// 게스트 정보 제거
 			guestMap.remove(guestId);
 			

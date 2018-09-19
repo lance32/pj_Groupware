@@ -5,19 +5,99 @@
 
 <!-- 회원 정보 가져오기 -->
     <select id="readMember" resultType="com.sp.member.Member" parameterType="String">
-        SELECT memberNum, name, pwd FROM member
-            WHERE memberNum = #{memberNum}
+        SELECT m.memberNum,name,pwd,saveFilename,originalFilename,departmentName,positionName 
+			FROM member m
+			LEFT OUTER JOIN department d ON m.departmentNum=d.departmentNum
+			LEFT OUTER JOIN position p ON m.positionNum=p.positionNum
+		WHERE memberNum=#{memberNum}
     </select>
 
 <!--  2개 table 모두 한번에  회원 추가 update -->
 	<update id="insertMember" parameterType="com.sp.member.Member">
 		INSERT ALL
-			INTO member(memberNum,name,pwd,positionNum,departmentNum) 
-				 VALUES(#{memberNum},#{name},#{pwd},#{positionNum},#{departmentNum})
+			INTO member(memberNum,name,pwd,positionNum,departmentNum,saveFilename,originalFilename) 
+				 VALUES(#{memberNum},#{name},#{pwd},#{positionNum},#{departmentNum}
+				 ,#{saveFilename,jdbcType=VARCHAR},#{originalFilename,jdbcType=VARCHAR})
 			INTO memberauthority(memberNum,Authority) VALUES(#{memberNum},'ROLE_USER') 
 			INTO memberdetailinfo(memberNum,birth,email,tel,phone,zip,addr1,addr2)
 				 VALUES(#{memberNum},#{birth},#{email},#{tel},#{phone},
 				 #{zip,jdbcType=VARCHAR},#{addr1,jdbcType=VARCHAR},#{addr2,jdbcType=VARCHAR})
+	 
 			SELECT * FROM dual
 	</update>
+	
+<!-- 사원조회 검색 조건 -->
+	<sql id="where-list">
+	  <if test="searchKey=='name'">
+	      INSTR(name,#{searchValue})&gt;=1
+	  </if>
+	  <if test="searchKey=='position'">
+	 	 INSTR(positionName,#{searchValue})&gt;=1
+	  </if>
+	  <if test="searchKey=='department'">
+	      INSTR(departmanetName,#{searchValue})&gt;=1 
+	  </if>
+	  <if test="searchKey=='created'">
+	      (TO_CHAR(created, 'YYYY-MM-DD') = #{searchValue}
+            OR TO_CHAR(created, 'YYYYMMDD') = #{searchValue})
+	  </if>
+	</sql>
+	
+	<!-- 총 사원 카운트 -->
+	<select id="dataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*),0) FROM member m JOIN department d 
+			ON m.departmentNum=d.departmentNum JOIN position p 
+			ON m.positionNum=p.positionNum
+		<where>
+			<if test="searchValue != null and searchValue != ''">
+				<include refid="where-list"/>
+			</if>
+		</where>
+	</select>
+	
+	<!-- 부서 데이터 -->
+	<select id="departmentList" resultType="map">
+		SELECT departmentNum,departmentName FROM department WHERE departmentType=1
+	</select>
+	
+	<!-- 직급데이터 -->
+	<select id="positionList" resultType="map">
+		SELECT positionNum,positionName FROM position ORDER BY positionstep
+	</select>
+	
+	<!-- 사원 조회 리스트 -->
+	<select id="listMember" parameterType="map" resultType="com.sp.member.Member">
+		SELECT * FROM (
+		    SELECT ROWNUM rnum, tb.* FROM (
+			     SELECT m.memberNum,name,email,tel,phone,TO_CHAR(created,'YYYY-MM-DD')created,departmentName,positionName 
+			     	FROM member m
+					LEFT OUTER JOIN memberdetailInfo i ON m.memberNum=i.memberNum
+					LEFT OUTER JOIN department d ON m.departmentNum = d.departmentNum 
+					LEFT OUTER JOIN position p ON p.positionNum = m.positionNum
+                    <where>
+                         <if test="searchValue != null and searchValue != ''">
+			                  <include refid="where-list"/>
+		                 </if>
+		                 AND m.departmentNum is NOT NULL AND p.positionNum is NOT NULL
+	                </where>
+					ORDER BY m.memberNum DESC
+	        ) tb WHERE ROWNUM &lt;= #{end}
+	    ) WHERE rnum &gt;= #{start}
+	</select>
+	
+	 <update id="updateMember1" parameterType="com.sp.member.Member">
+        UPDATE member SET userPwd=#{userPwd}, modify_date=SYSDATE
+               WHERE userId=#{userId}
+    </update>
+	
+    <update id="updateMember2" parameterType="com.sp.member.Member">
+        UPDATE memberdetailinfo SET email=#{email, jdbcType=VARCHAR}, 
+                     tel=#{tel, jdbcType=VARCHAR}, birth=#{birth, jdbcType=VARCHAR},
+                     zip=#{zip, jdbcType=VARCHAR},
+                     addr1=#{addr1, jdbcType=VARCHAR}, addr2=#{addr2, jdbcType=VARCHAR}
+               WHERE userId=#{userId}
+    </update>
+	
+	
+	
 </mapper>

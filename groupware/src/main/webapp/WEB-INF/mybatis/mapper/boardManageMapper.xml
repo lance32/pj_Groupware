@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="boardManage">
+
+<!-- 테이블 생성 -->
+<update id="createBoardTable" parameterType="String">
+CREATE TABLE ${value}(
+	num number,
+	memberNum varchar2(10),
+	title varchar2(255) not null,
+	content CLOB not null,
+	hitCount number default 0,
+	created date default sysdate,
+	groupNum number not null,
+	depth number not null,
+	orderNo number not null,
+	parent number not null,
+	PRIMARY KEY(num),
+	FOREIGN KEY(memberNum) REFERENCES member(memberNum)
+)
+</update>
+
+<update id="createBoardFileTable" parameterType="String">
+	CREATE TABLE ${value}_File(
+	fileNum number,
+	num number,
+	saveFilename varchar2(255) not null,
+	originalFilename varchar2(255) not null,
+	fileSize number not null,
+	PRIMARY KEY(fileNum),
+	FOREIGN KEY(num) REFERENCES ${value}(num)
+)
+</update>
+
+<update id="createBoardLikeTable" parameterType="String">
+	CREATE TABLE ${value}_Like(
+	num number,
+	memberNum varchar2(10),
+	PRIMARY KEY(num, memberNum),
+	FOREIGN KEY(num) REFERENCES ${value}(num),
+	FOREIGN KEY(memberNum) REFERENCES member(memberNum)
+	)
+</update>
+
+<update id="createBoardReplyTable" parameterType="String">
+	CREATE TABLE ${value}_Reply(
+	replyNum number,
+	num number,
+	memberNum varchar2(10),
+	content varchar2(3000) not null,
+	created date default sysdate,
+	answer number not null,
+	PRIMARY KEY(replyNum),
+	FOREIGN KEY(num) REFERENCES ${value}(num),
+	FOREIGN KEY(memberNum) REFERENCES member(memberNum)
+)
+</update>
+
+<update id="createBoardReplyLikeTable" parameterType="String">
+	CREATE TABLE ${value}_replyLike(
+	replyNum number,
+	memberNum varchar2(10),
+	PRIMARY KEY(replyNum, memberNum),
+	FOREIGN KEY(replyNum) REFERENCES ${value}_Reply(replyNum),
+	FOREIGN KEY(memberNum) REFERENCES member(memberNum)
+)
+</update>
+
+<select id="tableCount" resultType="Integer" parameterType="String">
+SELECT NVL(COUNT(*), 0) FROM tab WHERE tname=UPPER(#{value})
+	OR tname=UPPER(#{value}||'_LIKE')
+	OR tname=UPPER(#{value}||'_REPLY')
+	OR tname=UPPER(#{value}||'_REPLYLIKE')
+	OR tname=UPPER(#{value}||'_FILE')
+</select>
+
+
+<!-- 테이블 삭제 -->
+<update id="dropBoardTable" parameterType="String">
+	DROP TABLE ${value} PURGE
+</update>
+	
+<update id="dropBoardFileTable" parameterType="String">
+	DROP TABLE ${value}_File PURGE
+</update>
+	
+<update id="dropBoardLikeTable" parameterType="String">
+	DROP TABLE ${value}_Like PURGE
+</update>
+	
+<update id="dropBoardReplyLikeTable" parameterType="String">
+	DROP TABLE ${value}_ReplyLike PURGE
+</update>
+
+<update id="dropBoardReplyTable" parameterType="String">
+	DROP TABLE ${value}_Reply PURGE
+</update>
+
+<insert id="insertBoardManage" parameterType="com.sp.boardManage.BoardManage">
+	INSERT INTO boardInfo(boardNum, tableName, boardName, writePermit, canAnswer, canReply, canFile, canLike, canReplyLike, leftMenu, subMenu)
+		VALUES(boardInfo_seq.NEXTVAL, #{tableName}, #{boardName}, #{writePermit}, #{canAnswer}, #{canReply}, #{canFile}
+		, #{canLike}, #{canReplyLike}, #{leftMenu, jdbcType=VARCHAR}, #{subMenu})
+</insert>
+
+<select id="dataCount" resultType="Integer">
+	SELECT NVL(COUNT(boardNum), 0) FROM boardInfo
+</select>
+
+<select id="listBoardManage"  resultType="com.sp.boardManage.BoardManage">
+	SELECT boardNum, tableName, boardName, writePermit, canAnswer, canReply, canFile, canLike, canReplyLike, leftMenu, subMenu 
+		FROM boardInfo ORDER BY subMenu ASC, boardNum DESC
+</select>
+
+<select id="readBoardManage1" resultType="com.sp.boardManage.BoardManage" parameterType="Integer">
+	SELECT boardNum, tableName, boardName, writePermit, canAnswer, canReply, canFile, canLike, canReplyLike, leftMenu, subMenu
+		FROM boardInfo WHERE boardNum = #{boardNum}
+</select>
+<select id="readBoardManage2" resultType="com.sp.boardManage.BoardManage" parameterType="String">
+SELECT boardNum, tableName, boardName, writePermit, canAnswer, canReply, canFile, canLike, canReplyLike, leftMenu, subMenu
+		FROM boardInfo WHERE tableName = #{tableName}
+</select>
+
+<update id="updateBoardManage" parameterType="com.sp.boardManage.BoardManage">
+         UPDATE boardInfo SET boardName=#{boardName}, writePermit=#{writePermit},
+                    canAnswer=#{canAnswer},
+                    canReply=#{canReply}, canFile=#{canFile}, 
+                    canLike=#{canLike}, canReplyLike=#{canReplyLike}, subMenu=#{subMenu},
+                    leftMenu=#{leftMenu, jdbcType=VARCHAR}
+                    WHERE boardNum = #{boardNum}
+</update>
+
+<delete id="deleteBoardManage" parameterType="Integer">
+   	DELETE FROM boardInfo WHERE boardNum = #{boardNum}
+</delete>
+
+<select id="listBoardFile1" parameterType="String" resultType="com.sp.boardManage.BoardFile">
+   	SELECT fileNum, num, originalFilename, saveFilename
+     	FROM ${value}_File
+</select>
+
+<select id="listBoardFile2" parameterType="String" resultType="com.sp.boardManage.BoardFile">
+  	SELECT fileNum, num, originalFilename, saveFilename
+   		FROM ${value}_File  WHERE num IN 
+       	(SELECT num FROM ${value} WHERE depth &gt; 0)
+</select>
+      
+<delete id="deleteBoardAnswer" parameterType="String">
+ 	DELETE FROM ${value} WHERE depth &gt; 0      		      
+</delete>
+      
+<delete id="deleteBoardLike" parameterType="String">
+  	DELETE FROM ${value}_Like
+</delete>
+<delete id="deleteBoardReplyLike" parameterType="String">
+  	DELETE FROM ${value}_ReplyLike
+</delete>
+<delete id="deleteBoardReply" parameterType="String">
+  	DELETE FROM ${value}_Reply
+</delete>
+      
+<delete id="deleteBoardFile1" parameterType="String">
+   	DELETE FROM ${value}_File
+</delete>
+        
+<delete id="deleteBoardFile2" parameterType="String">
+  	DELETE FROM ${value}_File
+   		WHERE num IN 
+       	(SELECT num FROM ${value} WHERE depth &gt; 0)
+</delete>
+</mapper>

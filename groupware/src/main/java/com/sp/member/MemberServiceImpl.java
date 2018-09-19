@@ -1,8 +1,12 @@
 package com.sp.member;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.sp.common.FileManager;
 import com.sp.common.dao.CommonDAO;
 
 @Service("member.memberService")
@@ -10,6 +14,8 @@ public class MemberServiceImpl implements MemberService {
 	@Autowired
 	private CommonDAO dao;
 	
+	@Autowired
+	private FileManager filemanager;
 	
 	@Override
 	public Member readMember(String memberNum) {
@@ -25,7 +31,9 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public void insertMember(Member dto) throws Exception {
+	public int insertMember(Member dto, String pathname) throws Exception {
+		int result=0;
+		
 		try {
 			if(dto.getEmail1() != null && dto.getEmail1().length()!=0 &&
 					dto.getEmail2() != null && dto.getEmail2().length()!=0)
@@ -45,13 +53,78 @@ public class MemberServiceImpl implements MemberService {
 				dto.setPhone(dto.getPhone1()+"-"+dto.getPhone2()+"-"+dto.getPhone3());
 			}
 			
-			dao.updateData("member.insertMember",dto);
+			String saveFilename=filemanager.doFileUpload(dto.getUpload(), pathname);
+			if(saveFilename!=null) {
+				dto.setSaveFilename(saveFilename);
+				dto.setOriginalFilename(dto.getUpload().getOriginalFilename());
+			}
+			
+			result=dao.updateData("member.insertMember",dto);
 			
 		} catch (Exception e) {
 			throw e;
 		}
+		return result;
+	}
+
+	@Override
+	public void firstLoginMember(Member dto) throws Exception {
+		
 		
 	}
+
+	@Override
+	public int dataCount(Map<String, Object> map) {
+		int result =0;
+		
+		try {
+			result=dao.selectOne("member.dataCount", map);
+		} catch (Exception e) {
+		}
+		
+		return result;
+	}
+
+	@Override
+	public List<Member> ListMember(Map<String, Object> map) {
+		List<Member> listmember=null;
+		
+		try {
+			listmember=dao.selectList("member.listMember", map);
+		} catch (Exception e) {
+		}
+		return listmember;
+	}
+	//부서 DB 데이터 가져오기
+	@Override
+	public List<Map<String, Object>> departmentList() {
+		List<Map<String, Object>> departmentList=null;
+		try {
+			departmentList=dao.selectList("member.departmentList");
+			} catch (Exception e) {
+				
+			}
+		return departmentList;
+	}
+	//직급 DB 데이터 가져오기
+	@Override
+	public List<Map<String, Object>> positionList() {
+		List<Map<String, Object>> positionList=null;
+			try {
+				positionList=dao.selectList("member.positionList");
+			} catch (Exception e) {
+				
+			}
+			
+		return positionList;
+	}
+
+	@Override
+	public void updateMember(Member dto) throws Exception {
+		
+		
+	}
+
 
 
 }

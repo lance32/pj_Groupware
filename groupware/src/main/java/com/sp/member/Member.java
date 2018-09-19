@@ -1,6 +1,10 @@
 package com.sp.member;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class Member {
+	private int listmemberNum;
+	
 	private String memberNum, name, pwd;
 	private String email;
 	private String email1;
@@ -27,8 +31,49 @@ public class Member {
 	
 	private int departmentNum;
 	private int positionNum;
+	private String departmentName;
+	private String positionName;
 	
+	private String saveFilename;
+	private String originalFilename;
+	private MultipartFile upload;
 	
+	public String getSaveFilename() {
+		return saveFilename;
+	}
+	public void setSaveFilename(String saveFilename) {
+		this.saveFilename = saveFilename;
+	}
+	public String getOriginalFilename() {
+		return originalFilename;
+	}
+	public void setOriginalFilename(String originalFilename) {
+		this.originalFilename = originalFilename;
+	}
+	public MultipartFile getUpload() {
+		return upload;
+	}
+	public void setUpload(MultipartFile upload) {
+		this.upload = upload;
+	}
+	public String getDepartmentName() {
+		return departmentName;
+	}
+	public void setDepartmentName(String departmentName) {
+		this.departmentName = departmentName;
+	}
+	public String getPositionName() {
+		return positionName;
+	}
+	public void setPositionName(String positionName) {
+		this.positionName = positionName;
+	}
+	public int getListmemberNum() {
+		return listmemberNum;
+	}
+	public void setListmemberNum(int listmemberNum) {
+		this.listmemberNum = listmemberNum;
+	}
 	public String getMemberNum() {
 		return memberNum;
 	}

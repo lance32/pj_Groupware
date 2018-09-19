@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="message">
+	<sql id="where-list">
+		<if test="searchKey=='all'">
+			(INSTR(subject, #{searchValue}) &gt;= 1
+			OR DBMS_LOB.INSTR(content, #{searchValue}) &gt;= 1)
+		</if>
+		
+		<if test="searchKey=='subject'">
+			INSTR(subject, #{searchValue}) &gt;= 1
+		</if>
+		
+		<if test="searchKey=='content'">
+			DBMS_LOB.INSTR(content, #{searchValue}) &gt;= 1
+		</if>
+						
+		<if test="searchKey == 'sendMember'">
+			INSTR(sendMember, #{searchValue}) &gt;= 1
+		</if>
+		
+		<if test="searchKey == 'receiveMember'">
+			INSTR(toMember, #{toMember}) &gt;= 1
+		</if>
+	</sql>
+
+	<select id="msgCount" resultType="Integer" parameterType="map">
+		SELECT NVL(COUNT(*), 0) FROM message 
+		<where>
+			<if test="searchValue != null and searchValue != ''">
+				<include refid="where-list"/>
+			</if>
+			<if test="type == 'receive'">
+				AND msgKeep = 0 
+				AND INSTR(toMember, #{memberNum}) &gt;= 1
+			</if>
+			<if test="type == 'send'">
+				AND msgKeep = 0
+				AND INSTR(sendMember, #{memberNum}) &gt;= 1
+			</if>
+			<if test="type == 'keep'">
+				AND msgKeep = 1 
+				AND (INSTR(toMember, #{memberNum}) &gt;= 1 OR INSTR(sendMember, #{memberNum}) &gt;= 1)
+			</if>
+			<if test="type == 'unread'">
+				AND msgKeep = 0 
+				AND INSTR(toMember, #{memberNum}) &gt;= 1
+				AND readTime IS NULL
+			</if>
+		</where>
+	</select>
+	
+	<select id="msgList" resultType="com.sp.message.Message" parameterType="map">
+		SELECT * FROM (
+			SELECT ROWNUM rnum, tb.* FROM (
+				SELECT msgNum, subject, content, sendTime, readTime, msgKeep, sendMember, toMember, s.name sendMemberName, t.name toMemberName
+				FROM message m INNER JOIN member s ON m.sendMember = s.memberNum INNER JOIN member t ON m.toMember = t.memberNum
+				<where>
+					<if test="searchValue != null and searchValue != ''">
+						<include refid="where-list" />
+					</if>
+					<if test="type == 'receive'">	<!-- 받은 쪽지 -->
+						AND toMember = #{memberNum}
+						AND msgKeep = 0
+					</if>
+					<if test="type == 'send'">		<!-- 보낸 쪽지 -->
+						AND sendMember = #{memberNum} 
+						AND msgKeep = 0
+					</if>
+					<if test="keep == 1">			<!-- 보관 -->
+						AND (sendMember = #{memberNum} OR toMember = #{memberNum})
+						AND msgKeep = 1
+					</if>
+				</where>
+				ORDER BY msgNum DESC
+			) tb WHERE ROWNUM &lt;= #{end}
+		) WHERE rnum &gt;= #{start}
+	</select>
+	
+	<select id="msgRead" resultType="com.sp.message.Message" parameterType="Integer">
+		SELECT msgNum, subject, content, sendTime, readTime, msgKeep, sendMember, toMember, s.name sendMemberName, t.name toMemberName
+		FROM message m INNER JOIN member s ON m.sendMember = s.memberNum INNER JOIN member t ON m.toMember = t.memberNum
+		WHERE msgNum = #{msgNum}
+	</select>
+	
+	<insert id="msgInsert" parameterType="com.sp.message.Message">
+		INSERT INTO message(msgNum, subject, content, sendMember, toMember)
+		VALUES(msg_seq.nextval, #{subject}, #{content}, #{sendMember}, #{toMember, jdbcType=VARCHAR})
+	</insert>
+	
+	<update id="msgUpdateReadTime" parameterType="Integer">
+		UPDATE message SET readTime = SYSDATE WHERE msgNum = #{msgNum} AND readTime IS NULL
+	</update>
+	
+	<update id="msgSetMsgKeep" parameterType="map">
+		UPDATE message SET msgKeep = #{msgKeep} WHERE msgNum = #{msgNum}
+	</update>
+	
+	<delete id="msgDelete" parameterType="Integer">
+		DELETE FROM message WHERE msgNum = #{msgNum}
+	</delete>
+</mapper>

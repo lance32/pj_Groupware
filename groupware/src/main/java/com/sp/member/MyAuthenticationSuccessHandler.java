@@ -35,6 +35,10 @@ public class MyAuthenticationSuccessHandler extends SavedRequestAwareAuthenticat
 		SessionInfo info = new SessionInfo();
 		info.setUserId(memberNum);
 		info.setUserName(dto.getName());
+		info.setDepartmentName(dto.getDepartmentName());
+		info.setPositionName(dto.getPositionName());
+		info.setSaveFilename(dto.getSaveFilename());
+		info.setOriginalFilename(dto.getOriginalFilename());
 		
 		session.setAttribute("member", info);
 				

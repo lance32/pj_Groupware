@@ -19,7 +19,7 @@
 <link rel="stylesheet" href="<%=cp%>/resource/bootstrap/css/bootstrap.css" type="text/css">
 
 <link rel="stylesheet" href="<%=cp%>/resource/css/style.css?ver=12443" type="text/css">
-<link rel="stylesheet" href="<%=cp%>/resource/css/layout.css" type="text/css">
+<link rel="stylesheet" href="<%=cp%>/resource/css/layout.css?ver=1" type="text/css">
 
 <script type="text/javascript" src="<%=cp%>/resource/jquery/js/jquery-1.12.4.min.js"></script>
 </head>
@@ -32,7 +32,7 @@
 <div class="container">
 
 	<div class="side">
-	    <tiles:insertAttribute name="side"/>
+	    <tiles:insertAttribute name="side" ignore="true"/>
 	    <div class="sidetabs">
 		   	<tiles:insertAttribute name="sidetabs"/>
 		</div>
