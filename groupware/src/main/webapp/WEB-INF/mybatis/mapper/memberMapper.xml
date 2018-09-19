@@ -5,11 +5,12 @@
 
 <!-- 회원 정보 가져오기 -->
     <select id="readMember" resultType="com.sp.member.Member" parameterType="String">
-        SELECT m.memberNum,name,pwd,saveFilename,originalFilename,departmentName,positionName 
+        SELECT m.memberNum,name,pwd,status,created,phone,email,saveFilename,originalFilename,departmentName,positionName
 			FROM member m
+			LEFT OUTER JOIN memberdetailinfo i ON m.memberNum=i.memberNum
 			LEFT OUTER JOIN department d ON m.departmentNum=d.departmentNum
 			LEFT OUTER JOIN position p ON m.positionNum=p.positionNum
-		WHERE memberNum=#{memberNum}
+		WHERE m.memberNum=#{memberNum}
     </select>
 
 <!--  2개 table 모두 한번에  회원 추가 update -->
@@ -85,9 +86,9 @@
 	    ) WHERE rnum &gt;= #{start}
 	</select>
 	
-	 <update id="updateMember1" parameterType="com.sp.member.Member">
-        UPDATE member SET userPwd=#{userPwd}, modify_date=SYSDATE
-               WHERE userId=#{userId}
+	 <update id="updatepwd" parameterType="com.sp.member.Member">
+        UPDATE member SET userPwd=#{userPwd}, modified=SYSDATE
+               WHERE memberNum=#{memberNum}
     </update>
 	
     <update id="updateMember2" parameterType="com.sp.member.Member">
@@ -95,7 +96,7 @@
                      tel=#{tel, jdbcType=VARCHAR}, birth=#{birth, jdbcType=VARCHAR},
                      zip=#{zip, jdbcType=VARCHAR},
                      addr1=#{addr1, jdbcType=VARCHAR}, addr2=#{addr2, jdbcType=VARCHAR}
-               WHERE userId=#{userId}
+               WHERE memberNum=#{memberNum}
     </update>
 	
 	
