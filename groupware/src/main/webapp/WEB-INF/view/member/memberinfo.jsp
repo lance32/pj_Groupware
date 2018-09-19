@@ -50,26 +50,18 @@ $(function(){
     
     <div>
 			<table style="width: 100%; margin: 20px auto 0px; border-spacing: 0px; border-collapse: collapse;">
-			<tr height="35" style="border-top: 1px solid #cccccc; border-bottom: 1px solid #cccccc;">
-			    <td rowspan="3" align="center">
-				  <img style="width:200px;height:200px;" src="<%=cp%>/upload/member/${dto.saveFilename}">
+			<tr style="border-top: 1px solid #cccccc; border-bottom: 1px solid #cccccc;">
+			    <td rowspan="3" align="center" style="width:40px;height:50px;">
+				  <img src="<%=cp%>/upload/member/${dto.saveFilename}">
 			    </td>
 			    <td width="30px;">
 			    	 이름 : ${dto.name} |
 			    </td>
-			    <td>
+			    <td style="border-left: 1px solid #cccccc;">
 			    	부서 : ${dto.positionName}
 			    </td>
 			</tr>
 						
-			<tr height="35" style="border-bottom: 1px solid #cccccc;">
-			    <td width="50%" align="left" style="padding-left: 5px;">
-			       이름 : ${dto.name}
-			    </td>
-			    <td width="50%" align="right" style="padding-right: 5px;">
-			  		부서:${dto.positionName} | 직급:${dto.departmentName}
-			    </td>
-			</tr>
 			
 			<tr>
 			  <td colspan="2" align="left" style="padding: 10px 5px;" valign="top" height="200">
