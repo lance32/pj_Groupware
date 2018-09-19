@@ -451,4 +451,43 @@ public class BoardController {
 		
 		return "redirect:/cb_"+board+"/list?page="+page;
 	}
+	
+	// 게시물 좋아요
+	@RequestMapping(value="/cb_{board}/insertBoardLike", method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> insertBoardLike(
+			@PathVariable String board,
+			Board dto,
+			HttpSession session
+			) {
+		Map<String, Object> model = new HashMap<>(); 
+		try {
+			SessionInfo info=(SessionInfo) session.getAttribute("member");
+			String state="true";
+			int boardLikeCount=0;
+			
+			BoardManage cb=mservice.readBoardManage("cb_"+board);
+	   	    if(cb==null) {
+	   	    	state="noTable";
+	   	    } else {
+				dto.setTableName(cb.getTableName());
+				dto.setMemberNum(info.getUserId());
+				int result=service.insertBoardLike(dto);
+				
+				Map<String, Object> map = new HashMap<>();
+				map.put("tableName", cb.getTableName());
+				map.put("num", dto.getNum());
+				boardLikeCount=service.boardLikeCount(map);
+				
+				if(result==0)
+					state="false";
+	   	    }
+			model.put("state", state);
+			model.put("boardLikeCount", boardLikeCount);
+			
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return model;
+	}
 }

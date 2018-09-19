@@ -175,6 +175,11 @@
 			FROM ${tableName}_Like WHERE num = #{num}
 	</select>
 	
+	<delete id="deleteBoardLike" parameterType="com.sp.cboard.Board">
+		DELETE FROM ${tableName}_Like 
+			WHERE num = #{num} AND memberNum = #{memberNum}
+	</delete>
+	
 <!-- 파일 처리 -->
 	<select id="maxFileNum" resultType="Integer" parameterType="map">
 		SELECT NVL(MAX(fileNum), 0) FROM ${tableName}_File

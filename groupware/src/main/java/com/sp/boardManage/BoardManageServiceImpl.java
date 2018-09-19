@@ -135,7 +135,6 @@ public class BoardManageServiceImpl implements BoardManageService {
 				for(BoardFile vo:listFile) {
 					fileManager.doFileDelete(vo.getSaveFilename(), pathname);
 				}
-				
 				dao.updateData("boardManage.dropBoardFileTable", dto.getTableName());
 				dao.updateData("boardManage.dropBoardReplyTable", dto.getTableName());
 				dao.updateData("boardManage.dropBoardLikeTable", dto.getTableName());
