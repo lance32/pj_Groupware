@@ -9,8 +9,6 @@ public class BoardManage {
 	private int canReply;
 	private int canFile;
 	private int canLike;
-	private int canReplyLike;
-	private String leftMenu;
 	private int subMenu;
 	
 	public int getBoardNum() {
@@ -60,18 +58,6 @@ public class BoardManage {
 	}
 	public void setCanLike(int canLike) {
 		this.canLike = canLike;
-	}
-	public int getCanReplyLike() {
-		return canReplyLike;
-	}
-	public void setCanReplyLike(int canReplyLike) {
-		this.canReplyLike = canReplyLike;
-	}
-	public String getLeftMenu() {
-		return leftMenu;
-	}
-	public void setLeftMenu(String leftMenu) {
-		this.leftMenu = leftMenu;
 	}
 	public int getSubMenu() {
 		return subMenu;

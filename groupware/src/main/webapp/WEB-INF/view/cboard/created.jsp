@@ -29,9 +29,32 @@ $(function(){
 <c:if test="${mode=='update' && cb.canFile=='1'}">
 function deleteFile(fileNum) {
 		var url="<%=cp%>/${cb.tableName}/deleteFile";
-		$.post(url, {fileNum:fileNum}, function(data){
-			$("#f"+fileNum).remove();
-		}, "json");
+		var query = "fileNum="+fileNum;
+		
+		$.ajax({
+			type : "post",
+			url : url,
+			data : query,
+			dataType : "json",
+			success:function(data) {
+				var state=data.state;
+				if(state=="true") {
+					$("#f"+fileNum).remove();
+					window.location.reload();
+				} else if(state=="false") {
+					alert("파일 삭제 실패!!!");
+				}
+			}
+			,beforeSend : function(jqXHR) {
+		        jqXHR.setRequestHeader("AJAX", true);
+		    }
+		    ,error:function(jqXHR) {
+		    	if(jqXHR.status==403) {
+		    		return;
+		    	}
+		    	console.log(jqXHR.responseText);
+		    }
+		});
 }
 </c:if>
 
@@ -51,7 +74,12 @@ $(function(){
   		});
   		if(b)
   			return;
-
+  			
+  		if($("input[name=upload]").length > 2){
+  			alert("파일은 최대 3개까지만 등록할 수 있습니다.");
+  			return;
+  		}
+  		
   		var $tr, $td, $input;
   		
   	    $tr=$("<tr height='40' class='moreFile'>");
@@ -63,10 +91,11 @@ $(function(){
   	    $tr.append($td);
   	    
   	    $("#tb").append($tr);
+  	    
   	});
 });
 </c:if>
-
+ 
 </script>
 <div style="clear: both; margin: 10px 0px 15px 10px;">
 	<span class="glyphicon glyphicon-bullhorn"
@@ -109,9 +138,9 @@ $(function(){
 				  <tr align="left" height="40" style="border-bottom: 1px solid #cccccc;" id="f${vo.fileNum}">
 				      <td width="100" bgcolor="#eeeeee" style="text-align: center;">첨부된파일</td>
 				      <td style="padding-left:10px;"> 
-				          ${dto.originalFilename}
-				          <c:if test="${not empty dto.saveFilename}">
-				          		| <a id="chkDelete">파일삭제</a>
+				          ${vo.originalFilename}
+				          <c:if test="${not empty vo.saveFilename}">
+				          		| <a href="javascript:deleteFile('${vo.fileNum}');">파일삭제</a>&nbsp;
 				          </c:if>
 				       </td>
 				  </tr>

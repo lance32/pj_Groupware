@@ -7,6 +7,40 @@
 %>
 
 <script>
+$(function(){
+// 삭제 버튼
+	$("#btnDelete").click(function(){
+<c:if test="${sessionScope.member.userId=='admin' || sessionScope.member.userId==dto.memberNum}">
+		var num = "${dto.num}";
+		var page = "${page}";
+		var query = "num="+num+"&page="+page;
+		var url = "<%=cp%>/${cb.tableName}/delete?"+query;
+		
+		if(confirm("게시물을 삭제 하시겠습니까?")){
+			location.href = url;
+		}
+	});
+</c:if>
+
+<c:if test="${sessionScope.member.userId!='admin' && sessionScope.member.userId!=dto.memberNum}">
+	alert("게시물을 삭제할 수  없습니다.");
+</c:if>
+// 수정 버튼
+	$("#btnUpdate").click(function(){
+<c:if test="${sessionScope.member.userId==dto.memberNum}">
+		var num = "${dto.num}";
+		var page = "${page}";
+		var query = "num="+num+"&page="+page;
+		var url = "<%=cp%>/${cb.tableName}/update?"+query;
+		
+		location.href = url;
+	});
+</c:if>
+
+<c:if test="${sessionScope.member.userId!=dto.memberNum}">
+	alert("게시물을 수정할 수  없습니다.");
+</c:if>
+});
 </script>
 
 <div style="clear: both; margin: 10px 0px 15px 10px;">

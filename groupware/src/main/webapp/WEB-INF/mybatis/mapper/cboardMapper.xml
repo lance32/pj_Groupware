@@ -150,6 +150,20 @@
             ) tb WHERE ROWNUM=1
 	</select>
 	
+	<!-- 게시물 수정 -->
+	<update id="updateBoard" parameterType="com.sp.cboard.Board">
+		UPDATE ${tableName} SET title = #{title}, content = #{content}
+			WHERE num = #{num}
+	</update>
+	
+	<!-- 게시물 삭제 -->
+	<delete id="deleteBoard" parameterType="map">
+		DELETE FROM ${tableName} WHERE num IN
+			(SELECT num FROM ${tableName} START WITH num = #{num}
+			CONNECT BY PRIOR num = parent)
+	</delete>
+	
+	
 	<!-- 게시물 좋아요 -->
 	<insert id="insertBoardLike" parameterType="com.sp.cboard.Board">
 		INSERT INTO ${tableName}_Like(num, memberNum)
@@ -179,4 +193,14 @@
 			WHERE num = #{num}
 	</select>
 	
+	<!-- 파일 정보 가져오기 -->
+	<select id="readFile" parameterType="map" resultType="com.sp.cboard.Board">
+		SELECT fileNum, num, saveFilename, originalFilename, fileSize
+			FROM ${tableName}_File
+			WHERE fileNum = #{fileNum}
+	</select>
+	<!-- 파일 지우기 -->
+	<delete id="deleteFile" parameterType="map">
+		DELETE FROM ${tableName}_File WHERE ${field} = #{num}
+	</delete>
 </mapper>
