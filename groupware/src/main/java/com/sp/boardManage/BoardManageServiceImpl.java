@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.sp.common.FileManager;
 import com.sp.common.dao.CommonDAO;
 
 @Service("boardManage.boardManageService")
@@ -12,6 +13,9 @@ public class BoardManageServiceImpl implements BoardManageService {
 
 	@Autowired
 	private CommonDAO dao;
+	
+	@Autowired
+	private FileManager fileManager;
 	
 	@Override
 	public int createBoardManage(BoardManage dto) {
@@ -60,25 +64,94 @@ public class BoardManageServiceImpl implements BoardManageService {
 
 	@Override
 	public BoardManage readBoardManage(int num) {
-		// TODO Auto-generated method stub
-		return null;
+		BoardManage dto = null;
+		try {
+			dto = dao.selectOne("boardManage.readBoardManage1", num);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return dto;
 	}
 
 	@Override
 	public BoardManage readBoardManage(String board) {
-		// TODO Auto-generated method stub
-		return null;
+		BoardManage dto=null;
+		try {
+			dto=dao.selectOne("boardManage.readBoardManage2", board);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return dto;
 	}
 
 	@Override
 	public int updateBoardManage(BoardManage dto, String pathname) {
-		// TODO Auto-generated method stub
-		return 0;
+		int result=0;
+
+		try{
+			if(dto.getCanFile() == 0) {
+				List<BoardFile> listFile=dao.selectList("boardManage.listBoardFile1", dto.getTableName());
+				for(BoardFile vo:listFile) {
+					fileManager.doFileDelete(vo.getSaveFilename(), pathname);
+				}
+				
+				dao.deleteData("boardManage.deleteBoardFile1", dto.getTableName());
+			}
+			
+			if(dto.getCanLike() == 0) {
+				dao.deleteData("boardManage.deleteBoardLike", dto.getTableName());
+			}
+
+			if(dto.getCanReply() == 0) {
+				dao.deleteData("boardManage.deleteBoardReplyLike", dto.getTableName());
+
+				dao.deleteData("boardManage.deleteBoardReply", dto.getTableName());
+			}
+			
+			if(dto.getCanReplyLike() == 0) { 
+				dao.deleteData("boardManage.deleteBoardReplyLike", dto.getTableName());
+			}
+			
+			if(dto.getCanAnswer() == 0) {
+				List<BoardFile> listFile=dao.selectList("boardManage.listBoardFile2", dto.getTableName());
+				for(BoardFile vo:listFile) {
+					fileManager.doFileDelete(vo.getSaveFilename(), pathname);
+				}
+				
+				dao.deleteData("boardManage.deleteBoardFile2", dto.getTableName());
+				
+				dao.deleteData("boardManage.deleteBoardAnswer", dto.getTableName());
+			}
+			
+			result=dao.updateData("boardManage.updateBoardManage", dto);
+		} catch(Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
 	}
 
 	@Override
 	public int deleteBoardManage(int num, String pathname) {
-		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		try {
+			BoardManage dto = readBoardManage(num);
+			result=dao.deleteData("boardManage.deleteBoardManage", num);
+			
+			if(dto != null) {
+				List<BoardFile> listFile=dao.selectList("boardManage.listBoardFile1", dto.getTableName());
+				for(BoardFile vo:listFile) {
+					fileManager.doFileDelete(vo.getSaveFilename(), pathname);
+				}
+				
+				dao.updateData("boardManage.dropBoardFileTable", dto.getTableName());
+				dao.updateData("boardManage.dropBoardReplyLikeTable", dto.getTableName());
+				dao.updateData("boardManage.dropBoardReplyTable", dto.getTableName());
+				dao.updateData("boardManage.dropBoardLikeTable", dto.getTableName());
+				dao.updateData("boardManage.dropBoardTable", dto.getTableName());
+			}
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
 	}
 }

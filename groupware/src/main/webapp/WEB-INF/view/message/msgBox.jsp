@@ -37,18 +37,27 @@
 		
 		$("#keepBtn").click(function() {
 			if (confirm('쪽지를 보관 하시겠습니까?')) {
-				if ($("tr input[name='chk']").each(function() {
-					if (this.checked) {
-						alert('test');
-					} 					
+				var msgNum = [];
+				var index = 0;
+				$("tr input[name='chk']").each(function() { 
+					if (this.checked) {	
+						msgNum[index++] = $(this).data("msgNum");
+					} 
 				});
-
+				location.href="<%=cp%>/message/setMsgKeep?msgNum=" + msgNum;
 			}
 		});
 		
 		$("#deleteBtn").click(function() {
 			if (confirm('쪽지를 삭제 하시겠습니까?')) {
-				location.href="<%=cp%>/message/msgDelete?msgNum=${dto.msgNum}";
+				var msgNum = [];
+				var index = 0;
+				$("tr input[name='chk']").each(function() {
+					if (this.checked) {
+						msgNum[index++] = $(this).data("msgNum");
+					}
+				});
+				location.href="<%=cp%>/message/msgDelete?msgType=${msgType}&msgNum=" + msgNum;
 			}
 		});
 	});
@@ -100,7 +109,7 @@
 		</tr>
 		<c:forEach var="dto" items="${list}">
 			<tr class="tr">
-				<td><input type="checkbox" name="chk"><input type="hidden" name="msgNum" value="${dto.msgNum}"></td>
+				<td><input type="checkbox" name="chk" data-msg-num="${dto.msgNum}"></td>
 				<c:if test="${msgType == 'send'}">
 					<td style="text-align: left;">${dto.toMemberName}</td>
 				</c:if>

@@ -14,19 +14,16 @@
     	<td><a href="<%=cp%>/boardManage/list">게시판 관리</a></td>
     </tr>
     <tr>
-    	<td><a href="#">메뉴2 ( 0 | 0 )</a></td>
-    </tr>
-    <tr>
-    	<td><a href="#">메뉴3 (0)</a></td>
+    	<td><a href="<%=cp%>/notice/list">공 지 사 항</a></td>
     </tr>
 	<tr>
     	<th>메인 사이드 탭2</th>
     </tr>
-    <tr>
-    	<td><a href="#">메뉴1</a></td>
-    </tr>
-    <tr>
-    	<td><a href="#">메뉴2</a></td>
-    </tr>
+    <c:forEach var="dto" items="${boardList}">
+	    <tr>
+	    	<td><a href="<%=cp%>/${dto.tableName}/list">${dto.boardName}</a></td>
+	    </tr>
+    </c:forEach>
+
 
 </table>

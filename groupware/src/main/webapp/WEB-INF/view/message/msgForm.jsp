@@ -6,6 +6,32 @@
 	String cp=request.getContextPath();
 %>
 
+<script type="text/javascript">
+	$(function() {
+		$("#listBtn").click(function() {
+			<c:if test="${msgType == 'send'}">
+				location.href="<%=cp%>/message/msgSend";
+			</c:if>
+			<c:if test="${msgType == 'receive'}">
+				location.href="<%=cp%>/message/msgReceive";
+			</c:if>
+			<c:if test="${msgType == 'keep'}">
+				location.href="<%=cp%>/message/msgReceive";
+			</c:if>
+		});
+		
+		$("#keepBtn").click(function(){
+			if (confirm('쪽지를 보관하시겠습니까?'))
+				location.href="<%=cp%>/message/setMsgKeep?msgNum=${msgNum}";
+		});
+		
+		$("#deleteBtn").click(function(){
+			if (confirm('쪽지를 삭제하시겠습니까?'))
+				location.href="<%=cp%>/message/msgDelete?msgNum=${msgNum}&msgType=${msgType}";
+		});
+	});
+</script>
+
 <div id="msgWrite" style="width:100%; height: 600px;">
 	<div style="clear: both; margin: 10px 0px 15px 10px;">
 		<span class="glyphicon glyphicon-ok" style="font-size: 28px; margin-left: 10px;" ></span>

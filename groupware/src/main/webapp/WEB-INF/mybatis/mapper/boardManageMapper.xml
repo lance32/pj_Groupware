@@ -16,8 +16,8 @@ CREATE TABLE ${value}(
 	depth number not null,
 	orderNo number not null,
 	parent number not null,
-	CONSTRAINT pk_board_num PRIMARY KEY(num),
-	CONSTRAINT fk_board_memberNum FOREIGN KEY(memberNum) REFERENCES member(memberNum)
+	PRIMARY KEY(num),
+	FOREIGN KEY(memberNum) REFERENCES member(memberNum)
 )
 </update>
 
@@ -28,8 +28,8 @@ CREATE TABLE ${value}(
 	saveFilename varchar2(255) not null,
 	originalFilename varchar2(255) not null,
 	fileSize number not null,
-	CONSTRAINT pk_boardFile_fileNum PRIMARY KEY(fileNum),
-	CONSTRAINT fk_boardFile_num FOREIGN KEY(num) REFERENCES ${value}(num)
+	PRIMARY KEY(fileNum),
+	FOREIGN KEY(num) REFERENCES ${value}(num)
 )
 </update>
 
@@ -37,9 +37,9 @@ CREATE TABLE ${value}(
 	CREATE TABLE ${value}_Like(
 	num number,
 	memberNum varchar2(10),
-	CONSTRAINT pk_boardLike_like PRIMARY KEY(num, memberNum),
-	CONSTRAINT fk_boardLike_num FOREIGN KEY(num) REFERENCES ${value}(num),
-	CONSTRAINT fk_boardLike_memberNum FOREIGN KEY(memberNum) REFERENCES member(memberNum)
+	PRIMARY KEY(num, memberNum),
+	FOREIGN KEY(num) REFERENCES ${value}(num),
+	FOREIGN KEY(memberNum) REFERENCES member(memberNum)
 	)
 </update>
 
@@ -51,9 +51,9 @@ CREATE TABLE ${value}(
 	content varchar2(3000) not null,
 	created date default sysdate,
 	answer number not null,
-	CONSTRAINT pk_reply_replyNum PRIMARY KEY(replyNum),
-	CONSTRAINT fk_reply_num FOREIGN KEY(num) REFERENCES ${value}(num),
-	CONSTRAINT fk_reply_memberNum FOREIGN KEY(memberNum) REFERENCES member(memberNum)
+	PRIMARY KEY(replyNum),
+	FOREIGN KEY(num) REFERENCES ${value}(num),
+	FOREIGN KEY(memberNum) REFERENCES member(memberNum)
 )
 </update>
 
@@ -61,9 +61,9 @@ CREATE TABLE ${value}(
 	CREATE TABLE ${value}_replyLike(
 	replyNum number,
 	memberNum varchar2(10),
-	CONSTRAINT pk_replyLike_like PRIMARY KEY(replyNum, memberNum),
-	CONSTRAINT fk_replyLike_replyNum FOREIGN KEY(replyNum) REFERENCES ${value}_Reply(replyNum),
-	CONSTRAINT fk_replyLike_memberNum FOREIGN KEY(memberNum) REFERENCES member(memberNum)
+	PRIMARY KEY(replyNum, memberNum),
+	FOREIGN KEY(replyNum) REFERENCES ${value}_Reply(replyNum),
+	FOREIGN KEY(memberNum) REFERENCES member(memberNum)
 )
 </update>
 
@@ -109,7 +109,7 @@ SELECT NVL(COUNT(*), 0) FROM tab WHERE tname=UPPER(#{value})
 
 <select id="listBoardManage"  resultType="com.sp.boardManage.BoardManage">
 	SELECT boardNum, tableName, boardName, writePermit, canAnswer, canReply, canFile, canLike, canReplyLike, leftMenu, subMenu 
-		FROM boardInfo ORDER BY boardNum DESC
+		FROM boardInfo ORDER BY subMenu ASC, boardNum DESC
 </select>
 
 <select id="readBoardManage1" resultType="com.sp.boardManage.BoardManage" parameterType="Integer">
