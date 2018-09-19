@@ -61,6 +61,8 @@ public class MemberServiceImpl implements MemberService {
 			
 			result=dao.updateData("member.insertMember",dto);
 			
+			dao.insertData("address.insertGeneralGroup", dto.getMemberNum());
+			
 		} catch (Exception e) {
 			throw e;
 		}

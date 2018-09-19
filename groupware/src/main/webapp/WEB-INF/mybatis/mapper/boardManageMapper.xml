@@ -8,6 +8,7 @@
 CREATE TABLE ${value}(
 	num number,
 	memberNum varchar2(10),
+	name varchar2(30) not null,
 	title varchar2(255) not null,
 	content CLOB not null,
 	hitCount number default 0,
@@ -48,6 +49,7 @@ CREATE TABLE ${value}(
 	replyNum number,
 	num number,
 	memberNum varchar2(10),
+	name varchar2(30) not null,
 	content varchar2(3000) not null,
 	created date default sysdate,
 	answer number not null,

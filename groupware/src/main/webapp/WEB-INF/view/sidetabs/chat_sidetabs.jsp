@@ -6,8 +6,6 @@
 	String cp=request.getContextPath();
 %>
 
-<div class="tabsTop"><button class="sideBtn">채팅방 개설</button></div>
-
 <table class="tabs">
 	<tr>
     	<th>커뮤니티</th>

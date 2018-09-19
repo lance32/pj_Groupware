@@ -550,8 +550,8 @@ function writeToScreen(message) {
 	        	<span style="font-weight: 600; font-family: 나눔고딕, 맑은 고딕, 돋움; color: #424951;">채팅 메시지</span>
 	    	</div>
 		<div id="chatMsgContainer" style="width: 100%; height: 460px; border-bottom: 1px solid #E6E6E6; overflow-y: scroll; padding: 3px;"></div>
-		<div style="clear: both; padding-top: 10px; text-align: center;">
-	    	<input type="text" id="chatRoomMsg" style="width: 95%; height:30px; border: none; border-bottom: 1px solid #0174DF" placeholder="채팅 메시지를 입력 하세요...">
+		<div style="clear: both; padding-top: 15px; text-align: center;">
+	    	<input type="text" id="chatRoomMsg" style="width: 95%; height:30px; border: none; border: 1.4px solid #81BEF7; border-radius: 1.5px; padding-left: 3px; " placeholder="채팅 메시지를 입력 하세요...">
 	    </div>
 	</div>
 	<div style="float: left; width: 14px; height: 550px;">&nbsp;</div>
