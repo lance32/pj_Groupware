@@ -25,7 +25,7 @@
 </tr>
 <tr>
 <td align="center">
-	<a href = "#"><span class = "glyphicon glyphicon-comment" aria-hidden="true"></span>(0)</a><!-- 쪽지 -->
+	<a href = "#"><span class = "glyphicon glyphicon-send" aria-hidden="true"></span>(0)</a><!-- 쪽지 -->
 </td>
 </tr>
 <tr>

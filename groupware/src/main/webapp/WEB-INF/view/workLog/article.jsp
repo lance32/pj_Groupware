@@ -5,28 +5,41 @@
 <%
 	String cp=request.getContextPath();
 %>
-<div>
-<table>
-<tr>
-<td>제목</td>
-<td colspan="2">${dto.subject}</td>
-<td>작성자</td>
-<td colspan="2">${dto.name}</td>
-</tr>
-</table>
-</div>
+<style>
+textarea {
+	overflow: none;
+	resize: none;
+	border: none;
+}
+.worktable tr{
+	height:20px;
+	font-size: 15px;
+	overflow: scroll;
+	
+}
 
-<table style="width: 500px;" border="2">
+</style>
+
+<%-- 상단 대표글씨 --%>
+	<div style="clear: both; margin: 10px 0px 15px 10px;">
+		<span class="glyphicon glyphicon-book" style="font-size: 28px; margin-left: 10px;"></span>
+		<span style="font-size: 30px;">&nbsp;업무 일지</span><br>
+		<div style="clear: both; width: 300px; height: 1px; border-bottom: 3px solid black;"></div>
+	</div>
+	
+<table style="width: 800px;" border="1" class="worktable" >
 <tr>
-<td colspan = "5" rowspan = "2">일일 업무 일지</td>
-<td>작성</td>
-<td>검토</td>
-<td>승인</td>
+<td colspan = "5" rowspan = "3" style="font-size: 25px; border: none;">일일 업무 일지</td>
+<td width="33.3%" style="background-color: bisque">작성</td>
+<td width="33.3%" style="background-color: bisque">검토</td>
+<td width="33.3%" style="background-color: bisque">승인</td>
 </tr>
 <tr>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
+<td rowspan = "2">&nbsp;</td>
+<td rowspan = "2">&nbsp;</td>
+<td rowspan = "2">&nbsp;</td>
+</tr>
+<tr>
 </tr>
 <tr>
 <td>보고번호</td>
@@ -45,24 +58,24 @@
 <td colspan = "7">${dto.subject}</td>
 </tr>
 <tr>
-<td colspan = "4">금일 업무내용</td>
-<td colspan = "4">명일 업무내용</td>
+<td colspan = "4" height="50px" style="background-color: bisque">금일 업무내용</td>
+<td colspan = "4" height="50px" style="background-color: bisque">명일 업무내용</td>
 </tr>
 <tr>
 <td colspan = "4">
-<textarea rows="20" cols="35">
+<textarea rows="23" cols="67" readonly="readonly">
 ${dto.todayWork}
 </textarea>
 </td>
 <td colspan = "4">
-<textarea rows="20" cols="35">
+<textarea rows="23" cols="67" readonly="readonly">
 ${dto.nextdayWork}
 </textarea>
 </td>
 </tr>
 <tr>
-<td colspan = "8" rowspan = "2">
-<textarea rows="5" cols="75">
+<td colspan = "8" rowspan = "2" >
+<textarea rows="5" cols="140" readonly="readonly">
 비고
 ${dto.memo }
 </textarea>
