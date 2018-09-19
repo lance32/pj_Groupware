@@ -7,6 +7,76 @@
 %>
 
 <script>
+$(function(){
+// 삭제 버튼
+	$("#btnDelete").click(function(){
+<c:if test="${sessionScope.member.userId=='admin' || sessionScope.member.userId==dto.memberNum}">
+		var num = "${dto.num}";
+		var page = "${page}";
+		var query = "num="+num+"&page="+page;
+		var url = "<%=cp%>/${cb.tableName}/delete?"+query;
+		
+		if(confirm("게시물을 삭제 하시겠습니까?")){
+			location.href = url;
+		}
+	});
+</c:if>
+
+<c:if test="${sessionScope.member.userId!='admin' && sessionScope.member.userId!=dto.memberNum}">
+	alert("게시물을 삭제할 수  없습니다.");
+</c:if>
+// 수정 버튼
+	$("#btnUpdate").click(function(){
+<c:if test="${sessionScope.member.userId==dto.memberNum}">
+		var num = "${dto.num}";
+		var page = "${page}";
+		var query = "num="+num+"&page="+page;
+		var url = "<%=cp%>/${cb.tableName}/update?"+query;
+		
+		location.href = url;
+	});
+</c:if>
+
+<c:if test="${sessionScope.member.userId!=dto.memberNum}">
+	alert("게시물을 수정할 수  없습니다.");
+</c:if>
+});
+
+<c:if test="${cb.canLike == '1'}">
+$(function(){
+	$(".btnSendBoardLike").click(function(){
+		var url="<%=cp%>/${cb.tableName}/insertBoardLike";
+		var query="num=${dto.num}&canLike=1";
+		
+		$.ajax({
+			type:"post"
+			,url:url
+			,data:query
+			,dataType:"json"
+			,success:function(data) {
+				var state=data.state;
+				if(state=="true") {
+					var count = data.boardLikeCount;
+					$("#boardLikeCount").text(count);
+				} else if(state=="false") {
+					alert("좋아요는 한번만 가능합니다.");
+				}
+			}
+			,beforeSend : function(jqXHR) {
+		        jqXHR.setRequestHeader("AJAX", true);
+		    }
+		    ,error:function(jqXHR) {
+		    	if(jqXHR.status==403) {
+		    		return;
+		    	}
+		    	console.log(jqXHR.responseText);
+		    }
+		});
+		
+	});
+});
+</c:if>
+
 </script>
 
 <div style="clear: both; margin: 10px 0px 15px 10px;">

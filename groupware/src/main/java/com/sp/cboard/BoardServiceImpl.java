@@ -136,14 +136,56 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public int updateBoard(Board dto, String pathname) {
-		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		try {
+			result = dao.updateData("cboard.updateBoard", dto);
+			if(dto.getUpload() != null && ! dto.getUpload().isEmpty()) {
+				for(MultipartFile mf:dto.getUpload()) {
+					if(mf.isEmpty())
+						continue;
+					
+					String saveFilename=fileManager.doFileUpload(mf, pathname);
+					if(saveFilename!=null) {
+						String originalFilename=mf.getOriginalFilename();
+						long fileSize=mf.getSize();
+						
+						dto.setOriginalFilename(originalFilename);
+						dto.setSaveFilename(saveFilename);
+						dto.setFileSize(fileSize);
+						
+						insertFile(dto);
+					}
+				}
+			}
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
 	}
 
 	@Override
 	public int deleteBoard(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return 0;
+		int result=0;
+		try {
+			// 파일 지우기
+			String pathname=(String)map.get("pathname");
+			
+			List<Board> listFile=listFile(map);
+			if(listFile != null) {
+				for(Board dto : listFile) {
+					fileManager.doFileDelete(dto.getSaveFilename(), pathname);
+				}
+			}
+			// 파일 테이블 내용 지우기
+			// 정확히 이해 안됨
+			map.put("field", "num");
+			deleteFile(map);
+			
+			result=dao.deleteData("cboard.deleteBoard", map);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
 	}
 
 	@Override
@@ -198,14 +240,25 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public Board readFile(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return null;
+		Board dto = null;
+		try {
+			dto = dao.selectOne("cboard.readFile", map);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return dto;
 	}
 
 	@Override
 	public int deleteFile(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return 0;
+		int result=0;
+		try {
+			result=dao.deleteData("cboard.deleteFile", map);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		
+		return result;
 	}
 
 	@Override
