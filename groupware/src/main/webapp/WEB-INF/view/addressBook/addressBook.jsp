@@ -10,8 +10,6 @@
 <head>
 <meta charset="UTF-8">
 <title>주소록</title>
-<link rel="stylesheet" href="<%=cp%>/resource/css/style.css?ver=12443" type="text/css">
-<link rel="stylesheet" href="<%=cp%>/resource/css/layout.css?ver=1" type="text/css">
 <script type="text/javascript" src="<%=cp%>/resource/jquery/js/jquery-1.12.4.min.js"></script>
 <style type="text/css">
 

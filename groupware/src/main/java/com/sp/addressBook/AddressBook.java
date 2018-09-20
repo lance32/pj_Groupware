@@ -8,6 +8,8 @@ public class AddressBook {
 	private String belongto;		//소속
 	private String zip;				//우편번호
 	private String addr1, addr2;
+	private String groupNum;
+	private String groupName;
 	
 	public String getName() {
 		return name;
@@ -56,5 +58,17 @@ public class AddressBook {
 	}
 	public void setAddr2(String addr2) {
 		this.addr2 = addr2;
+	}
+	public String getGroupNum() {
+		return groupNum;
+	}
+	public void setGroupNum(String groupNum) {
+		this.groupNum = groupNum;
+	}
+	public String getGroupName() {
+		return groupName;
+	}
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
 	}
 }

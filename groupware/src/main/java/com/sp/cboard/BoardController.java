@@ -55,7 +55,7 @@ public class BoardController {
 			BoardManage cb = mservice.readBoardManage("cb_"+board);
 			if(cb == null)
 				// 수정 필요
-				return "redirect:/";
+				return "error.error";
 			
 			paramMap.put("tableName", cb.getTableName());
 			paramMap.put("searchKey", searchKey);
@@ -120,7 +120,7 @@ public class BoardController {
 		try {
 			BoardManage cb = mservice.readBoardManage("cb_"+board);
 			if(cb==null) {
-				return "redirect:/";
+				return "error.error";
 			}
 			
 			// 글쓰기 권한 처리 필요(session 활용)
@@ -158,7 +158,7 @@ public class BoardController {
 			
 			BoardManage cb=mservice.readBoardManage("cb_"+board);
 			if(cb==null) {
-				return "redirect:/";
+				return "error.error";
 			}
 			
 			String root = session.getServletContext().getRealPath("/");
@@ -191,7 +191,7 @@ public class BoardController {
 		try {
 			BoardManage cb=mservice.readBoardManage("cb_"+board);
 			if(cb==null) {
-				return "redirect:/";
+				return "error.error";
 			}
 			searchValue = URLDecoder.decode(searchValue, "UTF-8");
 			String query = "page="+page;
@@ -341,7 +341,7 @@ public class BoardController {
 		try {
 			BoardManage cb=mservice.readBoardManage("cb_"+board);
 	   	    if(cb==null) {
-	   	    	return "redircet:/";
+	   	    	return "error.error";
 	   	    }
 	   	    SessionInfo info=(SessionInfo)session.getAttribute("member");
 	   	    // 권한 처리 필요
@@ -374,7 +374,7 @@ public class BoardController {
 		}
 		return ".cboard.created";
 	}
-	
+
 	@RequestMapping(value="/cb_{board}/update", method=RequestMethod.POST)
 	public String updateSubmit(
 			@PathVariable String board,
@@ -385,7 +385,7 @@ public class BoardController {
 		try {
 			BoardManage cb=mservice.readBoardManage("cb_"+board);
 	   	    if(cb==null) {
-	   	    	return "redircet:/";
+	   	    	return "error.error";
 	   	    }
 	   	    
 	   	    SessionInfo info=(SessionInfo)session.getAttribute("member");
@@ -415,7 +415,7 @@ public class BoardController {
 		try {
 			BoardManage cb=mservice.readBoardManage("cb_"+board);
 	   	    if(cb==null) {
-	   	    	return "redirect:/";
+	   	    	return "error.error";
 	   	    }
 	 		
 			String root = session.getServletContext().getRealPath("/");
@@ -452,6 +452,69 @@ public class BoardController {
 		return "redirect:/cb_"+board+"/list?page="+page;
 	}
 	
+	// 게시물 답변 폼
+	@RequestMapping(value = "/cb_{board}/answer", method=RequestMethod.GET)
+	public String answerForm(
+			@PathVariable String board,
+			@RequestParam(value = "num") int num,
+			@RequestParam(value = "page") String page,
+			HttpSession session,
+			Model model) throws Exception {
+		
+		BoardManage cb = mservice.readBoardManage("cb_"+board);
+   	    if(cb==null) {
+   	    	return ".error.error";
+   	    }
+		
+		//SessionInfo info = (SessionInfo)session.getAttribute("member");
+		// 권한 처리 필요(페이지 이동)
+		
+		Map<String, Object> map=new HashMap<String, Object>();
+		map.put("tableName", cb.getTableName());
+		map.put("num", num);
+		
+		Board dto = service.readBoard(map);
+		if (dto == null) {
+			return "redirect:/cb_"+board+"/list?page="+page;
+		}
+
+		String str ="[ "+dto.getNum()+"번 게시물 ] "+dto.getTitle()+" 에 대한 답변입니다.\n";
+		dto.setTitle(str);
+        
+		model.addAttribute("cb", cb);
+		model.addAttribute("dto", dto);
+		model.addAttribute("page", page);
+		model.addAttribute("mode", "answer");
+
+		return ".cboard.created";
+	}
+	
+	// 답변 완료
+	@RequestMapping(value="/cb_{board}/answer", method = RequestMethod.POST)
+	public String replySubmit(
+			@PathVariable String board,
+			Board dto,
+			@RequestParam(value="page") String page,
+			HttpSession session) throws Exception {
+		
+		BoardManage cb = mservice.readBoardManage("cb_"+board);
+   	    if(cb==null) {
+   	    	return ".error.error";
+   	    }
+		
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		// 권한 처리 필요
+		
+		String root = session.getServletContext().getRealPath("/");
+		String pathname = root + "uploads" + File.separator + "cboard";		
+		
+		dto.setTableName(cb.getTableName());
+		dto.setMemberNum(info.getUserId());
+		service.insertBoard(dto,"answer", pathname);
+
+		return "redirect:/cb_"+board+"/list?page="+page;
+	}
+
 	// 게시물 좋아요
 	@RequestMapping(value="/cb_{board}/insertBoardLike", method=RequestMethod.POST)
 	@ResponseBody
@@ -479,8 +542,10 @@ public class BoardController {
 				map.put("num", dto.getNum());
 				boardLikeCount=service.boardLikeCount(map);
 				
-				if(result==0)
+				if(result==0) {
 					state="false";
+					boardLikeCount=service.boardLikeCount(map);
+				}
 	   	    }
 			model.put("state", state);
 			model.put("boardLikeCount", boardLikeCount);
@@ -490,4 +555,161 @@ public class BoardController {
 		}
 		return model;
 	}
+	
+	// 댓글 리스트
+	@RequestMapping(value="/cb_{board}/listReply")
+	public String listReply(
+			@PathVariable String board,
+			Map<String, Object> paramMap,
+			@RequestParam(value="num") int num,
+			@RequestParam(value="pageNo", defaultValue="1") int current_page,
+			Model model
+			) throws Exception {
+		
+		BoardManage cb = mservice.readBoardManage("cb_"+board);
+   	    if(cb==null) {
+   	    	return "error.error";
+   	    }
+   	    
+   	    paramMap.put("tableName", cb.getTableName());
+   	    paramMap.put("num", num);
+   	    
+   	    int rows = 5;
+   	    int dataCount = service.replyCount(paramMap);
+   	    int total_page = util.pageCount(rows, dataCount);
+   	    
+   	    if(current_page > total_page)
+   	    	current_page = total_page;
+   	    
+   	    int start = (current_page-1)*rows+1;
+   	    int end = current_page*rows;
+   	    
+   	    paramMap.put("start", start);
+   	    paramMap.put("end", end);
+   	    
+   	    List<Reply> listReply = service.listReply(paramMap);
+   	    for(Reply dto : listReply) {
+   	    	dto.setContent(util.htmlSymbols(dto.getContent()));
+   	    }
+   	    String paging = util.paging(current_page, total_page);
+   	    
+   	    model.addAttribute("cb", cb);
+   	    model.addAttribute("listReply", listReply);
+   	    model.addAttribute("pageNo", current_page);
+   	    model.addAttribute("replyCount", dataCount);
+   	    model.addAttribute("total_page", total_page);
+   	    model.addAttribute("paging", paging);
+		
+		return "cboard/listReply";
+	}
+	
+	// 댓글 and 답글 추가
+	@RequestMapping(value="/cb_{board}/insertReply", method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> insertReply(
+			@PathVariable String board,
+			Reply dto,
+			HttpSession session
+			) {
+		SessionInfo info=(SessionInfo) session.getAttribute("member");
+		String state="true";
+		
+		BoardManage cb = mservice.readBoardManage("cb_"+board);
+   	    if(cb==null) {
+   	    	state="noTable";
+   	    } else {
+   	    	dto.setTableName(cb.getTableName());
+   	    	dto.setMemberNum(info.getUserId());
+   	    	dto.setName(info.getUserName());
+   	    	
+   	    	int result=service.insertReply(dto);
+   	    	if(result==0)
+   	    		state="false";
+   	    }
+		Map<String, Object> model = new HashMap<>(); 
+		model.put("state", state);
+		return model;
+	}
+	
+	// 댓글 댓답글 삭제
+	@RequestMapping(value="/cb_{board}/deleteReply", method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> deleteReply(
+			@PathVariable String board,
+			@RequestParam(value="replyNum") int replyNum,
+			@RequestParam(value="mode") String mode,
+			HttpSession session) throws Exception {
+		
+		String state="true";
+		BoardManage cb = mservice.readBoardManage("cb_"+board);
+   	    if(cb == null) {
+   	    	state="noTable";
+   	    } else {
+			Map<String, Object> map=new HashMap<String, Object>();
+			map.put("tableName", cb.getTableName());
+			map.put("mode", mode);
+			map.put("replyNum", replyNum);
+	
+			int result=service.deleteReply(map);
+			if(result==0)
+				state="false";
+   	    }
+		Map<String, Object> model = new HashMap<>(); 
+		model.put("state", state);
+		return model;
+	}
+	
+	// 댓답글 리스트
+	@RequestMapping(value="/cb_{board}/listReplyAnswer")
+	public String listReplyAnswer(
+			@PathVariable String board,
+			@RequestParam(value="answer") int answer,
+			Model model) throws Exception {
+
+		BoardManage cb = mservice.readBoardManage("cb_"+board);
+   	    if(cb==null) {
+   	    	return ".error.error";
+   	    }
+   	    
+   	    Map<String, Object> map=new HashMap<String, Object>();
+		map.put("tableName", cb.getTableName());
+		map.put("answer", answer);
+		
+		List<Reply> listReplyAnswer=service.listReplyAnswer(map);
+		
+		for(Reply dto : listReplyAnswer) {
+   	    	dto.setContent(util.htmlSymbols(dto.getContent()));
+   	    }
+		
+		model.addAttribute("listReplyAnswer", listReplyAnswer);
+		
+		return "cboard/listReplyAnswer";
+	}
+	// 댓답글 개수
+	@RequestMapping(value="/cb_{board}/countReplyAnswer", method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> countReplyAnswer(
+			@PathVariable String board,
+			@RequestParam(value="answer") int answer) throws Exception {
+
+		String state="true";
+		int count=0;
+		
+		BoardManage cb = mservice.readBoardManage("cb_"+board);
+   	    if(cb==null) {
+   	    	state="noTable";
+   	    } else {
+   	   	    Map<String, Object> map=new HashMap<String, Object>();
+   			map.put("tableName", cb.getTableName());
+   			map.put("answer", answer);
+  	    
+   	    	count=service.replyAnswerCount(map);
+   	    }
+   	    
+   	    Map<String, Object> model = new HashMap<>(); 
+		model.put("state", state);
+		model.put("count", count);
+		return model;
+	}
+	
 }

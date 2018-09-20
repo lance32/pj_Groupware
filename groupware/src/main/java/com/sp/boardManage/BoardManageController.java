@@ -35,7 +35,10 @@ public class BoardManageController {
 	
 	@RequestMapping(value="/boardManage/created", method=RequestMethod.GET)
 	public String createdForm(Model model) {
-		try {			
+		try {
+			List<BoardManage> list = service.listBoardManage();
+			
+			model.addAttribute("list", list);
 			model.addAttribute("mode", "created");
 		} catch (Exception e) {
 			System.out.println(e.toString());
@@ -81,7 +84,9 @@ public class BoardManageController {
 			} else {
 				return "redirect:/boardManage/list";
 			}
+			List<BoardManage> list = service.listBoardManage();
 			
+			model.addAttribute("list", list);
 			model.addAttribute("mode", "update");
 			model.addAttribute("dto", dto);
 			

@@ -1,5 +1,6 @@
 package com.sp.addressBook;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ public class AddressBookServiceImpl implements AddressBookService{
 	@Override
 	public void insertAdress(AddressBook dto) {
 		try {
-			dao.insertData("adress.insertAdress",dto);
+			dao.insertData("address.insertAdress",dto);
 		} catch (Exception e) {
 			System.out.println(e.toString());
 		}
@@ -24,10 +25,22 @@ public class AddressBookServiceImpl implements AddressBookService{
 	@Override
 	public void insertGroup(Map<String, Object> map) {
 		try {
-			dao.insertData("adress.insertGroup",map);
+			dao.insertData("address.insertGroup",map);
 		} catch (Exception e) {
 			System.out.println(e.toString());
 		}
 	}
-	
+
+	@Override
+	public List<AddressBook> groupList(String memberNum) {
+		List<AddressBook> list=null;
+		try {
+			list=dao.selectList("address.groupList", memberNum);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return list;
+	}
+
+
 }

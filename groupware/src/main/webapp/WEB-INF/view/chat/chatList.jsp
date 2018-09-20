@@ -288,10 +288,10 @@ jQuery(function(){
 	
 		jQuery('#chatting-dialog').dialog({
 			  modal: false,
-			  minHeight: 665,
-			  minWidth: 620,
-			  maxHeight: 665,
-			  maxWidth: 620,
+			  minHeight: 670,
+			  minWidth: 630,
+			  maxHeight: 670,
+			  maxWidth: 630,
 			  title: subject,
 			  close: function(event, ui) {
 				  chatMsgClose(roomId);
