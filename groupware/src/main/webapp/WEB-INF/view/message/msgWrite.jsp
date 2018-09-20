@@ -30,11 +30,10 @@
 	
 	// 부서 클릭시 처리
 	function deptCheck(deptNum) {
-		if ($("#dept" + deptNum).prop('checked')) {
-			$(".dept" + deptNum).each(function() {
-				//$(this).attr('checked') = true;
-				alert('test');
-			});
+		if ($("#" + deptNum).is(':checked')) {
+			$("." + deptNum).attr("checked", true);
+		} else {
+			$("." + deptNum).attr("checked", false);
 		}		
 	}
 	
@@ -67,7 +66,7 @@
 							h += "<tr><td>";
 							ws += "&nbsp;&nbsp;&nbsp;&nbsp;"
 							h += ws;
-							h += "<input type='checkbox' class='memberChk dept" + val.deptNum + "' data-member-num='" + val.memberNum + "'>";
+							h += "<input type='checkbox' class='memberChk dept" + val.deptGroup + "' data-member-num='" + val.memberNum + "'>";
 							h += val.memberName;
 							h += "&nbsp;";
 							h += val.positionName;
@@ -103,7 +102,6 @@
 					console.log(jqXHR.resonseText);
 				}
 			});
-		//	console.log(dialog);
 		});
 		
 	});
@@ -130,7 +128,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td colspan="2"><div style="padding-top: 5px;"><textarea id="content" name="content" rows="15" cols="45" style="width: 87%;"></textarea></div></td>
+				<td colspan="2"><div style="padding-top: 5px;"><textarea id="content" name="content" rows="15" cols="45" style="width: 90%;"></textarea></div></td>
 			</tr>
 		</table>
 		<span><input type="button" value="&nbsp;전송&nbsp;" onclick="send();"></span>
