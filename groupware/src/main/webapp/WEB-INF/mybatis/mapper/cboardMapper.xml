@@ -2,7 +2,210 @@
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cboard">
-	<insert id="insertBoard">
+
+<!-- 게시물 처리 -->
+	<select id="maxNum" resultType="Integer" parameterType="map">
+		SELECT NVL(MAX(num),0) FROM ${tableName}
+	</select>
 	
+	<!-- 게시물 추가 -->
+	<insert id="insertBoard" parameterType="com.sp.cboard.Board">
+		INSERT INTO ${tableName}(num, memberNum, name, title, content,
+		groupNum, orderNo, depth, parent)
+			VALUES(#{num},#{memberNum},#{name},#{title},#{content},
+			#{groupNum},#{orderNo},#{depth},#{parent})
 	</insert>
+
+	<update id="updateOrderNo" parameterType="map">
+   		UPDATE ${tableName}  SET orderNo=orderNo+1
+            WHERE groupNum = #{groupNum} AND orderNo &gt; #{orderNo}
+	</update>
+	
+	<sql id="where-list">
+		<if test="searchKey=='title'">
+	        INSTR(title, #{searchValue}) &gt; 0
+	   	</if>
+	   
+	   	<if test="searchKey=='name'">
+	        INSTR(cb.name, #{searchValue}) &gt; 0
+	   	</if>
+	   
+	   	<if test="searchKey=='content'">
+	        DBMS_LOB.INSTR(content, #{searchValue}) &gt; 0
+	  	</if>
+	   
+	   	<if test="searchKey=='created'">
+	        (TO_CHAR(cb.created, 'YYYY-MM-DD') = #{searchValue}
+	          OR TO_CHAR(cb.created, 'YYYYMMDD') = #{searchValue})
+	   	</if>
+	</sql>
+	
+	<!-- 데이터 개수 -->
+	<select id="dataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(count(*),0) FROM ${tableName} cb
+			JOIN member m ON m.memberNum = cb.memberNum
+		<where>
+			<if test="searchValue != null and searchValue!=''">
+				<include refid="where-list"/>
+			</if>
+		</where>
+	</select>
+	
+	<!-- 게시물 리스트 -->
+	<select id="listBoard" parameterType="map" resultType="com.sp.cboard.Board">
+		SELECT * FROM(
+    		SELECT ROWNUM rnum, tb.* FROM(
+        		SELECT cb.num, cb.name, cb.memberNum, title, cb.created,
+        		hitCount, groupNum, orderNo, depth, NVL(replyCount, 0) replyCount
+            		FROM ${tableName} cb
+            		JOIN member m ON cb.memberNum = m.memberNum
+            		LEFT OUTER JOIN(
+                		SELECT num, COUNT(*) replyCount FROM ${tableName}_Reply
+                		WHERE answer = 0
+                		GROUP BY num
+            		) rc ON cb.num = rc.num
+            		<where>
+                         <if test="searchValue != null and searchValue != ''">
+			                  <include refid="where-list"/>
+		                 </if>
+	                </where>
+	                <if test="canAnswer == 0 ">
+	                      ORDER BY num DESC
+	                </if>
+	                <if test="canAnswer == 1 ">
+	                      ORDER BY groupNum DESC, orderNo ASC
+	                </if>
+	                
+    		) tb WHERE ROWNUM &lt;= #{end}
+		) WHERE rnum &gt;= #{start}	
+	</select>
+	
+	<!-- 조회수 증가 -->
+	<update id="updateHitCount" parameterType="map">
+		UPDATE ${tableName} set hitCount = hitCount+1 WHERE num = #{num}
+	</update>
+	
+	<!-- 게시물 조회 -->
+	<select id="readBoard" resultType="com.sp.cboard.Board" parameterType="map">
+		SELECT num, cb.memberNum, cb.name, title, content, groupNum, depth,
+			orderNo, parent, hitCount, cb.created
+			FROM ${tableName} cb
+			JOIN member m ON m.memberNum = cb.memberNum
+			where num = #{num}
+	</select>
+	
+	<!-- 이전글 조회 -->
+	<select id="preReadBoard" resultType="com.sp.cboard.Board" parameterType="map">
+		SELECT tb.* FROM (
+       		SELECT num, title FROM ${tableName} cb
+           		JOIN member m ON cb.memberNum=m.memberNum
+                <where>
+                    <if test="searchValue != null and searchValue != ''">
+                        <include refid="where-list"/>
+                    </if>
+                    
+	                <if test="canAnswer == 0 ">
+                   		AND (num &gt; #{num})
+	                </if>
+	                <if test="canAnswer == 1 ">
+		           		AND (( groupNum = #{groupNum} AND orderNo &lt; #{orderNo})
+                      	OR (groupNum &gt; #{groupNum} ))
+	                </if>
+                </where>
+                
+               <if test="canAnswer == 0 ">
+	           		ORDER BY num ASC
+               </if>
+               <if test="canAnswer == 1 ">
+	          		ORDER BY groupNum ASC, orderNo DESC
+               </if>
+		) tb WHERE ROWNUM=1
+	</select>
+	
+	<!-- 다음글 조회 -->
+	<select id="nextReadBoard" resultType="com.sp.cboard.Board" parameterType="map">
+		SELECT tb.* FROM (
+            SELECT num, title FROM ${tableName} cb
+                 JOIN member m ON cb.memberNum=m.memberNum
+                    <where>
+                         <if test="searchValue != null and searchValue != ''">
+                              <include refid="where-list"/>
+                         </if>
+
+	                <if test="canAnswer == 0 ">
+                 		AND (num &lt; #{num})
+	                </if>
+	                <if test="canAnswer == 1 ">
+		         		AND (( groupNum = #{groupNum} AND orderNo &gt; #{orderNo})
+                 		OR (groupNum &lt; #{groupNum} ))
+	                </if>
+                </where>
+                
+               <if test="canAnswer == 0 ">
+	          		ORDER BY num DESC
+               </if>
+               <if test="canAnswer == 1 ">
+	        		ORDER BY groupNum DESC, orderNo ASC
+               </if>
+            ) tb WHERE ROWNUM=1
+	</select>
+	
+	<!-- 게시물 수정 -->
+	<update id="updateBoard" parameterType="com.sp.cboard.Board">
+		UPDATE ${tableName} SET title = #{title}, content = #{content}
+			WHERE num = #{num}
+	</update>
+	
+	<!-- 게시물 삭제 -->
+	<delete id="deleteBoard" parameterType="map">
+		DELETE FROM ${tableName} WHERE num IN
+			(SELECT num FROM ${tableName} START WITH num = #{num}
+			CONNECT BY PRIOR num = parent)
+	</delete>
+	
+	
+	<!-- 게시물 좋아요 -->
+	<insert id="insertBoardLike" parameterType="com.sp.cboard.Board">
+		INSERT INTO ${tableName}_Like(num, memberNum)
+			VALUES(#{num}, #{memberNum})
+	</insert>
+	
+	<select id="boardLikeCount" resultType="Integer" parameterType="map">
+		SELECT NVL(COUNT(*),0) boardLikeCount
+			FROM ${tableName}_Like WHERE num = #{num}
+	</select>
+	
+	<delete id="deleteBoardLike" parameterType="com.sp.cboard.Board">
+		DELETE FROM ${tableName}_Like 
+			WHERE num = #{num} AND memberNum = #{memberNum}
+	</delete>
+	
+<!-- 파일 처리 -->
+	<select id="maxFileNum" resultType="Integer" parameterType="map">
+		SELECT NVL(MAX(fileNum), 0) FROM ${tableName}_File
+	</select>
+	
+	<!-- 파일 추가 -->
+	<insert id="insertFile" parameterType="com.sp.cboard.Board">
+		INSERT INTO ${tableName}_File(fileNum, num, saveFilename, originalFilename, fileSize)
+			VALUES(#{fileNum}, #{num}, #{saveFilename}, #{originalFilename}, #{fileSize})
+	</insert>
+	
+	<!-- 파일 리스트 -->
+	<select id="listFile" parameterType="map" resultType="com.sp.cboard.Board">
+		SELECT fileNum, num, saveFilename, originalFilename, fileSize
+			FROM ${tableName}_File
+			WHERE num = #{num}
+	</select>
+	
+	<!-- 파일 정보 가져오기 -->
+	<select id="readFile" parameterType="map" resultType="com.sp.cboard.Board">
+		SELECT fileNum, num, saveFilename, originalFilename, fileSize
+			FROM ${tableName}_File
+			WHERE fileNum = #{fileNum}
+	</select>
+	<!-- 파일 지우기 -->
+	<delete id="deleteFile" parameterType="map">
+		DELETE FROM ${tableName}_File WHERE ${field} = #{num}
+	</delete>
 </mapper>

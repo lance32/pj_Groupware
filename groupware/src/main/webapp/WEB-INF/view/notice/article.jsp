@@ -41,6 +41,7 @@ $(function(){
 	alert("게시물을 수정할 수  없습니다.");
 </c:if>
 });
+
 $(function(){
 	listPage(1);
 });

@@ -8,6 +8,7 @@
 CREATE TABLE ${value}(
 	num number,
 	memberNum varchar2(10),
+	name varchar2(30) not null,
 	title varchar2(255) not null,
 	content CLOB not null,
 	hitCount number default 0,
@@ -38,8 +39,8 @@ CREATE TABLE ${value}(
 	num number,
 	memberNum varchar2(10),
 	PRIMARY KEY(num, memberNum),
-	FOREIGN KEY(num) REFERENCES ${value}(num),
-	FOREIGN KEY(memberNum) REFERENCES member(memberNum)
+	FOREIGN KEY(num) REFERENCES ${value}(num) ON DELETE CASCADE,
+	FOREIGN KEY(memberNum) REFERENCES member(memberNum) ON DELETE CASCADE
 	)
 </update>
 
@@ -48,22 +49,13 @@ CREATE TABLE ${value}(
 	replyNum number,
 	num number,
 	memberNum varchar2(10),
+	name varchar2(30) not null,
 	content varchar2(3000) not null,
 	created date default sysdate,
 	answer number not null,
 	PRIMARY KEY(replyNum),
-	FOREIGN KEY(num) REFERENCES ${value}(num),
-	FOREIGN KEY(memberNum) REFERENCES member(memberNum)
-)
-</update>
-
-<update id="createBoardReplyLikeTable" parameterType="String">
-	CREATE TABLE ${value}_replyLike(
-	replyNum number,
-	memberNum varchar2(10),
-	PRIMARY KEY(replyNum, memberNum),
-	FOREIGN KEY(replyNum) REFERENCES ${value}_Reply(replyNum),
-	FOREIGN KEY(memberNum) REFERENCES member(memberNum)
+	FOREIGN KEY(num) REFERENCES ${value}(num) ON DELETE CASCADE,
+	FOREIGN KEY(memberNum) REFERENCES member(memberNum) ON DELETE CASCADE
 )
 </update>
 
@@ -71,7 +63,6 @@ CREATE TABLE ${value}(
 SELECT NVL(COUNT(*), 0) FROM tab WHERE tname=UPPER(#{value})
 	OR tname=UPPER(#{value}||'_LIKE')
 	OR tname=UPPER(#{value}||'_REPLY')
-	OR tname=UPPER(#{value}||'_REPLYLIKE')
 	OR tname=UPPER(#{value}||'_FILE')
 </select>
 
@@ -88,19 +79,15 @@ SELECT NVL(COUNT(*), 0) FROM tab WHERE tname=UPPER(#{value})
 <update id="dropBoardLikeTable" parameterType="String">
 	DROP TABLE ${value}_Like PURGE
 </update>
-	
-<update id="dropBoardReplyLikeTable" parameterType="String">
-	DROP TABLE ${value}_ReplyLike PURGE
-</update>
 
 <update id="dropBoardReplyTable" parameterType="String">
 	DROP TABLE ${value}_Reply PURGE
 </update>
 
 <insert id="insertBoardManage" parameterType="com.sp.boardManage.BoardManage">
-	INSERT INTO boardInfo(boardNum, tableName, boardName, writePermit, canAnswer, canReply, canFile, canLike, canReplyLike, leftMenu, subMenu)
+	INSERT INTO boardInfo(boardNum, tableName, boardName, writePermit, canAnswer, canReply, canFile, canLike, subMenu)
 		VALUES(boardInfo_seq.NEXTVAL, #{tableName}, #{boardName}, #{writePermit}, #{canAnswer}, #{canReply}, #{canFile}
-		, #{canLike}, #{canReplyLike}, #{leftMenu, jdbcType=VARCHAR}, #{subMenu})
+		, #{canLike}, #{subMenu})
 </insert>
 
 <select id="dataCount" resultType="Integer">
@@ -108,16 +95,16 @@ SELECT NVL(COUNT(*), 0) FROM tab WHERE tname=UPPER(#{value})
 </select>
 
 <select id="listBoardManage"  resultType="com.sp.boardManage.BoardManage">
-	SELECT boardNum, tableName, boardName, writePermit, canAnswer, canReply, canFile, canLike, canReplyLike, leftMenu, subMenu 
+	SELECT boardNum, tableName, boardName, writePermit, canAnswer, canReply, canFile, canLike, subMenu 
 		FROM boardInfo ORDER BY subMenu ASC, boardNum DESC
 </select>
 
 <select id="readBoardManage1" resultType="com.sp.boardManage.BoardManage" parameterType="Integer">
-	SELECT boardNum, tableName, boardName, writePermit, canAnswer, canReply, canFile, canLike, canReplyLike, leftMenu, subMenu
+	SELECT boardNum, tableName, boardName, writePermit, canAnswer, canReply, canFile, canLike, subMenu
 		FROM boardInfo WHERE boardNum = #{boardNum}
 </select>
 <select id="readBoardManage2" resultType="com.sp.boardManage.BoardManage" parameterType="String">
-SELECT boardNum, tableName, boardName, writePermit, canAnswer, canReply, canFile, canLike, canReplyLike, leftMenu, subMenu
+	SELECT boardNum, tableName, boardName, writePermit, canAnswer, canReply, canFile, canLike, subMenu
 		FROM boardInfo WHERE tableName = #{tableName}
 </select>
 
@@ -125,8 +112,7 @@ SELECT boardNum, tableName, boardName, writePermit, canAnswer, canReply, canFile
          UPDATE boardInfo SET boardName=#{boardName}, writePermit=#{writePermit},
                     canAnswer=#{canAnswer},
                     canReply=#{canReply}, canFile=#{canFile}, 
-                    canLike=#{canLike}, canReplyLike=#{canReplyLike}, subMenu=#{subMenu},
-                    leftMenu=#{leftMenu, jdbcType=VARCHAR}
+                    canLike=#{canLike}, subMenu=#{subMenu},
                     WHERE boardNum = #{boardNum}
 </update>
 
@@ -151,9 +137,6 @@ SELECT boardNum, tableName, boardName, writePermit, canAnswer, canReply, canFile
       
 <delete id="deleteBoardLike" parameterType="String">
   	DELETE FROM ${value}_Like
-</delete>
-<delete id="deleteBoardReplyLike" parameterType="String">
-  	DELETE FROM ${value}_ReplyLike
 </delete>
 <delete id="deleteBoardReply" parameterType="String">
   	DELETE FROM ${value}_Reply

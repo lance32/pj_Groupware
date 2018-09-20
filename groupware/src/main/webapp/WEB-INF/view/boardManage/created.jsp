@@ -53,13 +53,6 @@ $(function(){
             return false;
         }
 		
-		var str = $("input[name=leftMenu]").val().trim();
-		if(! str){
-			$("input[name=leftMenu]").focus();
-			alert("사이드 메뉴 폴더명을 입력하세요.");
-			return;
-		}
-		
 		$("form[name=boardManageForm]").attr("action","<%=cp%>/boardManage/${mode}");
         $("form[name=boardManageForm]").submit();
 	});
@@ -96,12 +89,7 @@ $(function(){
     
     <div class="form-group">
       <label for="subMenu">메 뉴 위 치</label>
-      <input type="text" class="form-control" placeholder="숫자만 가능하며 화면 좌측의 메뉴에 위치할 인덱스(1부터 시작) 입니다." name="subMenu" value="${dto.subMenu }" style="width:70%;">
-    </div>
-
-   	<div class="form-group">
-      <label for="leftMenu">사이드 메뉴</label>
-      <input type="text" class="form-control" placeholder="메뉴에 추가할 sidetabs 파일을 가진 폴더명(예:menu2)입니다." name="leftMenu" value="${dto.leftMenu }" style="width:70%;">
+      <input type="text" class="form-control" placeholder="숫자만 가능하며 화면 좌측의 메뉴 인덱스(1부터 시작) 입니다. 같은 인덱스가 존재할 경우 최근에 만들어진 게시판이 상단에 위치합니다." name="subMenu" value="${dto.subMenu }" style="width:70%;">
     </div>
 
    	<div class="form-group">
@@ -110,7 +98,6 @@ $(function(){
 		<span><input type="checkbox" name="canFile" value="1" ${dto.canFile==1?"checked='checked';":"" }> 파일첨부</span>&nbsp;&nbsp;&nbsp;
 		<span><input type="checkbox" name="canLike" value="1" ${dto.canLike==1?"checked='checked';":"" }> 게시글 추천</span>&nbsp;&nbsp;&nbsp;
 		<span><input type="checkbox" name="canReply" value="1" ${dto.canReply==1?"checked='checked';":"" }> 리플형</span>&nbsp;&nbsp;&nbsp;
-		<span><input type="checkbox" name="canReplyLike" value="1" ${dto.canReplyLike==1?"checked='checked';":"" }> 리플 추천</span>
     </div>
     
    	<c:if test="${mode=='update'}">

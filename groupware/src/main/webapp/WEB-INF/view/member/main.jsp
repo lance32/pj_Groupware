@@ -95,9 +95,11 @@ function searchMember(){
 			<td>
 			<button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/member/main';" >새로고침</button>
 			</td>
+			<c:if test="${sessionScope.member.userId=='admin'}">
 			<td style="text-align: right;">
 			<button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/member/member';">사원추가</button>
 			</td>
+			</c:if>
 		</tr>
 	</table>
 

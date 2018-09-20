@@ -140,9 +140,12 @@ public class MemberController {
 
 	//사원 추가 폼
 	@RequestMapping(value="/member/member", method=RequestMethod.GET)
-	public String createdForm(Model model) throws Exception {
+	public String createdForm(Model model,HttpSession session) throws Exception {
 		// 사원 추가 폼
-		
+		SessionInfo info=(SessionInfo) session.getAttribute("member");
+		if(info==null) {
+			return "member/login";
+		}
 		//부서,직급에 대한 정보를 가져와 리스트로 저장
 		List<Map<String, Object>> departmentList=service.departmentList();
 		List<Map<String, Object>> positionList=service.positionList();
@@ -298,20 +301,28 @@ public class MemberController {
 			Model model) throws Exception {
 		SessionInfo info=(SessionInfo)session.getAttribute("member");
 		
+		if(info==null) {
+			return "member/login";
+		}
+		
+		List<Map<String, Object>> departmentList=service.departmentList();
+		List<Map<String, Object>> positionList=service.positionList();
+		
 		Member dto = service.readMember(memberNum);
 		if(dto==null) {
 			return "redirect:/member/main?page="+page;
 		}
 
-		if(! info.getUserId().equals(dto.getMemberNum())) {
+		if(! info.getUserId().equals(dto.getMemberNum()) && ! info.getUserId().equals("admin")) {
 			return "redirect:/member/main?page="+page;
 		}
-		
+		model.addAttribute("departmentList",departmentList);
+		model.addAttribute("positionList",positionList);
 		model.addAttribute("dto", dto);
 		model.addAttribute("mode", "update");
 		model.addAttribute("page", page);
 		
-		return ".member.created";
+		return ".member.member";
 	}
 
 	
@@ -330,7 +341,7 @@ public class MemberController {
 		dto.setPwd(encPwd);
 		
 		
-		//service.updateMember(member);
+		//service.updateMember(dto.getMemberNum());
 		
 		StringBuffer sb=new StringBuffer();
 		sb.append(dto.getName()+ "님의 회원정보가 정상적으로 변경되었습니다.<br>");
