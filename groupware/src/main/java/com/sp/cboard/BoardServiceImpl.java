@@ -177,7 +177,7 @@ public class BoardServiceImpl implements BoardService {
 				}
 			}
 			// 파일 테이블 내용 지우기
-			// 정확히 이해 안됨
+			// 다시 한번 로직 체크하기
 			map.put("field", "num");
 			deleteFile(map);
 			
@@ -195,6 +195,12 @@ public class BoardServiceImpl implements BoardService {
 			result = dao.insertData("cboard.insertBoardLike", dto);
 		} catch (Exception e) {
 			System.out.println(e.toString());
+			try {
+				dao.deleteData("cboard.deleteBoardLike", dto);
+				result = 0;
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
 		}
 		return result;
 	}
@@ -257,56 +263,79 @@ public class BoardServiceImpl implements BoardService {
 		} catch (Exception e) {
 			System.out.println(e.toString());
 		}
-		
 		return result;
 	}
 
 	@Override
 	public int insertReply(Reply dto) {
-		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		try {
+			Map<String, Object> map = new HashMap<>();
+			map.put("tableName", dto.getTableName());
+			
+			int maxReplyNum = dao.selectOne("cboard.maxReplyNum", map);
+			dto.setReplyNum(maxReplyNum+1);
+			
+			result = dao.insertData("cboard.insertReply", dto);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
 	}
 
 	@Override
 	public List<Reply> listReply(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Reply> list = null;
+		try {
+			list = dao.selectList("cboard.listReply", map);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return list;
 	}
 
 	@Override
 	public List<Reply> listReplyAnswer(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Reply> list=null;
+		try {
+			list=dao.selectList("cboard.listReplyAnswer", map);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return list;
 	}
 
 	@Override
 	public int replyCount(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return 0;
+		int result=0;
+		try {
+			result=dao.selectOne("cboard.replyCount", map);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
 	}
 
 	@Override
 	public int replyAnswerCount(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return 0;
+		int result=0;
+		try {
+			result=dao.selectOne("cboard.replyAnswerCount", map);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
 	}
 
 	@Override
 	public int deleteReply(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int insertReplyLike(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public Map<String, Object> replyLikeCount(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return null;
+		int result=0;
+		try {
+			result=dao.deleteData("cboard.deleteReply", map);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
 	}
 
 }

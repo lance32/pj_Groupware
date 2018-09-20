@@ -32,6 +32,13 @@ $(function(){
 	});
 });
 </script>
+<div style="clear: both; margin: 10px 0px 15px 10px;">
+	<span class="glyphicon glyphicon-bullhorn"
+		style="font-size: 28px; margin-left: 10px;"></span> <span
+		style="font-size: 30px;">&nbsp;공 지 사 항</span><br>
+	<div
+		style="clear: both; width: 300px; height: 1px; border-bottom: 3px solid black;"></div>
+</div>
 
 <div class="container">
 	<form name="noticeForm" method="post" enctype="multipart/form-data">

@@ -6,11 +6,22 @@
 	String cp = request.getContextPath();
 %>
 
-<script>
-function searchList() {
-	var f=document.searchForm;
-	f.submit();
-}
-</script>
-
-답 댓 글 영 역
+<c:forEach var="dto" items="${listReplyAnswer}">
+    <div class='answer' style='padding: 0px 10px;'>
+        <div style='clear:both; padding: 10px 0px;'>
+            <div style='float: left; width: 5%;'>└</div>
+            <div style='float: left; width:95%;'>
+                <div style='float: left;'><b>${dto.name}</b></div>
+                <div style='float: right;'>
+                    <span>${dto.created}</span> |
+                    <c:if test="${sessionScope.member.userId==dto.memberNum || sessionScope.member.userId=='admin'}">
+                    	<span class='deleteReplyAnswer' style='cursor: pointer;' data-replyNum='${dto.replyNum}' data-answer='${dto.answer}'>삭제</span>
+                    </c:if>
+                </div>
+            </div>
+        </div>
+        <div style='clear:both; padding: 5px 5px 5px 5%; border-bottom: 1px solid #ccc;'>
+            ${dto.content}
+        </div>
+    </div>			            
+</c:forEach>

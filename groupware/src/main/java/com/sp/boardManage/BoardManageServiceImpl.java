@@ -115,7 +115,6 @@ public class BoardManageServiceImpl implements BoardManageService {
 				
 				dao.deleteData("boardManage.deleteBoardAnswer", dto.getTableName());
 			}
-			
 			result=dao.updateData("boardManage.updateBoardManage", dto);
 		} catch(Exception e) {
 			System.out.println(e.toString());

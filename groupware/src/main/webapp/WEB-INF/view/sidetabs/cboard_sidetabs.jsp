@@ -8,16 +8,13 @@
 
 <table class="tabs">
 	<tr>
-    	<th>메인 사이드 탭1</th>
+    	<th>게 시 판 목 록</th>
     </tr>
     <tr>
     	<td><a href="<%=cp%>/boardManage/list">게시판 관리</a></td>
     </tr>
     <tr>
     	<td><a href="<%=cp%>/notice/list">공 지 사 항</a></td>
-    </tr>
-	<tr>
-    	<th>메인 사이드 탭2</th>
     </tr>
     <c:forEach var="dto" items="${boardList}">
 	    <tr>

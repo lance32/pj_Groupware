@@ -112,7 +112,7 @@ SELECT NVL(COUNT(*), 0) FROM tab WHERE tname=UPPER(#{value})
          UPDATE boardInfo SET boardName=#{boardName}, writePermit=#{writePermit},
                     canAnswer=#{canAnswer},
                     canReply=#{canReply}, canFile=#{canFile}, 
-                    canLike=#{canLike}, subMenu=#{subMenu},
+                    canLike=#{canLike}, subMenu=#{subMenu}
                     WHERE boardNum = #{boardNum}
 </update>
 

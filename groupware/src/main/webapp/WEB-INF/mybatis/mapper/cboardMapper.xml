@@ -208,4 +208,65 @@
 	<delete id="deleteFile" parameterType="map">
 		DELETE FROM ${tableName}_File WHERE ${field} = #{num}
 	</delete>
+
+<!-- 댓글 처리 -->
+	<select id="maxReplyNum" resultType="Integer" parameterType="map">
+      	    SELECT NVL(MAX(replyNum), 0) FROM ${tableName}_Reply
+   	</select>
+	
+	<insert id="insertReply" parameterType="com.sp.cboard.Reply">
+		INSERT INTO ${tableName}_Reply(replyNum, num, memberNum, name, content, answer)
+			VALUES (#{replyNum}, #{num}, #{memberNum}, #{name}, #{content}, #{answer})
+	</insert>
+	
+	<select id="listReply" resultType="com.sp.cboard.Reply" parameterType="map">
+		SELECT * FROM (
+			SELECT ROWNUM rnum, tb.* FROM(
+				SELECT r.replyNum, num, r.memberNum, r.name, content, r.created,
+					NVL(answerCount, 0) answerCount
+				FROM ${tableName}_Reply r
+				JOIN member m ON m.memberNum = r.memberNum
+				LEFT OUTER JOIN(
+					SELECT answer, COUNT(*) answerCount
+						FROM ${tableName}_Reply WHERE answer != 0 GROUP BY answer
+				) a ON r.replyNum = a.answer
+				WHERE num = #{num} AND r.answer = 0
+				ORDER BY r.replyNum DESC
+			) tb WHERE ROWNUM &lt;= #{end}
+		) WHERE rnum &gt;= #{start}
+	</select>
+	
+	<!-- 댓글 개수 -->
+	<select id="replyCount" resultType="Integer" parameterType="map">
+		SELECT NVL(COUNT(*), 0)
+	        FROM ${tableName}_Reply WHERE num = #{num} AND answer = 0
+	</select>
+	
+	<!-- 댓글별 답글 리스트 -->
+	<select id="listReplyAnswer" resultType="com.sp.cboard.Reply" parameterType="map">
+     SELECT replyNum, num, r.memberNum, r.name, content, r.created, answer
+	          FROM ${tableName}_Reply r 
+	          JOIN member m ON r.memberNum=m.memberNum
+              WHERE answer=#{answer}
+              ORDER BY replyNum DESC
+	</select>
+	
+    <!-- 댓글별 답글 수 -->
+	<select id="replyAnswerCount" resultType="Integer" parameterType="map">
+	   SELECT NVL(COUNT(*), 0)
+	        FROM ${tableName}_Reply WHERE answer=#{answer}
+	</select>
+	
+	<!-- 댓글 댓답글 삭제 -->
+	<delete id="deleteReply" parameterType="map">
+		DELETE FROM ${tableName}_Reply WHERE
+	    <if test="mode == 'reply'">
+			 replyNum IN 
+               (SELECT replyNum FROM ${tableName}_Reply START WITH replyNum = #{replyNum}
+	            CONNECT BY PRIOR replyNum = answer)
+		</if>
+	    <if test="mode == 'answer'">
+			 replyNum=#{replyNum}
+		</if>
+	</delete>
 </mapper>
