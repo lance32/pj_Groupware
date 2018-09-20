@@ -1,5 +1,6 @@
 package com.sp.member;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -127,6 +128,14 @@ public class MemberServiceImpl implements MemberService {
 		
 	}
 
-
-
+	@Override
+	public List<OrganizationChart> organizationChart() throws Exception {
+		List<OrganizationChart> list = null;
+		try {
+			list = dao.selectList("member.organizationChart");
+		} catch(Exception e) {
+			System.out.println(e.getMessage());
+		} 
+		return list;
+	}
 }

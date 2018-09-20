@@ -70,7 +70,7 @@
 			<tr>
 				<td class="textLabel">첨부파일</td>
 				<td class="tdInput">
-					<span><input type="file" id="attachFile" name=""attachFile"" style="background: #fff; color: #333; width: 80%; border: 1px solid #d7d7d7;"></span>
+					<span><input type="file" id="attachFile" name="attachFile" style="background: #fff; color: #333; width: 80%; border: 1px solid #d7d7d7;"></span>
 				</td>
 			</tr>
 			<tr>

@@ -22,4 +22,6 @@ public interface MemberService {
 //	public int insertAuthority(Member dto);
 //	public int updateAuthority(Member dto);
 //	public List<Member> listAuthority(String userId);
+	
+	public List<OrganizationChart> organizationChart() throws Exception;
 }

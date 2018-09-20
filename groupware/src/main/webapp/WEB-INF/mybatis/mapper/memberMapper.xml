@@ -100,5 +100,13 @@
     </update>
 	
 	
-	
+	<select id="organizationChart" resultType="com.sp.member.OrganizationChart">
+		SELECT d1.departmentNum, d1.parentDepartment, d2.departmentName parentDeptName, d1.departmentName
+				, d1.deptGroup, d1.deptOrder, m.memberNum, m.name, p.positionName, p.positionStep
+		FROM department d1 
+		LEFT OUTER JOIN department d2 ON d2.departmentNum = d1.parentDepartment 
+		LEFT OUTER JOIN member m ON d1.departmentNum = m.departmentNum
+		LEFT OUTER JOIN position p ON m.positionNum = p.positionNum
+		ORDER BY d1.deptGroup, d1.departmentNum, d1.deptOrder, p.positionStep
+	</select>
 </mapper>
