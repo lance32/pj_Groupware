@@ -407,35 +407,12 @@ public class MemberController {
 			dept.put("deptGroup", chart.getDeptGroup());
 			dept.put("deptOrder", chart.getDeptOrder());
 			dept.put("deptName", chart.getDepartmentName());
-			String deptNum = String.format("%d", index++);
-			model.put(deptNum, dept);
+			dept.put("positionName", chart.getPositionName());
+			dept.put("deptNum", chart.getDepartmentNum());
+			String deptIndex = String.format("%d", index++);
+			model.put(deptIndex, dept);
 		}
-//		Map<String, Object> chartMap = new HashMap<String, Object>();
-//		for (OrganizationChart chart : list) {
-//			String parentDept = chart.getParentDeptName();
-//			String deptName = chart.getDepartmentName();
-//			
-//			if (parentDept == null && !chartMap.containsKey(deptName)) {
-//				Map<String, Object> deptMap = new HashMap<String, Object>();
-//				String name = chart.getName();								// emp "name"
-//				if (name != null && !name.isEmpty()) {
-//					String memberNum = chart.getMemberNum();
-//					Map<String, Object> empMap = new HashMap<String, Object>();
-//					empMap.put("name", name);
-//					empMap.put("memberNum", memberNum);
-//					deptMap.put("emp", empMap);
-//				}
-//				chartMap.put(deptName, deptMap);
-//			} else if (parentDept == null && chartMap.containsKey(deptName)){
-//				// 최상위 부서에 2번째 사람
-//				String name = chart.getName();
-//				if (name != null && !name.isEmpty()) {
-//					String memberNum = chart.getMemberNum();
-//					Map<String, Object>deptMap = (Map<String, Object>)chartMap.get(deptName);
-//				
-//				}
-//			}
-//		}
+
 		return model;
 	}
 }

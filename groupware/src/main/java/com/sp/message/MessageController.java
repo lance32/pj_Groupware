@@ -41,10 +41,13 @@ public class MessageController {
 	public String writeSubmit(Message msg, HttpSession session) throws Exception {
 		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		msg.setSendMember(info.getUserId());
-		//logger.debug(">> " + info.getUserId());
-		service.insertMessage(msg);
 		
-//		model.addAttribute("msgType", "send");
+		String[] members = msg.getToMember().split(";");
+		for (int i = 0; i < members.length; i++) {
+			msg.setToMember(members[i]);
+			service.insertMessage(msg);
+		}
+		
 		return "redirect:/message/msgSend";
 	}
 	
