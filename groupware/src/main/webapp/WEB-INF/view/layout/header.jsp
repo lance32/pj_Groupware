@@ -19,7 +19,7 @@
 				<li><a href="#">설문</a></li>
 				<li><a href="#">동호회</a></li>
 			</ul></li>
-		<li><a href="<%=cp%>/mail/mailReceive">메일</a></li>
+		<li><a href="<%=cp%>/mail/mailWrite">메일</a></li>
 		<li><a href="<%=cp%>/message/msgReceive">쪽지</a></li>
 		<li><a href="<%=cp%>/schedule/month">일정</a></li>
 		<li><a href="#">자원관리</a></li>
