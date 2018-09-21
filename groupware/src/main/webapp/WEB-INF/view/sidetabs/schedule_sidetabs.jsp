@@ -8,10 +8,7 @@
 
 <style>
 
-
 </style>
-
-<div class="tabsTop"><button class="sideBtn">테스트 버튼</button></div>
 
 <table class="tabs">
 	<tr>

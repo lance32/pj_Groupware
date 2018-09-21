@@ -1,10 +1,11 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
-<%@ page trimDirectiveWhitespaces="true"%>
+<%@ page trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%
-	String cp = request.getContextPath();
+	String cp=request.getContextPath();
 %>
+
 <link rel="stylesheet" href="<%=cp%>/resource/fullcalendar/fullcalendar.css" type="text/css">
 <link rel="stylesheet" href="<%=cp%>/resource/fullcalendar/fullcalendar.print.css" media='print' type="text/css">
 
@@ -64,20 +65,33 @@
 	font-size: 9pt;
 }
 
-/* 모달대화상자 */
-/* 타이틀바 */
-.ui-widget-header {
-	background: none;
-	border: none;
-	height:35px;
-	line-height:35px;
-	border-bottom: 1px solid #cccccc;
-	border-radius: 0px;
+/* 일정분류버튼 css */
+#classifyGroup .btn, #classifyGroup .focus.btn, #classifyGroup .btn:focus, #classifyGroup .btn:hover {
+    color: #fff; background-image:none;
 }
-/* 내용 */
-.ui-widget-content {
-   /* border: none; */
-   border-color: #cccccc; 
+.btn-blue {
+    background-color:blue; border-color:blue;
+}
+.btn-blue:hover, .btn-blue:focus {
+    background-color:blue; border-color:blue;
+}
+.btn-black {
+    background-color:black; border-color:black;
+}
+.btn-black:hover, .btn-black:focus {
+    background-color:black; border-color:black;
+}
+.btn-green {
+    background-color:green; border-color:green;
+}
+.btn-green:hover, .btn-green:focus {
+    background-color:green; border-color:green;
+}
+.btn-red {
+    background-color:red; border-color:red;
+}
+.btn-red:hover, .btn-red:focus {
+    background-color:red; border-color:red;
 }
 </style>
 
@@ -125,7 +139,7 @@ $(function() {
 				var startDay=start.format("YYYY-MM-DD");
 				var endDay=end.format("YYYY-MM-DD");
 		        
-				var url="<%=cp%>/schedule/month";
+				var url="<%=cp%>/sch/month";
                 var query="start="+startDay+"&end="+endDay+"&group="+group+"&tmp="+new Date().getTime();
 				$.ajax({
 				    url: url,
@@ -146,7 +160,6 @@ $(function() {
 				    	console.log(jqXHR.responseText);
 				    }
 				});
-			
 			},
 			eventDrop: function(event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui, view) {
 				// 일정을 드래그 한 경우
@@ -271,6 +284,7 @@ function insertForm(start, end) {
 	var dlg = $("#scheduleModal").dialog({
 		  autoOpen: false,
 		  modal: true,
+		  resizable : false,
 		  buttons: {
 		       " 확인 " : function() {
 		    	   insertOk();
@@ -279,14 +293,14 @@ function insertForm(start, end) {
 		    	   $(this).dialog("close");
 		        }
 		  },
-		  height: 480,
-		  width: 550,
+		  height: 650,
+		  width: 700,
 		  title: "일정 추가",
 		  close: function(event, ui) {
 		  }
 	});
 	
-	$('#scheduleModal').load("<%=cp%>/sch/inputForm", function() {
+	$('#scheduleModal').load("<%=cp%>/schedule/inputForm", function() {
 		var startDay="", startTime="";
 		var endDay="", endTime="";
 		
@@ -693,20 +707,20 @@ $(function(){
 });
 </script>
 
-<div class="body-container" style="width: 95%;">
+<div class="body-container" style="width: 75%;">
 <div style="clear: both; margin: 10px 0px 15px 10px;">
 	<span class="glyphicon glyphicon-calendar"
 		style="font-size: 28px; margin-left: 10px;"></span> <span
 		style="font-size: 30px;">&nbsp;일 정 관 리</span><br>
 	<div style="clear: both; width: 300px; height: 1px; border-bottom: 3px solid black;"></div>
 </div>
-
 <div id="calendarHeader" style="height: 35px; line-height: 35px;">
 	<div style="text-align: left;">
 		<div class="container">
 			<ul class="nav nav-tabs">
-				<li><a href="#">일 간 일 정</a></li>
-				<li class="active"><a href="#">월 간 일 정</a></li>
+				<li class="active"><a href="#">개 인 일 정</a></li>
+				<li><a href="#">부 서 일 정</a></li>
+				<li><a href="#">전 체 일 정</a></li>
 				<li><a href="#">일 정 검 색</a></li>
 			</ul>
 			<br>
@@ -714,8 +728,8 @@ $(function(){
 	</div>
 </div>
 
-<div id="calendar" style="width: 95%; min-height:500px;"></div>
-	<div id='schLoading'>loading...</div>
+<div id="calendar" style="width: 95%;"></div>
+<div id='schLoading'>loading...</div>
 
 </div>
 <div id="scheduleModal" style="display: none;"></div>

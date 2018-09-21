@@ -10,4 +10,9 @@ public class ScheduleController {
 	public String month() {
 		return ".schedule.schedule";
 	}
+	
+	@RequestMapping(value="/schedule/inputForm")
+	public String inputForm() {
+		return "schedule/inputForm";
+	}
 }
