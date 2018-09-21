@@ -5,72 +5,99 @@
 <%
 	String cp=request.getContextPath();
 %>
+<script type="text/javascript" src="<%=cp%>/resource/se/js/HuskyEZCreator.js" charset="utf-8"></script>
 
-<form>
-<table style="width: 500px; border: 1px solid black;" >
-<tr>
-<td colspan = "5" rowspan = "2">일일 업무 일지</td>
-<td>작성</td>
-<td>검토</td>
-<td>승인</td>
-</tr>
-<tr>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
-</tr>
-<tr>
-<td>보고번호</td>
-<td colspan = "3"> 0000-abc-0000</td>
-<td>작성일자</td>
-<td colspan = "3"> &nbsp;</td>
-</tr>
-<tr>
-<td>부서명</td>
-<td colspan = "3">&nbsp;</td>
-<td>작성자</td>
-<td colspan = "3">&nbsp;</td>
-</tr>
-<tr>
-<td>제목</td>
-<td colspan = "7">20180914-test</td>
-</tr>
-<tr>
-<td colspan = "4">금일 업무내용</td>
-<td colspan = "4">명일 업무내용</td>
-</tr>
-<tr>
-<td colspan = "4">
-<textarea rows="20" cols="35">
-1.출장보고서
 
-2.납품건 마무리 작업
-	-견적서 재발송
+	<div style="clear: both; margin: 10px 0px 15px 10px;">
+		<span class="glyphicon glyphicon-book" style="font-size: 28px; margin-left: 10px;"></span>
+		<span style="font-size: 30px;">&nbsp;업무 일지</span><br>
+		<div style="clear: both; width: 300px; height: 1px; border-bottom: 3px solid black;"></div>
+	</div>
 
-3.크라샤 형식승인
-
-4.재고파악 및 업무 흐름도 숙지
-
-5.자체 네트워크망 구축개획
-
-6.
-
-</textarea>
-</td>
-<td colspan = "4">
-<textarea rows="20" cols="35">
-&nbsp;
-</textarea>
+<div>
+<form name="workLogForm" method="post" enctype="multipart/form-data" onsubmit="return submitContent(this);">
+<table style="width: 100%; margin: 20px auto 0px; border-spacing: 0px; border-collapse: collapse;">
+<tr align="left" height="40" style="border-top: 1px solid #cccccc; border-bottom: 1px solid #cccccc;"> 
+<td width="100" bgcolor="#eeeeee" style="text-align: center;">제목</td>
+<td style="padding-left:10px;"> 
+<input style="border: none;" type="text" name="subject" maxlength="1000" value="${dto.subject}">
 </td>
 </tr>
-<tr>
-<td colspan = "8" rowspan = "2">
-<textarea rows="5" cols="75">
-비고
-</textarea>
+
+<tr align="left" height="40" style="border-bottom: 1px solid #cccccc;"> 
+<td width="100" bgcolor="#eeeeee" style="text-align: center;">기안자</td>
+<td style="padding-left:10px;"> 
+${sessionScope.member.userId}
+</td>
+</tr>
+
+<tr align="left" style="border-bottom: 1px solid #cccccc;"> 
+<td width="100" bgcolor="#eeeeee" style="text-align: center; padding-top:5px;" valign="top">내    용</td>
+<td height="870px;" valign="top" style="padding:5px 0px 5px 10px;"> 
+<textarea name="content" id="content" class="boxTA" style="width: 100%; height:870px;">${dto.formValue}</textarea>
+</td>
+</tr>
+</table>
+
+<table style="width: 100%; margin: 0px auto; border-spacing: 0px;">
+<tr height="45"> 
+<td align="center" >
+<button type="submit" class="btn">${mode=='update'?'수정완료':'등록하기'}</button>
+<button type="reset" class="btn">다시입력</button>
+<button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/workLog/list';">${mode=='update'?'수정취소':'등록취소'}</button>
+<c:if test="${mode=='update'}">
+<input type="hidden" name="num" value="${dto.workLogNum}">
+<input type="hidden" name="num" value="${dto.num}">
+<input type="hidden" name="page" value="${page}">
+</c:if>
 </td>
 </tr>
 </table>
 </form>
+</div>
+
+<script type="text/javascript">
+var oEditors = [];
+nhn.husky.EZCreator.createInIFrame({
+oAppRef: oEditors,
+elPlaceHolder: "content",
+sSkinURI: "<%=cp%>/resource/se/SmartEditor2Skin.html",	
+htParams : {bUseToolbar : true,
+fOnBeforeUnload : function(){
+}
+
+},
+fOnAppLoad : function(){
+//oEditors.getByIdcontent.exec("PASTE_HTML", "로딩이 완료된 후에 본문에 삽입되는 text);
+},
+
+fCreator: "createSEditor2"
+});
+
+function pasteHTML() {
+var sHTML = "<span style='color:#FF0000;'>이미지도 같은 방식으로 삽입<\/span>";
+oEditors.getByIdcontent.exec("PASTE_HTML", sHTML);
+}
+
+function showHTML() {
+var sHTML = oEditors.getByIdcontent.getIR();
+alert(sHTML);
+}
+
+function submitContents(elClickedObj) {
+oEditors.getByIdcontent.exec("UPDATE_CONTENTS_FIELD", []);	// 에디터의 내용이 textarea에 적용
+// 에디터의 내용에 대한 값 검증은 이곳에서 document.getElementById("content").value를 이용해서 처리.
+try {
+// elClickedObj.form.submit();
+return check();
+} catch(e) {}
+}
+
+function setDefaultFont() {
+var sDefaultFont = '돋움';
+var nFontSize = 24;
+oEditors.getByIdcontent.setDefaultFont(sDefaultFont, nFontSize);
+}
+</script> 
 
 
