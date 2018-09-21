@@ -719,6 +719,7 @@ $(function(){
 		<div class="container">
 			<ul class="nav nav-tabs">
 				<li class="active"><a href="#">개 인 일 정</a></li>
+				<li><a href="#">가 족 일 정</a></li>
 				<li><a href="#">부 서 일 정</a></li>
 				<li><a href="#">전 체 일 정</a></li>
 				<li><a href="#">일 정 검 색</a></li>
