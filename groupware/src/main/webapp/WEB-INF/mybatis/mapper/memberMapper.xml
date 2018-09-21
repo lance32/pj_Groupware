@@ -5,26 +5,38 @@
 
 <!-- 회원 정보 가져오기 -->
     <select id="readMember" resultType="com.sp.member.Member" parameterType="String">
-        SELECT m.memberNum,name,pwd,saveFilename,originalFilename,departmentName,positionName 
+        SELECT m.memberNum,name,pwd,zip,addr1,addr2,status,TO_CHAR(created,'YYYY-MM-DD')created,phone,email,
+        	   saveFilename,originalFilename,departmentName,positionName,qualifyCode,qualifyName,serialNum,getDate
 			FROM member m
+			LEFT OUTER JOIN memberdetailinfo i ON m.memberNum=i.memberNum
+			LEFT OUTER JOIN qualify q ON m.memberNum=q.memberNum
 			LEFT OUTER JOIN department d ON m.departmentNum=d.departmentNum
 			LEFT OUTER JOIN position p ON m.positionNum=p.positionNum
-		WHERE memberNum=#{memberNum}
+			 
+		WHERE m.memberNum=#{memberNum}
     </select>
 
-<!--  2개 table 모두 한번에  회원 추가 update -->
-	<update id="insertMember" parameterType="com.sp.member.Member">
-		INSERT ALL
-			INTO member(memberNum,name,pwd,positionNum,departmentNum,saveFilename,originalFilename) 
-				 VALUES(#{memberNum},#{name},#{pwd},#{positionNum},#{departmentNum}
-				 ,#{saveFilename,jdbcType=VARCHAR},#{originalFilename,jdbcType=VARCHAR})
-			INTO memberauthority(memberNum,Authority) VALUES(#{memberNum},'ROLE_USER') 
-			INTO memberdetailinfo(memberNum,birth,email,tel,phone,zip,addr1,addr2)
+<!--  4개 table 모두 한번에  회원 추가 update -->
+	<insert id="insertMember" parameterType="com.sp.member.Member">
+		INSERT INTO member(memberNum,name,pwd,positionNum,departmentNum,saveFilename,originalFilename)
+			VALUES(#{memberNum},#{name},#{pwd},#{positionNum},#{departmentNum},
+			#{saveFilename},#{originalFilename})
+	</insert>
+	
+	<insert id="insertMemberDetailinfo" parameterType="com.sp.member.Member">
+		INSERT INTO memberdetailinfo(memberNum,birth,email,tel,phone,zip,addr1,addr2)
 				 VALUES(#{memberNum},#{birth},#{email},#{tel},#{phone},
-				 #{zip,jdbcType=VARCHAR},#{addr1,jdbcType=VARCHAR},#{addr2,jdbcType=VARCHAR})
-	 
-			SELECT * FROM dual
-	</update>
+				 #{zip},#{addr1},#{addr2})
+	</insert>
+	
+	<insert id="insertMemberAuthority" parameterType="com.sp.member.Member">
+		INSERT INTO memberauthority(memberNum,Authority) VALUES(#{memberNum},'ROLE_USER')
+	</insert>
+	
+	<!-- <update id="insertMember" parameterType="com.sp.member.Member">
+			 INTO qualify(qualifyNum,memberNum,qualifyCode,qualifyName,serialNum,getDate)
+				 VALUES(qualify_seq.NEXTVAL,#{memberNum},#{qualifyCode},#{qualifyName},#{serialNum},#{getDate})
+	</update> -->
 	
 <!-- 사원조회 검색 조건 -->
 	<sql id="where-list">
@@ -41,6 +53,13 @@
 	      (TO_CHAR(created, 'YYYY-MM-DD') = #{searchValue}
             OR TO_CHAR(created, 'YYYYMMDD') = #{searchValue})
 	  </if>
+	</sql>
+	
+	<!-- AND 리스트 -->
+	<sql id="and-list">
+		<if test="">
+			AND status=#{chk_status}
+		</if>
 	</sql>
 	
 	<!-- 총 사원 카운트 -->
@@ -78,26 +97,42 @@
                          <if test="searchValue != null and searchValue != ''">
 			                  <include refid="where-list"/>
 		                 </if>
-		                 AND m.departmentNum is NOT NULL AND p.positionNum is NOT NULL
+		                 AND m.departmentNum is NOT NULL AND p.positionNum is NOT NULL 
+		           
 	                </where>
 					ORDER BY m.memberNum DESC
 	        ) tb WHERE ROWNUM &lt;= #{end}
 	    ) WHERE rnum &gt;= #{start}
 	</select>
 	
-	 <update id="updateMember1" parameterType="com.sp.member.Member">
-        UPDATE member SET userPwd=#{userPwd}, modify_date=SYSDATE
-               WHERE userId=#{userId}
+
+	 <update id="updatepwd" parameterType="com.sp.member.Member">
+        UPDATE member SET userPwd=#{userPwd}, modified=SYSDATE
+               WHERE memberNum=#{memberNum}
     </update>
+	
+	<update id="updateMember1" parameterType="com.sp.member.Member">
+		UPDATE member SET name=#{name},modified=sysdate,status=#{status},
+			departmentNum=#{departmentNum},positionNum=#{positionNum},saveFilename=#{saveFilename,jdbcType=VARCHAR}
+			WHERE memberNum=#{memberNum}
+	</update>
 	
     <update id="updateMember2" parameterType="com.sp.member.Member">
         UPDATE memberdetailinfo SET email=#{email, jdbcType=VARCHAR}, 
                      tel=#{tel, jdbcType=VARCHAR}, birth=#{birth, jdbcType=VARCHAR},
                      zip=#{zip, jdbcType=VARCHAR},
                      addr1=#{addr1, jdbcType=VARCHAR}, addr2=#{addr2, jdbcType=VARCHAR}
-               WHERE userId=#{userId}
+               WHERE memberNum=#{memberNum}
     </update>
 	
 	
-	
+	<select id="organizationChart" resultType="com.sp.member.OrganizationChart">
+		SELECT d1.departmentNum, d1.parentDepartment, d2.departmentName parentDeptName, d1.departmentName
+				, d1.deptGroup, d1.deptOrder, m.memberNum, m.name, p.positionName, p.positionStep
+		FROM department d1 
+		LEFT OUTER JOIN department d2 ON d2.departmentNum = d1.parentDepartment 
+		LEFT OUTER JOIN member m ON d1.departmentNum = m.departmentNum
+		LEFT OUTER JOIN position p ON m.positionNum = p.positionNum
+		ORDER BY d1.deptGroup, d1.departmentNum, d1.deptOrder, p.positionStep
+	</select>
 </mapper>

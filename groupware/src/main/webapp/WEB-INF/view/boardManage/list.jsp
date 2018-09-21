@@ -104,13 +104,6 @@ function deleteData(boardNum) {
                       	<c:if test="${dto.canReply==0}">X</c:if>
                      	<c:if test="${dto.canReply==1}">O</c:if>
 			       	</span>
-			        	
-			       	<span style="display: inline-block;width: 120px;">리플 추천 :
-                     	<c:if test="${dto.canReplyLike==0}">X</c:if>
-                    	<c:if test="${dto.canReplyLike==1}">O</c:if>
-			       	</span>
-			        	
-			        <span style="display: inline-block;">왼쪽메뉴 : ${dto.leftMenu}</span>
 			        
 			        <span style="display: inline-block; float: right">
 			       		<button type="button" class="btn"

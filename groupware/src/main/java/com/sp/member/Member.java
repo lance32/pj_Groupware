@@ -29,15 +29,46 @@ public class Member {
 	
 	private String authority;
 	
+	private String saveFilename;
+	private String originalFilename;
+	private MultipartFile upload;
+	
+	//부서/직급정보
 	private int departmentNum;
 	private int positionNum;
 	private String departmentName;
 	private String positionName;
 	
-	private String saveFilename;
-	private String originalFilename;
-	private MultipartFile upload;
+	//자격정보
+	private String qualifyCode;
+	private String qualifyName;
+	private String serialNum;
+	private String getDate;
 	
+	public String getQualifyCode() {
+		return qualifyCode;
+	}
+	public void setQualifyCode(String qualifyCode) {
+		this.qualifyCode = qualifyCode;
+	}
+	public String getQualifyName() {
+		return qualifyName;
+	}
+	public void setQualifyName(String qualifyName) {
+		this.qualifyName = qualifyName;
+	}
+	public String getSerialNum() {
+		return serialNum;
+	}
+	public void setSerialNum(String serialNum) {
+		this.serialNum = serialNum;
+	}
+	public String getGetDate() {
+		return getDate;
+	}
+	public void setGetDate(String getDate) {
+		this.getDate = getDate;
+	}
 	public String getSaveFilename() {
 		return saveFilename;
 	}

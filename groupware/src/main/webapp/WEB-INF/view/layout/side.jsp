@@ -47,11 +47,23 @@
 </td>
 </tr>
 <tr>
-<td align="center"><a href="#">정보 수정</a></td>
+<td align="center"><a href="">정보 수정</a></td>
 </tr>
 <tr>
-<td align="center"><a href="#">주소록</a></td>
+<td align="center"><a onclick="addressBookOpen()" style="cursor: pointer;">주소록</a></td>
 <td align="center"><a href="<%=cp%>/member/logout">로그아웃</a></td>
 </tr>
 
 </table>
+
+
+<script type="text/javascript">
+
+function addressBookOpen() {
+	var url="<%=cp%>/addressBook/addressBook";
+	var specs="width=830, height=560, top=200px, left=500px";
+	window.open(url,"addressBook",specs);
+}
+
+</script>
+

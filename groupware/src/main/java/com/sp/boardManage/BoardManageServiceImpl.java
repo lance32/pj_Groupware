@@ -29,7 +29,6 @@ public class BoardManageServiceImpl implements BoardManageService {
 				dao.updateData("boardManage.createBoardFileTable", dto.getTableName());
 				dao.updateData("boardManage.createBoardLikeTable", dto.getTableName());
 				dao.updateData("boardManage.createBoardReplyTable", dto.getTableName());
-				dao.updateData("boardManage.createBoardReplyLikeTable", dto.getTableName());
 				
 				result = 1;
 			}
@@ -103,13 +102,7 @@ public class BoardManageServiceImpl implements BoardManageService {
 			}
 
 			if(dto.getCanReply() == 0) {
-				dao.deleteData("boardManage.deleteBoardReplyLike", dto.getTableName());
-
 				dao.deleteData("boardManage.deleteBoardReply", dto.getTableName());
-			}
-			
-			if(dto.getCanReplyLike() == 0) { 
-				dao.deleteData("boardManage.deleteBoardReplyLike", dto.getTableName());
 			}
 			
 			if(dto.getCanAnswer() == 0) {
@@ -122,7 +115,6 @@ public class BoardManageServiceImpl implements BoardManageService {
 				
 				dao.deleteData("boardManage.deleteBoardAnswer", dto.getTableName());
 			}
-			
 			result=dao.updateData("boardManage.updateBoardManage", dto);
 		} catch(Exception e) {
 			System.out.println(e.toString());
@@ -142,9 +134,7 @@ public class BoardManageServiceImpl implements BoardManageService {
 				for(BoardFile vo:listFile) {
 					fileManager.doFileDelete(vo.getSaveFilename(), pathname);
 				}
-				
 				dao.updateData("boardManage.dropBoardFileTable", dto.getTableName());
-				dao.updateData("boardManage.dropBoardReplyLikeTable", dto.getTableName());
 				dao.updateData("boardManage.dropBoardReplyTable", dto.getTableName());
 				dao.updateData("boardManage.dropBoardLikeTable", dto.getTableName());
 				dao.updateData("boardManage.dropBoardTable", dto.getTableName());

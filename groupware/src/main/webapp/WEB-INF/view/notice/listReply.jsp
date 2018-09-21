@@ -31,9 +31,6 @@
 	           <c:if test="${dto.memberNum == sessionScope.member.userId ||  sessionScope.member.userId == 'admin' }">
 	                <span class="deleteReply" style="cursor: pointer;" data-replyNum='${dto.replyNum}' data-pageNo='${pageNo}'>삭제</span>
 	           	</c:if>
-	           <c:if test="${dto.memberNum != sessionScope.member.userId &&  sessionScope.member.userId != 'admin' }">
-	           		<span class="notifyReply">신고</span>
-	           	</c:if>
 	        </td>
 	    </tr>
 	    <tr>

@@ -3,7 +3,7 @@
 *{
 	margin: 0px; 
 	padding: 0px;
-	font-family: 'Jua', sans-serif;
+	font-family: 'Noto Sans KR', sans-serif;
 }
 
 body{
@@ -187,22 +187,24 @@ body{
 	}
 	
 	.tabs th{
-		text-align:left;
-	    padding-left:5px;
+		text-align:center;
 	    height:35px;
 	    background:#e6e6e6;
-	    font-size: 22px;
+	    font-size: 23px;
 	}
 	
 	.tabs td{
+		padding-top : 10px;
+		padding-left : 10px;
+		text-align : left;
 		font-size: 19px;
+		border-bottom: 1px solid #eeeeee;
 	}
 	
 	.tabs a{
 		text-decoration:none;
 	}
 	
-
 .footer {
 	clear:both;
     width:100%;

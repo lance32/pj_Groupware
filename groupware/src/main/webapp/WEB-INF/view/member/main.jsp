@@ -18,8 +18,12 @@
 function searchMember(){
 	var f=document.memberSearchForm;
 	f.submit();
-	
 }
+
+$(document).ready(function(){
+	var checkedValue = $("input[name=chk_status]:checked").val();
+	//alert(checkedValue);
+});
 </script>
 
 
@@ -31,7 +35,18 @@ function searchMember(){
 		<div style="clear: both; width: 300px; height: 1px; border-bottom: 3px solid black;"></div>
 	</div>
 	<div style="width:100%; text-align:right;">
+	
+	
+	
 	<form name="memberSearchForm" action="<%=cp%>/member/main" method="post">
+	
+			<input type="radio" name="chk_status" value="all" checked="checked">전체
+			<input type="radio" name="chk_status" value="1">재직
+			<input type="radio" name="chk_status" value="2">휴직
+			<input type="radio" name="chk_status" value="3">정직
+			<input type="radio" name="chk_status" value="0">퇴사
+			
+	
 			<select class="selectBox" name="searchKey">				<%-- 선택박스  --%>
 				<option value="name">이름</option>
 				<option value="department">부서</option>
@@ -95,9 +110,11 @@ function searchMember(){
 			<td>
 			<button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/member/main';" >새로고침</button>
 			</td>
+			<c:if test="${sessionScope.member.userId=='admin'}">
 			<td style="text-align: right;">
 			<button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/member/member';">사원추가</button>
 			</td>
+			</c:if>
 		</tr>
 	</table>
 

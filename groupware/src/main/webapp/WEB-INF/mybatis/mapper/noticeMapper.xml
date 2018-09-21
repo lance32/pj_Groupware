@@ -55,7 +55,7 @@
 	</select>
 	
 	<select id="readNotice" resultType="com.sp.notice.Notice" parameterType="Integer">
-        SELECT num, n.memberNum, n.name, subject, content, n.created, hitCount, notice, saveFilename, originalFilename
+        SELECT num, n.memberNum, n.name, subject, content, n.created, hitCount, notice, n.saveFilename, n.originalFilename
            FROM notice n JOIN member m ON n.memberNum=m.memberNum 
            WHERE num = #{num}
     </select>

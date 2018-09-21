@@ -64,7 +64,9 @@ function searchList() {
     	<input type="text" name="searchValue" class="searchBox">
     
    		<button type="button" class="btn" onclick="searchList()">검색</button>
+   		<c:if test="${sessionScope.member.userId=='admin'}">
    		<button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/notice/created';">글 쓰 기</button>
+   		</c:if>
    	</form>
 
 </div>

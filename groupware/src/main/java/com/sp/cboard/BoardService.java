@@ -28,6 +28,4 @@ public interface BoardService {
 	public int replyAnswerCount(Map<String, Object> map);
 	public int deleteReply(Map<String, Object> map);
 
-	public int insertReplyLike(Map<String, Object> map);
-	public Map<String, Object> replyLikeCount(Map<String, Object> map);
 }
