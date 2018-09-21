@@ -5,16 +5,18 @@ import java.util.Map;
 
 public interface WorkLogService {
 	
-	public int insertWorkLog(WorkLog dto) throws Exception;
+	public int insertWorkLog(WorkLog dto); 
 	
-	public List<WorkLog> listWorkLog(Map<String, Object> map) throws Exception;
+	public List<WorkLog> listWorkLog(Map<String, Object> map); 
 	
-	public int dataCount(Map<String, Object> map) throws Exception;
+	public int dataCount(Map<String, Object> map); 
 	
-	public WorkLog readWorkLog(int workLogNum) throws Exception;
+	public WorkLog readWorkLog(int workLogNum); 
 	
-	public int updateBoard(WorkLog dto, String pathname) throws Exception;
+	public int updateWorkLog(WorkLog dto, String pathname); 
 	
-	public int deleteBoard(int num, String pathname, String memberNum) throws Exception;
+	public int deleteWorkLog(int num, String pathname, String memberNum);
+	
+	public WorkLog readWorkForm(int num);
 
 }

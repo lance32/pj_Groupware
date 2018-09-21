@@ -6,8 +6,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller("schedule.scheduleController")
 public class ScheduleController {
 
-	@RequestMapping(value="/schedule/month")
+	@RequestMapping(value="/schedule/main")
 	public String month() {
-		return ".schedule.main";
+		return ".schedule.schedule";
+	}
+	
+	@RequestMapping(value="/schedule/inputForm")
+	public String inputForm() {
+		return "schedule/inputForm";
 	}
 }

@@ -15,10 +15,28 @@
 	</select>
 	
 	<insert id="insertAdress" parameterType="com.sp.addressBook.AddressBook">
-		
+		INSERT INTO addressBook(addressBookNum, memberNum, name, tel, fax, email, belongto, zip, addr1, addr2, groupNum)
+    			VALUES (addressBook_seq.NEXTVAL, #{memberNum}, #{name}, #{tel}, #{fax}, #{email}, #{belongto}, #{zip}, #{addr1}, #{addr2}, #{groupNum})
 	</insert>
 	
+	<select id="addressList" parameterType="String" resultType="com.sp.addressBook.AddressBook">
+		SELECT addressBookNum, name, tel, groupName FROM addressBook a 
+			JOIN addressBookGroup g ON a.memberNum=g.memberNum 
+			WHERE a.memberNum=#{memberNum}
+			ORDER BY name
+	</select>
 	
+	<select id="readAddressInfo" parameterType="Integer" resultType="com.sp.addressBook.AddressBook">
+		SELECT addressBookNum, a.memberNum, name, tel
+				, NVL(fax,'-') fax, NVL(email,'-') email, NVL(belongto,'없음') belongto
+				, NVL(zip,'-') zip, NVL(addr1,'-') addr1, NVL(addr2,'-') addr2, a.groupNum, groupName 
+			FROM addressBook a 
+	    		JOIN addressBookGroup g ON a.memberNum=g.memberNum 
+	    		WHERE addressBookNum=#{addressBookNum}
+	</select>
 	
+	<delete id="deleteAddress" parameterType="Integer">
+		DELETE FROM addressBook WHERE addressBookNum=#{addressBookNum}
+	</delete>
 	
 </mapper>

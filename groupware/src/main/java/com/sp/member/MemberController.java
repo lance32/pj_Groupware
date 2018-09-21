@@ -455,6 +455,7 @@ public class MemberController {
 			dept.put("deptName", chart.getDepartmentName());
 			dept.put("positionName", chart.getPositionName());
 			dept.put("deptNum", chart.getDepartmentNum());
+			dept.put("parentDept", chart.getParentDepartment());
 			String deptIndex = String.format("%d", index++);
 			model.put(deptIndex, dept);
 		}

@@ -5,7 +5,7 @@
 
 	<!-- workLog INSERT -->
 	<insert id="insertWorkLog" parameterType="com.sp.workLog.WorkLog">
-		insert into(workLogNum, memberNum, subject, todayWork, nextdayWork, memo)
+		insert into workLog(workLogNum, memberNum, subject, todayWork, nextdayWork, memo)
 			values(workLog_seq.nextval, #{memberNum}, #{subject}, #{todayWork}, #{nextdayWork}, #{memo,jdbcType=VARCHAR})
 	</insert>
 	
@@ -58,5 +58,9 @@
 		WHERE workLogNum = #{WorkLogNum}
 	</select>
 	
+	<!-- form형식 불러오기 -->
+	<select id="readWorkForm" resultType="com.sp.workLog.WorkLog" parameterType="Integer">
+		SELECT num, formName, formValue from textform WHERE num = #{num}
+	</select>	
 	
 </mapper>

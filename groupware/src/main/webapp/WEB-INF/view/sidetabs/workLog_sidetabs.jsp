@@ -14,9 +14,9 @@
     	<th>업 무 일 지</th>
     </tr>
     <tr>
-    	<td><a href="#">업무 일지함</a></td>
+    	<td><a href="<%=cp%>/workLog/list">업무 일지함</a></td>
     </tr>
     <tr>
-    	<td><a href="#">내 업무 일지함 ( 0 | 0 )</a></td>
+    	<td><a href="<%=cp%>/workLog/created">업무일지 쓰기</a></td>
     </tr>
 </table>

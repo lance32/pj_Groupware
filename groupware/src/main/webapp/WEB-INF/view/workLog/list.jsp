@@ -13,8 +13,13 @@
 #paginate .numBox {border:1px solid #ccc;height:28px;text-decoration:none;padding:4px 7px 4px 7px;margin-left:3px;line-height:normal;vertical-align:middle;}
 </style>
 
+<div style="clear: both; margin: 10px 0px 15px 10px;">
+		<span class="glyphicon glyphicon-book" style="font-size: 28px; margin-left: 10px;"></span>
+		<span style="font-size: 30px;">&nbsp;업무 일지</span><br>
+		<div style="clear: both; width: 300px; height: 1px; border-bottom: 3px solid black;"></div>
+	</div>
+
 <div id="test" style="width:100%; height:600px; ">
-	
 	<%-- --%>
 	<table id="tb" style="width: 70%;"><%-- 테이블 길이 수정 가능 --%>
 		<tr>

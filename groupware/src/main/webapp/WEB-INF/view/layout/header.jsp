@@ -11,7 +11,7 @@
 
 <div class="menu">
 	<ul class="nav">
-		<li><a href="#">전자 결재</a></li>
+		<li><a href="<%=cp%>/approval/approval">전자 결재</a></li>
 		<li><a href="<%=cp%>/workLog/list">업무일지</a></li>
 		<li><a style="cursor: pointer;">커뮤니티</a>
 			<ul class="sub_menu">
@@ -21,7 +21,7 @@
 			</ul></li>
 		<li><a href="<%=cp%>/mail/mailWrite">메일</a></li>
 		<li><a href="<%=cp%>/message/msgReceive">쪽지</a></li>
-		<li><a href="<%=cp%>/schedule/month">일정</a></li>
+		<li><a href="<%=cp%>/schedule/main">일정</a></li>
 		<li><a href="#">자원관리</a></li>
 		<li><a href="#">업무지원</a>
 			<ul class="sub_menu">

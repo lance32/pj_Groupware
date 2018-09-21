@@ -47,8 +47,15 @@
 				success:function(data) {
 					var h = "<table>";
 					var preDeptName = "";
+					var deptClass = "";
 					$.each(data, function(idx, val) {
 						var ws = "";
+						
+						if (val.deptOrder == 1)
+							deptClass = "dept" + val.deptNum + " ";
+						else
+							deptClass+= "dept" + val.deptNum + " ";
+						
 						for (var i = 1; i < val.deptOrder; i++) {
 							ws += "&nbsp;&nbsp;&nbsp;&nbsp;";
 						}
@@ -56,7 +63,7 @@
 						if (preDeptName != val.deptName) {
 							h += "<tr><td>";
 							h += ws;
-							h += "<input type='checkbox' id='dept" + val.deptNum + "' onclick='deptCheck(\"dept"+ val.deptNum +"\");'>";
+							h += "<input type='checkbox' id='dept" + val.deptNum + "' class='" + deptClass + "' onclick='deptCheck(\"dept"+ val.deptNum +"\");'>";
 							h += val.deptName;
 							h += "</td></tr>";
 							preDeptName = val.deptName;
@@ -66,7 +73,7 @@
 							h += "<tr><td>";
 							ws += "&nbsp;&nbsp;&nbsp;&nbsp;"
 							h += ws;
-							h += "<input type='checkbox' class='memberChk dept" + val.deptGroup + "' data-member-num='" + val.memberNum + "'>";
+							h += "<input type='checkbox' id='" + val.memberNum + "' class='memberChk " + deptClass + "' data-member-num='" + val.memberNum + "'>";
 							h += val.memberName;
 							h += "&nbsp;";
 							h += val.positionName;
@@ -80,6 +87,16 @@
 						height: 400,
 						width: 500,
 						modal: true,
+						open: function () {
+							var member = $("#toMember").val();
+							if (member.length > 0) {
+								var memberList = member.split(";");
+								for (var i = 0; i < memberList.length; i++) {
+									if (memberList[i] == "") continue;
+									$("#" + memberList[i]).attr("checked", true);
+								}
+							}
+						},
 						buttons: {
 							"확인" : function() {
 								var memberList = "";
