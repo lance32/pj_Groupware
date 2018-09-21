@@ -1,6 +1,5 @@
 package com.sp.member;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +37,7 @@ public class MemberServiceImpl implements MemberService {
 		try {
 			if (dto.getEmail1() != null && dto.getEmail1().length() != 0 && dto.getEmail2() != null
 					&& dto.getEmail2().length() != 0)
-				dto.setEmail(dto.getEmail1() + "@" + dto.getEmail2());
+				dto.setEmail(dto.getEmail1()+dto.getEmail2());
 
 			if (dto.getTel1() != null && dto.getTel1().length() != 0 && dto.getTel2() != null
 					&& dto.getTel2().length() != 0 && dto.getTel3() != null && dto.getTel3().length() != 0) {
@@ -97,7 +96,8 @@ public class MemberServiceImpl implements MemberService {
 		}
 		return listmember;
 	}
-
+	
+	//자격정보 가져오기
 	@Override
 	public List<Map<String, Object>> qualifyList() {
 		List<Map<String, Object>> listqualify = null;
@@ -136,12 +136,12 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public void updateMember(Member dto,String pathname) throws Exception {
+	public int updateMember(Member dto,String pathname) throws Exception {
 		try {
 
 			if (dto.getEmail1() != null && dto.getEmail1().length() != 0 && dto.getEmail2() != null
 					&& dto.getEmail2().length() != 0)
-				dto.setEmail(dto.getEmail1() + "@" + dto.getEmail2());
+				dto.setEmail(dto.getEmail1()+ dto.getEmail2());
 
 			if (dto.getTel1() != null && dto.getTel1().length() != 0 && dto.getTel2() != null
 					&& dto.getTel2().length() != 0 && dto.getTel3() != null && dto.getTel3().length() != 0) {
@@ -158,21 +158,33 @@ public class MemberServiceImpl implements MemberService {
 			// 업로드한 파일이 존재한 경우
 			String saveFilename = filemanager.doFileUpload(dto.getUpload(), pathname);
 
-			if (saveFilename != null) {
-				// 이전 파일 지우기
-				if (dto.getSaveFilename().length() != 0) {
+			if(saveFilename != null) {
+				if(dto.getSaveFilename()!=null && dto.getSaveFilename().length()!=0)
 					filemanager.doFileDelete(dto.getSaveFilename(), pathname);
-				}
-
+				
 				dto.setSaveFilename(saveFilename);
+				dto.setOriginalFilename(dto.getUpload().getOriginalFilename());
 			}
-
+			
 			dao.updateData("member.updateMember1", dto);
 			dao.updateData("member.updateMember2", dto);
 		} catch (Exception e) {
 		}
 		
+		return 1;
 	}
+	
+	@Override
+	public int deleteMember(String memberNum) {
+		
+		try {
+			dao.updateData("deleteMember",memberNum);
+		} catch (Exception e) {
+		}
+		
+		return 1;
+	}
+	
 	
 	@Override
 	public List<OrganizationChart> organizationChart() throws Exception {
@@ -184,4 +196,5 @@ public class MemberServiceImpl implements MemberService {
 		} 
 		return list;
 	}
+
 }

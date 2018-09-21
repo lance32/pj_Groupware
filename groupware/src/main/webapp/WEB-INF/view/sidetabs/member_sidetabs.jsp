@@ -10,16 +10,19 @@
     	<th>전사정보</th>
     </tr>
     <tr>
-    	<td><a href="<%=cp%>/member/main">사원 조회</a></td>
+    	<td>
+	    	<a href="<%=cp%>/member/main">
+	    	<c:if test="${sessionScope.member.userId!='admin'}">
+	    		사원 조회
+	    	</c:if>
+	    	<c:if test="${sessionScope.member.userId=='admin'}">
+	    		사원 관리
+	    	</c:if>
+	    	</a>
+    	</td>
     </tr>
     
     <c:if test="${sessionScope.member.userId=='admin'}">
-	<tr>
-    	<th>관리자</th>
-    </tr>
-	    <tr>
-	    	<td><a href="#">사원 관리</a></td>
-	    </tr>
 	    <tr>
 	    	<td><a href="#">조직 관리</a></td>
 	    </tr>

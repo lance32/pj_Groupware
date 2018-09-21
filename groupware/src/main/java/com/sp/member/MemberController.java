@@ -60,14 +60,14 @@ public class MemberController {
 	
 	//멤버 리스트
 	@RequestMapping(value="/member/main")
-	public String memberList(@RequestParam(value="page", defaultValue="1") int current_page,
-			@RequestParam(value="searchKey", defaultValue="subject") String searchKey,
+	public String memberList(
+			@RequestParam(value="page", defaultValue="1") int current_page,
+			@RequestParam(value="searchKey", defaultValue="name") String searchKey,
 			@RequestParam(value="searchValue", defaultValue="") String searchValue,
 			HttpServletRequest req,
 			HttpSession session,
 			Model model) throws Exception{
 			
-		
 		SessionInfo info=(SessionInfo) session.getAttribute("member");
 		if(info==null) {
 			return "member/login";
@@ -136,7 +136,11 @@ public class MemberController {
         model.addAttribute("dataCount", dataCount);
         model.addAttribute("total_page", total_page);
         model.addAttribute("paging", paging);
-		
+        if(info.getUserId().equalsIgnoreCase("admin")) {
+        	model.addAttribute("mode","memberadmin");
+        }else {
+        	model.addAttribute("mode","member");
+        }
 		return ".member.main";
 	}
 
@@ -298,10 +302,10 @@ public class MemberController {
 		return ".member.pwd";
 	}
 	
+	//사원 수정 폼
 	@RequestMapping(value="/member/update", method=RequestMethod.GET)
 	public String updateForm(
 			@RequestParam String memberNum,
-			@RequestParam String page,
 			HttpSession session,
 			Model model) throws Exception {
 		SessionInfo info=(SessionInfo)session.getAttribute("member");
@@ -309,27 +313,23 @@ public class MemberController {
 		if(info==null) {
 			return "member/login";
 		}
-		
-		List<Map<String, Object>> departmentList=service.departmentList();
-		List<Map<String, Object>> positionList=service.positionList();
+		if(info.getUserId().equalsIgnoreCase("admin")){
+			List<Map<String, Object>> departmentList=service.departmentList();
+			List<Map<String, Object>> positionList=service.positionList();
+			model.addAttribute("departmentList",departmentList);
+			model.addAttribute("positionList",positionList);
+		}
 		
 		Member dto = service.readMember(memberNum);
-		if(dto==null) {
-			return "redirect:/member/main?page="+page;
-		}
-
-		model.addAttribute("departmentList",departmentList);
-		model.addAttribute("positionList",positionList);
+		
+		
 		model.addAttribute("dto", dto);
 		model.addAttribute("mode", "update");
-		model.addAttribute("page", page);
 		
 		return ".member.member";
 	}
 
-	
-	
-	// 수정완료
+	// 사원 정보 수정 완료
 	@RequestMapping(value="/member/update", method=RequestMethod.POST)
 	public String updateSubmit(
 			Member dto,
@@ -338,8 +338,8 @@ public class MemberController {
 			) throws Exception {
 		
 		// 패스워드 암호화
-//		String encPwd=bcryptEncoder.encode(dto.getPwd());
-//		dto.setPwd(encPwd);
+		String encPwd=bcryptEncoder.encode(dto.getPwd());
+		dto.setPwd(encPwd);
 		
 		//파일처리
 		String root=session.getServletContext().getRealPath("/");
@@ -349,14 +349,16 @@ public class MemberController {
 		
 		StringBuffer sb=new StringBuffer();
 		sb.append(dto.getName()+ "님의 회원정보가 정상적으로 변경되었습니다.<br>");
-		sb.append("메인화면으로 이동 하시기 바랍니다.<br>");
+		sb.append("다시 로그인 해주시기 바랍니다.<br>");
 		
 		model.addAttribute("title", "회원 정보 수정");
 		model.addAttribute("message", sb.toString());
 		
-		return ".member.complete";
+		
+		return "redirect:/member/logout";
 	}
 	
+	//사원 정보 보기
 	@RequestMapping(value="/member/memberinfo")
 	public String article( 
 			@RequestParam String memberNum,
@@ -388,6 +390,43 @@ public class MemberController {
 		
 		return ".member.memberinfo";
 	}
+	
+	@RequestMapping(value="/member/updateAdmin",method=RequestMethod.GET)
+	public String updateFormAdmin(
+			@RequestParam String memberNum,
+			HttpSession session,
+			Model model
+			) throws Exception{
+		
+		SessionInfo info=(SessionInfo)session.getAttribute("member");
+		
+		if(info.getUserId().equalsIgnoreCase("admin")){
+			List<Map<String, Object>> departmentList=service.departmentList();
+			List<Map<String, Object>> positionList=service.positionList();
+			model.addAttribute("departmentList",departmentList);
+			model.addAttribute("positionList",positionList);
+		}
+		
+		Member dto = service.readMember(memberNum);
+		
+		model.addAttribute("dto", dto);
+		model.addAttribute("mode", "updateAdmin");
+		
+		return ".member.memberinfo";
+	}
+	
+	
+	
+	
+	@RequestMapping(value="/member/delete")
+	public String deleteMember(@RequestParam String memberNum) {
+		
+		service.deleteMember(memberNum);
+		
+		
+		return ".member.main";
+	}
+	
 	
 	
 	@RequestMapping(value="/member/noAuthorized")
