@@ -47,7 +47,7 @@
 </td>
 </tr>
 <tr>
-<td align="center"><a href="#">정보 수정</a></td>
+<td align="center"><a href="">정보 수정</a></td>
 </tr>
 <tr>
 <td align="center"><a onclick="addressBookOpen()" style="cursor: pointer;">주소록</a></td>

@@ -38,19 +38,21 @@ public class MemberController {
 	@RequestMapping(value="/login", method=RequestMethod.GET)
 	public String loginForm(String login_error, HttpSession session, Model model) {
 		// 로그인 폼
+		
 		if(login_error!=null) {
 			model.addAttribute("message","아이디 또는 패스워드가 일치하지 않습니다.");
 		}
-		
-		//SessionInfo info =(SessionInfo) session.getAttribute("member");
-		
+		SessionInfo info=(SessionInfo) session.getAttribute("member");
+		if(info!=null) {
+			return "member/logout";
+		}
+			
 		return "/member/login";
 	}
 	
 	//최초 로그인 체크
 	@RequestMapping(value="/login", method=RequestMethod.POST)
-	public String firstLoginCheck(Member dto,HttpSession session) {
-		
+	public String firstLoginCheck(Member dto) {
 		
 		return "";
 	}
@@ -162,6 +164,10 @@ public class MemberController {
 	public String createdSubmit(Member dto, Model model,HttpSession session) throws Exception {
 		// 사원 추가
 		
+		SessionInfo info=(SessionInfo) session.getAttribute("member");
+		if(info==null) {
+			return "member/login";
+		}
 		// 패스워드 암호화
 		String encPwd="1111";
 		encPwd=bcryptEncoder.encode(encPwd);
@@ -170,7 +176,7 @@ public class MemberController {
 		//사진 추가 
 		String root=session.getServletContext().getRealPath("/");
 		String pathname=root+"upload"+File.separator+"member";
-	
+		
 		try {
 			service.insertMember(dto, pathname);
 		}catch(Exception e) {
@@ -215,10 +221,9 @@ public class MemberController {
 			HttpSession session
 			) {
 		// 패스워드 확인 폼
-		
 		SessionInfo info=(SessionInfo)session.getAttribute("member");
 		if(info==null) {
-			return "redirect:/member/login";
+			return "member/login";
 		}
 		
 		if(dropout==null) {
@@ -242,7 +247,7 @@ public class MemberController {
 		
 		SessionInfo info=(SessionInfo)session.getAttribute("member");
 		if(info==null) {
-			return "redirect:/member/login";
+			return "member/login";
 		}
 		
 		Member dto=service.readMember(info.getUserId());
@@ -313,9 +318,6 @@ public class MemberController {
 			return "redirect:/member/main?page="+page;
 		}
 
-		if(! info.getUserId().equals(dto.getMemberNum()) && ! info.getUserId().equals("admin")) {
-			return "redirect:/member/main?page="+page;
-		}
 		model.addAttribute("departmentList",departmentList);
 		model.addAttribute("positionList",positionList);
 		model.addAttribute("dto", dto);
@@ -334,14 +336,16 @@ public class MemberController {
 			HttpSession session,
 			Model model
 			) throws Exception {
-		SessionInfo info=(SessionInfo)session.getAttribute("member");
 		
 		// 패스워드 암호화
-		String encPwd=bcryptEncoder.encode(dto.getPwd());
-		dto.setPwd(encPwd);
+//		String encPwd=bcryptEncoder.encode(dto.getPwd());
+//		dto.setPwd(encPwd);
 		
+		//파일처리
+		String root=session.getServletContext().getRealPath("/");
+		String pathname=root+"upload"+File.separator+"member";
 		
-		//service.updateMember(dto.getMemberNum());
+		service.updateMember(dto, pathname);
 		
 		StringBuffer sb=new StringBuffer();
 		sb.append(dto.getName()+ "님의 회원정보가 정상적으로 변경되었습니다.<br>");
@@ -359,25 +363,28 @@ public class MemberController {
 			@RequestParam(value="page") String page,
 			@RequestParam(value="searchKey", defaultValue="name") String searchKey,
 			@RequestParam(value="searchValue", defaultValue="") String searchValue,
+			HttpSession session,
 			Model model) throws Exception{
-		
+		SessionInfo info=(SessionInfo)session.getAttribute("member");
+		if(info==null) {
+			return "member/login";
+		}
 		searchValue = URLDecoder.decode(searchValue, "utf-8");
 		
 		String query="page="+page;
 		if(searchValue.length()!=0) {
 			query+="&searchKey="+searchKey+"&searchValue="+URLEncoder.encode(searchValue, "UTF-8");
 		}
-
-
+		
 		// 해당 레코드 가져 오기
 		Member dto = service.readMember(memberNum);
 		if(dto==null)
 			return "redirect:/member/main?"+query;
 	
+		
 		model.addAttribute("dto", dto);
 		model.addAttribute("page", page);
 		model.addAttribute("query", query);
-		model.addAttribute("member",dto);
 		
 		return ".member.memberinfo";
 	}

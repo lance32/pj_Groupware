@@ -18,16 +18,10 @@
 <link rel="stylesheet" href="<%=cp%>/resource/bootstrap/css/bootstrap-theme.css" type="text/css">
 <link rel="stylesheet" href="<%=cp%>/resource/bootstrap/css/bootstrap.css" type="text/css">
 
-<link rel="stylesheet" href="<%=cp%>/resource/fullcalendar/css/fullcalendar.css" type="text/css">
-<link rel="stylesheet" href="<%=cp%>/resource/fullcalendar/css/fullcalendar.print.css" type="text/css">
-
 <link rel="stylesheet" href="<%=cp%>/resource/css/style.css?ver=12443" type="text/css">
 <link rel="stylesheet" href="<%=cp%>/resource/css/layout.css?ver=23" type="text/css">
 
-<script type="text/javascript" src="<%=cp%>/resource/fullcalendar/js/moment.min.js"></script>
 <script type="text/javascript" src="<%=cp%>/resource/jquery/js/jquery-1.12.4.min.js"></script>
-<script type="text/javascript" src="<%=cp%>/resource/fullcalendar/js/fullcalendar.js"></script>
-<script type="text/javascript" src="<%=cp%>/resource/fullcalendar/js/gcal.js"></script>
 
 </head>
 <body>

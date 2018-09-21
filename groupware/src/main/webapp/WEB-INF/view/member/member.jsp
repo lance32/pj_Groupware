@@ -31,7 +31,16 @@ input{
 function memberOk() {
 	var f = document.memberForm;
 	var str;
+	
+	str = f.upload.value;
+	str = str.trim();
+    if(!str) {
+        alert("파일을 등록해 주세요. ");
+        f.upload.focus();
+        return;
+    }
 
+<c:if test="${mode=='created'}">
 	str = f.memberNum.value;
 	str = str.trim();
 	if(!str) {
@@ -45,7 +54,10 @@ function memberOk() {
 		return;
 	}
 	f.memberNum.value = str;
+</c:if>
 
+	
+	
 	
     str = f.name.value;
 	str = str.trim();
@@ -238,10 +250,10 @@ function memberNumCheck() {
 			  <table style="width: 100%; margin: 20px auto 0px; border-spacing: 0px;">
 			  <tr>
 			  	<td width="100" valign="top" style="text-align: right; padding-top: 5px;">
-    				<span>사용하실 증명사진을 입력해주세요</span>
+    				<span>사진을 선택하세요</span>
 			  	</td>
 			  	<td style="padding: 0 0 15px 15px;">
-					<input type=file name="upload">			  	
+					<input type=file name="upload" value="${dto.saveFilename}">			  	
 			  	</td>
 			  </tr>
 			  <tr>
@@ -267,12 +279,29 @@ function memberNumCheck() {
 			        <p style="margin-top: 1px; margin-bottom: 5px;">
 			            <input type="text" name="name" value="${dto.name}" maxlength="30" class="boxTF"
 		                      style="width: 95%;"
-		                      ${mode=="update" ? "readonly='readonly' ":""}
 		                      placeholder="이름">
 			        </p>
 			      </td>
 			  </tr>
 			  
+		  <c:if test="${sessionScope.member.userId=='admin'}">
+		  		<tr>
+						<td width="100" valign="top" style="text-align: right; padding-top: 5px;">
+							<label style="font-weight: 900;">근무구분</label>
+						</td>
+						 <td style="padding: 0 0 15px 15px;">
+						  <p style="margin-top: 1px; margin-bottom: 5px;">
+							<select class="selectField" id="status" name="status">
+							<option value="">선 택</option>
+							<option value="0">퇴사</option>
+							<option value="1">재직</option>
+							<option value="2">휴직</option>
+							<option value="3">정직</option>
+							</select>
+						  </p>
+						</td>
+					</tr>
+
 			   <tr>
 			      <td width="100" valign="top" style="text-align: right; padding-top: 5px;">
 			            <label style="font-weight: 900;">부서</label>
@@ -288,7 +317,7 @@ function memberNumCheck() {
 			         </p>
 			      </td>
 			  </tr>
-
+					
 			   <tr>
 			      <td width="100" valign="top" style="text-align: right; padding-top: 5px;">
 			            <label style="font-weight: 900;">직급</label>
@@ -304,6 +333,7 @@ function memberNumCheck() {
 			        </p>
 			      </td>
 			  </tr>
+			</c:if>
 
 			  <tr>
 			      <td width="100" valign="top" style="text-align: right; padding-top: 5px;">
@@ -399,7 +429,7 @@ function memberNumCheck() {
 			  </tr>
 			  
 			  <tr>
-			      <td width="100" valign="top" style="text-align: right; padding-top: 5px;">
+			      <td width="100" valign="top" style="text-align: right; padding-top: 2px;">
 			            <label style="font-weight: 900;">우편번호</label>
 			      </td>
 			      <td style="padding: 0 0 15px 15px;">
@@ -425,10 +455,45 @@ function memberNumCheck() {
 			                       class="boxTF" style="width: 95%;" placeholder="나머지 주소">
 			        </p>
 			      </td>
+			      
 			  </tr>
+			  <%-- <c:if test="${sessionScope.member.userId==dto.memberNum || sessionScope.member.userId=='admin'}">
+				  <tr>
+			      <td width="100" valign="top" style="text-align: right; padding-top: 5px;"rowspan="2">
+			            <label style="font-weight: 900;">자격 정보</label>
+			      </td>
+			      
+			      
+			      <td style="padding: 0 0 15px 15px;">
+			      <span style="width:70px;">면허/자격 명</span>
+			            <input type="text" name="qualifyName" id="qualifyName" value="${dto.qualifyName}"
+                         onchange="" style="width: 25%;" placeholder="면허 자격 명">
+                         
+			      <span style="padding-left: 5px;">취득일자</span>
+			            <input type="text" name="getDate" id="getDate" value="${dto.getDate}"
+                         onchange="" style="width: 25%;" placeholder="ex)2018-09-20">
+			      </td>
+			  </tr>
+			  <tr>
+			  
+		
+			  	<td style="padding: 0 0 15px 15px;">
+			      <span style="width:70px;">시리얼넘버</span>
+			            <input type="text" name="serialNum" id="serialNum" value="${dto.serialNum}"
+                         onchange="" style="width: 25%;" placeholder="시리얼넘버">
+                         
+			      <span style="padding-left: 5px;">고유코드</span>
+			            <input type="text" name="qualifyCode" id="qualifyCode" value="${dto.qualifyCode}"
+                         onchange="" style="width: 35%;" placeholder="고유코드">
+			      </td>
+			  
+			  </tr>
+			  
+			  </c:if> --%>
+			  
 			  </table>
 			
-			  <table style="width: 100%; margin: 0px auto; border-spacing: 0px;">
+			  <table style="width: 100%; margin: 0px auto; border-spacing: 0px; margin-top:10px;">
 			     <tr height="45"> 
 			      <td align="center" >
 			        <button type="button" name="sendButton" class="btn" onclick="memberOk();">${mode=="created"?"사원 추가":"정보수정"}</button>

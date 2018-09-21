@@ -15,7 +15,6 @@
     height:100%;
 }
 
-
 .info-subject{
 	font-size:20px;
 	text-align:center;
@@ -25,8 +24,6 @@
     background: #efefef;
 }
 
-
-
 .info-value{
 	padding-left:10px;
 	width:250px;
@@ -34,21 +31,12 @@
 
 
 
-.info-btn{
-	border:1px solid black;
-	background-color: white;
- 	padding: 10px 15px;
- 	border: 1px black;
- 	color: black;
- 	text-align: center;
- 	text-decoration: none;
- 	font-size: 16px;
- 	display: inline-block;
- 	cursor: pointer;
- 	float: left;
-
+.side-info td{
+	height:40px;
+	text-align:center;
+	font-size:15px;
+	border-right: 1px solid #efefef;
 }
-
 
 </style>
 <script type="text/javascript">
@@ -83,10 +71,7 @@ function updatemember() {
 </script>
 
 <script type="text/javascript">
-// 페이징 처리
-$(function(){
-	listPage(1);
-});
+
 
 </script>
 
@@ -97,8 +82,8 @@ $(function(){
     <div>
 		
 	<table style="width: 100%; margin: 20px auto 0px; border-spacing: 0px; border-collapse: collapse;" class="info-table">
-    	<tr style="border-top: 1px solid #cccccc; border-bottom: 1px solid #cccccc;">
-          <td rowspan="4" style="width:270px; height:250px;">
+    	<tr style="border-top: 2px solid #cccccc; border-bottom: 1px solid #cccccc;">
+          <td rowspan="5" style="width:270px; height:250px;">
              <img src="<%=cp%>/upload/member/${dto.saveFilename}"
              	style="width:270px; height:250px;">
           </td>
@@ -119,7 +104,7 @@ $(function(){
           		퇴사
           	</c:if>
          	<c:if test="${dto.status == 2}">
-          		재직
+          		휴직
           	</c:if>
           	<c:if test="${dto.status == 3}">
           		정직
@@ -165,13 +150,54 @@ $(function(){
           	${dto.created}
           </td>
         </tr>
+        
+        <tr>
+        	<td class="info-subject">
+        	주소
+        	</td>
+        	<td class="info-value">
+        	${dto.addr1}&nbsp;${dto.addr2}
+        	</td>
+        </tr>
     </table>
 
-	    <div style="margin-top:20px;">
-        	<button type="button" class="info-btn" >개인정보</button>
-            <button type="button" class="info-btn">학력사항</button>
-            <button type="button" class="info-btn">경력사항</button>
-            <button type="button" class="info-btn">자격면허</button>
+	    <div>
+	    	<table style="width: 100%; margin: 20px auto 0px; border-spacing: 0px; border-collapse: collapse;" class="side-info">
+		    	<tr>
+			    	<th>자격정보</th>
+		    	</tr>
+    			<tr style="border-top: 2px solid #cccccc; border-bottom: 1px solid #cccccc; height:20px;">
+		    		<td>
+		    			자격/면허 명
+		    		</td>
+		    		<td>
+		    			취득일자
+		    		</td>
+		    		<td>
+		    			고유 코드
+		    		</td>
+		    		<td>
+		    			식별번호
+		    		</td>
+		    	</tr>
+		    	
+		    		
+			    	<tr>
+						<td>
+							${dto.qualifyName}
+						</td>
+						<td>
+							${dto.getDate}
+						</td>
+						<td>
+							${dto.qualifyCode}
+						</td>		    	
+						<td>
+							${dto.serialNum}
+						</td>
+			    	</tr>
+	    	</table>
+	 
         </div>
     <table style="margin-top:20px;">
     <tr>

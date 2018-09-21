@@ -21,7 +21,7 @@
 			</ul></li>
 		<li><a href="<%=cp%>/mail/mailWrite">메일</a></li>
 		<li><a href="<%=cp%>/message/msgReceive">쪽지</a></li>
-		<li><a href="<%=cp%>/schedule/month">일정</a></li>
+		<li><a href="<%=cp%>/schedule/main">일정</a></li>
 		<li><a href="#">자원관리</a></li>
 		<li><a href="#">업무지원</a>
 			<ul class="sub_menu">
