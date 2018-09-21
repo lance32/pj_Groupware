@@ -11,12 +11,12 @@
 <table class="sidetable" border ="1">
 	
 		<tr>
-			<td rowspan = "5" style="width:80px;">
+			<td rowspan = "5" style="width:90px;">
 				<c:if test="${not empty sessionScope.member.saveFilename}">
-					<img src = "<%=cp%>/upload/member/${sessionScope.member.saveFilename}" width="100" height = "100">
+					<img src = "<%=cp%>/upload/member/${sessionScope.member.saveFilename}" width="110" height = "125">
 				</c:if>
 				<c:if test="${empty sessionScope.member.saveFilename}">
-					<img src = "<%=cp%>/resource/images/no-image-icon.png" width="100" height = "100">
+					<img src = "<%=cp%>/resource/images/no-image-icon.png" width="110" height = "125">
 				</c:if>
 				</td>
 				<c:if test="${not empty sessionScope.member.userId}">

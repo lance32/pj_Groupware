@@ -11,8 +11,29 @@ public class WorkLog {
 	private String todayWork;
 	private String nextdayWork;
 	private String memo;
+	private int num;
+	private String formName;
+	private String formValue;
 	
-	
+
+	public int getNum() {
+		return num;
+	}
+	public void setNum(int num) {
+		this.num = num;
+	}
+	public String getFormName() {
+		return formName;
+	}
+	public void setFormName(String formName) {
+		this.formName = formName;
+	}
+	public String getFormValue() {
+		return formValue;
+	}
+	public void setFormValue(String formValue) {
+		this.formValue = formValue;
+	}
 	public int getListNum() {
 		return listNum;
 	}

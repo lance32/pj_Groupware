@@ -14,7 +14,10 @@ textarea {
 .worktable tr{
 	height:20px;
 	font-size: 15px;
-	overflow: scroll;
+	
+}
+.worktable td{
+	min-height: 30px;
 	
 }
 
@@ -26,18 +29,18 @@ textarea {
 		<span style="font-size: 30px;">&nbsp;업무 일지</span><br>
 		<div style="clear: both; width: 300px; height: 1px; border-bottom: 3px solid black;"></div>
 	</div>
-	
-<table style="width: 800px;" border="1" class="worktable" >
+<div style="width:100%; height:100%; margin-left: 50px;">	
+<table style="width: 70%; height: 100%" border="1" class="worktable">
 <tr>
-<td colspan = "5" rowspan = "3" style="font-size: 25px; border: none;">일일 업무 일지</td>
-<td width="33.3%" style="background-color: bisque">작성</td>
-<td width="33.3%" style="background-color: bisque">검토</td>
-<td width="33.3%" style="background-color: bisque">승인</td>
+<td colspan = "5" rowspan = "3" style="font-size: 25px;">일일 업무 일지</td>
+<td height="30px" style="background-color: bisque">작성</td>
+<td height="30px" style="background-color: bisque">검토</td>
+<td height="30px" style="background-color: bisque">승인</td>
 </tr>
 <tr>
-<td rowspan = "2">&nbsp;</td>
-<td rowspan = "2">&nbsp;</td>
-<td rowspan = "2">&nbsp;</td>
+<td height="40px" rowspan = "2">&nbsp;</td>
+<td height="40px" rowspan = "2">&nbsp;</td>
+<td height="40px" rowspan = "2">&nbsp;</td>
 </tr>
 <tr>
 </tr>
@@ -63,22 +66,23 @@ textarea {
 </tr>
 <tr>
 <td colspan = "4">
-<textarea rows="23" cols="67" readonly="readonly">
+<textarea rows="23" cols="67" disabled="disabled" style="background-color: white">
 ${dto.todayWork}
 </textarea>
 </td>
 <td colspan = "4">
-<textarea rows="23" cols="67" readonly="readonly">
+<textarea rows="23" cols="67" disabled="disabled" style="background-color: white">
 ${dto.nextdayWork}
 </textarea>
 </td>
 </tr>
 <tr>
 <td colspan = "8" rowspan = "2" >
-<textarea rows="5" cols="140" readonly="readonly">
+<textarea rows="5" cols="140" style="background-color: white">
 비고
 ${dto.memo }
 </textarea>
 </td>
 </tr>
 </table>
+</div>

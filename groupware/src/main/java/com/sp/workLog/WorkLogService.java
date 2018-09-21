@@ -16,5 +16,7 @@ public interface WorkLogService {
 	public int updateBoard(WorkLog dto, String pathname) throws Exception;
 	
 	public int deleteBoard(int num, String pathname, String memberNum) throws Exception;
+	
+	public WorkLog readWorkForm(int num) throws Exception;
 
 }

@@ -58,5 +58,9 @@
 		WHERE workLogNum = #{WorkLogNum}
 	</select>
 	
+	<!-- form형식 불러오기 -->
+	<select id="readWorkForm" resultType="com.sp.workLog.WorkLog" parameterType="Integer">
+		SELECT num, formName, formValue from textform WHERE num = #{num}
+	</select>	
 	
 </mapper>

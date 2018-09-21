@@ -77,6 +77,25 @@ public class WorkLogServiceImpl implements WorkLogService{
 		return 0;
 	}
 
+	@Override
+	public WorkLog readWorkForm(int num) throws Exception {
+		
+		WorkLog dto=null;
+		
+		try{
+			dto=dao.selectOne("workLog.readWorkForm", num);
+			if (dto == null)
+				System.out.println("workLog.readWorkForm null");
+			else
+				System.out.println("workLog.readWorkForm not null");
+		} catch(Exception e) {
+			System.out.println(e.toString());
+		}
+		
+		return dto;
+
+	}
+
 
 
 }
