@@ -173,6 +173,7 @@ public class MemberServiceImpl implements MemberService {
 		}
 		
 	}
+	
 	@Override
 	public List<OrganizationChart> organizationChart() throws Exception {
 		List<OrganizationChart> list = null;
