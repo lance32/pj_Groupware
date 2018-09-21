@@ -17,24 +17,18 @@
 <div>
 <form name="workLogForm" method="post" enctype="multipart/form-data" onsubmit="return submitContent(this);">
 <table style="width: 100%; margin: 20px auto 0px; border-spacing: 0px; border-collapse: collapse;">
-<tr align="left" height="40" style="border-top: 1px solid #cccccc; border-bottom: 1px solid #cccccc;"> 
-<td width="100" bgcolor="#eeeeee" style="text-align: center;">제목</td>
-<td style="padding-left:10px;"> 
-<input style="border: none;" type="text" name="subject" maxlength="1000" value="${dto.subject}">
-</td>
-</tr>
 
-<tr align="left" height="40" style="border-bottom: 1px solid #cccccc;"> 
+<tr align="left" height="40" style="border-top: 1px solid #cccccc; border-bottom: 1px solid #cccccc;"> 
 <td width="100" bgcolor="#eeeeee" style="text-align: center;">기안자</td>
 <td style="padding-left:10px;"> 
-${sessionScope.member.userId}
+${sessionScope.member.userName}
 </td>
 </tr>
 
 <tr align="left" style="border-bottom: 1px solid #cccccc;"> 
 <td width="100" bgcolor="#eeeeee" style="text-align: center; padding-top:5px;" valign="top">내    용</td>
-<td height="870px;" valign="top" style="padding:5px 0px 5px 10px;"> 
-<textarea name="content" id="content" class="boxTA" style="width: 100%; height:870px;">${dto.formValue}</textarea>
+<td height="870px;" valign="top" style="padding:5px 0px 5px 10px;" > 
+<textarea name="content" id="content" class="boxTA" style="width: 95%; height:870px;">${dto.formValue}</textarea>
 </td>
 </tr>
 </table>
@@ -43,6 +37,12 @@ ${sessionScope.member.userId}
 <tr height="45"> 
 <td align="center" >
 <button type="submit" class="btn">${mode=='update'?'수정완료':'등록하기'}</button>
+<input type ="hidden" name = "memberNum" value = "${sessionScope.member.userId}">
+<input type ="hidden" name = "makeDate" value = "">
+<input type ="hidden" name = "subject" value = "$('#subject').textContent">
+<input type ="hidden" name = "todayWork" value = "$('#todayWork').textContent">
+<input type ="hidden" name = "nextdayWork" value = "$('#nextdayWork').textContent">
+<input type ="hidden" name = "memo" value = "$('#memo').textContent">
 <button type="reset" class="btn">다시입력</button>
 <button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/workLog/list';">${mode=='update'?'수정취소':'등록취소'}</button>
 <c:if test="${mode=='update'}">

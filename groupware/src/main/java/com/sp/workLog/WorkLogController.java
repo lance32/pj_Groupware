@@ -1,5 +1,6 @@
 package com.sp.workLog;
 
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.sp.common.MyUtil;
+import com.sp.member.SessionInfo;
 
 @Controller("workLog.workLogController")
 public class WorkLogController {
@@ -132,16 +135,31 @@ public class WorkLogController {
 		return ".workLog.article";
 	}
 	
-	@RequestMapping(value="/worklog/created", method=RequestMethod.GET)
+	@RequestMapping(value="/workLog/created", method=RequestMethod.GET)
 	public String createdForm(
+			
 			Model model) throws Exception {
+		
 		int num = 1;
-		
-		
 		WorkLog dto=service.readWorkForm(num);
 		
 		model.addAttribute("dto",dto);
+		model.addAttribute("mode","created");
+		
 		return ".workLog.created";
+	}
+	
+	@RequestMapping(value="/workLog/created", method=RequestMethod.POST)
+	public String createdSubmit(WorkLog dto, HttpSession session){
+		SessionInfo info=(SessionInfo) session.getAttribute("member");
+		if(info==null) {
+			return "redirect:/member/login";
+		}
+		
+		dto.setMemberNum(info.getUserId());
+		service.insertWorkLog(dto);
+		
+		return "redirect:/workLog/list";
 	}
 }
 

@@ -14,7 +14,7 @@ public class WorkLog {
 	private int num;
 	private String formName;
 	private String formValue;
-	
+
 
 	public int getNum() {
 		return num;
