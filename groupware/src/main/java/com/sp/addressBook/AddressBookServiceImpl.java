@@ -42,5 +42,27 @@ public class AddressBookServiceImpl implements AddressBookService{
 		return list;
 	}
 
+	@Override
+	public List<AddressBook> addressList(String memberNum) {
+		List<AddressBook> list=null;
+		try {
+			list=dao.selectList("address.addressList", memberNum);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return list;
+	}
+
+	@Override
+	public AddressBook readAddressInfo(int addressBookNum) {
+		AddressBook dto=null;
+		try {
+			dto=dao.selectOne("address.readAddressInfo", addressBookNum);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return dto;
+	}
+
 
 }

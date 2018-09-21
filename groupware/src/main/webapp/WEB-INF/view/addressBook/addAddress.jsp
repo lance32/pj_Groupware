@@ -78,12 +78,25 @@ function sendOk() {
 
 jQuery(function(){
 	
-	jQuery("#addAddressBtn").click(function(){
-		var form=document.addAddressForm;
+	jQuery("#createAddressButn").click(function(){
+		var f=document.addAddressForm;
 		
-		form.action="<%=cp%>/addressBook/created";
+		var str=f.name.value;
+		if(!str){
+			alert("이름은 필수 입력사항 입니다.");
+			f.name.focus();
+			return;
+		}
 		
-		form.submit();
+		var str=f.tel.value;
+		if(!str){
+			alert("전화번호는 필수 입력사항 입니다.");
+			f.tel.focus();
+			return;
+		}
+		
+		f.action="<%=cp%>/addressBook/created";
+		f.submit();
 	});
 	
 	//취소버튼 클릭시
@@ -121,36 +134,38 @@ jQuery(function(){
 					<tr height="50px;">
 						<td class="addressItem"> 그룹 </td>
 						<td>
-							<select id="groupSeparate" name="group" style="width: 90px; height: 25px;">
+							<select id="groupSeparate" name="groupNum" style="width: 90px; height: 25px;">
 							 <c:forEach var="dto" items="${groupList}">
 								<option value="${dto.groupNum}">${dto.groupName}</option> 
 							 </c:forEach>
 							</select>
 						</td>
 						<td style="color: #848484;"> 소속 </td>
-						<td><input type="text" name="name" class="addressInput"  autocomplete="off" style="width: 130px;"></td>
+						<td><input type="text" name="belongto" class="addressInput"  autocomplete="off" style="width: 130px;"></td>
 					</tr>
 					<tr height="50px;">
 						<td class="addressItem"> 이메일 </td>
-						<td colspan="3"><input type="text" name="name" class="addressInput"  autocomplete="off"></td>
+						<td colspan="3"><input type="text" name="email" class="addressInput"  autocomplete="off"></td>
 					</tr>
 					<tr height="50px;">
 						<td class="addressItem"> FAX 번호 </td>
-						<td colspan="3"><input type="text" name="name" class="addressInput"  autocomplete="off"></td>
+						<td colspan="3"><input type="text" name="fax" class="addressInput"  autocomplete="off"></td>
 					</tr>
 					<tr height="50px;">
 						<td class="addressItem"> 주소1 </td>
-						<td colspan="3"><input type="text" name="name" class="addressInput"  autocomplete="off"></td>
+						<td colspan="3"><input type="text" name="addr1" class="addressInput"  autocomplete="off"></td>
 					</tr>
 					<tr height="50px;">
 						<td class="addressItem"> 주소2 </td>
-						<td colspan="3"><input type="text" name="name" class="addressInput"  autocomplete="off"></td>
+						<td colspan="3"><input type="text" name="addr2" class="addressInput"  autocomplete="off"></td>
 					</tr>
 					<tr height="50px;">
 						<td class="addressItem"> 우편번호 </td>
-						<td colspan="3"><input type="text" name="name" class="addressInput"  autocomplete="off"></td>
+						<td colspan="3"><input type="text" name="zip" class="addressInput"  autocomplete="off"></td>
 					</tr>
 				</table>
+				
+				<input type="hidden" name="memberNum" value="${sessionScope.member.userId}">
 			</form>
 		</div>
 		<div style="clear:both; width: 100%; height: 50px;">
@@ -170,7 +185,7 @@ jQuery(function(){
 		</div>
 		<div style="width: 100%; height: 58px; float: left;">
 			<button class="butn" style="float: left; margin: 10px;">삭제</button>
-			<button class="butn" style="float: right; margin: 10px;">추가완료</button>
+			<button id="createAddressButn" class="butn" style="float: right; margin: 10px;">추가완료</button>
 		</div>
 	</div>
 	

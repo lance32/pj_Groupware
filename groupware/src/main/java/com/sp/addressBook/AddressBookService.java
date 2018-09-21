@@ -7,7 +7,7 @@ public interface AddressBookService {
 	public void insertAdress(AddressBook dto);
 	public void insertGroup(Map<String, Object> map);
 	public List<AddressBook> groupList(String memberNum);
-	
-	
+	public List<AddressBook> addressList(String memberNum);
+	public AddressBook readAddressInfo(int addressBookNum);
 	
 }

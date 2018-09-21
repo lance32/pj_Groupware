@@ -37,6 +37,7 @@
 #nameSearchDiv:hover{
 	cursor: pointer;
 }
+
 .address{
 	height: 50px; 
 	border-bottom: 1px solid #E6E6E6; 
@@ -48,6 +49,11 @@
 	background: #FBF8EF;
 	cursor: pointer;
 }
+.addressList{
+ 	line-height: 50px; 
+ 	text-align:center;
+ 	 float: left; 
+}
 
 </style>
 <link rel="stylesheet" href="<%=cp%>/resource/bootstrap/css/bootstrap-theme.css" type="text/css">
@@ -55,24 +61,67 @@
 <script type="text/javascript">
 jQuery(function(){
 	jQuery("#addressInfo").hide();
+	
+	//연락처 클릭시 정보보기 AJAX
 	jQuery(".address").click(function(){
+		jQuery("#infoContent").empty();
+		jQuery("#infoButn").empty();
 		jQuery(".address").css("border-left","2px solid #F2F2F2");
 		jQuery(this).css("border-left","none");
+		
+		var addressBookNum=jQuery(this).children("input").val();
+		if(! addressBookNum){
+			alert("연락처의 정보가 없습니다.");
+			jQuery(".address").css("border-left","2px solid #F2F2F2");
+			return;
+		}
+		
+		var query="addressBookNum="+addressBookNum;
+		var url="<%=cp%>/addressBook/addressInfo";
+		jQuery.ajax({
+			type:"post"
+			,url:url
+			,data:query
+			,dataType:"json"
+			,success:function(data) {
+				jQuery("#infoContent").append(""
+					+"<table style='margin: 10px 30px;'>"
+					+"	<tr height='40px'> <td width='80px'>이름</td> <td>"+data.name+"</td> </tr>"
+					+"	<tr height='40px'> <td>그룹</td> <td>"+data.groupName+"</td> </tr>"
+					+"	<tr height='40px'> <td>소속</td> <td>"+data.belongto+"</td> </tr>"
+					+"	<tr height='40px'> <td>이메일</td> <td>"+data.email+"</td> </tr>"
+					+"	<tr height='40px'> <td>FAX 번호</td> <td>"+data.fax+"</td> </tr>"
+					+"	<tr height='40px'> <td>주소1</td> <td>"+data.addr1+"</td> </tr>"
+					+"	<tr height='40px'> <td>주소2</td> <td>"+data.addr2+"</td> </tr>"
+					+"	<tr height='40px'> <td>우편번호</td> <td>"+data.zip+"</td> </tr>"
+					+"</table>"
+				);
+				jQuery("#infoButn").append("<button type='button' class='butn' style='float:left; margin-left: 10px;'>수정</button>");
+				jQuery("#infoButn").append("<button type='button' class='butn' style='float:right; margin-right: 20px;'>삭제</button>");
+			}
+			,beforeSend : function(jqXHR) {
+		        jqXHR.setRequestHeader("AJAX", true);
+		    }
+		    ,error:function(jqXHR) {
+		    	console.log(jqXHR.responseText);
+		    }
+		}); 
+		
 		jQuery("#addressInfo").show();
 	});
-	
+
 	//추가 버튼 클릭시
 	jQuery("#addAdressButn").click(function(){
 		location.href="<%=cp%>/addressBook/created";
 		return;
 	});
 	
-	
+
 });
 </script>
 </head>
 <body>
-
+	
 <div style="width:800px; height:542px;margin: 10px 0px 0px 10px;">
 	<div style="clear:both; width: 100%; height: 40px; background: #C46F1A; padding: 0px; margin: 0px;">
 		<div style="margin: 10px 0px 0px 10px; float: left; font-weight: bold; color: #FAFAFA">
@@ -88,65 +137,22 @@ jQuery(function(){
 	
 	<div style="width: 400px; height: 460px; float: left; border-left: 2px solid #E6E6E6; border-bottom: 2px solid #E6E6E6; border-top: 3px solid #F2F2F2;">
 		<div id="addressInfo" style="width: 100%; height: 450px; border-top: 1px solid #E6E6E6;">
-			<div style="width: 100%; height: 400px;">
-				<table style="margin: 10px 20px;">
-					<tr height="40px">
-						<td width="80px">이름</td>
-						<td>테스트</td>
-					</tr>
-					<tr height="40px">
-						<td>전화번호</td>
-						<td>010-1111-1111</td>
-					</tr>
-					<tr height="40px">
-						<td>그룹</td>
-						<td>일반</td>
-					</tr>
-					<tr height="40px">
-						<td>소속</td>
-						<td></td>
-					</tr>
-					<tr height="40px">
-						<td>이메일</td>
-						<td></td>
-					</tr>
-					<tr height="40px">
-						<td>FAX 번호</td>
-						<td></td>
-					</tr>
-					<tr height="40px">
-						<td>주소1</td>
-						<td></td>
-					</tr>
-					<tr height="40px">
-						<td>주소2</td>
-						<td></td>
-					</tr>
-					<tr height="40px">
-						<td>우편번호</td>
-						<td></td>
-					</tr>
-				</table>
-			</div>
-	
-			<div style="width: 100%; height: 50px;">
-				<button type="button" class="butn" style="float:left; margin-left: 10px;">수정</button>
-				<button type="button" class="butn" style="float:right; margin-right: 20px;">삭제</button>
-			</div>
+			<div id="infoContent" style='width: 100%; height: 400px;'> 
+			 </div>
+			 <div id="infoButn" style='width: 100%; height: 50px;'>	
+			 </div>
 		</div>
 	</div>
 	<div style="width: 400px; height: 460px; float: left;  border-right: 2px solid #E6E6E6; border-bottom: 2px solid #E6E6E6;">
 		<div style="width: 100%; height:458px; float: left; overflow-y:scroll; background: #F2F2F2; padding: 3px 0px 3px 0px;">
-			
-			<div class="address">
-				<div style="width: 30%; line-height: 50px; text-align:center; float: left; ">테스트</div>
-				<div style="width: 70%; line-height: 50px; text-align:center; float: left;">010-1111-1111</div>
-			</div>
-			<div class="address">
-				<div style="width: 30%; line-height: 50px; text-align:center; float: left; ">테스트2</div>
-				<div style="width: 70%; line-height: 50px; text-align:center; float: left;">010-1111-1111</div>
-			</div>
-		
+			<c:forEach var="dto" items="${list}">
+				<div class="address">
+					<div class="addressList" style="width: 30%;">${dto.name}</div>
+					<div class="addressList" style="width: 30%;">${dto.groupName}</div>
+					<div class="addressList" style="width: 40%;">${dto.tel}</div>
+					<input type="hidden" value="${dto.addressBookNum}">
+				</div>
+			</c:forEach>
 		</div>
 		
 	</div>

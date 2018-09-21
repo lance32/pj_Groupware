@@ -1,6 +1,8 @@
 package com.sp.addressBook;
 
 public class AddressBook {
+	private int addressBookNum;
+	private String memberNum;
 	private String name;
 	private String tel;
 	private String fax;
@@ -11,6 +13,18 @@ public class AddressBook {
 	private String groupNum;
 	private String groupName;
 	
+	public int getAddressBookNum() {
+		return addressBookNum;
+	}
+	public void setAddressBookNum(int addressBookNum) {
+		this.addressBookNum = addressBookNum;
+	}
+	public String getMemberNum() {
+		return memberNum;
+	}
+	public void setMemberNum(String memberNum) {
+		this.memberNum = memberNum;
+	}
 	public String getName() {
 		return name;
 	}
