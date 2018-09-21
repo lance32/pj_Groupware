@@ -10,7 +10,7 @@
     	<th>결재 문서</th>
     </tr>
     <tr>
-    	<td><a href="#">새문서 작성</a></td>
+    	<td><a href="<%=cp%>/approval/approval_create">새문서 작성</a></td>
     </tr>
     <tr>
     	<td><a href="#">결재 문서함 ( 0 | 0 )</a></td><!--본인이 중간 결재자일때 앞:결재해야할 문서 개수, 뒤:결재하고 진행중인 문서 -->

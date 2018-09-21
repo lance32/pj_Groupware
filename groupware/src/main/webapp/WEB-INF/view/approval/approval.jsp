@@ -6,7 +6,7 @@
 	String cp=request.getContextPath();
 %>
 
-	<div style=" width: 600px; margin: 10px 0px 15px 10px; float: left;" >
+	<div style=" width: 45%; margin: 10px 0px 15px 10px; float: left;" >
 		<a href="#"><span class="glyphicon glyphicon-folder-open" style="font-size: 28px; margin-left: 10px;"></span>
 		<span style="font-size: 30px;">&nbsp;결재 문서함</span></a><br><!--본인이 중간 결재자일때 앞:결재해야할 문서 개수, 뒤:결재하고 진행중인 문서 -->
 			
@@ -46,7 +46,7 @@
 		</table>
 	</div>
 	
-     <div style=" width: 600px;margin: 10px 0px 15px 10px; float: left;">
+     <div style=" width: 45%;margin: 10px 0px 15px 10px; float: left;">
 		<a href="#" ><span class="glyphicon glyphicon-folder-open" style="font-size: 28px; margin-left: 10px;"></span>
 		<span style="font-size: 30px;">&nbsp;진행 문서함</span></a><br><!--본인이 상신한 문서만  -->
 		
@@ -86,7 +86,7 @@
 		</table>
 	</div>
 	
-	<div style=" width: 600px; margin: 10px 0px 15px 10px; float: left;">
+	<div style=" width: 45%; margin: 10px 0px 15px 10px; float: left;">
 		<a href="#" ><span class="glyphicon glyphicon-folder-open" style="font-size: 28px; margin-left: 10px;"></span>
 		<span style="font-size: 30px;">&nbsp;완료 문서함</span></a><br><!--본인이 상신한 문서 완료함  -->
 			
@@ -126,7 +126,7 @@
 		</table>
 	</div>
 	
-     <div style=" width: 600px;margin: 10px 0px 15px 10px; float: left;">
+     <div style=" width: 45%;margin: 10px 0px 15px 10px; float: left;">
 		<a href="#" ><span class="glyphicon glyphicon-folder-open" style="font-size: 28px; margin-left: 10px;"></span>
 		<span style="font-size: 30px;">&nbsp;반려 문서함</span></a><br><!--본인이 상신한 문서 반려  -->
 
