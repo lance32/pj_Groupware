@@ -31,7 +31,6 @@
 	width: 48px;
 }
 </style>
-
 <script type="text/javascript">
 jQuery(function(){
 	jQuery(".chatInfoBox").hide();
@@ -501,8 +500,8 @@ function writeToScreen(message) {
 		
 	<div style="width: 490px; height: 600px; float: left;">
 		<div style="width:480px; height: 55px; padding-top: 10px; padding-left: 5px;">
-			<button type="button" id="refreshRoomListBtn" class="btn" style="font-size: 16px;">새로고침</button>
-			<button type="button" id="addChatRoomBtn" class="btn" style="font-size: 16px;">채팅방 개설</button>
+			<button type="button" id="refreshRoomListBtn" class="butn" style="font-size: 16px; margin-right: 5px;">새로고침</button>
+			<button type="button" id="addChatRoomBtn" class="butn" style="font-size: 16px;">채팅방 개설</button>
 		</div>
 		
 		<div style="clear:both; width: 490px; height: 500px; padding: 5px 0px 5px 10px; border: 1px solid #F2F2F2; overflow-y: scroll;">
@@ -516,7 +515,7 @@ function writeToScreen(message) {
 			<div id="chatRoom_Info" style="width: 100%; font-size: 16px;"></div>
 		</div>
 		<div style="width: 100%; height: 100px; text-align: center; float: left;">
-			<button id="chatRoom_join" class="btn" value="" type="button" style="width: 350px; height: 60px; margin-top: 20px; font-size: 20px;">채팅방 입장하기</button>
+			<button id="chatRoom_join" class="butn" value="" type="button" style="width: 350px; height: 60px; margin-top: 20px; font-size: 20px;">채팅방 입장하기</button>
 		</div>
 	</div> 
 </div>
@@ -563,8 +562,8 @@ function writeToScreen(message) {
 	    <div id="chatRoomJoinList" style="padding-top: 5px;"></div>
 	</div>
 	<div style="clear: both; width: 600px; height: 40px; padding: 10px 10px 0px 3px;">
-		<button type="button" id="cleanChatBtn" class="btn">채팅내용 지우기</button>
-		<button type="button" id="closeChatBtn" class="btn" style="float: right;">채팅방 나가기</button>
+		<button type="button" id="cleanChatBtn" class="butn">채팅내용 지우기</button>
+		<button type="button" id="closeChatBtn" class="butn" style="float: right;">채팅방 나가기</button>
 	</div>
 </div>
 

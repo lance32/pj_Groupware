@@ -4,7 +4,7 @@
 <%
 	String cp=request.getContextPath();
 %>
-
+<%-- 
 main
 현재 시각
 공지사항
@@ -14,4 +14,6 @@ main
 미확인 결재
 <br>
 <br>
+ --%>
+ <h1>메인화면 입니다.</h1>
 &gt;<a href="<%=cp%>/template/template"> 목록,버튼 견본 </a>&lt;

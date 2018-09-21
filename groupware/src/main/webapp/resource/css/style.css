@@ -66,6 +66,25 @@
     color: #ffffff;
 }
 
+/*개선된 버튼*/
+.butn{
+	width: auto;
+	height: auto;
+	padding: 5px 10px;
+	border-radius: 5px;
+	background: #337ab7;
+	color: #E3E5E6;
+	border:none;
+	outline: 0;
+	font-size: 15px;
+}
+.butn:hover{
+	background: #0A68B0;
+	color: #ffffff;
+	cursor: pointer;
+}
+
+
 /* 검색창 */
 .searchBox{
 	height: 30px;
