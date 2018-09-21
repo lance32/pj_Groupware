@@ -5,6 +5,24 @@
 <%
 	String cp=request.getContextPath();
 %>
+<script type="text/javascript">
+
+ 	function sendWork() {
+       
+ 		$("#makeDateId").val($('#makeDate').textContent);
+ 		
+    	
+    	var subject = "$('#subject').textContent";
+    	var todayWork = "$('#todayWork').textContent";
+    	var nextdayWork = "$('#nextdayWork').textContent";
+
+
+
+        f.submit();
+  }
+</script>
+
+
 <script type="text/javascript" src="<%=cp%>/resource/se/js/HuskyEZCreator.js" charset="utf-8"></script>
 
 
@@ -36,9 +54,9 @@ ${sessionScope.member.userName}
 <table style="width: 100%; margin: 0px auto; border-spacing: 0px;">
 <tr height="45"> 
 <td align="center" >
-<button type="submit" class="btn">${mode=='update'?'수정완료':'등록하기'}</button>
+<button type="button" class="btn" onclick="sendWork();">${mode=='update'?'수정완료':'등록하기'}</button>
 <input type ="hidden" name = "memberNum" value = "${sessionScope.member.userId}">
-<input type ="hidden" name = "makeDate" value = "">
+<input type ="hidden" name = "makeDate" id = "makeDateId">
 <input type ="hidden" name = "subject" value = "$('#subject').textContent">
 <input type ="hidden" name = "todayWork" value = "$('#todayWork').textContent">
 <input type ="hidden" name = "nextdayWork" value = "$('#nextdayWork').textContent">
