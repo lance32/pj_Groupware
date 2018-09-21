@@ -87,6 +87,7 @@ jQuery(function(){
 				jQuery("#infoContent").append(""
 					+"<table style='margin: 10px 30px;'>"
 					+"	<tr height='40px'> <td width='80px'>이름</td> <td>"+data.name+"</td> </tr>"
+					+"	<tr height='40px'> <td>전화번호</td> <td>"+data.tel+"</td> </tr>"
 					+"	<tr height='40px'> <td>그룹</td> <td>"+data.groupName+"</td> </tr>"
 					+"	<tr height='40px'> <td>소속</td> <td>"+data.belongto+"</td> </tr>"
 					+"	<tr height='40px'> <td>이메일</td> <td>"+data.email+"</td> </tr>"
@@ -97,7 +98,7 @@ jQuery(function(){
 					+"</table>"
 				);
 				jQuery("#infoButn").append("<button type='button' class='butn' style='float:left; margin-left: 10px;'>수정</button>");
-				jQuery("#infoButn").append("<button type='button' class='butn' style='float:right; margin-right: 20px;'>삭제</button>");
+				jQuery("#infoButn").append("<button id='deleteAddressButn' value='"+data.addressBookNum+"' type='button' class='butn' style='float:right; margin-right: 20px;'>삭제</button>");
 			}
 			,beforeSend : function(jqXHR) {
 		        jqXHR.setRequestHeader("AJAX", true);
@@ -116,6 +117,15 @@ jQuery(function(){
 		return;
 	});
 	
+	//삭제 버튼 클릭시
+	jQuery("body").on("click","#deleteAddressButn",function(){
+		if(! confirm("삭제하시겠습니까?")){
+			return;
+		}
+		var addressBookNum=jQuery(this).val();
+		location.href="<%=cp%>/addressBook/delete?addressBookNum="+addressBookNum;
+		return;
+	});
 
 });
 </script>

@@ -77,7 +77,7 @@ function sendOk() {
 }
 
 jQuery(function(){
-	
+	//추가완료 버튼 클릭시.. (submit빼고 추가버튼으로 변경)
 	jQuery("#createAddressButn").click(function(){
 		var f=document.addAddressForm;
 		
@@ -104,7 +104,7 @@ jQuery(function(){
 		location.href="<%=cp%>/addressBook/addressBook";
 		return;
 	});
-	
+
 });
 
 </script>
@@ -119,8 +119,8 @@ jQuery(function(){
 	</div>
 	
 	<div style="width: 480px; height: 500px; float: left; border-left: 2px solid #E6E6E6; border-bottom: 2px solid #E6E6E6; border-right: 1px solid #E6E6E6;">
-		<div style="margin: 20px 30px 10px 30px;">
-			<form name="addAddressForm" method="post">
+		<form name="addAddressForm" method="post">
+			<div style="margin: 20px 30px 10px 30px;">
 				<table style="border-spacing: 0px;">
 					<tr height="1px;"><td width="90px;"></td><td width="120px;"></td><td width="50px;"></td><td width="130px;"></td></tr>
 					<tr height="50px;">
@@ -134,7 +134,7 @@ jQuery(function(){
 					<tr height="50px;">
 						<td class="addressItem"> 그룹 </td>
 						<td>
-							<select id="groupSeparate" name="groupNum" style="width: 90px; height: 25px;">
+							<select id="groupSeparate" name="groupNum" style="width: 100px; height: 25px;">
 							 <c:forEach var="dto" items="${groupList}">
 								<option value="${dto.groupNum}">${dto.groupName}</option> 
 							 </c:forEach>
@@ -166,13 +166,13 @@ jQuery(function(){
 				</table>
 				
 				<input type="hidden" name="memberNum" value="${sessionScope.member.userId}">
-			</form>
-		</div>
-		<div style="clear:both; width: 100%; height: 50px;">
-			<button class="butn" style="float: left; margin: 20px 30px; 0px 30px;">초기화</button>
-			<button id="addCancelButn" class="butn" style="float: right; margin: 20px 20px 0px 10px;">취소</button>
-			<button class="butn" style="float: right; margin-top: 20px;">추가</button>
-		</div>
+			</div>
+			<div style="clear:both; width: 100%; height: 50px;">
+				<button class="butn" type="reset" style="float: left; margin: 20px 30px; 0px 30px;">초기화</button>
+				<button id="addCancelButn" class="butn" style="float: right; margin: 20px 20px 0px 10px;">취소</button>
+				<button class="butn" type="button" style="float: right; margin-top: 20px;">추가</button>
+			</div>
+		</form>
 	</div>
 	<div style="width: 320px; height: 500px; float: left;  border-right: 2px solid #E6E6E6; border-bottom: 2px solid #E6E6E6;">
 		<div style="width: 100%; height: 40px; float: left;">
@@ -185,9 +185,15 @@ jQuery(function(){
 		</div>
 		<div style="width: 100%; height: 58px; float: left;">
 			<button class="butn" style="float: left; margin: 10px;">삭제</button>
-			<button id="createAddressButn" class="butn" style="float: right; margin: 10px;">추가완료</button>
+			<button id="createAddressButn" type="button" class="butn" style="float: right; margin: 10px;">추가완료</button>
 		</div>
 	</div>
+	
+	<%-- --%>
+	<div id="alterGroup-dialog" style="display: none; margin: 0px; padding: 0px;">
+		그룹정보수정
+	</div>
+	
 	
 </div>
 

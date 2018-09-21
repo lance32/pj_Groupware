@@ -64,5 +64,14 @@ public class AddressBookServiceImpl implements AddressBookService{
 		return dto;
 	}
 
+	@Override
+	public void deleteAddress(int addressBookNum) {
+		try {
+			dao.deleteData("address.deleteAddress", addressBookNum);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+	}
+
 
 }

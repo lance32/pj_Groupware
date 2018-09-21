@@ -1,8 +1,6 @@
 package com.sp.addressBook;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -46,27 +44,7 @@ public class AddressBookController {
 		return dto;
 	}
 	
-	/*	
-	// 댓글 및 댓글의 답글 등록 : AJAX-JSON
-	@RequestMapping(value="/bbs/insertReply", method=RequestMethod.POST)
-	@ResponseBody
-	public Map<String, Object> insertReply(
-			Reply dto,
-			HttpSession session
-			) {
-		SessionInfo info=(SessionInfo)session.getAttribute("member");
-		String state="true";
-		
-		dto.setUserId(info.getUserId());
-		int result=service.insertReply(dto);
-		if(result==0)
-			state="false";
-		
-		Map<String, Object> model = new HashMap<>();
-		model.put("state", state);
-		return model;
-	}
-*/
+
 	@RequestMapping(value="/addressBook/created", method=RequestMethod.GET)
 	public String createdAddressForm(HttpSession session, Model model) {
 		SessionInfo info=(SessionInfo)session.getAttribute("member");
@@ -93,5 +71,17 @@ public class AddressBookController {
 		}
 		return "redirect:/addressBook/addressBook";
 	}
+	
+	
+	@RequestMapping(value="/addressBook/delete")
+	public String deleteAddress(@RequestParam int addressBookNum) {
+		try {
+			service.deleteAddress(addressBookNum);
+		} catch (Exception e) {
+			return "error/error";
+		}
+		return "redirect:/addressBook/addressBook";
+	}
+	
 	
 }

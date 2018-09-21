@@ -9,5 +9,6 @@ public interface AddressBookService {
 	public List<AddressBook> groupList(String memberNum);
 	public List<AddressBook> addressList(String memberNum);
 	public AddressBook readAddressInfo(int addressBookNum);
+	public void deleteAddress(int addressBookNum);
 	
 }

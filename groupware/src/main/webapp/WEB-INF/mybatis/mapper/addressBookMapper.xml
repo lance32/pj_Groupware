@@ -27,11 +27,16 @@
 	</select>
 	
 	<select id="readAddressInfo" parameterType="Integer" resultType="com.sp.addressBook.AddressBook">
-		SELECT addressBookNum, a.memberNum, name, tel, fax, email, belongto, zip, addr1, addr2, a.groupNum, groupName FROM addressBook a 
+		SELECT addressBookNum, a.memberNum, name, tel
+				, NVL(fax,'-') fax, NVL(email,'-') email, NVL(belongto,'없음') belongto
+				, NVL(zip,'-') zip, NVL(addr1,'-') addr1, NVL(addr2,'-') addr2, a.groupNum, groupName 
+			FROM addressBook a 
 	    		JOIN addressBookGroup g ON a.memberNum=g.memberNum 
 	    		WHERE addressBookNum=#{addressBookNum}
 	</select>
 	
-	
+	<delete id="deleteAddress" parameterType="Integer">
+		DELETE FROM addressBook WHERE addressBookNum=#{addressBookNum}
+	</delete>
 	
 </mapper>
