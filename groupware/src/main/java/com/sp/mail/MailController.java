@@ -1,12 +1,20 @@
 package com.sp.mail;
 
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.sp.member.SessionInfo;
+
 @Controller("mail.controller")
 public class MailController {
+	@Autowired
+	private MailSender mailSender;
+	
 	// 보낸 편지함
 	@RequestMapping(value="/mail/mailSend", method=RequestMethod.GET)
 	public String mailForm(Model model) throws Exception {
@@ -39,6 +47,26 @@ public class MailController {
 	@RequestMapping(value="/mail/mailWrite", method=RequestMethod.GET)
 	public String writeMail(Model model) throws Exception {
 		return ".mail.mailWrite";
+	}
+	
+	// 메일 보내기
+	@RequestMapping(value="/mail/send", method=RequestMethod.POST)
+	public String writeMailSubmit(Mail mail, HttpSession session, Model model) throws Exception {
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		mail.setSendName(info.getUserName());
+//		mail.setSendMail(info.get);
+		
+		boolean send = mailSender.mailSend(mail);
+		String msg = "<span style='color:blue;'>" + mail.getReceiveMail() + "</span> 님에게<br>";
+		if (send) {
+			msg += "메일을 성공적으로 전송 했습니다.";
+		} else {
+			msg += "메일을 정송하는데 실패하였습니다.";
+		}
+		
+		model.addAttribute("msg", msg);
+		
+		return ".mail.complete";
 	}
 	
 	// 메일 읽기

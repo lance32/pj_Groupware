@@ -37,7 +37,7 @@
 			return false;
 		}
 		
-		document.msgWriteForm.submit();
+		document.mailWriteForm.submit();
 	}
 </script>
 <div id="mailWrite" style="width:100%; height: 600px;">
@@ -47,7 +47,7 @@
 		<div style="clear: both; width: 300px; height: 1px; border-bottom: 3px solid black;"></div>
 	</div>
 	
-	<form name="mailWriteForm" method="post" action="<%=cp%>/message/mailWrite" >
+	<form name="mailWriteForm" method="post" enctype="multipart/form-data" action="<%=cp%>/mail/send" >
 		<table style="width:100%; border-top: 2px solid #a1c9e4;">
 			<tr>
 				<td style="border-bottom: 1px dotted #dfdfdf; padding:5px; background: #f7f7f7; color: #595959; text-align:center; width: 15%;">받는 사람</td>

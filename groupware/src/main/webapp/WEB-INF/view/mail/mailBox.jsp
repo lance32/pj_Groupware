@@ -36,62 +36,66 @@
 	</div>
 	
 	<%-- 목록 --%>
-	<table id="tb" style="width: 1000px;"><%-- 테이블 길이 수정 가능 --%>
+	<table id="tb" style="width: 100%;"><%-- 테이블 길이 수정 가능 --%>
 		<tr>
 			<td id="count" colspan="2">
-				3개(1/1 페이지)
+				${dataCount}개(${page}/${totalPage} 페이지)
 			</td>
 			<td></td><td></td>
 		</tr>
 		
 		<tr class="cf">
 			<%-- 구분 폭 수정 가능 --%>
-			<td width="170">구분1</td>
-			<td width="auto" style="text-align: left;">구분2</td>
-			<td width="190">구분3</td>
-			<td width="150">구분4</td>
+			<td width="50">&nbsp;</td>
+			<c:if test="${msgType == 'receive'}">
+				<td width="200" align="left">보낸 사람</td>
+			</c:if>
+			<c:if test="${msgType == 'send'}">
+				<td width="200" align="left">받는 사람</td>
+			</c:if>
+			<c:if test="${msgType == 'keep'}">
+				<td width="200" align="left">보낸(받는) 사람</td>
+			</c:if>
+			<td width="auto" align="left">제목</td>
+			<td width="200">발송시간</td>
+			<td width="200">확인시간</td>
 		</tr>
-		
-		<tr class="tr">
-			<td>항목1</td>
-			<td style="text-align: left;">1</td>
-			<td>2</td>
-			<td>3</td>
-		</tr>
-		<tr class="tr">
-			<td>항목2</td>
-			<td style="text-align: left;">1</td>
-			<td>2</td>
-			<td>3</td>
-		</tr>
-		<tr class="tr">
-			<td>항목3</td>
-			<td style="text-align: left;">1</td>
-			<td>2</td>
-			<td>3</td>
-		</tr>
+		<c:forEach var="dto" items="${list}">
+			<tr class="tr">
+				<td><input type="checkbox" name="chk" data-msg-num="${dto.msgNum}"></td>
+				<c:if test="${msgType == 'send'}">
+					<td style="text-align: left;">${dto.toMemberName}</td>
+				</c:if>
+				<c:if test="${msgType != 'send'}">
+					<td style="text-align: left;">${dto.sendMemberName}</td>
+				</c:if>
+				<td style="text-align: left;"><a href="${articleUrl}&msgNum=${dto.msgNum}&msgType=${msgType}&memberNum=${dto.sendMember}">${dto.subject}</a></td>
+				<td>${dto.sendTime}</td>
+				<td>${dto.readTime}</td>
+			</tr>
+		</c:forEach>
 	</table>
+	<div style="padding:5px 5px 5px 5px;">
+		<button type="button" id="keepBtn">&nbsp;보관&nbsp;</button>&nbsp;
+		<button type="button" id="deleteBtn">&nbsp;삭제&nbsp;</button>
+	</div>
 	<br>
-	<div id='paginate'>	<%-- MyUtil.java 안에 있음. ${paging}으로 써야됨. --%>
-		<a href="#">처음</a>
-		<span class="curBox">1</span>
-		<a href="#" class="numBox">2</a>
-		<a href="#" class="numBox">3</a>
-		<a href="#">다음</a>
+	<div id='paginate'>
+		${paging}
 	</div>
 	
 	<div style="text-align:center;">
-	
-		<select class="selectBox">				<%-- 선택박스  --%>
-			<option>테스트 옵션1</option>
-			<option>테스트 옵션2</option>
-		</select>
-		
-		<input type="text" class="searchBox">		<%-- 입력창 --%>
-		
-		<button type="button" class="btn">검색</button>		<%-- 버튼 --%>
-		<br>
-		<button type="button" class="btn">테스트12</button>		<%-- 버튼 --%>
+		<form name="searchForm" method="post">
+			<input type="hidden" name="page" value="${page}">
+			<select class="selectBox" name="searchKey">
+				<option value="all">제목+내용</option>
+				<option value="subject">제목</option>
+				<option value="content">내용</option>
+				<option value="sendMember">보낸 사람</option>
+				<option value="receiveMember">받는 사람</option>
+			</select>
+			<input type="text" id="searchValue" name="searchValue" class="searchBox">
+			<button type="button" id="searchBtn" class="btn">검색</button>
+		</form>
 	</div>
-	
 </div>
