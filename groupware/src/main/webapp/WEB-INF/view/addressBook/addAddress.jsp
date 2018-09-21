@@ -22,14 +22,14 @@
 	height: auto;
 	padding: 5px 10px;
 	border-radius: 5px;
-	background: #64380F;
+	background: #8F5116;
 	color: #E6E6E6;
-	border: 1px solid #BDBDBD;
+	border: 1px solid #D7904E;
 	outline: 0;
 	font-size: 15px;
 }
 .butn:hover{
-	background: #886A08;
+	background: #E87C16;
 	color: #ffffff;
 	cursor: pointer;
 }
@@ -50,8 +50,9 @@
 	border-bottom: 2px solid orange;
 }
 
-
 </style>
+<link rel="stylesheet" href="<%=cp%>/resource/bootstrap/css/bootstrap-theme.css" type="text/css">
+<link rel="stylesheet" href="<%=cp%>/resource/bootstrap/css/bootstrap.css" type="text/css">
 <script type="text/javascript">
 function sendOk() {
     var f = document.boardForm;
@@ -85,6 +86,12 @@ jQuery(function(){
 		form.submit();
 	});
 	
+	//취소버튼 클릭시
+	jQuery("#addCancelButn").click(function(){
+		location.href="<%=cp%>/addressBook/addressBook";
+		return;
+	});
+	
 });
 
 </script>
@@ -92,8 +99,10 @@ jQuery(function(){
 <body>
 
 <div style="width:800px; height:540px;margin: 10px 0px 0px 10px;">
-	<div style="clear:both; width: 100%; height: 40px; background: #A77C67; padding: 0px; margin: 0px;">
-		<div style="margin: 10px 0px 0px 10px; float: left; font-weight: bold; color: #FAFAFA">연락처 추가</div>
+	<div style="clear:both; width: 100%; height: 40px; background: #C46F1A; padding: 0px; margin: 0px;">
+		<div style="margin: 10px 0px 0px 10px; float: left; font-weight: bold; color: #FAFAFA">
+			<span class="glyphicon glyphicon-book" style="font-size: 15px; margin-right: 10px;"></span>연락처 추가
+		</div>
 	</div>
 	
 	<div style="width: 480px; height: 500px; float: left; border-left: 2px solid #E6E6E6; border-bottom: 2px solid #E6E6E6; border-right: 1px solid #E6E6E6;">
@@ -146,15 +155,16 @@ jQuery(function(){
 		</div>
 		<div style="clear:both; width: 100%; height: 50px;">
 			<button class="butn" style="float: left; margin: 20px 30px; 0px 30px;">초기화</button>
-			<button class="butn" style="float: right; margin: 20px 20px 0px 10px;">취소</button>
+			<button id="addCancelButn" class="butn" style="float: right; margin: 20px 20px 0px 10px;">취소</button>
 			<button class="butn" style="float: right; margin-top: 20px;">추가</button>
 		</div>
 	</div>
-	<div style="width: 315px; height: 500px; float: left;  border-right: 2px solid #E6E6E6; border-bottom: 2px solid #E6E6E6;">
+	<div style="width: 320px; height: 500px; float: left;  border-right: 2px solid #E6E6E6; border-bottom: 2px solid #E6E6E6;">
 		<div style="width: 100%; height: 40px; float: left;">
+			<input type="checkbox" style="margin: 13px; width: 15px; height: 15px;">
 			<button class="butn" style="float: right; margin: 5px;">사원목록에서 추가</button>
 		</div>
-		<div style="width: 100%; height:400px; float: left; overflow-y:scroll; background: #FAFAFA;">
+		<div style="width: 100%; height:395px; float: left; overflow-y:scroll; background: #FAFAFA; margin-top: 5px;">
 		
 		
 		</div>
