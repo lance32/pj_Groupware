@@ -11,7 +11,7 @@
 
 <div class="menu">
 	<ul class="nav">
-		<li><a href="#">전자 결재</a></li>
+		<li><a href="<%=cp%>/approval/approval">전자 결재</a></li>
 		<li><a href="<%=cp%>/workLog/list">업무일지</a></li>
 		<li><a style="cursor: pointer;">커뮤니티</a>
 			<ul class="sub_menu">
