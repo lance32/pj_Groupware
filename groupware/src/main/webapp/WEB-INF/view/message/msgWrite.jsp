@@ -21,6 +21,50 @@
 		
 		document.msgWriteForm.submit();
 	}
+	
+	$(function() {
+		$("#organizationChart").click(function() {
+			$.ajax({
+				url:"<%=cp%>/member/organizationChart",
+				type:"get",
+				dataType:"json",
+				success:function(data) {
+					var h = "<table>";
+					var preDeptName = "";
+					$.each(data, function(idx, val) {
+						var ws = "";
+						for (var i = 1; i < val.deptOrder; i++) {
+							ws += "&nbsp;&nbsp;";
+						}
+						
+						if (val.deptName != 'null' && preDeptName != val.deptName) {
+							h += "<tr><td>";
+							h += ws;
+							h += "<input type='checkbox'>";
+							h += val.deptName;
+							h += "</td></tr>";
+							preDeptName = val.deptName;
+						} 
+
+						if(val.memberName != "") {
+							h += "<tr><td>";
+							ws += "&nbsp;&nbsp;"
+							h += "<input type='checkbox'>";
+							h += val.memberName;
+							h += "</td></tr>";
+						}
+					});
+					h += "</table>";
+					
+					$("#organizationLayout").html(h);
+					$("#organizationLayout").dialog();
+				},
+				error:function(jqXHR) {
+					console.log(jqXHR.resonseText);
+				}
+			});
+		});
+	});
 </script>
 <div id="msgWrite" style="width:100%; height: 600px;">
 	<div style="clear: both; margin: 10px 0px 15px 10px;">
@@ -39,7 +83,7 @@
 				<td style="border-bottom: 1px dotted #dfdfdf; padding:5px; background: #f7f7f7; color: #595959; text-align:center; width: 15%;">받는이</td>
 				<td style="background: #fff; width: 85%;">
 					<span><input type="text" id="toMember" name="toMember" style="background: #fff; color: #333; width: 80%; border: 1px solid #d7d7d7;"></span>
-					<span><input type="button" id="" value="&nbsp;조직도&nbsp;"></span>
+					<span><input type="button" id="organizationChart" value="&nbsp;조직도&nbsp;"></span>
 				</td>
 			</tr>
 			<tr>
@@ -49,3 +93,4 @@
 		<span><input type="button" value="&nbsp;전송&nbsp;" onclick="send();"></span>
 	</form>
 </div>
+<div id="organizationLayout"></div>

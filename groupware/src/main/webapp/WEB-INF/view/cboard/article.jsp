@@ -42,12 +42,12 @@ $(function(){
 </c:if>
 });
 
+// 게시물 좋아요 처리
 <c:if test="${cb.canLike == '1'}">
 $(function(){
 	$(".btnSendBoardLike").click(function(){
 		var url="<%=cp%>/${cb.tableName}/insertBoardLike";
 		var query="num=${dto.num}&canLike=1";
-		
 		$.ajax({
 			type:"post"
 			,url:url
@@ -59,7 +59,8 @@ $(function(){
 					var count = data.boardLikeCount;
 					$("#boardLikeCount").text(count);
 				} else if(state=="false") {
-					alert("좋아요는 한번만 가능합니다.");
+					var count = data.boardLikeCount;
+					$("#boardLikeCount").text(count);
 				}
 			}
 			,beforeSend : function(jqXHR) {
@@ -67,6 +68,7 @@ $(function(){
 		    }
 		    ,error:function(jqXHR) {
 		    	if(jqXHR.status==403) {
+		    		location.href="<%=cp%>/login";
 		    		return;
 		    	}
 		    	console.log(jqXHR.responseText);
@@ -77,6 +79,264 @@ $(function(){
 });
 </c:if>
 
+<c:if test="${cb.canReply == '1'}">
+// 댓글 리스트
+$(function(){
+	listPage(1);
+});
+
+function listPage(page) {
+	var url="<%=cp%>/${cb.tableName}/listReply";
+	var query="num=${dto.num}&pageNo="+page;
+	$.ajax({
+		type:"get"
+		,url:url
+		,data:query
+		,success:function(data) {
+			$("#listReply").html(data);
+		}
+	    ,beforeSend :function(jqXHR) {
+	    	jqXHR.setRequestHeader("AJAX", true);
+	    }
+	    ,error:function(jqXHR) {
+	    	if(jqXHR.status==403) {
+	    		location.href="<%=cp%>/login";
+	    		return;
+	    	}
+	    	console.log(jqXHR.responseText);
+	    }
+	});
+}
+
+// 댓글 등록
+$(function(){
+	$("#btnSendReply").click(function(){
+		var num = "${dto.num}";
+		var content = $("#replyArea").val().trim();
+		if(! content){
+			$("#replyArea").focus();
+			return;
+		}
+		content = encodeURIComponent(content);
+		
+		var url = "<%=cp%>/${cb.tableName}/insertReply";
+		var query = "num="+num+"&content="+content+"&answer=0";
+		
+		$.ajax({
+			type:"post"
+			,url:url
+			,data:query
+			,dataType:"json"
+			,success:function(data) {
+				$("#replyArea").val("");
+				var state=data.state;
+				if(state=="true") {
+					listPage(1);
+				} else if(state=="false") {
+					alert("댓글을 추가 하지 못했습니다.");
+					listPage(1);
+				}
+			}
+			,beforeSend : function(jqXHR) {
+		        jqXHR.setRequestHeader("AJAX", true);
+		    }
+		    ,error:function(jqXHR) {
+		    	if(jqXHR.status==403) {
+		    		location.href="<%=cp%>/login";
+		    		return;
+		    	}
+		    	console.log(jqXHR.responseText);
+		    }
+		});
+	});
+});
+
+// 댓글 삭제
+$(function(){
+	$("body").on("click", ".deleteReply", function(){
+		if(! confirm("댓글을 삭제하시겠습니까?"))
+			return;
+		
+		var replyNum = $(this).attr("data-replyNum");
+		var page = $(this).attr("data-pageNo");
+		
+		var url = "<%=cp%>/${cb.tableName}/deleteReply";
+		var query = "replyNum="+replyNum+"&mode=reply";
+		
+		$.ajax({
+			type:"post"
+			,url:url
+			,data:query
+			,dataType:"json"
+			,success:function(data) {
+				listPage(page);
+			}
+			,beforeSend : function(jqXHR) {
+		        jqXHR.setRequestHeader("AJAX", true);
+		    }
+		    ,error:function(jqXHR) {
+		    	if(jqXHR.status==403) {
+		    		location.href="<%=cp%>/login";
+		    		return;
+		    	}
+		    	console.log(jqXHR.responseText);
+		    }
+		});
+	});
+});
+
+// 답글 작성 영역 열기
+$(function(){
+	$("body").on("click", ".btnReplyAnswerLayout", function(){
+		var $replyAnswer = $(this).closest("tr").next();
+		
+		var isVisible = $replyAnswer.is(':visible');
+		var replyNum = $(this).attr("data-replyNum");
+		
+		if(isVisible){
+			$replyAnswer.hide();
+		} else {
+			$replyAnswer.show();
+			listReplyAnswer(replyNum);
+			countReplyAnswer(replyNum);
+		}
+	});
+});
+
+// 댓답글 추가
+$(function(){
+	$("body").on("click", ".btnSendReplyAnswer", function(){
+		var num = "${dto.num}";
+		var replyNum = $(this).attr("data-replyNum");
+		
+		var $td = $(this).closest("td");
+		var content = $td.find("textArea").val().trim();
+		if(! content){
+			$td.find("textArea").focus();
+			return;
+		}
+		content = encodeURIComponent(content);
+		
+		var url = "<%=cp%>/${cb.tableName}/insertReply";
+		var query = "num="+num+"&content="+content+"&answer="+replyNum;
+		
+		$.ajax({
+			type:"post"
+			,url:url
+			,data:query
+			,dataType:"json"
+			,success:function(data) {
+				$td.find("textarea").val("");
+				var state=data.state;
+				if(state=="true") {
+					listReplyAnswer(replyNum);
+					countReplyAnswer(replyNum);
+				}
+			}
+			,beforeSend : function(jqXHR) {
+		        jqXHR.setRequestHeader("AJAX", true);
+		    }
+		    ,error:function(jqXHR) {
+		    	if(jqXHR.status==403) {
+		    		location.href="<%=cp%>/login";
+		    		return;
+		    	}
+		    	console.log(jqXHR.responseText);
+		    }
+		});
+	});
+});
+
+//댓답글 리스트
+function listReplyAnswer(answer) {
+	var url="<%=cp%>/${cb.tableName}/listReplyAnswer";
+	var query = "answer="+answer;
+	$.ajax({
+		type:"get"
+		,url:url
+		,data:query
+		,success:function(data) {
+			var answerList="#listReplyAnswer"+answer;
+			$(answerList).html(data);
+		}
+	    ,beforeSend :function(jqXHR) {
+	    	jqXHR.setRequestHeader("AJAX", true);
+	    }
+	    ,error:function(jqXHR) {
+	    	if(jqXHR.status==403) {
+	    		location.href="<%=cp%>/login";
+	    		return;
+	    	}
+	    	console.log(jqXHR.responseText);
+	    }
+	});
+}
+
+// 댓답글 개수
+function countReplyAnswer(answer) {
+	var url="<%=cp%>/${cb.tableName}/countReplyAnswer";
+	var query = "answer="+answer;
+	
+	$.ajax({
+		type:"post"
+		,url:url
+		,data:query
+		,dataType:"json"
+		,success:function(data) {
+			var count=data.count;
+			var answerCountId="#answerCount"+answer;
+			$(answerCountId).html(count);
+		}
+		,beforeSend : function(jqXHR) {
+	        jqXHR.setRequestHeader("AJAX", true);
+	    }
+	    ,error:function(jqXHR) {
+	    	if(jqXHR.status==403) {
+	    		location.href="<%=cp%>/login";
+	    		return;
+	    	}
+	    	console.log(jqXHR.responseText);
+	    }
+	});
+}
+
+// 댓답글 삭제
+$(function(){
+	$("body").on("click", ".deleteReplyAnswer", function(){
+		if(! confirm("댓글을 삭제하시겠습니까 ?"))
+		    return;
+		
+		var replyNum=$(this).attr("data-replyNum");
+		var answer=$(this).attr("data-answer");
+		
+		var url="<%=cp%>/${cb.tableName}/deleteReply";
+		var query="replyNum="+replyNum+"&mode=answer";
+		
+		$.ajax({
+			type:"post"
+			,url:url
+			,data:query
+			,dataType:"json"
+			,success:function(data) {
+				listReplyAnswer(answer);
+				countReplyAnswer(answer);
+			}
+			,beforeSend : function(jqXHR) {
+		        jqXHR.setRequestHeader("AJAX", true);
+		    }
+		    ,error:function(jqXHR) {
+		    	if(jqXHR.status==403) {
+		    		location.href="<%=cp%>/login";
+		    		return;
+		    	}
+		    	console.log(jqXHR.responseText);
+		    }
+		});
+		
+	});
+});
+
+</c:if>
 </script>
 
 <div style="clear: both; margin: 10px 0px 15px 10px;">
@@ -104,8 +364,7 @@ $(function(){
 			        	${dto.created } | 조 회 수 : ${dto.hitCount }
 			    </td>
 			</tr>
-			
-			<tr>
+			<tr style="${cb.canLike=='0'?'border-bottom: 1px solid #cccccc;':''}">
 			  <td colspan="2" align="left" style="padding: 10px 5px;" valign="top" height="300">
 			   	   ${dto.content }
 			   </td>
@@ -181,12 +440,12 @@ $(function(){
 			</tr>
 			<tr>
 			   	<td style='padding:5px 5px 0px;'>
-					<textarea id="replyArea" class='boxTA' style='width:100%; height: 70px; resize: none'></textarea>
+					<textarea id="replyArea" class='boxTA' style='width:100%; height: 50px; resize: none; border-radius: 7px;'></textarea>
 			    </td>
 			</tr>
 			<tr>
 			   <td align='right'>
-			        <button type='button' id="btnSendReply" class='btn' data-num='10' style='padding:5px 10px; margin-right: 5px;'>댓글 등록</button>
+			        <button type='button' id="btnSendReply" class='btn' style='padding:5px 10px; margin-right: 5px;'>댓글 등록</button>
 			    </td>
 			 </tr>
 		</table>

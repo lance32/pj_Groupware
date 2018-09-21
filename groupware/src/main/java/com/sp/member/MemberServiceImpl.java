@@ -1,5 +1,6 @@
 package com.sp.member;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -124,18 +125,18 @@ public class MemberServiceImpl implements MemberService {
 	// 직급 DB 데이터 가져오기
 	@Override
 	public List<Map<String, Object>> positionList() {
-		List<Map<String, Object>> positionList = null;
-		try {
-			positionList = dao.selectList("member.positionList");
-		} catch (Exception e) {
-
-		}
-
+		List<Map<String, Object>> positionList=null;
+			try {
+				positionList=dao.selectList("member.positionList");
+			} catch (Exception e) {
+				
+			}
+			
 		return positionList;
 	}
 
 	@Override
-	public void updateMember(Member dto, String pathname) throws Exception {
+	public void updateMember(Member dto,String pathname) throws Exception {
 		try {
 
 			if (dto.getEmail1() != null && dto.getEmail1().length() != 0 && dto.getEmail2() != null
@@ -170,6 +171,16 @@ public class MemberServiceImpl implements MemberService {
 			dao.updateData("member.updateMember2", dto);
 		} catch (Exception e) {
 		}
+		
 	}
-
+	@Override
+	public List<OrganizationChart> organizationChart() throws Exception {
+		List<OrganizationChart> list = null;
+		try {
+			list = dao.selectList("member.organizationChart");
+		} catch(Exception e) {
+			System.out.println(e.getMessage());
+		} 
+		return list;
+	}
 }

@@ -1,11 +1,17 @@
 package com.sp.addressBook;
 
+import java.util.List;
+
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.sp.common.MyUtil;
+import com.sp.member.SessionInfo;
 
 @Controller("addressBook.addressBookController")
 public class AddressBookController {
@@ -21,8 +27,18 @@ public class AddressBookController {
 	}
 	
 	@RequestMapping(value="/addressBook/created", method=RequestMethod.GET)
-	public String createdAddressForm() {
+	public String createdAddressForm(HttpSession session, Model model) {
+		SessionInfo info=(SessionInfo)session.getAttribute("member");
+		String memberNum=info.getUserId();
 		
+		List<AddressBook> list =null;
+		try {			
+			list = service.groupList(memberNum);
+			
+		} catch (Exception e) {
+			return "error.error";
+		}
+		model.addAttribute("groupList", list);
 		return "addressBook/addAddress";
 	}
 	

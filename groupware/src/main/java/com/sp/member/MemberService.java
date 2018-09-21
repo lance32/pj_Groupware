@@ -16,6 +16,7 @@ public interface MemberService {
 	public List<Map<String, Object>> departmentList();
 	public List<Map<String, Object>> positionList();
 	public List<Map<String, Object>> qualifyList();
+	
 	public void updateMember(Member dto,String pathname) throws Exception;
 //	public int updateLastLogin(String userId);
 //	
@@ -24,4 +25,6 @@ public interface MemberService {
 //	public int insertAuthority(Member dto);
 //	public int updateAuthority(Member dto);
 //	public List<Member> listAuthority(String userId);
+	
+	public List<OrganizationChart> organizationChart() throws Exception;
 }

@@ -61,7 +61,7 @@
 
 function addressBookOpen() {
 	var url="<%=cp%>/addressBook/addressBook";
-	var specs="width=800, height=600";
+	var specs="width=830, height=560, top=200px, left=500px";
 	window.open(url,"addressBook",specs);
 }
 

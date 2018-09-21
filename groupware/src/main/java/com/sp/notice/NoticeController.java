@@ -157,7 +157,10 @@ public class NoticeController {
 		Notice preReadDto = service.preReadNotice(paramMap);
 		Notice nextReadDto = service.nextReadNotice(paramMap);
 		
+		List<BoardManage> boardList = mservice.listBoardManage();
+		
 		model.addAttribute("dto", dto);
+		model.addAttribute("boardList", boardList);
 		model.addAttribute("preReadDto", preReadDto);
 		model.addAttribute("nextReadDto", nextReadDto);
 
@@ -201,9 +204,12 @@ public class NoticeController {
 		if(dto == null)
 			return "redirect:/notice/list?page="+page;
 		
+		List<BoardManage> boardList = mservice.listBoardManage();
+		
 		model.addAttribute("mode", "update");
 		model.addAttribute("dto", dto);
 		model.addAttribute("page", page);
+		model.addAttribute("boardList", boardList);
 		
 		return ".notice.created";
 	}
