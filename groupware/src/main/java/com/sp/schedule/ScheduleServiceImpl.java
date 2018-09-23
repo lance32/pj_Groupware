@@ -3,13 +3,27 @@ package com.sp.schedule;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.sp.common.dao.CommonDAO;
+
+@Service("schedule.scheduleService")
 public class ScheduleServiceImpl implements ScheduleService {
 
+	@Autowired
+	CommonDAO dao;
+	
 	@Override
 	// 일정 추가
 	public int insertSchedule(Schedule dto) throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		try {
+			result = dao.insertData("sch.insertSchedule", dto);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
 	}
 
 	@Override
@@ -28,8 +42,13 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 	@Override
 	// 일정 리스트
-	public List<Schedule> listSchedule(Map<String, Object> map) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Schedule> listMonthSchedule(Map<String, Object> map) throws Exception {
+		List<Schedule> list = null;
+		try {
+			list = dao.selectList("sch.listMonthSchedule", map);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return list;
 	}
 }

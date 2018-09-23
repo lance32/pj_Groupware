@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sch">
+	<insert id="insertSchedule" parameterType="com.sp.schedule.Schedule">
+		INSERT INTO schedule(scheduleNum, memberNum, name, color, allDay,
+		startDay, endDay, startTime, endTime, title, content, place, repeat, cycle)
+		VALUES(schedule_seq.NEXTVAL, #{memberNum}, #{name}, #{color},
+		#{allDay}, #{startDay}, #{endDay}, 
+		#{startTime, jdbcType=VARCHAR},
+		#{endTime, jdbcType=VARCHAR},
+		#{title}, #{content}, #{place},
+		#{repeat}, #{cycle, jdbcType=VARCHAR})
+	</insert>
+	
+	<select id="listMonthSchedule" resultType="com.sp.schedule.Schedule" parameterType="map">
+		SELECT scheduleNum, s.memberNum, s.name, color, allDay,
+		startDay, endDay, startTime, endTime, title, content, place, repeat, cycle, s.created
+		FROM schedule s
+		JOIN member m ON s.memberNum = m.memberNum
+		<where>
+			s.memberNum = #{memberNum}
+			<if test="group !='all' ">
+				AND color = #{group}
+			</if>
+				AND ((startDay &gt;= #{start} AND startDay &lt;= #{end})
+				OR (endDay &gt;= #{start} AND endDay &lt;= #{end}))
+		</where>
+			ORDER BY startDay ASC, scheduleNum DESC
+	</select>
+</mapper>

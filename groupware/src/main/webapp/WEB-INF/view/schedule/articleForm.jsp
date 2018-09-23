@@ -6,4 +6,3 @@
 	String cp=request.getContextPath();
 %>
 
-<h1>일 정 조 회</h1>

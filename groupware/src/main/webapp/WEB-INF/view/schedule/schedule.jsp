@@ -106,9 +106,6 @@ var calendar=null;
 var group="all";
 var tempContent;
 
-//start:2016-01-01 => 2016-01-01 일정
-//start:2016-01-01, end:2016-01-02 => 2016-01-01 일정
-//start:2016-01-01, end:2016-01-03 => 2016-01-01 ~ 2016-01-02 일정
 $(function() {
 		calendar = $('#calendar').fullCalendar({
 			header: {
@@ -139,7 +136,7 @@ $(function() {
 				var startDay=start.format("YYYY-MM-DD");
 				var endDay=end.format("YYYY-MM-DD");
 		        
-				var url="<%=cp%>/sch/month";
+				var url="<%=cp%>/schedule/month";
                 var query="start="+startDay+"&end="+endDay+"&group="+group+"&tmp="+new Date().getTime();
 				$.ajax({
 				    url: url,
@@ -154,7 +151,7 @@ $(function() {
 				    },
 				    error:function(jqXHR) {
 				    	if(jqXHR.status==403) {
-				    		location.href="<%=cp%>/member/login";
+				    		location.href="<%=cp%>/login";
 				    		return;
 				    	}
 				    	console.log(jqXHR.responseText);
@@ -177,11 +174,11 @@ $(function() {
 
 // 분류별 검색
 function classification(kind, idx) {
-	$("#calendarHeader a").each(function(){
-		$(this).removeClass("hbtn-bottom");
+	$("#calendarHeader li").each(function(){
+		$(this).removeClass("active");
 		// $(this).css("opacity","0.8");
 	});
-	$("#calendarHeader a:eq("+idx+")").addClass("hbtn-bottom");
+	$("#calendarHeader li:eq("+idx+")").addClass("avtice");
 	// $("#calendarHeader a:eq("+idx+")").css("opacity","1.0");
 	
 	group=kind;
@@ -306,17 +303,18 @@ function insertForm(start, end) {
 		
 		startDay=start.format("YYYY-MM-DD");
 		startTime=start.format("HH:mm");
-
+		
+		endDay=end.format("YYYY-MM-DD");
+		endTime=end.format("HH:mm");
+		
 		$("input[name='startDay']").val(startDay);
-
+		$("input[name='endDay']").val(startDay);
+		
 		if(start.hasTime()) {
 			// 시간 일정인 경우
-			$("#allDayChk").prop("checked", false);
-			$("#allDayHidden").prop("disabled", false);
+			$("#schStartTime").show();
+			$("#schEndTime").show();
 			
-			$("#startTime").show();
-			$("#endTime").show();
-          
 			$("input[name='startTime']").val(startTime);
 			if(start.format()!=end.format()) {
 				endDay=end.format("YYYY-MM-DD");
@@ -328,13 +326,10 @@ function insertForm(start, end) {
 			
 		} else {
 			// 하루종일 일정인 경우
-			$("#allDayChk").prop("checked", true);
-			$("#allDayHidden").prop("disabled", true);
-			
 			$("input[name='startTime']").val("");
 			$("input[name='endTime']").val("");
-			$("#startTime").hide();
-			$("#endTime").hide();
+			$("#schStartTime").hide();
+			$("#schEndTime").hide();
 			
 			if(start.format()!=end.add("-1", "days").format()) {
 				endDay=end.format("YYYY-MM-DD");
@@ -354,7 +349,7 @@ function insertOk() {
 		return;
 	
 	var query=$("form[name=schForm]").serialize();
-	var url="<%=cp%>/sch/created";
+	var url="<%=cp%>/schedule/created";
 
      $.ajax({
         type:"post"
@@ -367,10 +362,10 @@ function insertOk() {
 	      		   group="all";
 	      		   calendar.fullCalendar('refetchEvents');
 	
-	      		    $("#calendarHeader a").each(function(){
-	      				$(this).removeClass("hbtn-bottom");
-	      			});
-	      			$("#calendarHeader a:eq(0)").addClass("hbtn-bottom");
+	      		    //$("#calendarHeader a").each(function(){
+	      				//$(this).removeClass("hbtn-bottom");
+	      			//});
+	      			//$("#calendarHeader a:eq(0)").addClass("hbtn-bottom");
 	          }
           }
 	      ,beforeSend : function(jqXHR) {
@@ -378,7 +373,7 @@ function insertOk() {
 		  }
 		  ,error:function(jqXHR) {
 		    	if(jqXHR.status==403) {
-		    		location.href="<%=cp%>/member/login";
+		    		location.href="<%=cp%>/login";
 		    		return;
 		    	}
 		    	console.log(jqXHR.responseText);
@@ -391,12 +386,14 @@ function insertOk() {
 function validCheck() {
 	var title=$.trim($("input[name='title']").val());
 	var color=$.trim($("select[name='color']").val());
-	var allDay=$("#allDayChk:checked").val();
+	var allDay=$("input[name=allDay]:checked").val();
 	var startDay=$.trim($("input[name='startDay']").val());
 	var endDay=$.trim($("input[name='endDay']").val());
-	var startTime=$.trim($("input[name='startTime']").val());
-	var endTime=$.trim($("input[name='endTime']").val());
+	var startTime=$.trim($("select[name='startTime']").val());
+	var endTime=$.trim($("select[name='endTime']").val());
 	var content=$.trim($("textarea[name='content']").val());
+	var repeat = $.trim($("input[name=repeat]:checked").val());
+	var cycle = $.trim($("input[name=cycle]:checked").val());
 	
 	if(! title) {
 		alert("제목을 입력 하세요 !!!");
@@ -420,16 +417,23 @@ function validCheck() {
 			$("input[name='startTime']").focus();
 			return false;
 	 }
-	 if(allDay==undefined && startTime=="") {
-		    alert("시간을 정확히 입력 하세요 [hh:mm] !!! ");
-			$("input[name='startTime']").focus();
-			return false;
+	 
+	 if((allDay == '0' && !startTime)){
+		 alert("시작시간을 선택하세요!");
+		 return false;
 	 }
 	 
-	 if(endTime!="" && ! /[0-2][0-9]:[0-5][0-9]/.test(endTime)){
-			alert("시간을 정확히 입력 하세요 [hh:mm] !!! ");
-			$("input[name='endTime']").focus();
-			return false;
+	 if((allDay == '0' && !endTime)){
+		 alert("종료시간을 선택하세요!");
+		 return false;
+	 }
+	 
+	 if(! repeat){
+		 alert("반복여부를 선택하세요!");
+		 return false;
+	 } else if(repeat == '1' && (!cycle)) {
+		 alert("반복 주기를 선택하세요!");
+		 return false;
 	 }
 	 
 	 if(allDay==undefined && endDay!="" && endTime=="") {
@@ -457,10 +461,8 @@ function validCheck() {
 	if(allDay=="true") {
 		$("input[name='startTime']").val("");
 		$("input[name='endTime']").val("");
-		$("#allDayHidden").prop("disabled", true);
 	} else {
 		$("input[name='endTime']").val(endTime);
-		$("#allDayHidden").prop("disabled", false);
 	}
 	
 	return true;
@@ -689,22 +691,6 @@ function classifyChange(classify) {
 	}
 	$("#scheduleModal input[name='color']").val(classify);
 }
-
-// 종일일정에 따른 시간 입력폼 보이기/숨기기
-$(function(){
-	$(document).on("click","#allDayChk",function(){
-		var allDay=$("#allDayChk:checked").val();
-		if(allDay=='true') {
-			$("#startTime").hide();
-			$("#endTime").hide();
-			$("#allDayHidden").prop("disabled", false);
-		} else {
-			$("#startTime").show();
-            $("#endTime").show();
-			$("#allDayHidden").prop("disabled", true);
-		}
-	});
-});
 </script>
 
 <div class="body-container" style="width: 75%;">
@@ -718,10 +704,11 @@ $(function(){
 	<div style="text-align: left;">
 		<div class="container">
 			<ul class="nav nav-tabs">
-				<li class="active"><a href="#">개 인 일 정</a></li>
-				<li><a href="#">가 족 일 정</a></li>
-				<li><a href="#">부 서 일 정</a></li>
-				<li><a href="#">전 체 일 정</a></li>
+				<li class="active"><a href="javascript:classification('all', 0)">전 체 일 정</a></li>
+				<li><a href="javascript:classification('blue', 1)">개 인 일 정</a></li>
+				<li><a href="javascript:classification('black', 2)">가 족 일 정</a></li>
+				<li><a href="javascript:classification('red', 3)">부 서 일 정</a></li>
+				<li><a href="javascript:classification('green', 4)">회 사 일 정</a></li>
 				<li><a href="#">일 정 검 색</a></li>
 			</ul>
 			<br>
