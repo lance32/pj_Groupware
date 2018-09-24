@@ -29,15 +29,25 @@ public class ScheduleServiceImpl implements ScheduleService {
 	@Override
 	// 일정 수정
 	public int updateSchedule(Schedule dto) throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		try {
+			result = dao.updateData("sch.updateSchedule", dto);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
 	}
 
 	@Override
 	// 일정 삭제
 	public int deleteSchedule(int scheduleNum) throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		try {
+			result = dao.deleteData("sch.deleteSchedule", scheduleNum);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
 	}
 
 	@Override
@@ -50,5 +60,17 @@ public class ScheduleServiceImpl implements ScheduleService {
 			System.out.println(e.toString());
 		}
 		return list;
+	}
+
+	@Override
+	// 정보 조회
+	public Schedule readSchedule(int scheduleNum) {
+		Schedule dto = null;
+		try {
+			dto = dao.selectOne("sch.readSchedule", scheduleNum);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return dto;
 	}
 }

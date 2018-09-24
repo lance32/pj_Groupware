@@ -11,9 +11,11 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.sp.common.MyUtil;
 import com.sp.member.SessionInfo;
 
 @Controller("schedule.scheduleController")
@@ -21,6 +23,8 @@ public class ScheduleController {
 	
 	@Autowired
 	private ScheduleService service;
+	@Autowired
+	private MyUtil util;
 
 	@RequestMapping(value="/schedule/main")
 	public String main() {
@@ -30,6 +34,11 @@ public class ScheduleController {
 	@RequestMapping(value="/schedule/inputForm")
 	public String inputForm() {
 		return "schedule/inputForm";
+	}
+	
+	@RequestMapping(value="/schedule/articleForm")
+	public String articleForm() {
+		return "schedule/articleForm";
 	}
 	
 	@RequestMapping(value="/schedule/created")
@@ -70,8 +79,6 @@ public class ScheduleController {
 	    Iterator<Schedule> it=list.iterator();
 		while(it.hasNext()) {
 			Schedule sch=it.next();
-			// if(sch.getContent()!=null)
-			//   sch.setContent(sch.getContent().replaceAll("\n", "<br>"));
 			
 			ScheduleJSON dto=new ScheduleJSON();
 	    	dto.setId(sch.getScheduleNum());
@@ -92,7 +99,9 @@ public class ScheduleController {
 	    		dto.setEnd(sch.getEndDay()+" " + sch.getEndTime());
 	    	else
 	    		dto.setEnd(sch.getEndDay());
+	    	sch.setContent(util.htmlSymbols(sch.getContent()));
 	    	dto.setContent(sch.getContent());
+	    	dto.setPlace(sch.getPlace());
 	    	dto.setCreated(sch.getCreated());
 	    	
 	    	listJSON.add(dto);
@@ -103,4 +112,37 @@ public class ScheduleController {
 		model.put("list", listJSON);
 		return model;
 	}
+	
+	@RequestMapping(value="/schedule/delete")
+	@ResponseBody
+	public Map<String, Object> delete(
+			@RequestParam(value="scheduleNum") int scheduleNum
+			) throws Exception {
+		String state = "false";
+		int result = service.deleteSchedule(scheduleNum);
+		if(result == 1)
+			state = "true";
+		
+		Map<String, Object> model = new HashMap<>();
+		model.put("state", state);
+		
+		return model;
+	}
+	
+	@RequestMapping(value="/schedule/update", method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> update(
+			Schedule dto,
+			HttpSession session
+			) throws Exception {
+		String state = "false";
+		int result = service.updateSchedule(dto);
+		if(result == 1) {
+			state = "true";
+		}
+		Map<String, Object> model = new HashMap<>();
+		model.put("state", state);
+		return model;
+	}
+	
 }

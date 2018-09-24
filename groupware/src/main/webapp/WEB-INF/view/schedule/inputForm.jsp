@@ -138,4 +138,5 @@
 			<label class="radio-inline"><input type="radio" name="cycle" id="cycle2" value="2"> Year</label>
 		</div>
 	</div>
+	<input type="hidden" name="scheduleNum" value="">
 </form>

@@ -28,4 +28,24 @@
 		</where>
 			ORDER BY startDay ASC, scheduleNum DESC
 	</select>
+	
+	<select id="readSchedule" resultType="com.sp.schedule.Schedule" parameterType="Integer">
+		SELECT scheduleNum, memberNum, name, title, color, content, allDay, startDay, endDay,
+			startTime, endTime, created
+			FROM schedule s
+			JOIN member m ON m.memberNum = s.memberNum
+			WHERE scheduleNum = #{scheduleNum}
+	</select>
+	
+	<update id="updateSchedule">
+		UPDATE schedule SET
+			title = #{title}, color = #{color}, content = #{content},
+			allDay = #{allDay}, startDay = #{startDay}, endDay = #{endDay},
+			startTime = #{startTime, jdbcType=VARCHAR}, endTime = #{endTime, jdbcType=VARCHAR}
+			WHERE scheduleNum = #{scheduleNum}
+	</update>
+	
+	<delete id="deleteSchedule" parameterType="Integer">
+		DELETE FROM schedule WHERE scheduleNum = #{scheduleNum}
+	</delete>
 </mapper>

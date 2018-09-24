@@ -154,7 +154,7 @@ $(function() {
 				    		location.href="<%=cp%>/login";
 				    		return;
 				    	}
-				    	console.log(jqXHR.responseText);
+				    	//console.log(jqXHR.responseText);
 				    }
 				});
 			},
@@ -192,18 +192,22 @@ function articleForm(calEvent) {
 	
 	var num=calEvent.id;
 	var title=calEvent.title;
-	var userName=calEvent.userName;
-	
+	var name=calEvent.name;
 	var color=calEvent.color;
+	
 	var classify="";
+	
 	if(color=="blue") classify="개인일정";
 	else if(color=="black") classify="가족일정";
 	else if(color=="green") classify="회사일정";
 	else if(color=="red") classify="부서일정";
 	
 	var allDay=calEvent.allDay;
+	var place = calEvent.place;
+	
 	var startDay="", startTime="", sday="";
 	var endDay="", endTime="", eday="";
+	
 	var strDay;
 	startDay=calEvent.start.format("YYYY-MM-DD");
 	if(calEvent.start.hasTime()) {
@@ -223,12 +227,13 @@ function articleForm(calEvent) {
 		sday=startDay+" "+ startTime;
 		eday=endDay+" "+ endTime;
 		strDay="시간일정";
-	}else if(allDay==false) {
-		sday=startDay+" "+ startTime;
-		eday=endDay;
+	}else if(allDay == true && endDay=="") {
+		sday=startDay;
+		eday=startDay;
+		startTime="";
 		endTime="";
-		strDay="시간일정";
-	}else {
+		strDay="하루종일";
+	} else {
 		sday=startDay;
 		eday=endDay;
 		startTime="";
@@ -245,7 +250,7 @@ function articleForm(calEvent) {
 		  modal: true,
 		  buttons: {
 		       " 수정 " : function() {
-		    	   updateForm(num,title,allDay,startDay,endDay,startTime,endTime,color);
+		    	   updateForm(num,title,allDay,startDay,endDay,startTime,endTime,color,place);
 		        },
 			   " 삭제 " : function() {
 				   deleteOk(num);
@@ -261,14 +266,15 @@ function articleForm(calEvent) {
 		  }
 	});	
 	
-	$('#scheduleModal').load("<%=cp%>/sch/articleForm", function() {
-		$("#schTitle").html(title);
-		$("#schUserName").html(userName);
-		$("#schClassify").html(classify);
-		$("#schAllDay").html(strDay);
-		$("#schStartDay").html(sday);
-		$("#schEndDay").html(eday);
-		$("#schContent").html(content);
+	$('#scheduleModal').load("<%=cp%>/schedule/articleForm", function() {
+		$("#articleTitle").html(title);
+		$("#articleName").html(name);
+		$("#articleClassify").html(classify);
+		$("#articleAllDay").html(strDay);
+		$("#articleStartDay").html(sday);
+		$("#articleEndDay").html(eday);
+		$("#articlePlace").html(place);
+		$("#articleContent").html(content);
 		
 		dlg.dialog("open");
 	});
@@ -470,7 +476,7 @@ function validCheck() {
 
 // -------------------------------------------------
 // 수정 폼
-function updateForm(num, title, allDay, startDay, endDay, startTime, endTime, color) {
+function updateForm(num, title, allDay, startDay, endDay, startTime, endTime, color, place) {
 	var dlg = $("#scheduleModal").dialog({
 		  autoOpen: false,
 		  modal: true,
@@ -482,34 +488,35 @@ function updateForm(num, title, allDay, startDay, endDay, startTime, endTime, co
 		    	   $(this).dialog("close");
 		        }
 		  },
-		  height: 480,
-		  width: 550,
+		  height: 650,
+		  width: 700,
 		  title: "일정 수정",
 		  close: function(event, ui) {
 		  }
 	});
 	
-	$('#scheduleModal').load("<%=cp%>/sch/inputForm", function() {
-		$("input[name='title']").val(title);
-		$("select[name='color']").val(color);
-		$("input[name='startDay']").val(startDay);
-		$("input[name='endDay']").val(endDay);
-		$("input[name='startTime']").val(startTime);
-		$("input[name='endTime']").val(endTime);
-		$("textarea[name='content']").val(tempContent);
+	$('#scheduleModal').load("<%=cp%>/schedule/inputForm", function() {
+		$("input[name=title]").val(title);
+		$("select[name=color]").val(color);
+		$("input[name=startDay]").val(startDay);
+		$("input[name=endDay]").val(endDay);
+		$("select[name=startTime]").val(startTime);
+		$("select[name=endTime]").val(endTime);
+		$("textarea[name=content]").val(tempContent);
+		$("input[name=place]").val(place);
 		
 		if(allDay==true || allDay=="true") {
-			$("#allDayChk").prop('checked', true);
-			$("#allDayHidden").prop("disabled", true);
+			$("#allDay1").prop('checked', true);
+			$("#allDay2").prop('checked', false);
 			
-			$("#startTime").hide();
-			$("#endTime").hide();
+			$("#schStartTime").hide();
+			$("#schEndTime").hide();
 		} else {
-			$("#allDayChk").prop('checked', false);
-			$("#allDayHidden").prop("disabled", false);
+			$("#allDay1").prop('checked', false);
+			$("#allDay2").prop('checked', true);
 			
-			$("#startTime").show();
-			$("#endTime").show();
+			$("#schStartTime").show();
+			$("#schEndTime").show();
 		}
 		$("input[name='title']").focus();
 
@@ -522,9 +529,9 @@ function updateOk(num) {
 	if(! validCheck())
 		return;
 	
-	$("form[name=schForm] input[name=num]").val(num);
+	$("form[name=schForm] input[name=scheduleNum]").val(num);
+	var url="<%=cp%>/schedule/update";
 	var query=$("form[name=schForm]").serialize();
-	var url="<%=cp%>/sch/update";
        
     $.ajax({
          type:"post"
@@ -532,20 +539,25 @@ function updateOk(num) {
          ,data:query
          ,dataType:"json"
          ,success:function(data) {
-    		 group="all";
-        	 calendar.fullCalendar('refetchEvents', num);
-        	 
-   			$("#calendarHeader a").each(function(){
-  				$(this).removeClass("hbtn-bottom");
-  			});
-  			$("#calendarHeader a:eq(0)").addClass("hbtn-bottom");
+        	 var state = data.state;
+        	 if(state == 'true'){
+        		 group="all";
+            	 calendar.fullCalendar('refetchEvents', num);
+            	 
+       			$("#calendarHeader li").each(function(){
+      				$(this).removeClass("active");
+      			});
+      			$("#calendarHeader li:eq(0)").addClass("active"); 
+        	 } else {
+        		 alert("일정수정 실패!");
+        	 }
          }
     	 ,beforeSend : function(jqXHR) {
         	 jqXHR.setRequestHeader("AJAX", true);
   		 }
   		 ,error:function(jqXHR) {
     		if(jqXHR.status==403) {
-    			location.href="<%=cp%>/member/login";
+    			location.href="<%=cp%>/login";
     			return;
     		}
     		console.log(jqXHR.responseText);
@@ -634,22 +646,26 @@ function updateDrag(e) {
 function deleteOk(num) {
 	if(confirm("삭제 하시겠습니까 ?")) {
 		
-		var url="<%=cp%>/sch/delete";
-		var query="num="+num;
+		var url="<%=cp%>/schedule/delete";
+		var query="scheduleNum="+num;
 		$.ajax({
 	         type:"post"
 	         ,url:url
 			 ,data:query
 			 ,dataType:"json"
 			 ,success:function(data) {
-				 calendar.fullCalendar('removeEvents', num);
+				 var state = data.state;
+				 if(state == 'true')
+					 calendar.fullCalendar('removeEvents', num);
+				 else
+					 alert("일정삭제 실패!");
 	         }
 		     ,beforeSend : function(jqXHR) {
 	             jqXHR.setRequestHeader("AJAX", true);
 	         }
 	         ,error:function(jqXHR) {
 	  	         if(jqXHR.status==403) {
-	  		         location.href="<%=cp%>/member/login";
+	  		         location.href="<%=cp%>/login";
 	  	             return;
 	  	         }
 	  	         console.log(jqXHR.responseText);

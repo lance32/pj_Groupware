@@ -9,9 +9,16 @@ private String color;
 private Boolean allDay;
 private String start;
 private String end;
+private String place;
 private String content;
 private String created;
 
+public String getPlace() {
+	return place;
+}
+public void setPlace(String place) {
+	this.place = place;
+}
 
 public Boolean getAllDay() {
 	return allDay;
