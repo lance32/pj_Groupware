@@ -97,9 +97,11 @@ public class MailSender {
 						mp.addBodyPart(mbp2);
 					}
 				} catch(UnsupportedEncodingException e) {
-					System.out.println(e.getMessage());
+					//System.out.println(e.getMessage());
+					e.printStackTrace();
 				} catch(Exception e) {
-					System.out.println(e.getMessage());
+//					System.out.println(e.getMessage());
+					e.printStackTrace();
 				}
 			}
 			
@@ -181,7 +183,8 @@ public class MailSender {
 			}
 			b= true;
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			//System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 		
 		return b;
