@@ -77,7 +77,7 @@ public class MessageController {
 		map.put("type", "receive");
 
 		dataCount = service.getDataCount(map);
-		logger.info(">>>>>>>>>>> datacount : " + dataCount);
+
 		if (dataCount != 0)
 			totalPage = myUtil.pageCount(rows, dataCount);
 		
@@ -143,7 +143,7 @@ public class MessageController {
 		map.put("type", "send");
 
 		dataCount = service.getDataCount(map);
-		logger.info(">>>>>>>>>>> datacount : " + dataCount);
+
 		if (dataCount != 0)
 			totalPage = myUtil.pageCount(rows, dataCount);
 		
@@ -209,7 +209,7 @@ public class MessageController {
 		map.put("type", "keep");
 
 		dataCount = service.getDataCount(map);
-		logger.info(">>>>>>>>>>> datacount : " + dataCount);
+
 		if (dataCount != 0)
 			totalPage = myUtil.pageCount(rows, dataCount);
 		

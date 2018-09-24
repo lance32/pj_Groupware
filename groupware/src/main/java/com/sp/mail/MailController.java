@@ -54,7 +54,6 @@ public class MailController {
 	public String writeMailSubmit(Mail mail, HttpSession session, Model model) throws Exception {
 		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		mail.setSendName(info.getUserName());
-//		mail.setSendMail(info.get);
 		
 		boolean send = mailSender.mailSend(mail);
 		String msg = "<span style='color:blue;'>" + mail.getReceiveMail() + "</span> 님에게<br>";

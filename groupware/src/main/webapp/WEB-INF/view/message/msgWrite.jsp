@@ -51,10 +51,15 @@
 					$.each(data, function(idx, val) {
 						var ws = "";
 						
-						if (val.deptOrder == 1)
+						if (val.deptOrder == 1) {
 							deptClass = "dept" + val.deptNum + " ";
-						else
+						} else {
+							var deptArray = deptClass.split(" ");
+							deptClass = deptArray[val.deptOrder - 2] + " ";
+							console.log(deptArray[0] + ":" + deptArray[1]);
+							
 							deptClass+= "dept" + val.deptNum + " ";
+						}
 						
 						for (var i = 1; i < val.deptOrder; i++) {
 							ws += "&nbsp;&nbsp;&nbsp;&nbsp;";

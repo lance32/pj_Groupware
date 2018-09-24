@@ -24,7 +24,26 @@
 }
 </style>
 <script type="text/javascript">
+	$(function() {
+		$.ajax({
+			url: "<%=cp%>/member/readMember",
+			type: "get",
+			dataType: "json",
+			success: function(data) {
+				$("#sendMail").val(data.member.email);
+			},
+			error: function(jqXHR) {
+				console.log(jqXHR.responseText);
+			}
+		});	
+	});
+
 	function send() {
+		if ($("#sendMail").val() == undefined || $("#sendMail").val() == "") {
+			alert('보내는 사람의 email이 없습니다.');
+			return false;
+		}
+
 		if ($("#members").val() == "") {
 			alert('받는 사람이 없습니다.');
 			$(this).focus();
@@ -39,6 +58,8 @@
 		
 		document.mailWriteForm.submit();
 	}
+	
+	
 </script>
 <div id="mailWrite" style="width:100%; height: 600px;">
 	<div style="clear: both; margin: 10px 0px 15px 10px;">
@@ -52,7 +73,7 @@
 			<tr>
 				<td style="border-bottom: 1px dotted #dfdfdf; padding:5px; background: #f7f7f7; color: #595959; text-align:center; width: 15%;">받는 사람</td>
 				<td style="background: #fff; width: 85%;">
-					<span><input type="text" id="receive" name="receive" style="background: #fff; color: #333; width: 80%; border: 1px solid #d7d7d7;"></span>
+					<span><input type="text" id="receiveMail" name="receiveMail" style="background: #fff; color: #333; width: 80%; border: 1px solid #d7d7d7;"></span>
 				</td>
 			</tr>
 			<tr>
@@ -77,6 +98,7 @@
 				<td colspan="2"><div style="padding-top: 5px;"><textarea id="content" name="content" rows="15" cols="45" style="width: 83%;"></textarea></div></td>
 			</tr>
 		</table>
+		<input type="hidden" name="sendMail" id="sendMail">
 		<span><input type="button" value="&nbsp;전송&nbsp;" onclick="send();"></span>
 	</form>
 </div>
