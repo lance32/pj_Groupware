@@ -145,4 +145,9 @@ public class ScheduleController {
 		return model;
 	}
 	
+	@RequestMapping(value="/schedule/list")
+	public String list() {
+		return ".schedule.searchForm";
+	}
+	
 }

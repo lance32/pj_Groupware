@@ -1,9 +1,9 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
-<%@ page trimDirectiveWhitespaces="true"%>
+<%@ page trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%
-	String cp = request.getContextPath();
+	String cp=request.getContextPath();
 %>
 
 <script>
@@ -14,9 +14,9 @@ function searchList() {
 </script>
 
 <div style="clear: both; margin: 10px 0px 15px 10px;">
-	<span class="glyphicon glyphicon-bullhorn"
+	<span class="glyphicon glyphicon-calendar"
 		style="font-size: 28px; margin-left: 10px;"></span> <span
-		style="font-size: 30px;">&nbsp;공 지 사 항</span><br>
+		style="font-size: 30px;">&nbsp;일 정 검 색</span><br>
 	<div
 		style="clear: both; width: 300px; height: 1px; border-bottom: 3px solid black;"></div>
 </div>
@@ -29,11 +29,13 @@ function searchList() {
 	</tr>
 
 	<tr class="cf">
-		<td width="150">번호</td>
-		<td width="500" style="text-align: center;">제목</td>
+		<td width="190">일정분류</td>
+		<td width="350" style="text-align: center;">제목</td>
+		<td width="250">시작일</td>
+		<td width="250">종료일</td>
+		<td width="190">장소</td>
 		<td width="190">작성자</td>
-		<td width="350">작성일</td>
-		<td width="100">조회수</td>
+		<td width="300">작성일</td>
 	</tr>
 	<c:forEach var="dto" items="${list}">
 		<tr class="tr">
@@ -68,4 +70,5 @@ function searchList() {
    		<button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/notice/created';">글 쓰 기</button>
    		</c:if>
    	</form>
+
 </div>

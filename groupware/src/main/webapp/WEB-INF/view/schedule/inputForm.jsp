@@ -13,8 +13,6 @@
 	});
 	
 	$(function(){
-		$("#schStartTime").hide();
-		$("#schEndTime").hide();
 		
 		$("input[name=repeat]").click(function(){
 			var repeatValue = $(this).val();
@@ -35,10 +33,13 @@
 				$("#schEndTime").show();
 			} else {
 				$("#schStartTime").hide();
+				$("#schStartTime").val("");
 				$("#schEndTime").hide();
+				$("#schEndTime").val("");
 			}
 		});
 	});
+
 </script>
 
 <form name="schForm" class="form-horizontal">
@@ -84,9 +85,11 @@
 				<option value="">선 택</option>
 				<c:forEach var="h" begin="0" end="9">
 					<option value="0${h}:00">0${h}:00</option>
+					<option value="0${h}:30">0${h}:30</option>
 				</c:forEach>
 				<c:forEach var="h" begin="10" end="23">
 					<option value="${h}:00">${h}:00</option>
+					<option value="${h}:30">${h}:30</option>
 				</c:forEach>
 			</select>
 		</div>
@@ -100,9 +103,11 @@
 				<option value="">선 택</option>
 				<c:forEach var="h" begin="0" end="9">
 					<option value="0${h}:00">0${h}:00</option>
+					<option value="0${h}:30">0${h}:30</option>
 				</c:forEach>
 				<c:forEach var="h" begin="10" end="23">
 					<option value="${h}:00">${h}:00</option>
+					<option value="${h}:30">${h}:30</option>
 				</c:forEach>
 			</select>
 		</div>
@@ -111,7 +116,7 @@
 	<div class="form-group">
 		<label for="title" class="col-sm-2 control-label">장 소</label>
 		<div class="col-sm-10">
-			<input type="text" class="form-control" id="place" name="place" placeholder="클릭해서 장소를 선택하세요.">
+			<input type="text" class="form-control" id="schPlace" name="place" placeholder="클릭해서 장소를 선택하세요." readonly="readonly">
 		</div>
 	</div>
 	

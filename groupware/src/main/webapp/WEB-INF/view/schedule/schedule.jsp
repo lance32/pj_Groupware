@@ -10,36 +10,6 @@
 <link rel="stylesheet" href="<%=cp%>/resource/fullcalendar/fullcalendar.print.css" media='print' type="text/css">
 
 <style type="text/css">
-.hbtn {
-	font-family: "Malgun Gothic", "맑은 고딕", NanumGothic, 나눔고딕, 돋움, sans-serif;
-    background-image:none;
-    color:#fff;
-    line-height: 1.5;
-    text-align: center;
-    padding: 5px 10px;
-    font-size: 12px;
-    text-decoration: none;
-    position: relative;
-    float: left;
-    border: 1px solid #ccc;    
-}
-.hbtn:hover, .hbtn:active {
-    background-image:none;
-    color:#fff;
-    text-decoration: none;
-}
-
-.hbtn:focus {
-    background-image:none;
-    color:#fff;
-    text-decoration: none;
-}
-
-.hbtn-bottom {
-	border-bottom:3px solid #3DB7CC;
-	font-weight: 900;
-}
-
 #calendar {
 	margin: 20px auto 10px;
 }
@@ -51,47 +21,12 @@
 	right: 10px;
 }
 
-.fc-center h2{
-	display: block;
-	font-family: "Malgun Gothic", "맑은 고딕", NanumGothic, 나눔고딕, 돋움, sans-serif;
-	font-size: 1.5em;
-	font-weight: bold;
-	/* -webkit-margin-after: 0.83em; */
-	-webkit-margin-start: 0px;
-	-webkit-margin-end: 0px;
-}
-
-.fc-content .fc-title{
-	font-size: 9pt;
-}
-
-/* 일정분류버튼 css */
-#classifyGroup .btn, #classifyGroup .focus.btn, #classifyGroup .btn:focus, #classifyGroup .btn:hover {
-    color: #fff; background-image:none;
-}
-.btn-blue {
-    background-color:blue; border-color:blue;
-}
-.btn-blue:hover, .btn-blue:focus {
-    background-color:blue; border-color:blue;
-}
-.btn-black {
-    background-color:black; border-color:black;
-}
-.btn-black:hover, .btn-black:focus {
-    background-color:black; border-color:black;
-}
-.btn-green {
-    background-color:green; border-color:green;
-}
-.btn-green:hover, .btn-green:focus {
-    background-color:green; border-color:green;
-}
-.btn-red {
-    background-color:red; border-color:red;
-}
-.btn-red:hover, .btn-red:focus {
-    background-color:red; border-color:red;
+.schTab {
+	color: #555;
+    cursor: default;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-bottom-color: transparent;
 }
 </style>
 
@@ -170,17 +105,19 @@ $(function() {
 				$('#schLoading').toggle(bool);
 			}
 		});
+		
+		$("body").on("click", "#schPlace", function(){
+			window.open("<%=cp%>/mapTest.jsp", "width=800,height=600");
+		});
 });
 
 // 분류별 검색
 function classification(kind, idx) {
 	$("#calendarHeader li").each(function(){
-		$(this).removeClass("active");
-		// $(this).css("opacity","0.8");
+		$(this).removeClass("schTab");
 	});
-	$("#calendarHeader li:eq("+idx+")").addClass("avtice");
-	// $("#calendarHeader a:eq("+idx+")").css("opacity","1.0");
-	
+	$("#calendarHeader li:eq("+idx+")").addClass("schTab");
+
 	group=kind;
 	calendar.fullCalendar('refetchEvents');
 }
@@ -314,10 +251,15 @@ function insertForm(start, end) {
 		endTime=end.format("HH:mm");
 		
 		$("input[name='startDay']").val(startDay);
-		$("input[name='endDay']").val(startDay);
+		alert(startDay);
+		$("select[name='startTime']").val(startTime);
 		
+		$("input[name='endDay']").val(endDay);
+		$("select[name='endTime']").val(endTime);
+		alert(endDay);
 		if(start.hasTime()) {
 			// 시간 일정인 경우
+			$("#allDay2").prop("checked",true);
 			$("#schStartTime").show();
 			$("#schEndTime").show();
 			
@@ -327,13 +269,13 @@ function insertForm(start, end) {
 				endTime=end.format("HH:mm");
 			
 				$("input[name='endDay']").val(endDay);
-				$("input[name='endTime']").val(endTime);
+				$("select[name='endTime']").val(endTime);
 			}
 			
 		} else {
 			// 하루종일 일정인 경우
 			$("input[name='startTime']").val("");
-			$("input[name='endTime']").val("");
+			$("select[name='endTime']").val("");
 			$("#schStartTime").hide();
 			$("#schEndTime").hide();
 			
@@ -368,10 +310,10 @@ function insertOk() {
 	      		   group="all";
 	      		   calendar.fullCalendar('refetchEvents');
 	
-	      		    //$("#calendarHeader a").each(function(){
-	      				//$(this).removeClass("hbtn-bottom");
-	      			//});
-	      			//$("#calendarHeader a:eq(0)").addClass("hbtn-bottom");
+	      		    $("#calendarHeader li").each(function(){
+	      				$(this).removeClass("schTab");
+	      			});
+	      			$("#calendarHeader li:eq(0)").addClass("schTab");
 	          }
           }
 	      ,beforeSend : function(jqXHR) {
@@ -545,9 +487,9 @@ function updateOk(num) {
             	 calendar.fullCalendar('refetchEvents', num);
             	 
        			$("#calendarHeader li").each(function(){
-      				$(this).removeClass("active");
+      				$(this).removeClass("schTab");
       			});
-      			$("#calendarHeader li:eq(0)").addClass("active"); 
+      			$("#calendarHeader li:eq(0)").addClass("schTab"); 
         	 } else {
         		 alert("일정수정 실패!");
         	 }
@@ -672,41 +614,15 @@ function deleteOk(num) {
 	        }
 		});
 	}
-	
 	 $("#scheduleModal").dialog("close");
 }
 
 // -------------------------------------------------
 // 입력 및 수정 화면에서 일정 분류를 선택 한 경우
 function classifyChange(classify) {
-	$("#btnTitle").removeClass("btn-blue")
-	                     .removeClass("btn-black")
-	                     .removeClass("btn-green")
-	                     .removeClass("btn-red");
-	$("#btnDropdown").removeClass("btn-blue")
-	                              .removeClass("btn-black")
-	                              .removeClass("btn-green")
-	                              .removeClass("btn-red");
-	
-	if(classify=="blue") {
-		$("#btnTitle").html("개인일정")
-		$("#btnTitle").addClass("btn-blue");
-		$("#btnDropdown").addClass("btn-blue");
-	} else if(classify=="black") {
-		$("#btnTitle").html("가족일정")
-		$("#btnTitle").addClass("btn-black");
-		$("#btnDropdown").addClass("btn-black");
-	} else if(classify=="green") {
-		$("#btnTitle").html("회사일정")
-		$("#btnTitle").addClass("btn-green");
-		$("#btnDropdown").addClass("btn-green");
-	} else if(classify=="red") {
-		$("#btnTitle").html("부서일정")
-		$("#btnTitle").addClass("btn-red");
-		$("#btnDropdown").addClass("btn-red");
-	}
 	$("#scheduleModal input[name='color']").val(classify);
 }
+
 </script>
 
 <div class="body-container" style="width: 75%;">
@@ -720,12 +636,11 @@ function classifyChange(classify) {
 	<div style="text-align: left;">
 		<div class="container">
 			<ul class="nav nav-tabs">
-				<li class="active"><a href="javascript:classification('all', 0)">전 체 일 정</a></li>
+				<li class="schTab"><a href="javascript:classification('all', 0)">전 체 일 정</a></li>
 				<li><a href="javascript:classification('blue', 1)">개 인 일 정</a></li>
 				<li><a href="javascript:classification('black', 2)">가 족 일 정</a></li>
 				<li><a href="javascript:classification('red', 3)">부 서 일 정</a></li>
 				<li><a href="javascript:classification('green', 4)">회 사 일 정</a></li>
-				<li><a href="#">일 정 검 색</a></li>
 			</ul>
 			<br>
 		</div>
