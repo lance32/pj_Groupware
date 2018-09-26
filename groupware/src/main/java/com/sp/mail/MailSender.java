@@ -59,7 +59,7 @@ public class MailSender {
 		@Override
 		protected PasswordAuthentication getPasswordAuthentication() {
 			String username = "lance32@naver.com";
-			String password = "xptmxmapdlf";
+			String password = "";
 			return new PasswordAuthentication(username, password);
 		}
 	}
@@ -109,7 +109,7 @@ public class MailSender {
 		}
 	}
 	
-	public boolean mailSend(Mail mail) {
+	public boolean mailSend(Mail mail) throws Exception {
 		boolean b = false;
 		
 		Properties p = new Properties();
@@ -185,6 +185,7 @@ public class MailSender {
 		} catch(Exception e) {
 			//System.out.println(e.getMessage());
 			e.printStackTrace();
+			throw new Exception(e.getMessage());
 		}
 		
 		return b;

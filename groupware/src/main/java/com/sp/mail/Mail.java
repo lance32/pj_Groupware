@@ -3,9 +3,14 @@ package com.sp.mail;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.web.multipart.MultipartFile;
 
+@Document(collection = "mail")
 public class Mail {
+	@Id
+	private long index;
 	private String receiveMail;
 	private String sendMail;
 	private String sendName;
@@ -16,6 +21,12 @@ public class Mail {
 	private List<MultipartFile> upload;
 	private List<String> savePathname = new ArrayList<String>();
 	
+	public long getIndex() {
+		return index;
+	}
+	public void setIndex(long index) {
+		this.index = index;
+	}
 	public String getCc() {
 		return cc;
 	}

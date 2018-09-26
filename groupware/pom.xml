@@ -371,7 +371,7 @@
     		<version>2.1.7</version>
 		</dependency>
 		
-				<!-- JSON -->
+		<!-- JSON -->
 		<dependency>
             <groupId>net.sf.json-lib</groupId>
             <artifactId>json-lib</artifactId>
@@ -379,5 +379,21 @@
             <classifier>jdk15</classifier>
         </dependency>
 		
+		<!-- mongodb -->
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongo-java-driver</artifactId>
+			<version>3.8.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-commons</artifactId>
+			<version>1.13.15.RELEASE</version>
+		</dependency>		
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-mongodb</artifactId>
+			<version>1.10.15.RELEASE</version>
+		</dependency>		
 	</dependencies>	
 </project>
