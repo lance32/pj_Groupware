@@ -19,6 +19,7 @@
 	overflow: hidden;
 }
 .sideBtn:hover{
+	background: #0A68B0;
 	color: #ffffff;
 }
 

@@ -204,7 +204,7 @@ body{
 	.tabs a{
 		text-decoration:none;
 	}
-	
+
 .footer {
 	clear:both;
     width:100%;
@@ -214,4 +214,6 @@ body{
     height: 54px;
     font-size: 17px;
     padding-top: 5px;
+    position: absolute;
+    bottom: 0px;
 }

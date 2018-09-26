@@ -17,7 +17,7 @@
 			<ul class="sub_menu">
 				<li><a href="<%=cp%>/chat/chatList">채팅</a></li>
 				<li><a href="#">설문</a></li>
-				<li><a href="#">동호회</a></li>
+				<li><a href="<%=cp%>/clubList/clubList">동호회</a></li>
 			</ul></li>
 		<li><a href="<%=cp%>/mail/mailWrite">메일</a></li>
 		<li><a href="<%=cp%>/message/msgReceive">쪽지</a></li>

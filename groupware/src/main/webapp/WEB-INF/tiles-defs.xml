@@ -21,6 +21,12 @@
 		<put-attribute name="footer" value="/WEB-INF/view/layout/footer.jsp" />
 	</definition>
 	
+	<definition name=".club.*" extends=".mainLayout">
+    	<put-attribute name="side" value="/WEB-INF/view/club/sideProfile.jsp" />
+    	<put-attribute name="sidetabs" value="/WEB-INF/view/club/sideTab.jsp" />
+		<put-attribute name="body" value="/WEB-INF/view/club/main.jsp" />
+	</definition>
+	
 	<definition name=".admin.*.*.*" extends=".adminLayout">
 		<put-attribute name="body" value="/WEB-INF/view/admin/{1}/{2}/{3}.jsp"/>
 		<put-attribute name="sidetabs" value="/WEB-INF/view/sidetabs/{1}_sidetabs.jsp"/>
@@ -44,4 +50,5 @@
 	<definition name=".*" extends=".mainLayout">
     	<put-attribute name="body" value="/WEB-INF/view/{1}.jsp" />
 	</definition>
+	
 </tiles-definitions>

@@ -48,7 +48,7 @@ jQuery(function(){
     } else if ('MozWebSocket' in window) {
     	socket = new MozWebSocket(host);
     } else {
-    	jQuery("#messageBox").html('Your browser does not support WebSockets');
+    	jQuery("#messageBox").html('브라우저가 채팅을 지원 안합니다.');
         return false;
     }
 	socket.onopen = function(evt) { onOpen(evt) };
@@ -66,11 +66,11 @@ jQuery(function(){
 	    jsonStr = JSON.stringify(obj);
 	    socket.send(jsonStr);
 	    
-	    jQuery("#messageBox").html('Info: Server connection.');
+	    jQuery("#messageBox").html('서버 연결. 채팅방에 입장하거나 개설하여 채팅을 시작하세요.');
 	}
 	//연결 끊김
 	function onClose(evt) {
-		jQuery("#messageBox").html('Info: WebSocket error. Server disconnection.');
+		jQuery("#messageBox").html('서버 연결끊김. 재접속하세요.');
 	}
 	//메시지를 받음
 	function onMessage(evt) {
@@ -85,7 +85,7 @@ jQuery(function(){
 	}
 	//기타에러 발생시
 	function onError(evt) {
-		jQuery("#messageBox").html('Info: error');
+		jQuery("#messageBox").html('에러발생. 재접속하세요.');
 	}
 	
 	//개설된 채팅방이 없을경우
