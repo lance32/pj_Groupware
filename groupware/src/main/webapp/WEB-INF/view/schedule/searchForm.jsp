@@ -7,12 +7,27 @@
 %>
 
 <script>
+$(function() {
+	$("input[name=startDay]").datepicker();
+	$("input[name=endDay]").datepicker();
+	
+	$("select[name=searchKey]").change(function(){
+		var search = $("option:selected").val();
+		if(search == 'start'){
+			$("#searchDay").show();
+		} else {
+			$("#searchDay").hide();
+			$("input[name=startDay]").val("");
+			$("input[name=endDay]").val("");
+		}
+	});
+});
+
 function searchList() {
 	var f=document.searchForm;
 	f.submit();
 }
 </script>
-
 <div style="clear: both; margin: 10px 0px 15px 10px;">
 	<span class="glyphicon glyphicon-calendar"
 		style="font-size: 28px; margin-left: 10px;"></span> <span
@@ -39,36 +54,38 @@ function searchList() {
 	</tr>
 	<c:forEach var="dto" items="${list}">
 		<tr class="tr">
-			<c:if test="${dto.notice == 1}">
-				<td><span style="background-color: #ff0000;border-radius: 3px;color:#fff;padding: 2px;">긴 급 공 지</span></td>
-			</c:if>
-			<c:if test="${dto.notice == 0}">
-				<td>${dto.num }</td>
-			</c:if>
-			<td style="text-align: center;"><a href="${articleUrl}&num=${dto.num}">${dto.subject}</a></td>
+			<td style="text-align: center;">${dto.color == 'blue'?'개인일정': (dto.color=='black'?'가족일정':(dto.color=='red'? '부서일정':'회사일정'))}</td>
+			<td>${dto.title }</td>
+			<td>${dto.startDay }</td>
+			<td>${dto.endDay }</td>
+			<td>${dto.place }</td>
 			<td>${dto.name }</td>
 			<td>${dto.created }</td>
-			<td>${dto.hitCount }</td>
 		</tr>
 	</c:forEach>
 </table>
 <br>
 <div style="text-align: center;">
-	<form name="searchForm" action="<%=cp%>/notice/list" method="post">
+	<form name="searchForm" action="<%=cp%>/schedule/list" method="post">
 		${paging }
-		<button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/notice/list';">새 로 고 침</button>
+		<br>
+		<button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/schedule/list';">새 로 고 침</button>
    		<select name="searchKey" class="selectBox" style="margin-bottom: 5px;">
-          	<option value="subject">제 목</option>
+          	<option value="title">제 목</option>
            	<option value="name">작 성 자</option>
           	<option value="content">내 용</option>
-          	<option value="created">등 록 일</option>
+          	<option value="start">시 작 일</option>
       	</select>
     	<input type="text" name="searchValue" class="searchBox">
-    
-   		<button type="button" class="btn" onclick="searchList()">검색</button>
-   		<c:if test="${sessionScope.member.userId=='admin'}">
-   		<button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/notice/created';">글 쓰 기</button>
-   		</c:if>
+    	
+   		<button type="button" class="butn" onclick="searchList()">검색</button>
+   		<div class="form-group" align="center"><br>
+		<div id="searchDay" style="display: none;">
+			<input type="text" class="form-control" name="startDay" style="width: 10%; display: inline;" readonly="readonly"> ~ 
+			<input type="text" class="form-control" name="endDay" style="width: 10%; display: inline;" readonly="readonly">
+			<button type="button" class="butn" onclick="searchList()">검색</button>
+		</div>
+		</div>
    	</form>
 
 </div>

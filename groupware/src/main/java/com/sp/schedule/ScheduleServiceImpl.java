@@ -73,4 +73,26 @@ public class ScheduleServiceImpl implements ScheduleService {
 		}
 		return dto;
 	}
+
+	@Override
+	public List<Schedule> listSchedule(Map<String, Object> map) throws Exception {
+		List<Schedule> list = null;
+		try {
+			list = dao.selectList("sch.listSchedule", map);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return list;
+	}
+
+	@Override
+	public int dataCount(Map<String, Object> map) throws Exception {
+		int result = 0;
+		try {
+			result = dao.selectOne("sch.dataCount", map);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
+	}
 }

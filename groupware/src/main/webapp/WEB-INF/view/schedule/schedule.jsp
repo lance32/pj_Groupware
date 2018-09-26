@@ -89,7 +89,6 @@ $(function() {
 				    		location.href="<%=cp%>/login";
 				    		return;
 				    	}
-				    	//console.log(jqXHR.responseText);
 				    }
 				});
 			},
@@ -122,8 +121,8 @@ function classification(kind, idx) {
 	calendar.fullCalendar('refetchEvents');
 }
 
-// -------------------------------------------
-// -- 상세 일정 보기
+
+// 상세 일정 보기
 function articleForm(calEvent) {
 	var str;
 	
@@ -217,8 +216,6 @@ function articleForm(calEvent) {
 	});
 }
 
-// -------------------------------------------
-// -- 입력 및 수정 대화상자
 // 일정 등록 폼
 function insertForm(start, end) {
 	var dlg = $("#scheduleModal").dialog({
@@ -251,12 +248,11 @@ function insertForm(start, end) {
 		endTime=end.format("HH:mm");
 		
 		$("input[name='startDay']").val(startDay);
-		alert(startDay);
 		$("select[name='startTime']").val(startTime);
 		
 		$("input[name='endDay']").val(endDay);
 		$("select[name='endTime']").val(endTime);
-		alert(endDay);
+
 		if(start.hasTime()) {
 			// 시간 일정인 경우
 			$("#allDay2").prop("checked",true);
@@ -324,7 +320,7 @@ function insertOk() {
 		    		location.href="<%=cp%>/login";
 		    		return;
 		    	}
-		    	console.log(jqXHR.responseText);
+		    	//console.log(jqXHR.responseText);
 		  }
     });
     
@@ -340,6 +336,7 @@ function validCheck() {
 	var startTime=$.trim($("select[name='startTime']").val());
 	var endTime=$.trim($("select[name='endTime']").val());
 	var content=$.trim($("textarea[name='content']").val());
+	var place = $.trim($("input[name=place]").val());
 	var repeat = $.trim($("input[name=repeat]:checked").val());
 	var cycle = $.trim($("input[name=cycle]:checked").val());
 	
@@ -348,23 +345,6 @@ function validCheck() {
 		$("input[name='title']").focus();
 		return false;
 	}
-	
-	 if(! /[12][0-9]{3}-[0-9]{2}-[0-9]{2}/.test(startDay)){
-			alert("날짜를 정확히 입력 하세요 [yyyy-mm-dd] !!! ");
-			$("input[name='startDay']").focus();
-			return false;
-	 }
-	 if(endDay!="" && ! /[12][0-9]{3}-[0-9]{2}-[0-9]{2}/.test(endDay)){
-			alert("날짜를 정확히 입력 하세요 [yyyy-mm-dd] !!! ");
-			$("input[name='endDay']").focus();
-			return false;
-	 }
-	
-	 if(startTime!="" && ! /[0-2][0-9]:[0-5][0-9]/.test(startTime)){
-			alert("시간을 정확히 입력 하세요 [hh:mm] !!! ");
-			$("input[name='startTime']").focus();
-			return false;
-	 }
 	 
 	 if((allDay == '0' && !startTime)){
 		 alert("시작시간을 선택하세요!");
@@ -388,6 +368,11 @@ function validCheck() {
 		 alert("시간을 정확히 입력 하세요 [hh:mm] !!! ");
 			$("input[name='endTime']").focus();
 			return false;
+	 }
+	 
+	 if(! place){
+		 alert("장소를 선택하세요!");
+		 return false;
 	 }
 
 	// 종료 날짜는 종일일정인 경우 하루가 더 커야한다.
@@ -416,7 +401,6 @@ function validCheck() {
 	return true;
 }
 
-// -------------------------------------------------
 // 수정 폼
 function updateForm(num, title, allDay, startDay, endDay, startTime, endTime, color, place) {
 	var dlg = $("#scheduleModal").dialog({
@@ -502,14 +486,13 @@ function updateOk(num) {
     			location.href="<%=cp%>/login";
     			return;
     		}
-    		console.log(jqXHR.responseText);
+    		//console.log(jqXHR.responseText);
   		}
    });
     
     $("#scheduleModal").dialog("close");
 }
 
-// -------------------------------------------------------
 // 일정을 드래그하거나 일정의 크기를 변경할 때 일정 수정
 function updateDrag(e) {
 	var num=e.id;
@@ -563,7 +546,7 @@ function updateDrag(e) {
            +"&endTime="+endTime
            +"&content="+content;
 	
-	var url="<%=cp%>/sch/update";
+	var url="<%=cp%>/schedule/update";
 	$.ajax({
          type:"post"
          ,url:url
@@ -576,10 +559,10 @@ function updateDrag(e) {
 		 }
 		 ,error:function(jqXHR) {
 			  if(jqXHR.status==403) {
-				  location.href="<%=cp%>/member/login";
+				  location.href="<%=cp%>/login";
 				  return;
 		      }
-			  console.log(jqXHR.responseText);
+			  //console.log(jqXHR.responseText);
 		 }
 	});
 }
@@ -610,7 +593,7 @@ function deleteOk(num) {
 	  		         location.href="<%=cp%>/login";
 	  	             return;
 	  	         }
-	  	         console.log(jqXHR.responseText);
+	  	         //console.log(jqXHR.responseText);
 	        }
 		});
 	}

@@ -9,4 +9,6 @@ public interface ScheduleService {
 	public int deleteSchedule(int scheduleNum) throws Exception;
 	public Schedule readSchedule(int scheduleNum);
 	public List<Schedule> listMonthSchedule(Map<String, Object> map) throws Exception;
+	public int dataCount(Map<String, Object> map) throws Exception;
+	public List<Schedule> listSchedule(Map<String, Object> map) throws Exception;
 }
