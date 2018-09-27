@@ -36,6 +36,7 @@ public class MyAuthenticationSuccessHandler extends SavedRequestAwareAuthenticat
 		info.setUserId(memberNum);
 		info.setUserName(dto.getName());
 		info.setDepartmentName(dto.getDepartmentName());
+		info.setDepartmentNum(dto.getDepartmentNum());
 		info.setPositionName(dto.getPositionName());
 		info.setSaveFilename(dto.getSaveFilename());
 		info.setOriginalFilename(dto.getOriginalFilename());

@@ -76,6 +76,8 @@ public class ScheduleController {
 		map.put("start", start);
 		map.put("end", end);
 		map.put("memberNum", info.getUserId());
+		map.put("departmentNum", info.getDepartmentNum());
+		System.out.println("디파트먼트넘 : "+info.getDepartmentNum());
 		
 		List<Schedule> list=service.listMonthSchedule(map);
 		
@@ -156,7 +158,9 @@ public class ScheduleController {
 			Model model,
 			@RequestParam(value="page", defaultValue="1") int current_page,
 			@RequestParam(value="searchKey", defaultValue="subject") String searchKey,
-			@RequestParam(value="searchValue", defaultValue="") String searchValue
+			@RequestParam(value="searchValue", defaultValue="") String searchValue,
+			@RequestParam(value="sDay", defaultValue="") String sDay,
+			@RequestParam(value="eDay", defaultValue="") String eDay
 			) throws Exception {
 		int rows = 5;
 		int total_page;
@@ -165,8 +169,14 @@ public class ScheduleController {
 		if(req.getMethod().equalsIgnoreCase("GET")) {
 			searchValue = URLDecoder.decode(searchValue, "UTF-8");
 		}
+		
+		System.out.println("sDay : "+ sDay);
+		System.out.println("eDay : "+ eDay);
+		
 		paramMap.put("searchKey", searchKey);
 		paramMap.put("searchValue", searchValue);
+		paramMap.put("sDay", sDay);
+		paramMap.put("eDay", eDay);
 		
 		dataCount = service.dataCount(paramMap);
 		total_page = util.pageCount(rows, dataCount);

@@ -118,6 +118,7 @@ function classification(kind, idx) {
 	$("#calendarHeader li:eq("+idx+")").addClass("schTab");
 
 	group=kind;
+	alert(group);
 	calendar.fullCalendar('refetchEvents');
 }
 
@@ -186,10 +187,21 @@ function articleForm(calEvent) {
 		  modal: true,
 		  buttons: {
 		       " 수정 " : function() {
-		    	   updateForm(num,title,allDay,startDay,endDay,startTime,endTime,color,place);
+		    	   if(name == "${sessionScope.member.userName}"){
+		    		   updateForm(num,title,allDay,startDay,endDay,startTime,endTime,color,place);
+		    	   } else{
+					   alert("작성자 본인만 삭제할 수 있습니다!");
+					   return false;
+				   }
 		        },
 			   " 삭제 " : function() {
-				   deleteOk(num);
+				   if(name == "${sessionScope.member.userName}"){
+					   deleteOk(num);					   
+				   }
+				   else{
+					   alert("작성자 본인만 삭제할 수 있습니다!");
+					   return false;
+				   }
 			   },
 		       " 닫기 " : function() {
 		    	   $(this).dialog("close");
@@ -320,7 +332,7 @@ function insertOk() {
 		    		location.href="<%=cp%>/login";
 		    		return;
 		    	}
-		    	//console.log(jqXHR.responseText);
+		    	console.log(jqXHR.responseText);
 		  }
     });
     
@@ -389,6 +401,11 @@ function validCheck() {
 			endDay=end.format("YYYY-MM-DD");
     	}
     	$("input[name='endDay']").val(endDay);
+    }
+    
+    if((startDay == endDay) && startTime >= endTime){
+    	alert("시작시간과 종료시간을 다시 확인하세요!");
+    	return false;
     }
     
 	if(allDay=="true") {
@@ -486,7 +503,7 @@ function updateOk(num) {
     			location.href="<%=cp%>/login";
     			return;
     		}
-    		//console.log(jqXHR.responseText);
+    		console.log(jqXHR.responseText);
   		}
    });
     
@@ -562,7 +579,7 @@ function updateDrag(e) {
 				  location.href="<%=cp%>/login";
 				  return;
 		      }
-			  //console.log(jqXHR.responseText);
+			  console.log(jqXHR.responseText);
 		 }
 	});
 }
@@ -593,7 +610,7 @@ function deleteOk(num) {
 	  		         location.href="<%=cp%>/login";
 	  	             return;
 	  	         }
-	  	         //console.log(jqXHR.responseText);
+	  	         console.log(jqXHR.responseText);
 	        }
 		});
 	}
