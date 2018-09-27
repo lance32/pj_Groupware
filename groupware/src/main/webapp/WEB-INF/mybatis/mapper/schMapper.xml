@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sch">
+	<insert id="insertSchedule" parameterType="com.sp.schedule.Schedule">
+		INSERT INTO schedule(scheduleNum, memberNum, name, color, allDay,
+		startDay, endDay, startTime, endTime, title, content, place, repeat, cycle)
+		VALUES(schedule_seq.NEXTVAL, #{memberNum}, #{name}, #{color},
+		#{allDay}, #{startDay}, #{endDay}, 
+		#{startTime, jdbcType=VARCHAR},
+		#{endTime, jdbcType=VARCHAR},
+		#{title}, #{content}, #{place},
+		#{repeat}, #{cycle, jdbcType=VARCHAR})
+	</insert>
+	
+	<select id="listMonthSchedule" resultType="com.sp.schedule.Schedule" parameterType="map">
+		SELECT scheduleNum, s.memberNum, s.name, color, allDay,
+		startDay, endDay, startTime, endTime, title, content, place, repeat, cycle, s.created
+		FROM schedule s
+		JOIN member m ON s.memberNum = m.memberNum
+		<where>
+			s.memberNum = #{memberNum}
+			<if test="group !='all' ">
+				AND color = #{group}
+			</if>
+				AND ((startDay &gt;= #{start} AND startDay &lt;= #{end})
+				OR (endDay &gt;= #{start} AND endDay &lt;= #{end}))
+		</where>
+			ORDER BY startDay ASC, scheduleNum DESC
+	</select>
+	
+	<select id="readSchedule" resultType="com.sp.schedule.Schedule" parameterType="Integer">
+		SELECT scheduleNum, s.memberNum, s.name, title, color, content, allDay, startDay, endDay,
+			startTime, endTime, s.created
+			FROM schedule s
+			JOIN member m ON m.memberNum = s.memberNum
+			WHERE scheduleNum = #{scheduleNum}
+	</select>
+	
+	<update id="updateSchedule">
+		UPDATE schedule SET
+			title = #{title}, color = #{color}, content = #{content},
+			allDay = #{allDay}, startDay = #{startDay}, endDay = #{endDay},
+			startTime = #{startTime, jdbcType=VARCHAR}, endTime = #{endTime, jdbcType=VARCHAR}
+			WHERE scheduleNum = #{scheduleNum}
+	</update>
+	
+	<delete id="deleteSchedule" parameterType="Integer">
+		DELETE FROM schedule WHERE scheduleNum = #{scheduleNum}
+	</delete>
+	
+	<sql id="where-list">
+		<if test="searchKey=='title'">
+	        INSTR(title, #{searchValue}) &gt; 0
+	   	</if>
+	   
+	   	<if test="searchKey=='name'">
+	        INSTR(s.name, #{searchValue}) &gt; 0
+	   	</if>
+	   
+	   	<if test="searchKey=='content'">
+	        DBMS_LOB.INSTR(content, #{searchValue}) &gt; 0
+	  	</if>
+	</sql>
+	
+	<select id="dataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0) FROM schedule s
+			JOIN member m ON s.memberNum = m.memberNum
+			<where>
+				<if test="searchValue != null and searchValue != ''">
+					<include refid="where-list"/>
+				</if>
+			</where>
+	</select>
+	
+	<select id="listSchedule" resultType="com.sp.schedule.Schedule" parameterType="map">
+		SELECT * FROM(
+			SELECT ROWNUM rnum, tb.* FROM(
+				SELECT scheduleNum, s.memberNum, s.name, title, color, content, allDay, startDay, endDay, place, s.created
+				FROM schedule s
+				JOIN member m ON m.memberNum = s.memberNum
+				<where>
+					<if test="searchValue != null and searchValue != ''">
+						<include refid="where-list"/>
+					</if>
+				</where>
+				ORDER BY scheduleNum DESC
+			) tb WHERE ROWNUM &lt;= #{end}
+		) WHERE rnum &gt;= #{start}
+	</select>
+</mapper>

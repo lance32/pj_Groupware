@@ -68,5 +68,4 @@ function searchList() {
    		<button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/notice/created';">글 쓰 기</button>
    		</c:if>
    	</form>
-
 </div>

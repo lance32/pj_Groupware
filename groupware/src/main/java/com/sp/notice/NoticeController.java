@@ -64,7 +64,7 @@ public class NoticeController {
 		total_page = util.pageCount(rows, dataCount);
 		
 		if(current_page > total_page)
-			total_page = current_page;
+			current_page = total_page;
 		
 		int start = (current_page-1)*rows+1;
 		int end = current_page*rows;

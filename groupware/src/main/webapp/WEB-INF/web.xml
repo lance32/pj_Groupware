@@ -11,6 +11,7 @@
         <param-value>
                 classpath:spring/application-config.xml
                 classpath:spring/security-context.xml
+                classpath:spring/mongo-connection.xml
         </param-value>
     </context-param>
 	

@@ -3,18 +3,42 @@ package com.sp.mail;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.web.multipart.MultipartFile;
 
+@Document(collection = "mail")
 public class Mail {
+	@Id
+	private long index;
 	private String receiveMail;
 	private String sendMail;
 	private String sendName;
 	private String subject;
 	private String content;
-	
+	private String cc;
+	private String bcc;
 	private List<MultipartFile> upload;
-	private List<String> filePath = new ArrayList<String>();
+	private List<String> savePathname = new ArrayList<String>();
 	
+	public long getIndex() {
+		return index;
+	}
+	public void setIndex(long index) {
+		this.index = index;
+	}
+	public String getCc() {
+		return cc;
+	}
+	public void setCc(String cc) {
+		this.cc = cc;
+	}
+	public String getBcc() {
+		return bcc;
+	}
+	public void setBcc(String bcc) {
+		this.bcc = bcc;
+	}
 	public String getReceiveMail() {
 		return receiveMail;
 	}
@@ -51,10 +75,10 @@ public class Mail {
 	public void setUpload(List<MultipartFile> upload) {
 		this.upload = upload;
 	}
-	public List<String> getFilePath() {
-		return filePath;
+	public List<String> getSavePathname() {
+		return savePathname;
 	}
-	public void setFilePath(List<String> filePath) {
-		this.filePath = filePath;
+	public void setSavePathname(List<String> savePathname) {
+		this.savePathname = savePathname;
 	}
 }

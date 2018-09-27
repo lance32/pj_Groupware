@@ -28,7 +28,14 @@
 		document.msgWriteForm.submit();
 	}
 	
-	// 부서 클릭시 처리
+	// ------------------ 조직도 호출 시 필요한 부분(start) --------------------------------------
+	// 조직도 버튼  : <input type="button" id="organizationChart" value="&nbsp;조직도&nbsp;">
+	// 선택된 멤버 받는 에디트 박스 : <input type="text" id="toMember" name="toMember" ..>
+	//                     member1;member2; .. 형식으로 들어옴. 따라서 컨트롤러쪽에서 ';' split()으로 처리 필요
+	// 조직도 dialog layer : <div id="organizationLayout" title="조직도"></div>
+	// 
+	
+	// 조직도 내에서 부서 클릭시 처리
 	function deptCheck(deptNum) {
 		if ($("#" + deptNum).is(':checked')) {
 			$("." + deptNum).attr("checked", true);
@@ -36,7 +43,7 @@
 			$("." + deptNum).attr("checked", false);
 		}		
 	}
-	
+	// 조직도 버튼(button name="organizationChart") 클릭 시
 	$(function() {
 		$("#organizationChart").click(function() {
 			var dialog;
@@ -50,11 +57,13 @@
 					var deptClass = "";
 					$.each(data, function(idx, val) {
 						var ws = "";
-						
-						if (val.deptOrder == 1)
+						if (val.deptOrder == 1) {
 							deptClass = "dept" + val.deptNum + " ";
-						else
+						} else {
+							var deptArray = deptClass.split(" ");
+							deptClass = deptArray[val.deptOrder - 2] + " ";
 							deptClass+= "dept" + val.deptNum + " ";
+						}
 						
 						for (var i = 1; i < val.deptOrder; i++) {
 							ws += "&nbsp;&nbsp;&nbsp;&nbsp;";
@@ -88,7 +97,9 @@
 						width: 500,
 						modal: true,
 						open: function () {
-							var member = $("#toMember").val();
+							// 기존 선택된 멤버가 있을 경우, 로드시 조직도에서 체크 되도록 처리
+							// <input type="text" id="toMember" name="toMember"> 에서 읽어옴
+							var member = $("#toMember").val();		
 							if (member.length > 0) {
 								var memberList = member.split(";");
 								for (var i = 0; i < memberList.length; i++) {
@@ -99,6 +110,8 @@
 						},
 						buttons: {
 							"확인" : function() {
+								// 조직도에서 선택된 값을 받을 input object에 넣도록 처리
+								// 여기서는 <input type="text" id="toMember" name="toMember"..>
 								var memberList = "";
 								$(".memberChk").each(function() {
 									if (this.checked) {
@@ -120,8 +133,8 @@
 				}
 			});
 		});
-		
 	});
+	// ------------------ 조직도 호출 시 필요한 부분(end) --------------------------------------
 	
 </script>
 <div id="msgWrite" style="width:100%; height: 600px;">

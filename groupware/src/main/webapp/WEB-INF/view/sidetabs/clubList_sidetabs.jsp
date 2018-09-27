@@ -6,6 +6,25 @@
 	String cp=request.getContextPath();
 %>
 
+<style>
+
+
+</style>
+
+<script type="text/javascript">
+
+jQuery(function(){
+	jQuery("#createClubSideButn").click(function(){
+		location.href="<%=cp%>/clubList/createClub";
+		return;
+	});
+});
+
+</script>
+
+
+<div class="tabsTop"><button class="sideBtn" id="createClubSideButn">동호회 생성</button></div>
+
 <table class="tabs">
 	<tr>
     	<th>커뮤니티</th>

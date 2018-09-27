@@ -466,4 +466,17 @@ public class MemberController {
 
 		return model;
 	}
+	
+	@RequestMapping(value="/member/readMember", method=RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> readMember(HttpSession session) throws Exception {
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		String memberNum = info.getUserId();
+		
+		Member member = service.readMember(memberNum);
+		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("member", member);
+		
+		return model;
+	}
 }
