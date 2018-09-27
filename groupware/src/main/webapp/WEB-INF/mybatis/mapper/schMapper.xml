@@ -19,10 +19,16 @@
 		FROM schedule s
 		JOIN member m ON s.memberNum = m.memberNum
 		<where>
-			s.memberNum = #{memberNum}
-			<if test="group !='all' ">
+			 <if test="group == 'red'">
+			 	color = #{group}
+			 	AND m.departmentNum = #{departmentNum}
+			 </if>
+ 
+			<if test="(group !='all') and (group !='red')">
+				s.memberNum = #{memberNum}
 				AND color = #{group}
 			</if>
+
 				AND ((startDay &gt;= #{start} AND startDay &lt;= #{end})
 				OR (endDay &gt;= #{start} AND endDay &lt;= #{end}))
 		</where>
@@ -61,6 +67,10 @@
 	   	<if test="searchKey=='content'">
 	        DBMS_LOB.INSTR(content, #{searchValue}) &gt; 0
 	  	</if>
+	  	
+	  	<if test="searchKey=='start'">
+	  		(TO_DATE(startDay, 'YYYY-MM-DD') &gt;= #{sDay} AND TO_DATE(startDay, 'YYYY-MM-DD') &lt;= #{eDay})
+	  	</if>
 	</sql>
 	
 	<select id="dataCount" parameterType="map" resultType="Integer">
@@ -80,7 +90,7 @@
 				FROM schedule s
 				JOIN member m ON m.memberNum = s.memberNum
 				<where>
-					<if test="searchValue != null and searchValue != ''">
+					<if test="(searchValue != null and searchValue != '') or (sDay != null) or (eDay != null)">
 						<include refid="where-list"/>
 					</if>
 				</where>

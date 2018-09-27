@@ -6,7 +6,7 @@
 <!-- 회원 정보 가져오기 -->
     <select id="readMember" resultType="com.sp.member.Member" parameterType="String">
         SELECT m.memberNum,name,zip,addr1,addr2,status,TO_CHAR(created,'YYYY-MM-DD')created,phone,email,
-        	   saveFilename,originalFilename,departmentName,positionName,qualifyCode,qualifyName,serialNum,getDate
+        	   saveFilename,originalFilename,m.departmentNum,departmentName,positionName,qualifyCode,qualifyName,serialNum,getDate
 			FROM member m
 			LEFT OUTER JOIN memberdetailinfo i ON m.memberNum=i.memberNum
 			LEFT OUTER JOIN qualify q ON m.memberNum=q.memberNum

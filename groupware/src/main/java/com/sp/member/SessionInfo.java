@@ -6,11 +6,19 @@ public class SessionInfo {
 	private String userName;
 	private int memberLevel;
 	
+	private int departmentNum;
 	private String departmentName;
 	private String positionName;
 	
 	private String saveFilename;
 	private String originalFilename;
+	
+	public int getDepartmentNum() {
+		return departmentNum;
+	}
+	public void setDepartmentNum(int departmentNum) {
+		this.departmentNum = departmentNum;
+	}
 	
 	public String getDepartmentName() {
 		return departmentName;
