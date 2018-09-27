@@ -126,6 +126,7 @@
 			</tr>
 		</table>
 		<input type="hidden" name="sendMail" id="sendMail">
+		<input type="hidden" name="memberNum" value="${sessionScope.member.userId}">
 		<span><input type="button" value="&nbsp;전송&nbsp;" onclick="send();"></span>
 	</form>
 </div>

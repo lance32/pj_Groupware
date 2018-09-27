@@ -47,31 +47,31 @@
 		<tr class="cf">
 			<%-- 구분 폭 수정 가능 --%>
 			<td width="50">&nbsp;</td>
-			<c:if test="${msgType == 'receive'}">
+			<c:if test="${mailType == 'receive'}">
 				<td width="200" align="left">보낸 사람</td>
 			</c:if>
-			<c:if test="${msgType == 'send'}">
+			<c:if test="${mailType == 'send'}">
 				<td width="200" align="left">받는 사람</td>
 			</c:if>
-			<c:if test="${msgType == 'keep'}">
+			<c:if test="${mailType == 'keep'}">
 				<td width="200" align="left">보낸(받는) 사람</td>
 			</c:if>
 			<td width="auto" align="left">제목</td>
-			<td width="200">발송시간</td>
-			<td width="200">확인시간</td>
+			<td width="200">날짜</td>
+			<td width="200">첨부파일</td>
 		</tr>
 		<c:forEach var="dto" items="${list}">
 			<tr class="tr">
-				<td><input type="checkbox" name="chk" data-msg-num="${dto.msgNum}"></td>
-				<c:if test="${msgType == 'send'}">
-					<td style="text-align: left;">${dto.toMemberName}</td>
+				<td><input type="checkbox" name="chk" data-msg-num="${dto.index}"></td>
+				<c:if test="${mailType == 'send'}">
+					<td style="text-align: left;">${dto.receiveMail}</td>
 				</c:if>
-				<c:if test="${msgType != 'send'}">
-					<td style="text-align: left;">${dto.sendMemberName}</td>
+				<c:if test="${mailType != 'send'}">
+					<td style="text-align: left;">${dto.sendName}</td>
 				</c:if>
-				<td style="text-align: left;"><a href="${articleUrl}&msgNum=${dto.msgNum}&msgType=${msgType}&memberNum=${dto.sendMember}">${dto.subject}</a></td>
+				<td style="text-align: left;"><a href="#">${dto.subject}</a></td>
 				<td>${dto.sendTime}</td>
-				<td>${dto.readTime}</td>
+				<td>&nbsp;</td>
 			</tr>
 		</c:forEach>
 	</table>

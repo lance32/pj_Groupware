@@ -1,16 +1,18 @@
 package com.sp.mail;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.web.multipart.MultipartFile;
 
 @Document(collection = "mail")
 public class Mail {
 	@Id
 	private long index;
+	private String memberNum;
 	private String receiveMail;
 	private String sendMail;
 	private String sendName;
@@ -18,9 +20,25 @@ public class Mail {
 	private String content;
 	private String cc;
 	private String bcc;
-	private List<MultipartFile> upload;
-	private List<String> savePathname = new ArrayList<String>();
+//	private List<MultipartFile> upload;
+//	private List<String> savePathname = new ArrayList<String>();
+	private MultipartFile upload;
+	private String savePathname;
+	@DateTimeFormat(iso=ISO.DATE_TIME)
+	private Date sendTime;
 	
+	public Date getSendTime() {
+		return sendTime;
+	}
+	public void setSendTime(Date sendTime) {
+		this.sendTime = sendTime;
+	}
+	public String getMemberNum() {
+		return memberNum;
+	}
+	public void setMemberNum(String memberNum) {
+		this.memberNum = memberNum;
+	}
 	public long getIndex() {
 		return index;
 	}
@@ -69,16 +87,28 @@ public class Mail {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	public List<MultipartFile> getUpload() {
+//	public List<MultipartFile> getUpload() {
+//		return upload;
+//	}
+//	public void setUpload(List<MultipartFile> upload) {
+//		this.upload = upload;
+//	}
+//	public List<String> getSavePathname() {
+//		return savePathname;
+//	}
+//	public void setSavePathname(List<String> savePathname) {
+//		this.savePathname = savePathname;
+//	}
+	public MultipartFile getUpload() {
 		return upload;
 	}
-	public void setUpload(List<MultipartFile> upload) {
+	public void setUpload(MultipartFile upload) {
 		this.upload = upload;
 	}
-	public List<String> getSavePathname() {
+	public String getSavePathname() {
 		return savePathname;
 	}
-	public void setSavePathname(List<String> savePathname) {
+	public void setSavePathname(String savePathname) {
 		this.savePathname = savePathname;
 	}
 }

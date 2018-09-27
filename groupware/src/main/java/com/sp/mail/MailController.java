@@ -1,5 +1,7 @@
 package com.sp.mail;
 
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +22,15 @@ public class MailController {
 	
 	// 보낸 편지함
 	@RequestMapping(value="/mail/mailSend", method=RequestMethod.GET)
-	public String mailForm(Model model) throws Exception {
+	public String mailForm(HttpSession session, Model model) throws Exception {
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		List<Mail>list = mailService.list(info.getUserId());
 		model.addAttribute("mailType", "send");
+		model.addAttribute("list", list);
+		model.addAttribute("dataCount", 1);
+		model.addAttribute("page", 1);
+		model.addAttribute("totalPage", 1);
+		
 		return ".mail.mailBox";
 	}
 	
@@ -60,7 +69,7 @@ public class MailController {
 		
 		String msg = "<span style='color:blue;'>" + mail.getReceiveMail() + "</span> 님에게<br>";
 		try {
-			boolean send = mailSender.mailSend(mail);
+			boolean send = true;// mailSender.mailSend(mail);
 			if (send) {
 				msg += "메일을 성공적으로 전송 했습니다.";
 			} else {
