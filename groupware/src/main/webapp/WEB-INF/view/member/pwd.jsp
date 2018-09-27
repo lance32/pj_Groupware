@@ -32,25 +32,21 @@ function pwdOk() {
 	var f = document.pwdForm;
 	var str;
 
-	str = f.memberNum.value;
+	str = f.pwd.value;
 	str = str.trim();
 	if(!str) {
-		alert("아이디를 입력하세요. ");
-		f.memberNum.focus();
+		alert("비밀번호를 입력하세요. ");
+		f.pwd.focus();
 		return;
 	}
+	
 	if(!/^[0-9]{4,8}$/i.test(str)) { 
 		alert("아이디는 5~10자이며 첫글자는 영문자이어야 합니다.");
 		f.memberNum.focus();
 		return;
 	}
 
-    var mode="${mode}";
-    
-    if(mode=="created")
-   		f.action = "<%=cp%>/member/member";
-	else
-   		f.action = "<%=cp%>/member/update";
+   	f.action = "<%=cp%>/groupware/main";
 
     f.submit();
 }
@@ -60,6 +56,7 @@ function pwdOk() {
 <div class="body-container" style="width: 700px;">
     <div class="body-title">
         <h3><span style="font-family: Webdings">2</span> 비밀번호 변경 </h3>
+        <span>ㅣ최초 로그인시 비밀번호 변경이 필요합니다.</span>
     </div>
     
         <div>
@@ -98,7 +95,7 @@ function pwdOk() {
 			  <table style="width: 100%; margin: 0px auto; border-spacing: 0px;">
 			     <tr height="45"> 
 			      <td align="center" >
-			        <button type="button" name="sendButton" class="btn" onclick="pwdOk();">비밀번호 변경</button>
+			        <button type="button" name="sendButton" class="btn" onclick="pwdOk();">변경</button>
 			        <button type="reset" class="btn">다시입력</button>
 			        <button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/member/main';">변경 취소</button>
 			      </td>

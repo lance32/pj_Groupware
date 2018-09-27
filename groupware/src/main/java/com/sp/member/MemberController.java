@@ -50,11 +50,15 @@ public class MemberController {
 		return "/member/login";
 	}
 	
+
 	//최초 로그인 체크
-	@RequestMapping(value="/login", method=RequestMethod.POST)
+	@RequestMapping(value="/member/firstLogin", method=RequestMethod.POST)
 	public String firstLoginCheck(Member dto) {
 		
-		return "";
+		
+		
+		
+		return ".member.pwd";
 	}
 	// 변경할 끝 부분 ----------------------------------------------------------------------
 	
