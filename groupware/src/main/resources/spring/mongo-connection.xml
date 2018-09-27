@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	        xmlns:context="http://www.springframework.org/schema/context"
+	        xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+	        xsi:schemaLocation="
+	              http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		          http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		          http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo-2.0.xsd">
+    
+     <!-- 몽고디비 환경 설정 -->
+     <bean id="mongoClientOptions" class="org.springframework.data.mongodb.core.MongoClientOptionsFactoryBean">
+     	<property name="connectionsPerHost" value="3"/>
+     	<property name="connectTimeout" value="1000"/>
+     	<property name="maxWaitTime" value="1500"/>
+     	<property name="socketKeepAlive" value="true"/>
+     </bean>
+     
+     <bean id="mongo" class="org.springframework.data.mongodb.core.MongoClientFactoryBean">
+     	<property name="host" value="211.238.142.190"/>
+     	<property name="port" value="27017"/>
+     	<property name="mongoClientOptions" ref="mongoClientOptions"/>
+     </bean>
+     
+     <bean id="simpleMongoDbFactory" class="org.springframework.data.mongodb.core.SimpleMongoDbFactory">
+     	<constructor-arg ref="mongo"/>
+     	<constructor-arg name="databaseName" value="groupware"/>
+     </bean>
+     
+    <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+    	<constructor-arg name="mongoDbFactory" ref="simpleMongoDbFactory"/>
+    </bean>
+</beans>

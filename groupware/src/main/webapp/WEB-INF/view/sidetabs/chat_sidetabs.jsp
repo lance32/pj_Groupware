@@ -11,12 +11,12 @@
     	<th>커뮤니티</th>
     </tr>
     <tr>
-    	<td><a href="#">채팅</a></td>
+    	<td><a href="<%=cp%>/chat/chatList">채팅</a></td>
     </tr>
     <tr>
     	<td><a href="#">설문</a></td>
     </tr>
     <tr>
-    	<td><a href="#">동호회</a></td>
+    	<td><a href="<%=cp%>/clubList/clubList">동호회</a></td>
     </tr>
 </table>

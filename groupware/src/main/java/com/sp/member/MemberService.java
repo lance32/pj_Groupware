@@ -17,10 +17,10 @@ public interface MemberService {
 	public List<Map<String, Object>> positionList();
 	public List<Map<String, Object>> qualifyList();
 	
-	public void updateMember(Member dto,String pathname) throws Exception;
+	public int updateMember(Member dto,String pathname) throws Exception;
 //	public int updateLastLogin(String userId);
 //	
-//	public int deleteMember(String userId);
+	public int deleteMember(String memberNum);
 	
 //	public int insertAuthority(Member dto);
 //	public int updateAuthority(Member dto);

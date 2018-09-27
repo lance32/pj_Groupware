@@ -13,8 +13,6 @@ public class Schedule {
 	private String title;
 	private String content;
 	private String place;
-	private int repeat;
-	private int cycle;
 	private String created;
 	
 	public int getScheduleNum() {
@@ -88,18 +86,6 @@ public class Schedule {
 	}
 	public void setPlace(String place) {
 		this.place = place;
-	}
-	public int getRepeat() {
-		return repeat;
-	}
-	public void setRepeat(int repeat) {
-		this.repeat = repeat;
-	}
-	public int getCycle() {
-		return cycle;
-	}
-	public void setCycle(int cycle) {
-		this.cycle = cycle;
 	}
 	public String getCreated() {
 		return created;

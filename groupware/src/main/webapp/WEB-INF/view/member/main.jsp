@@ -31,22 +31,30 @@ $(document).ready(function(){
 	<%-- 상단 대표글씨 --%>
 	<div style="clear: both; margin: 10px 0px 15px 10px;">
 		<span class="glyphicon glyphicon-th-list" style="font-size: 25px; margin-left: 10px;"></span>
-		<span style="font-size: 25px;">&nbsp;사원조회</span><br>
+		<span style="font-size: 25px;">&nbsp;
+			<c:if test="${sessionScope.member.userId=='admin'}">
+				사원 관리
+			</c:if>
+			
+			
+			<c:if test="${sessionScope.member.userId!='admin'}">
+				사원 조회
+			</c:if>
+		</span><br>
 		<div style="clear: both; width: 300px; height: 1px; border-bottom: 3px solid black;"></div>
 	</div>
 	<div style="width:100%; text-align:right;">
-	
-	
-	
-	<form name="memberSearchForm" action="<%=cp%>/member/main" method="post">
+		
 	
 			<input type="radio" name="chk_status" value="all" checked="checked">전체
 			<input type="radio" name="chk_status" value="1">재직
 			<input type="radio" name="chk_status" value="2">휴직
 			<input type="radio" name="chk_status" value="3">정직
 			<input type="radio" name="chk_status" value="0">퇴사
-			
 	
+	<form name="memberSearchForm" action="<%=cp%>/member/main" method="post">
+	
+			
 			<select class="selectBox" name="searchKey">				<%-- 선택박스  --%>
 				<option value="name">이름</option>
 				<option value="department">부서</option>
@@ -111,9 +119,9 @@ $(document).ready(function(){
 			<button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/member/main';" >새로고침</button>
 			</td>
 			<c:if test="${sessionScope.member.userId=='admin'}">
-			<td style="text-align: right;">
-			<button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/member/member';">사원추가</button>
-			</td>
+				<td style="text-align: right;">
+					<button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/member/member';">사원추가</button>
+				</td>
 			</c:if>
 		</tr>
 	</table>

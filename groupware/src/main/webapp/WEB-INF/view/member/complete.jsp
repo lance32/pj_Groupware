@@ -8,9 +8,7 @@
 <style>
 .updatesuccess{
 	text-align: center;
-
 }
-
 </style>
 
 
@@ -25,7 +23,7 @@
                        ${message}            
             </div>
             <div style="margin-top: 20px;">
-                     <button type="button" onclick="javascript:location.href='<%=cp%>/member/main';" class="btnConfirm">메인화면으로 이동</button>
+                     <button type="button" onclick="javascript:location.href='<%=cp%>/member/main';" class="btn">메인화면으로 이동</button>
                 </div>
         </div>
      </div>   

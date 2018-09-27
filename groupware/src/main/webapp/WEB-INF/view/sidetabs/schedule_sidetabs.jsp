@@ -12,22 +12,12 @@
 
 <table class="tabs">
 	<tr>
-    	<th>일 정 관 리</th>
+    	<th>일 정</th>
     </tr>
     <tr>
-    	<td><a href="#">메뉴1</a></td>
+    	<td><a href="<%=cp%>/schedule/main">일 정 관 리</a></td>
     </tr>
     <tr>
-    	<td><a href="#">메뉴2 ( 0 | 0 )</a></td>
-    </tr>
-    <tr>
-    	<td><a href="#">메뉴3 (0)</a></td>
-    </tr>
-
-    <tr>
-    	<td><a href="#">메뉴1</a></td>
-    </tr>
-    <tr>
-    	<td><a href="#">메뉴2</a></td>
+    	<td><a href="<%=cp%>/schedule/list">일 정 검 색</a></td>
     </tr>
 </table>

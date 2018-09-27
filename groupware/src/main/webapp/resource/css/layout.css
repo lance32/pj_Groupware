@@ -204,14 +204,19 @@ body{
 	.tabs a{
 		text-decoration:none;
 	}
-	
+
 .footer {
 	clear:both;
-    width:100%;
+	min-width:1445px;
+	width: 100%;
     text-align: center;
     color: #dddddd;
     background: #4e4e4e;
     height: 54px;
     font-size: 17px;
     padding-top: 5px;
+/*     
+	position: absolute;
+    	bottom: 0px; 
+*/
 }

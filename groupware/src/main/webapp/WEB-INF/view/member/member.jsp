@@ -55,9 +55,29 @@ function memberOk() {
 	}
 	f.memberNum.value = str;
 </c:if>
-
+<c:if test="${mode=='update'}">
+	str = f.pwd.value;
+	str = str.trim();
+	if(!str) {
+		alert("비밀번호를 입력하세요. ");
+		f.pwd.focus();
+		return;
+	}
 	
+	if(!/^(?=.*[a-z])(?=.*[!@#$%^*+=-]|.*[0-9]).{5,10}$/i.test(str)) { 
+		alert("비밀번호는 5~10자이며 하나 이상의 숫자나 특수문자가 포함되어야 합니다.");
+		f.pwd.focus();
+		return;
+	}
 	
+	f.pwd.value = str;
+	
+	if(str!= f.pwdCheck.value) {
+	    alert("비밀번호가 일치하지 않습니다. ");
+	    f.pwdCheck.focus();
+	    return;
+	}
+</c:if>
 	
     str = f.name.value;
 	str = str.trim();
@@ -76,7 +96,6 @@ function memberOk() {
         return;
     }
     
-    
     str = f.tel1.value;
 	str = str.trim();
     if(!str) {
@@ -92,6 +111,7 @@ function memberOk() {
         f.tel2.focus();
         return;
     }
+    
     if(!/^(\d+)$/.test(str)) {
         alert("숫자만 가능합니다.");
         f.tel2.focus();
@@ -105,12 +125,14 @@ function memberOk() {
         f.tel3.focus();
         return;
     }
+    
     if(!/^(\d+)$/.test(str)) {
         alert("숫자만 가능합니다.");
         f.tel3.focus();
         return;
     }
     
+<c:if test="${sessionScope.member.userId=='admin'}">
     str = f.departmentNum.value;
 	str = str.trim();
     if(!str) {
@@ -126,6 +148,7 @@ function memberOk() {
         f.positionNum.focus();
         return;
     }
+</c:if> 
 
     str = f.phone1.value;
 	str = str.trim();
@@ -155,6 +178,7 @@ function memberOk() {
         f.phone3.focus();
         return;
     }
+    
     if(!/^(\d+)$/.test(str)) {
         alert("숫자만 가능합니다. ");
         f.phone3.focus();
@@ -169,14 +193,6 @@ function memberOk() {
         return;
     }
 
-    str = f.email2.value;
-	str = str.trim();
-    if(!str) {
-        alert("이메일을 입력하세요. ");
-        f.email2.focus();
-        return;
-    }
-	
     var mode="${mode}";
     
     if(mode=="created")
@@ -185,22 +201,6 @@ function memberOk() {
    		f.action = "<%=cp%>/member/update";
 
     f.submit();
-}
-
-function changeEmail() {
-    var f = document.memberForm;
-	    
-    var str = f.selectEmail.value;
-    if(str!="direct") {
-        f.email2.value=str; 
-        f.email2.readOnly = true;
-        f.email1.focus(); 
-    }
-    else {
-        f.email2.value="";
-        f.email2.readOnly = false;
-        f.email1.focus();
-    }
 }
 
 function memberNumCheck() {
@@ -253,7 +253,7 @@ function memberNumCheck() {
     				<span>사진을 선택하세요</span>
 			  	</td>
 			  	<td style="padding: 0 0 15px 15px;">
-					<input type=file name="upload" value="${dto.saveFilename}">			  	
+					<input type=file name="upload" value="">			  	
 			  	</td>
 			  </tr>
 			  <tr>
@@ -270,6 +270,33 @@ function memberNumCheck() {
 			        <p class="help-block">사번은 8자 이며 모두 숫자로 구성되어야 합니다.</p>
 			      </td>
 			  </tr>
+		<c:if test="${mode=='update'}">
+			 <tr>
+			      <td width="100" valign="top" style="text-align: right; padding-top: 5px;">
+			            <label style="font-weight: 900;">비밀번호</label>
+			      </td>
+			      <td style="padding: 0 0 15px 15px;">
+			        <p style="margin-top: 1px; margin-bottom: 5px;">
+			            <input type="password" name="pwd" maxlength="15" class="boxTF"
+			                       style="width:95%;" placeholder="비밀번호">
+			        </p>
+			        <p class="help-block">비밀번호는 5~10자 이내이며, 하나 이상의 숫자나 특수문자가 포함되어야 합니다.</p>
+			      </td>
+			  </tr>
+			
+			  <tr>
+			      <td width="100" valign="top" style="text-align: right; padding-top: 5px;">
+			            <label style="font-weight: 900;">비밀번호 확인</label>
+			      </td>
+			      <td style="padding: 0 0 15px 15px;">
+			        <p style="margin-top: 1px; margin-bottom: 5px;">
+			            <input type="password" name="pwdCheck" maxlength="15" class="boxTF"
+			                       style="width: 95%;" placeholder="비밀번호 확인">
+			        </p>
+			        <p class="help-block">비밀번호를 한번 더 입력해주세요.</p>
+			      </td>
+			  </tr>
+		</c:if>
 			
 			  <tr>
 			      <td width="100" valign="top" style="text-align: right; padding-top: 5px;">
@@ -277,7 +304,7 @@ function memberNumCheck() {
 			      </td>
 			      <td style="padding: 0 0 15px 15px;">
 			        <p style="margin-top: 1px; margin-bottom: 5px;">
-			            <input type="text" name="name" value="${dto.name}" maxlength="30" class="boxTF"
+			            <input type="text" name="name" value="" maxlength="30" class="boxTF"
 		                      style="width: 95%;"
 		                      placeholder="이름">
 			        </p>
@@ -341,7 +368,7 @@ function memberNumCheck() {
 			      </td>
 			      <td style="padding: 0 0 15px 15px;">
 			        <p style="margin-top: 1px; margin-bottom: 5px;">
-			            <input type="text" name="birth" value="${dto.birth}" maxlength="10" 
+			            <input type="text" name="birth" value="" maxlength="10" 
 			                       class="boxTF" style="width: 95%;" placeholder="생년월일">
 			        </p>
 			        <p class="help-block">생년월일은 2000-01-01 형식으로 입력 합니다.</p>
@@ -354,18 +381,9 @@ function memberNumCheck() {
 			      </td>
 			      <td style="padding: 0 0 15px 15px;">
 			        <p style="margin-top: 1px; margin-bottom: 5px;">
-			            <select name="selectEmail" onchange="changeEmail();" class="selectField">
-			                <option value="">선 택</option>
-			                <option value="naver.com" ${dto.email2=="naver.com" ? "selected='selected'" : ""}>네이버 메일</option>
-			                <option value="hanmail.net" ${dto.email2=="hanmail.net" ? "selected='selected'" : ""}>한 메일</option>
-			                <option value="hotmail.com" ${dto.email2=="hotmail.com" ? "selected='selected'" : ""}>핫 메일</option>
-			                <option value="gmail.com" ${dto.email2=="gmail.com" ? "selected='selected'" : ""}>지 메일</option>
-			                <option value="daum.net" ${dto.email2=="gmail.com" ? "selected='selected'" : ""}>다음 메일</option>
-			                <option value="direct">직접입력</option>
-			            </select>
-			            <input type="text" name="email1" value="${dto.email1}" size="13" maxlength="30"  class="boxTF">
-			            @ 
-			            <input type="text" name="email2" value="${dto.email2}" size="13" maxlength="30"  class="boxTF" readonly="readonly">
+			            <input type="text" name="email1" value="" size="13" maxlength="30"  class="boxTF">
+			            @
+			            <input type="text" name="email2" value="groupware.com" size="13" maxlength="30"  class="boxTF" readonly="readonly">
 			        </p>
 			      </td>
 			  </tr>
@@ -397,9 +415,9 @@ function memberNumCheck() {
 			                <option value="064" ${dto.tel1=="064" ? "selected='selected'" : ""}>064</option>
 			            </select>
 			            -
-			            <input type="text" name="tel2" value="${dto.tel2}" class="boxTF" maxlength="4">
+			            <input type="text" name="tel2" value="" class="boxTF" maxlength="4">
 			            -
-			            <input type="text" name="tel3" value="${dto.tel3}" class="boxTF" maxlength="4">
+			            <input type="text" name="tel3" value="" class="boxTF" maxlength="4">
 			        </p>
 			      </td>
 			  </tr>
@@ -421,9 +439,9 @@ function memberNumCheck() {
 			                <option value="019" ${dto.tel1=="019" ? "selected='selected'" : ""}>019</option>
 			            </select>
 			            -
-			            <input type="text" name="phone2" value="${dto.tel2}" class="boxTF" maxlength="4">
+			            <input type="text" name="phone2" value="" class="boxTF" maxlength="4">
 			            -
-			            <input type="text" name="phone3" value="${dto.tel3}" class="boxTF" maxlength="4">
+			            <input type="text" name="phone3" value="" class="boxTF" maxlength="4">
 			        </p>
 			      </td>
 			  </tr>
@@ -434,7 +452,7 @@ function memberNumCheck() {
 			      </td>
 			      <td style="padding: 0 0 15px 15px;">
 			        <p style="margin-top: 1px; margin-bottom: 5px;">
-			            <input type="text" name="zip" id="zip" value="${dto.zip}"
+			            <input type="text" name="zip" id="zip" value=""
 			                       class="boxTF" readonly="readonly">
 			            <button type="button" class="btn" onclick="daumPostcode();">우편번호</button>          
 			        </p>
@@ -447,11 +465,11 @@ function memberNumCheck() {
 			      </td>
 			      <td style="padding: 0 0 15px 15px;">
 			        <p style="margin-top: 1px; margin-bottom: 5px;">
-			            <input type="text" name="addr1" id="addr1"  value="${dto.addr1}" maxlength="50" 
+			            <input type="text" name="addr1" id="addr1"  value="" maxlength="50" 
 			                       class="boxTF" style="width: 95%;" placeholder="기본 주소" readonly="readonly">
 			        </p>
 			        <p style="margin-bottom: 5px;">
-			            <input type="text" name="addr2" id="addr2" value="${dto.addr2}" maxlength="50" 
+			            <input type="text" name="addr2" id="addr2" value="" maxlength="50" 
 			                       class="boxTF" style="width: 95%;" placeholder="나머지 주소">
 			        </p>
 			      </td>

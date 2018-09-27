@@ -31,7 +31,6 @@
 	width: 48px;
 }
 </style>
-
 <script type="text/javascript">
 jQuery(function(){
 	jQuery(".chatInfoBox").hide();
@@ -49,7 +48,7 @@ jQuery(function(){
     } else if ('MozWebSocket' in window) {
     	socket = new MozWebSocket(host);
     } else {
-    	jQuery("#messageBox").html('Your browser does not support WebSockets');
+    	jQuery("#messageBox").html('브라우저가 채팅을 지원 안합니다.');
         return false;
     }
 	socket.onopen = function(evt) { onOpen(evt) };
@@ -67,11 +66,11 @@ jQuery(function(){
 	    jsonStr = JSON.stringify(obj);
 	    socket.send(jsonStr);
 	    
-	    jQuery("#messageBox").html('Info: Server connection.');
+	    jQuery("#messageBox").html('서버 연결. 채팅방에 입장하거나 개설하여 채팅을 시작하세요.');
 	}
 	//연결 끊김
 	function onClose(evt) {
-		jQuery("#messageBox").html('Info: WebSocket error. Server disconnection.');
+		jQuery("#messageBox").html('서버 연결끊김. 재접속하세요.');
 	}
 	//메시지를 받음
 	function onMessage(evt) {
@@ -86,7 +85,7 @@ jQuery(function(){
 	}
 	//기타에러 발생시
 	function onError(evt) {
-		jQuery("#messageBox").html('Info: error');
+		jQuery("#messageBox").html('에러발생. 재접속하세요.');
 	}
 	
 	//개설된 채팅방이 없을경우
@@ -287,7 +286,7 @@ jQuery(function(){
 		jQuery("#chatRoomJoinList").append("<p style='color: #58ACFA'>&nbsp;&nbsp;"+sessionUserName+"</p>");
 	
 		jQuery('#chatting-dialog').dialog({
-			  modal: false,
+			  modal: true,
 			  minHeight: 670,
 			  minWidth: 630,
 			  maxHeight: 670,
@@ -496,13 +495,13 @@ function writeToScreen(message) {
 	<div style="clear: both; width: 300px; height: 1px; border-bottom: 3px solid black;"></div>
 </div>
 
-<div style="clear:both; width: 100%; min-width:1550px; padding-left: 10%">
+<div style="clear:both; width: 100%; min-width:1000px; padding-left: 10%">
 	<div id="messageBox" style="clear:both; width: 100%; height: 40px; font-size: 20px; padding-left: 10px;"></div>
 		
 	<div style="width: 490px; height: 600px; float: left;">
 		<div style="width:480px; height: 55px; padding-top: 10px; padding-left: 5px;">
-			<button type="button" id="refreshRoomListBtn" class="btn" style="font-size: 16px;">새로고침</button>
-			<button type="button" id="addChatRoomBtn" class="btn" style="font-size: 16px;">채팅방 개설</button>
+			<button type="button" id="refreshRoomListBtn" class="butn" style="font-size: 16px; margin-right: 5px;">새로고침</button>
+			<button type="button" id="addChatRoomBtn" class="butn" style="font-size: 16px;">채팅방 개설</button>
 		</div>
 		
 		<div style="clear:both; width: 490px; height: 500px; padding: 5px 0px 5px 10px; border: 1px solid #F2F2F2; overflow-y: scroll;">
@@ -516,7 +515,7 @@ function writeToScreen(message) {
 			<div id="chatRoom_Info" style="width: 100%; font-size: 16px;"></div>
 		</div>
 		<div style="width: 100%; height: 100px; text-align: center; float: left;">
-			<button id="chatRoom_join" class="btn" value="" type="button" style="width: 350px; height: 60px; margin-top: 20px; font-size: 20px;">채팅방 입장하기</button>
+			<button id="chatRoom_join" class="butn" value="" type="button" style="width: 350px; height: 60px; margin-top: 20px; font-size: 20px;">채팅방 입장하기</button>
 		</div>
 	</div> 
 </div>
@@ -563,8 +562,8 @@ function writeToScreen(message) {
 	    <div id="chatRoomJoinList" style="padding-top: 5px;"></div>
 	</div>
 	<div style="clear: both; width: 600px; height: 40px; padding: 10px 10px 0px 3px;">
-		<button type="button" id="cleanChatBtn" class="btn">채팅내용 지우기</button>
-		<button type="button" id="closeChatBtn" class="btn" style="float: right;">채팅방 나가기</button>
+		<button type="button" id="cleanChatBtn" class="butn">채팅내용 지우기</button>
+		<button type="button" id="closeChatBtn" class="butn" style="float: right;">채팅방 나가기</button>
 	</div>
 </div>
 

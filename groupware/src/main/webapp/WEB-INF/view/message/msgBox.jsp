@@ -145,5 +145,4 @@
 			<button type="button" id="searchBtn" class="btn">검색</button>
 		</form>
 	</div>
-	
 </div>

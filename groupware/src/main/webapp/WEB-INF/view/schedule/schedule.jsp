@@ -10,36 +10,6 @@
 <link rel="stylesheet" href="<%=cp%>/resource/fullcalendar/fullcalendar.print.css" media='print' type="text/css">
 
 <style type="text/css">
-.hbtn {
-	font-family: "Malgun Gothic", "맑은 고딕", NanumGothic, 나눔고딕, 돋움, sans-serif;
-    background-image:none;
-    color:#fff;
-    line-height: 1.5;
-    text-align: center;
-    padding: 5px 10px;
-    font-size: 12px;
-    text-decoration: none;
-    position: relative;
-    float: left;
-    border: 1px solid #ccc;    
-}
-.hbtn:hover, .hbtn:active {
-    background-image:none;
-    color:#fff;
-    text-decoration: none;
-}
-
-.hbtn:focus {
-    background-image:none;
-    color:#fff;
-    text-decoration: none;
-}
-
-.hbtn-bottom {
-	border-bottom:3px solid #3DB7CC;
-	font-weight: 900;
-}
-
 #calendar {
 	margin: 20px auto 10px;
 }
@@ -51,47 +21,12 @@
 	right: 10px;
 }
 
-.fc-center h2{
-	display: block;
-	font-family: "Malgun Gothic", "맑은 고딕", NanumGothic, 나눔고딕, 돋움, sans-serif;
-	font-size: 1.5em;
-	font-weight: bold;
-	/* -webkit-margin-after: 0.83em; */
-	-webkit-margin-start: 0px;
-	-webkit-margin-end: 0px;
-}
-
-.fc-content .fc-title{
-	font-size: 9pt;
-}
-
-/* 일정분류버튼 css */
-#classifyGroup .btn, #classifyGroup .focus.btn, #classifyGroup .btn:focus, #classifyGroup .btn:hover {
-    color: #fff; background-image:none;
-}
-.btn-blue {
-    background-color:blue; border-color:blue;
-}
-.btn-blue:hover, .btn-blue:focus {
-    background-color:blue; border-color:blue;
-}
-.btn-black {
-    background-color:black; border-color:black;
-}
-.btn-black:hover, .btn-black:focus {
-    background-color:black; border-color:black;
-}
-.btn-green {
-    background-color:green; border-color:green;
-}
-.btn-green:hover, .btn-green:focus {
-    background-color:green; border-color:green;
-}
-.btn-red {
-    background-color:red; border-color:red;
-}
-.btn-red:hover, .btn-red:focus {
-    background-color:red; border-color:red;
+.schTab {
+	color: #555;
+    cursor: default;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-bottom-color: transparent;
 }
 </style>
 
@@ -106,15 +41,12 @@ var calendar=null;
 var group="all";
 var tempContent;
 
-//start:2016-01-01 => 2016-01-01 일정
-//start:2016-01-01, end:2016-01-02 => 2016-01-01 일정
-//start:2016-01-01, end:2016-01-03 => 2016-01-01 ~ 2016-01-02 일정
 $(function() {
 		calendar = $('#calendar').fullCalendar({
 			header: {
 				left: 'prev,next today',
 				center: 'title',
-				right: 'month,agendaDay'
+				right: 'month,agendaWeek,agendaDay,listMonth'
 			},
 			locale: 'ko',
 			selectable: true,
@@ -139,7 +71,7 @@ $(function() {
 				var startDay=start.format("YYYY-MM-DD");
 				var endDay=end.format("YYYY-MM-DD");
 		        
-				var url="<%=cp%>/sch/month";
+				var url="<%=cp%>/schedule/month";
                 var query="start="+startDay+"&end="+endDay+"&group="+group+"&tmp="+new Date().getTime();
 				$.ajax({
 				    url: url,
@@ -154,10 +86,9 @@ $(function() {
 				    },
 				    error:function(jqXHR) {
 				    	if(jqXHR.status==403) {
-				    		location.href="<%=cp%>/member/login";
+				    		location.href="<%=cp%>/login";
 				    		return;
 				    	}
-				    	console.log(jqXHR.responseText);
 				    }
 				});
 			},
@@ -173,40 +104,51 @@ $(function() {
 				$('#schLoading').toggle(bool);
 			}
 		});
+		
+		$("body").on("click", "#schPlace", function(){
+			window.open("<%=cp%>/mapTest.jsp", "width=800,height=600");
+		});
 });
 
 // 분류별 검색
 function classification(kind, idx) {
-	$("#calendarHeader a").each(function(){
-		$(this).removeClass("hbtn-bottom");
-		// $(this).css("opacity","0.8");
+	$("#calendarHeader li").each(function(){
+		$(this).removeClass("schTab");
 	});
-	$("#calendarHeader a:eq("+idx+")").addClass("hbtn-bottom");
-	// $("#calendarHeader a:eq("+idx+")").css("opacity","1.0");
+	$("#calendarHeader a").each(function(){
+		$(this).removeAttr('style');
+	});
 	
+	$("#calendarHeader li:eq("+idx+")").addClass("schTab");
+	$("#calendarHeader li a:eq("+idx+")").css("font-weight", "bold");
+	$("#calendarHeader li a:eq("+idx+")").css("color", kind);
+
 	group=kind;
 	calendar.fullCalendar('refetchEvents');
 }
 
-// -------------------------------------------
-// -- 상세 일정 보기
+// 상세 일정 보기
 function articleForm(calEvent) {
 	var str;
 	
 	var num=calEvent.id;
 	var title=calEvent.title;
-	var userName=calEvent.userName;
-	
+	var name=calEvent.name;
 	var color=calEvent.color;
+	
 	var classify="";
+	
 	if(color=="blue") classify="개인일정";
 	else if(color=="black") classify="가족일정";
 	else if(color=="green") classify="회사일정";
 	else if(color=="red") classify="부서일정";
 	
 	var allDay=calEvent.allDay;
+	var place = calEvent.place;
+	
 	var startDay="", startTime="", sday="";
 	var endDay="", endTime="", eday="";
+	
 	var strDay;
 	startDay=calEvent.start.format("YYYY-MM-DD");
 	if(calEvent.start.hasTime()) {
@@ -222,16 +164,20 @@ function articleForm(calEvent) {
 		if(calEvent.end!=null)
 		    calEvent.end.add("1", "days");
 	}
+	// 종일일정이 아닐때
 	if(allDay==false) {
-		sday=startDay+" "+ startTime;
-		eday=endDay+" "+ endTime;
+		sday=startDay+" "+startTime;
+		eday=endDay+" "+endTime;
 		strDay="시간일정";
-	}else if(allDay==false) {
-		sday=startDay+" "+ startTime;
-		eday=endDay;
+	//종일일정
+	}else if(allDay == true && endDay=="") {
+		sday=startDay;
+		eday=startDay;
+		//시작-종료 시간값 없음
+		startTime="";
 		endTime="";
-		strDay="시간일정";
-	}else {
+		strDay="하루종일";
+	} else {
 		sday=startDay;
 		eday=endDay;
 		startTime="";
@@ -247,11 +193,24 @@ function articleForm(calEvent) {
 		  autoOpen: false,
 		  modal: true,
 		  buttons: {
+			  //작성자만 수정 가능
 		       " 수정 " : function() {
-		    	   updateForm(num,title,allDay,startDay,endDay,startTime,endTime,color);
+		    	   if(name == "${sessionScope.member.userName}"){
+		    		   updateForm(num,title,allDay,startDay,endDay,startTime,endTime,color,place);
+		    	   } else {
+					   alert("작성자 본인만 수정할 수 있습니다!");
+					   return false;
+				   }
 		        },
+		        // 작성자만 삭제 가능
 			   " 삭제 " : function() {
-				   deleteOk(num);
+				   if(name == "${sessionScope.member.userName}"){
+					   deleteOk(num);				   
+				   }
+				   else{
+					   alert("작성자 본인만 삭제할 수 있습니다!");
+					   return false;
+				   }
 			   },
 		       " 닫기 " : function() {
 		    	   $(this).dialog("close");
@@ -264,21 +223,20 @@ function articleForm(calEvent) {
 		  }
 	});	
 	
-	$('#scheduleModal').load("<%=cp%>/sch/articleForm", function() {
-		$("#schTitle").html(title);
-		$("#schUserName").html(userName);
-		$("#schClassify").html(classify);
-		$("#schAllDay").html(strDay);
-		$("#schStartDay").html(sday);
-		$("#schEndDay").html(eday);
-		$("#schContent").html(content);
+	$('#scheduleModal').load("<%=cp%>/schedule/articleForm", function() {
+		$("#articleTitle").html(title);
+		$("#articleName").html(name);
+		$("#articleClassify").html(classify);
+		$("#articleAllDay").html(strDay);
+		$("#articleStartDay").html(sday);
+		$("#articleEndDay").html(eday);
+		$("#articlePlace").html(place);
+		$("#articleContent").html(content);
 		
 		dlg.dialog("open");
 	});
 }
 
-// -------------------------------------------
-// -- 입력 및 수정 대화상자
 // 일정 등록 폼
 function insertForm(start, end) {
 	var dlg = $("#scheduleModal").dialog({
@@ -293,7 +251,7 @@ function insertForm(start, end) {
 		    	   $(this).dialog("close");
 		        }
 		  },
-		  height: 650,
+		  height: 590,
 		  width: 700,
 		  title: "일정 추가",
 		  close: function(event, ui) {
@@ -306,35 +264,39 @@ function insertForm(start, end) {
 		
 		startDay=start.format("YYYY-MM-DD");
 		startTime=start.format("HH:mm");
-
+		
+		endDay=end.format("YYYY-MM-DD");
+		endTime=end.format("HH:mm");
+		
 		$("input[name='startDay']").val(startDay);
+		$("select[name='startTime']").val(startTime);
+		
+		$("input[name='endDay']").val(endDay);
+		$("select[name='endTime']").val(endTime);
 
 		if(start.hasTime()) {
 			// 시간 일정인 경우
-			$("#allDayChk").prop("checked", false);
-			$("#allDayHidden").prop("disabled", false);
+			$("#allDay2").prop("checked",true);
+			// 시간 입력칸 표시
+			$("#schStartTime").show();
+			$("#schEndTime").show();
 			
-			$("#startTime").show();
-			$("#endTime").show();
-          
 			$("input[name='startTime']").val(startTime);
 			if(start.format()!=end.format()) {
 				endDay=end.format("YYYY-MM-DD");
 				endTime=end.format("HH:mm");
 			
 				$("input[name='endDay']").val(endDay);
-				$("input[name='endTime']").val(endTime);
+				$("select[name='endTime']").val(endTime);
 			}
 			
 		} else {
 			// 하루종일 일정인 경우
-			$("#allDayChk").prop("checked", true);
-			$("#allDayHidden").prop("disabled", true);
-			
 			$("input[name='startTime']").val("");
-			$("input[name='endTime']").val("");
-			$("#startTime").hide();
-			$("#endTime").hide();
+			$("select[name='endTime']").val("");
+			// 시간 입력칸 숨김
+			$("#schStartTime").hide();
+			$("#schEndTime").hide();
 			
 			if(start.format()!=end.add("-1", "days").format()) {
 				endDay=end.format("YYYY-MM-DD");
@@ -354,7 +316,7 @@ function insertOk() {
 		return;
 	
 	var query=$("form[name=schForm]").serialize();
-	var url="<%=cp%>/sch/created";
+	var url="<%=cp%>/schedule/created";
 
      $.ajax({
         type:"post"
@@ -367,10 +329,13 @@ function insertOk() {
 	      		   group="all";
 	      		   calendar.fullCalendar('refetchEvents');
 	
-	      		    $("#calendarHeader a").each(function(){
-	      				$(this).removeClass("hbtn-bottom");
+	      		    $("#calendarHeader li").each(function(){
+	      				$(this).removeClass("schTab");
 	      			});
-	      			$("#calendarHeader a:eq(0)").addClass("hbtn-bottom");
+	      			$("#calendarHeader li:eq(0)").addClass("schTab");
+	          } else if(state=="false"){
+	        	  alert("일정 등록 실패!");ㅇ
+	        	  return false;
 	          }
           }
 	      ,beforeSend : function(jqXHR) {
@@ -378,7 +343,7 @@ function insertOk() {
 		  }
 		  ,error:function(jqXHR) {
 		    	if(jqXHR.status==403) {
-		    		location.href="<%=cp%>/member/login";
+		    		location.href="<%=cp%>/login";
 		    		return;
 		    	}
 		    	console.log(jqXHR.responseText);
@@ -388,54 +353,42 @@ function insertOk() {
      $("#scheduleModal").dialog("close");
 }
 
+// 입력 값 유효성 체크
 function validCheck() {
 	var title=$.trim($("input[name='title']").val());
 	var color=$.trim($("select[name='color']").val());
-	var allDay=$("#allDayChk:checked").val();
+	var allDay=$("input[name=allDay]:checked").val();
 	var startDay=$.trim($("input[name='startDay']").val());
 	var endDay=$.trim($("input[name='endDay']").val());
-	var startTime=$.trim($("input[name='startTime']").val());
-	var endTime=$.trim($("input[name='endTime']").val());
+	var startTime=$.trim($("select[name='startTime']").val());
+	var endTime=$.trim($("select[name='endTime']").val());
 	var content=$.trim($("textarea[name='content']").val());
+	var place = $.trim($("input[name=place]").val());
 	
 	if(! title) {
 		alert("제목을 입력 하세요 !!!");
 		$("input[name='title']").focus();
 		return false;
 	}
-	
-	 if(! /[12][0-9]{3}-[0-9]{2}-[0-9]{2}/.test(startDay)){
-			alert("날짜를 정확히 입력 하세요 [yyyy-mm-dd] !!! ");
-			$("input[name='startDay']").focus();
-			return false;
-	 }
-	 if(endDay!="" && ! /[12][0-9]{3}-[0-9]{2}-[0-9]{2}/.test(endDay)){
-			alert("날짜를 정확히 입력 하세요 [yyyy-mm-dd] !!! ");
-			$("input[name='endDay']").focus();
-			return false;
-	 }
-	
-	 if(startTime!="" && ! /[0-2][0-9]:[0-5][0-9]/.test(startTime)){
-			alert("시간을 정확히 입력 하세요 [hh:mm] !!! ");
-			$("input[name='startTime']").focus();
-			return false;
-	 }
-	 if(allDay==undefined && startTime=="") {
-		    alert("시간을 정확히 입력 하세요 [hh:mm] !!! ");
-			$("input[name='startTime']").focus();
-			return false;
+	 
+	 if((allDay == '0' && !startTime)){
+		 alert("시작시간을 선택하세요!");
+		 return false;
 	 }
 	 
-	 if(endTime!="" && ! /[0-2][0-9]:[0-5][0-9]/.test(endTime)){
-			alert("시간을 정확히 입력 하세요 [hh:mm] !!! ");
-			$("input[name='endTime']").focus();
-			return false;
+	 if((allDay == '0' && !endTime)){
+		 alert("종료시간을 선택하세요!");
+		 return false;
 	 }
 	 
-	 if(allDay==undefined && endDay!="" && endTime=="") {
-		 alert("시간을 정확히 입력 하세요 [hh:mm] !!! ");
-			$("input[name='endTime']").focus();
-			return false;
+	 if(startDay > endDay) {
+		 alert("시작일과 종료일을 다시 확인하세요!");
+		 return false;
+	 }
+		 
+	 if(! place){
+		 alert("장소를 선택하세요!");
+		 return false;
 	 }
 
 	// 종료 날짜는 종일일정인 경우 하루가 더 커야한다.
@@ -454,21 +407,23 @@ function validCheck() {
     	$("input[name='endDay']").val(endDay);
     }
     
+    if((startDay == endDay) && startTime >= endTime){
+    	alert("시작시간과 종료시간을 다시 확인하세요!");
+    	return false;
+    }
+    
 	if(allDay=="true") {
 		$("input[name='startTime']").val("");
 		$("input[name='endTime']").val("");
-		$("#allDayHidden").prop("disabled", true);
 	} else {
 		$("input[name='endTime']").val(endTime);
-		$("#allDayHidden").prop("disabled", false);
 	}
 	
 	return true;
 }
 
-// -------------------------------------------------
 // 수정 폼
-function updateForm(num, title, allDay, startDay, endDay, startTime, endTime, color) {
+function updateForm(num, title, allDay, startDay, endDay, startTime, endTime, color, place) {
 	var dlg = $("#scheduleModal").dialog({
 		  autoOpen: false,
 		  modal: true,
@@ -480,34 +435,35 @@ function updateForm(num, title, allDay, startDay, endDay, startTime, endTime, co
 		    	   $(this).dialog("close");
 		        }
 		  },
-		  height: 480,
-		  width: 550,
+		  height: 650,
+		  width: 700,
 		  title: "일정 수정",
 		  close: function(event, ui) {
 		  }
 	});
 	
-	$('#scheduleModal').load("<%=cp%>/sch/inputForm", function() {
-		$("input[name='title']").val(title);
-		$("select[name='color']").val(color);
-		$("input[name='startDay']").val(startDay);
-		$("input[name='endDay']").val(endDay);
-		$("input[name='startTime']").val(startTime);
-		$("input[name='endTime']").val(endTime);
-		$("textarea[name='content']").val(tempContent);
+	$('#scheduleModal').load("<%=cp%>/schedule/inputForm", function() {
+		$("input[name=title]").val(title);
+		$("select[name=color]").val(color);
+		$("input[name=startDay]").val(startDay);
+		$("input[name=endDay]").val(endDay);
+		$("select[name=startTime]").val(startTime);
+		$("select[name=endTime]").val(endTime);
+		$("textarea[name=content]").val(tempContent);
+		$("input[name=place]").val(place);
 		
 		if(allDay==true || allDay=="true") {
-			$("#allDayChk").prop('checked', true);
-			$("#allDayHidden").prop("disabled", true);
+			$("#allDay1").prop('checked', true);
+			$("#allDay2").prop('checked', false);
 			
-			$("#startTime").hide();
-			$("#endTime").hide();
+			$("#schStartTime").hide();
+			$("#schEndTime").hide();
 		} else {
-			$("#allDayChk").prop('checked', false);
-			$("#allDayHidden").prop("disabled", false);
+			$("#allDay1").prop('checked', false);
+			$("#allDay2").prop('checked', true);
 			
-			$("#startTime").show();
-			$("#endTime").show();
+			$("#schStartTime").show();
+			$("#schEndTime").show();
 		}
 		$("input[name='title']").focus();
 
@@ -520,9 +476,9 @@ function updateOk(num) {
 	if(! validCheck())
 		return;
 	
-	$("form[name=schForm] input[name=num]").val(num);
+	$("form[name=schForm] input[name=scheduleNum]").val(num);
+	var url="<%=cp%>/schedule/update";
 	var query=$("form[name=schForm]").serialize();
-	var url="<%=cp%>/sch/update";
        
     $.ajax({
          type:"post"
@@ -530,20 +486,25 @@ function updateOk(num) {
          ,data:query
          ,dataType:"json"
          ,success:function(data) {
-    		 group="all";
-        	 calendar.fullCalendar('refetchEvents', num);
-        	 
-   			$("#calendarHeader a").each(function(){
-  				$(this).removeClass("hbtn-bottom");
-  			});
-  			$("#calendarHeader a:eq(0)").addClass("hbtn-bottom");
+        	 var state = data.state;
+        	 if(state == 'true'){
+        		 group="all";
+            	 calendar.fullCalendar('refetchEvents', num);
+            	 
+       			$("#calendarHeader li").each(function(){
+      				$(this).removeClass("schTab");
+      			});
+      			$("#calendarHeader li:eq(0)").addClass("schTab"); 
+        	 } else {
+        		 alert("일정 수정 실패!");
+        	 }
          }
     	 ,beforeSend : function(jqXHR) {
         	 jqXHR.setRequestHeader("AJAX", true);
   		 }
   		 ,error:function(jqXHR) {
     		if(jqXHR.status==403) {
-    			location.href="<%=cp%>/member/login";
+    			location.href="<%=cp%>/login";
     			return;
     		}
     		console.log(jqXHR.responseText);
@@ -553,7 +514,6 @@ function updateOk(num) {
     $("#scheduleModal").dialog("close");
 }
 
-// -------------------------------------------------------
 // 일정을 드래그하거나 일정의 크기를 변경할 때 일정 수정
 function updateDrag(e) {
 	var num=e.id;
@@ -607,7 +567,7 @@ function updateDrag(e) {
            +"&endTime="+endTime
            +"&content="+content;
 	
-	var url="<%=cp%>/sch/update";
+	var url="<%=cp%>/schedule/update";
 	$.ajax({
          type:"post"
          ,url:url
@@ -620,7 +580,7 @@ function updateDrag(e) {
 		 }
 		 ,error:function(jqXHR) {
 			  if(jqXHR.status==403) {
-				  location.href="<%=cp%>/member/login";
+				  location.href="<%=cp%>/login";
 				  return;
 		      }
 			  console.log(jqXHR.responseText);
@@ -628,83 +588,45 @@ function updateDrag(e) {
 	});
 }
 
-// -------------------------------------------
+// 일정 삭제
 function deleteOk(num) {
 	if(confirm("삭제 하시겠습니까 ?")) {
 		
-		var url="<%=cp%>/sch/delete";
-		var query="num="+num;
+		var url="<%=cp%>/schedule/delete";
+		var query="scheduleNum="+num;
 		$.ajax({
 	         type:"post"
 	         ,url:url
 			 ,data:query
 			 ,dataType:"json"
 			 ,success:function(data) {
-				 calendar.fullCalendar('removeEvents', num);
+				 var state = data.state;
+				 if(state == 'true')
+					 calendar.fullCalendar('removeEvents', num);
+				 else
+					 alert("일정삭제 실패!");
 	         }
 		     ,beforeSend : function(jqXHR) {
 	             jqXHR.setRequestHeader("AJAX", true);
 	         }
 	         ,error:function(jqXHR) {
 	  	         if(jqXHR.status==403) {
-	  		         location.href="<%=cp%>/member/login";
+	  		         location.href="<%=cp%>/login";
 	  	             return;
 	  	         }
 	  	         console.log(jqXHR.responseText);
 	        }
 		});
 	}
-	
 	 $("#scheduleModal").dialog("close");
 }
 
 // -------------------------------------------------
 // 입력 및 수정 화면에서 일정 분류를 선택 한 경우
 function classifyChange(classify) {
-	$("#btnTitle").removeClass("btn-blue")
-	                     .removeClass("btn-black")
-	                     .removeClass("btn-green")
-	                     .removeClass("btn-red");
-	$("#btnDropdown").removeClass("btn-blue")
-	                              .removeClass("btn-black")
-	                              .removeClass("btn-green")
-	                              .removeClass("btn-red");
-	
-	if(classify=="blue") {
-		$("#btnTitle").html("개인일정")
-		$("#btnTitle").addClass("btn-blue");
-		$("#btnDropdown").addClass("btn-blue");
-	} else if(classify=="black") {
-		$("#btnTitle").html("가족일정")
-		$("#btnTitle").addClass("btn-black");
-		$("#btnDropdown").addClass("btn-black");
-	} else if(classify=="green") {
-		$("#btnTitle").html("회사일정")
-		$("#btnTitle").addClass("btn-green");
-		$("#btnDropdown").addClass("btn-green");
-	} else if(classify=="red") {
-		$("#btnTitle").html("부서일정")
-		$("#btnTitle").addClass("btn-red");
-		$("#btnDropdown").addClass("btn-red");
-	}
 	$("#scheduleModal input[name='color']").val(classify);
 }
 
-// 종일일정에 따른 시간 입력폼 보이기/숨기기
-$(function(){
-	$(document).on("click","#allDayChk",function(){
-		var allDay=$("#allDayChk:checked").val();
-		if(allDay=='true') {
-			$("#startTime").hide();
-			$("#endTime").hide();
-			$("#allDayHidden").prop("disabled", false);
-		} else {
-			$("#startTime").show();
-            $("#endTime").show();
-			$("#allDayHidden").prop("disabled", true);
-		}
-	});
-});
 </script>
 
 <div class="body-container" style="width: 75%;">
@@ -714,20 +636,22 @@ $(function(){
 		style="font-size: 30px;">&nbsp;일 정 관 리</span><br>
 	<div style="clear: both; width: 300px; height: 1px; border-bottom: 3px solid black;"></div>
 </div>
+<br>
 <div id="calendarHeader" style="height: 35px; line-height: 35px;">
 	<div style="text-align: left;">
 		<div class="container">
 			<ul class="nav nav-tabs">
-				<li class="active"><a href="#">개 인 일 정</a></li>
-				<li><a href="#">부 서 일 정</a></li>
-				<li><a href="#">전 체 일 정</a></li>
-				<li><a href="#">일 정 검 색</a></li>
+				<li class="schTab"><a href="javascript:classification('all', 0)">전 체 일 정</a></li>
+				<li><a href="javascript:classification('blue', 1)">개 인 일 정</a></li>
+				<li><a href="javascript:classification('black', 2)">가 족 일 정</a></li>
+				<li><a href="javascript:classification('red', 3)">부 서 일 정</a></li>
+				<li><a href="javascript:classification('green', 4)">회 사 일 정</a></li>
 			</ul>
 			<br>
 		</div>
 	</div>
 </div>
-
+<br>
 <div id="calendar" style="width: 95%;"></div>
 <div id='schLoading'>loading...</div>
 

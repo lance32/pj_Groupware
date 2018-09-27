@@ -5,8 +5,8 @@
 
 <!-- 회원 정보 가져오기 -->
     <select id="readMember" resultType="com.sp.member.Member" parameterType="String">
-        SELECT m.memberNum,name,pwd,zip,addr1,addr2,status,TO_CHAR(created,'YYYY-MM-DD')created,phone,email,
-        	   saveFilename,originalFilename,departmentName,positionName,qualifyCode,qualifyName,serialNum,getDate
+        SELECT m.memberNum,name,zip,addr1,addr2,status,TO_CHAR(created,'YYYY-MM-DD')created,phone,email,
+        	   saveFilename,originalFilename,m.departmentNum,departmentName,positionName,qualifyCode,qualifyName,serialNum,getDate
 			FROM member m
 			LEFT OUTER JOIN memberdetailinfo i ON m.memberNum=i.memberNum
 			LEFT OUTER JOIN qualify q ON m.memberNum=q.memberNum
@@ -16,7 +16,7 @@
 		WHERE m.memberNum=#{memberNum}
     </select>
 
-<!--  4개 table 모두 한번에  회원 추가 update -->
+<!-- insert -->
 	<insert id="insertMember" parameterType="com.sp.member.Member">
 		INSERT INTO member(memberNum,name,pwd,positionNum,departmentNum,saveFilename,originalFilename)
 			VALUES(#{memberNum},#{name},#{pwd},#{positionNum},#{departmentNum},
@@ -112,19 +112,22 @@
     </update>
 	
 	<update id="updateMember1" parameterType="com.sp.member.Member">
-		UPDATE member SET name=#{name},modified=sysdate,status=#{status},
-			departmentNum=#{departmentNum},positionNum=#{positionNum},saveFilename=#{saveFilename,jdbcType=VARCHAR}
+		UPDATE member SET name=#{name},pwd=#{pwd},modified=sysdate,
+			saveFilename=#{saveFilename}
 			WHERE memberNum=#{memberNum}
 	</update>
 	
     <update id="updateMember2" parameterType="com.sp.member.Member">
-        UPDATE memberdetailinfo SET email=#{email, jdbcType=VARCHAR}, 
-                     tel=#{tel, jdbcType=VARCHAR}, birth=#{birth, jdbcType=VARCHAR},
-                     zip=#{zip, jdbcType=VARCHAR},
-                     addr1=#{addr1, jdbcType=VARCHAR}, addr2=#{addr2, jdbcType=VARCHAR}
+        UPDATE memberdetailinfo SET email=#{email}, 
+                     tel=#{tel}, birth=#{birth},
+                     zip=#{zip},
+                     addr1=#{addr1}, addr2=#{addr2}
                WHERE memberNum=#{memberNum}
     </update>
-	
+    
+	<update id="deleteMember" parameterType="String">
+		UPDATE member SET status=0 WHERE memberNum=#{memberNum}
+	</update>
 	
 	<select id="organizationChart" resultType="com.sp.member.OrganizationChart">
 		SELECT d1.departmentNum, d1.parentDepartment, d2.departmentName parentDeptName, d1.departmentName

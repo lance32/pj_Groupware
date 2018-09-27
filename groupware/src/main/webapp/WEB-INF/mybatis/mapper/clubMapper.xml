@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="club">
+
+	<!-- 동호회 추가 -->
+	<insert id="createClub" parameterType="com.sp.club.Club">
+		INSERT INTO clubInfo(clubNum, clubName, clubSubject, clubIntro, maxPeople, memberNum, clubImg) 
+    		VALUES(clubInfo_seq1.NEXTVAL, #{clubName}, #{clubSubject}, #{clubIntro}, #{maxPeople}, #{memberNum}, #{clubImg})
+	</insert>
+	
+	<!-- 동호회 개설자 회원목록에 추가 -->
+	<insert id="insertFounder" parameterType="String">
+		INSERT INTO clubMember(memberNum, clubNum) VALUES(#{memberNum}, clubInfo_seq1.CURRVAL) 
+	</insert>
+
+	<!-- 동호회 목록 -->
+	<select id="clubList" parameterType="map" resultType="com.sp.club.Club">
+		SELECT clubNum, clubName, clubSubject, clubIntro, memberNum, clubImg FROM clubInfo
+	</select>
+
+	<!-- 입장한 동호회의 정보 -->
+	<select id="readClubInfo" parameterType="Integer" resultType="com.sp.club.Club">
+		SELECT clubNum, clubName, clubSubject, clubIntro, maxPeople, c.memberNum, m.name memberName, clubImg 
+		FROM clubInfo c JOIN member m ON c.memberNum=m.memberNum
+		WHERE clubNum = #{clubNum}
+	</select>
+	
+	<!-- 동호회 가입한 사람인지.. -->
+	<select id="isClubMember" parameterType="map" resultType="String">
+		SELECT memberNum FROM clubMember WHERE memberNum=#{memberNum} AND clubNum=#{clubNum}
+	</select>
+	
+	<select id="listClubMember" parameterType="Integer" resultType="com.sp.club.Club">
+		SELECT c.memberNum joinMemberNum, name joinMemberName 
+		FROM clubMember c JOIN member m ON c.memberNum=m.memberNum
+		WHERE clubNum=#{clubNum}
+	</select>
+	
+	<update id="updateClubInfo" parameterType="com.sp.club.Club">
+		UPDATE clubInfo SET clubName=#{clubName}, clubSubject=#{clubSubject}, clubIntro=#{clubIntro}, maxPeople=#{maxPeople}, clubImg=#{clubImg} 
+		WHERE clubNum=#{clubNum}
+	</update>
+	
+</mapper>
