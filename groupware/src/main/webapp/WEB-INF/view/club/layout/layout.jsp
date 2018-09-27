@@ -31,14 +31,9 @@
 </div>
 
 <div class="container">
-
 	<div class="side">
-	    <tiles:insertAttribute name="side" ignore="true"/>
-	    <div class="sidetabs">
-		   	<tiles:insertAttribute name="sidetabs"/>
-		</div>
+	    <tiles:insertAttribute name="side"/>
 	</div>
-	
 	<div class="body">
     	<tiles:insertAttribute name="body"/>
 	</div>

@@ -5,4 +5,4 @@
 <%
 	String cp=request.getContextPath();
 %>
-에러입니다.
+에러.<br>${message}

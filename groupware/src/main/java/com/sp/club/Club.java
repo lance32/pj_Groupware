@@ -9,9 +9,12 @@ public class Club {
 	private String clubIntro;		//소개글
 	private String openDate;		//생성일
 	private int maxPeople;
-	private String memberNum;	//개설자
+	private String memberNum;	//개설자 id
+	private String memberName;	//개설자 이름
 	private String clubImg;			//대표이미지
 	private MultipartFile upload;
+	private String joinMemberNum;	
+	private String joinMemberName;	
 	
 	public int getClubNum() {
 		return clubNum;
@@ -55,6 +58,12 @@ public class Club {
 	public void setMemberNum(String memberNum) {
 		this.memberNum = memberNum;
 	}
+	public String getMemberName() {
+		return memberName;
+	}
+	public void setMemberName(String memberName) {
+		this.memberName = memberName;
+	}
 	public String getClubImg() {
 		return clubImg;
 	}
@@ -66,6 +75,18 @@ public class Club {
 	}
 	public void setUpload(MultipartFile upload) {
 		this.upload = upload;
+	}
+	public String getJoinMemberNum() {
+		return joinMemberNum;
+	}
+	public void setJoinMemberNum(String joinMemberNum) {
+		this.joinMemberNum = joinMemberNum;
+	}
+	public String getJoinMemberName() {
+		return joinMemberName;
+	}
+	public void setJoinMemberName(String joinMemberName) {
+		this.joinMemberName = joinMemberName;
 	}
 }
 

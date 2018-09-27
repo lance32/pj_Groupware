@@ -21,10 +21,18 @@
 		<put-attribute name="footer" value="/WEB-INF/view/layout/footer.jsp" />
 	</definition>
 	
-	<definition name=".club.*" extends=".mainLayout">
-    	<put-attribute name="side" value="/WEB-INF/view/club/sideProfile.jsp" />
-    	<put-attribute name="sidetabs" value="/WEB-INF/view/club/sideTab.jsp" />
+	<definition name=".clubLayout" template="/WEB-INF/view/club/layout/layout.jsp">
+	  	<put-attribute name="header" value="/WEB-INF/view/layout/header.jsp" />
+		<put-attribute name="footer" value="/WEB-INF/view/layout/footer.jsp" />
+	  	<put-attribute name="side" value="/WEB-INF/view/club/layout/side.jsp" />
 		<put-attribute name="body" value="/WEB-INF/view/club/main.jsp" />
+	</definition>
+	
+	<definition name=".club.*.*" extends=".clubLayout">
+		<put-attribute name="body" value="/WEB-INF/view/club/{1}/{2}.jsp" />
+	</definition>
+	<definition name=".club.*" extends=".clubLayout">
+		<put-attribute name="body" value="/WEB-INF/view/club/{1}.jsp" />
 	</definition>
 	
 	<definition name=".admin.*.*.*" extends=".adminLayout">
@@ -36,7 +44,7 @@
 		<put-attribute name="sidetabs" value="/WEB-INF/view/sidetabs/{1}_sidetabs.jsp"/>
 	</definition>
 	<definition name=".admin.*" extends=".adminLayout">
-    	<put-attribute name="body" value="/WEB-INF/view/admin/{1}.jsp" />
+    		<put-attribute name="body" value="/WEB-INF/view/admin/{1}.jsp" />
 	</definition>
 	
 	<definition name=".*.*.*" extends=".mainLayout">
@@ -48,7 +56,7 @@
 		<put-attribute name="sidetabs" value="/WEB-INF/view/sidetabs/{1}_sidetabs.jsp"/>
 	</definition>
 	<definition name=".*" extends=".mainLayout">
-    	<put-attribute name="body" value="/WEB-INF/view/{1}.jsp" />
+    		<put-attribute name="body" value="/WEB-INF/view/{1}.jsp" />
 	</definition>
 	
 </tiles-definitions>

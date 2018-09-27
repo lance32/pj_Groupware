@@ -5,8 +5,21 @@
 <%
 	String cp=request.getContextPath();
 %>
-
 <style type="text/css">
+.body{
+	width: 78%;
+}
+.side{
+	max-width: none;
+}
+
+.representimg{
+    height: auto;
+    max-width: 100%;
+	max-height:176px;
+	margin: auto;
+}
+
 .clubSideButn{
 	width: 100%;
 	height: 45px;
@@ -42,8 +55,35 @@
 	background: #E6E6E6;
 }
 </style>
+<script type="text/javascript">
+jQuery(function(){
+	jQuery("#manageClubButn").click(function(){
+		location.href="<%=cp%>/club/alterClubInfo?clubNum="+${clubInfo.clubNum};
+		return;
+	});
+	
+	
+});
 
-<div class="tabsTop"><button class="clubSideButn" id="joinClubButn">동호회 가입</button></div>
+</script>
+
+<div style="width: 250px; height: 280px; border-radius: 5px; border: 1.2px solid #A4A4A4; margin-bottom: 20px;">
+	<div style="width: 230px; height: 180px; margin: 10px auto; line-height: 170px; text-align: center;  border: 1.5px solid #D8D8D8; background: #FAFAFA;">
+		<img class="representimg" src="<%=cp%>/uploads/club/${clubInfo.memberNum}/${clubInfo.clubImg}">
+	</div>
+	<div style="width: 100%; height: 75px; padding-left: 20px;">
+		<p>${clubInfo.clubName}</p>
+		<span>${clubInfo.clubIntro}</span>
+	</div>
+
+</div>
+
+<c:if test="${empty isMember}">
+	<div class="tabsTop"><button class="clubSideButn" id="joinClubButn">동호회 가입</button></div>
+</c:if>
+<c:if test="${clubInfo.memberNum == sessionScope.member.userId}">
+	<div class="tabsTop"><button class="clubSideButn" id="manageClubButn">동호회 관리</button></div>
+</c:if>
 
 <div style="width: 250px; height: auto; border-radius: 5px; border: 1px solid #A4A4A4; padding: 15px 15px 30px 15px; margin-bottom: 30px;">
 	<div style="text-align: left;">
@@ -60,5 +100,7 @@
 			<li class="li-items">테스트2</li>
 		</ul>
 	</div>
-
 </div>
+
+
+
