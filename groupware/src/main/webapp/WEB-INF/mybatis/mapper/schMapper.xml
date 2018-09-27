@@ -4,18 +4,17 @@
 <mapper namespace="sch">
 	<insert id="insertSchedule" parameterType="com.sp.schedule.Schedule">
 		INSERT INTO schedule(scheduleNum, memberNum, name, color, allDay,
-		startDay, endDay, startTime, endTime, title, content, place, repeat, cycle)
+		startDay, endDay, startTime, endTime, title, content, place)
 		VALUES(schedule_seq.NEXTVAL, #{memberNum}, #{name}, #{color},
 		#{allDay}, #{startDay}, #{endDay}, 
 		#{startTime, jdbcType=VARCHAR},
 		#{endTime, jdbcType=VARCHAR},
-		#{title}, #{content}, #{place},
-		#{repeat}, #{cycle, jdbcType=VARCHAR})
+		#{title}, #{content}, #{place})
 	</insert>
 	
 	<select id="listMonthSchedule" resultType="com.sp.schedule.Schedule" parameterType="map">
 		SELECT scheduleNum, s.memberNum, s.name, color, allDay,
-		startDay, endDay, startTime, endTime, title, content, place, repeat, cycle, s.created
+		startDay, endDay, startTime, endTime, title, content, place, s.created
 		FROM schedule s
 		JOIN member m ON s.memberNum = m.memberNum
 		<where>

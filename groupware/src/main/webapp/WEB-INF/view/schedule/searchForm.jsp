@@ -14,10 +14,12 @@ $(function() {
 		var search = $("option:selected").val();
 		if(search == 'start'){
 			$("#searchDay").show();
+			$("input[name=searchValue]").prop("readonly", true);
 		} else {
 			$("#searchDay").hide();
 			$("input[name=sDay]").val("");
 			$("input[name=eDay]").val("");
+			$("input[name=searchValue]").prop("readonly", false);
 		}
 	});
 });
