@@ -48,6 +48,7 @@
 				AND INSTR(toMember, #{memberNum}) &gt;= 1
 				AND readTime IS NULL
 			</if>
+			AND sendTime &lt;= sysdate
 		</where>
 	</select>
 	
@@ -72,6 +73,7 @@
 						AND (sendMember = #{memberNum} OR toMember = #{memberNum})
 						AND msgKeep = 1
 					</if>
+					AND sendTime &lt;= sysdate
 				</where>
 				ORDER BY msgNum DESC
 			) tb WHERE ROWNUM &lt;= #{end}
