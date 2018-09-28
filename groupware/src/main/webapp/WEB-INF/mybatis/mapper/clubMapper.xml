@@ -42,4 +42,8 @@
 		WHERE clubNum=#{clubNum}
 	</update>
 	
+	<delete id="deleteClub" parameterType="Integer">
+		DELETE FROM clubInfo WHERE clubNum=#{clubNum}
+	</delete>
+	
 </mapper>

@@ -46,6 +46,12 @@ jQuery(function(){
 			f.maxPeople.focus();
 			return;
 		}
+		if(! /^[0-9]*$/.test(str)){
+			alert("가입 최대 인원수는 숫자만 입력가능합니다.");
+			f.maxPeople.focus();
+			return;
+		}
+		
 		var str=f.clubSubject.value;
 		if(!str){
 			alert("주제는 필수 입력사항 입니다.");

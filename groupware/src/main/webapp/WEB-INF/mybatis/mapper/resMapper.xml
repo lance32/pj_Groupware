@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="res1">
+
+<select id="listResourceList" resultType="com.sp.resource.ResourceJSON">
+	SELECT resourceNum id, rl.groupNum, groupName, resourceName title,
+		color eventColor, occupancy
+		FROM resourceList rl
+		JOIN resourceGroup rg ON rl.groupNum = rg.groupNum
+		ORDER BY rl.groupNum, resourceNum
+</select>
+
+<select id="listReserve" parameterType="map" resultType="com.sp.resource.ResourceJSON">
+	SELECT reserveNum id, groupName, rs.resourceNum resourceId, title, 
+		NVL2(startTime, startDay||'T'||startTime, startDay) "start",
+		NVL2(endTime, endDay||'T'||endTime, endDay) "end",
+			startDay, startTime, endDay, endTime, 
+			rs.memberNum, name, occupancy, resourceName, rl.groupNum, inwon
+        FROM reservation rs
+        JOIN resourceList rl ON rs.resourceNum = rl.resourceNum
+        JOIN resourceGroup rg ON rl.groupNum = rg.groupNum
+        JOIN member m ON rs.memberNum = m.memberNum
+        WHERE TO_DATE(startDay, 'YYYY-MM-DD') &gt;= #{start}
+           AND TO_DATE(endDay, 'YYYY-MM-DD') &lt;= #{end}
+        ORDER BY groupNum, resourceId, reserveNum
+</select>
+
+</mapper>

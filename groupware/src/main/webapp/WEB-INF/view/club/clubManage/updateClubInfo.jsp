@@ -46,6 +46,11 @@ jQuery(function(){
 			f.maxPeople.focus();
 			return;
 		}
+		if(! /^[0-9]*$/.test(str)){
+			alert("가입 최대 인원수는 숫자만 입력가능합니다.");
+			f.maxPeople.focus();
+			return;
+		}
 		var str=f.clubSubject.value;
 		if(!str){
 			alert("주제는 필수 입력사항 입니다.");
@@ -71,10 +76,16 @@ jQuery(function(){
 
 </script>
 
-<div style="">
+<ul class="nav nav-tabs">
+  <li role="presentation" class="active"><a>동호회 정보</a></li>
+  <li role="presentation"><a href="<%=cp%>/club/alterCategory?clubNum=${clubInfo.clubNum}">게시판 카테고리 설정</a></li>
+  <li role="presentation" style="float: right;"><a href="<%=cp%>/club/deleteClub?clubNum=${clubInfo.clubNum}" style="color: #B40404;">동호회 삭제</a></li>
+</ul>
+
+<div style="margin: 30px 0px 0px 40px;">
 	<div style="clear: both; margin: 10px 0px 40px 10px;">
 		<span class="glyphicon glyphicon-edit" style="font-size: 28px; margin-left: 10px;"></span> 
-		<span style="font-size: 30px;">&nbsp;동호회 개설</span><br>
+		<span style="font-size: 30px;">&nbsp;동호회 수정</span><br>
 		<div style="clear: both; width: 300px; height: 1px; border-bottom: 3px solid black;"></div>
 	</div>
 	
@@ -107,12 +118,13 @@ jQuery(function(){
 				<td ><input name="upload" type="file" value="${clubInfo.clubImg}"></td>
 			</tr>
 		</table>
-		
+
 		<div style="width: 830px; height: 100px; margin-left: 40px; padding-top: 50px;">
-			<button type="reset" class="butn" style=" float: left;">초기화</button>
-			<button id="cancelButn" type="button" class="butn" style=" float: right; margin-left: 10px;">개설취소</button>
-			<button id="updateClubButn" type="button" class="butn" style=" float: right;">개설완료</button>
+			<button type="reset" class="clubButn" style=" float: left;">초기화</button>
+			<button id="cancelButn" type="button" class="clubButn" style=" float: right; margin-left: 10px;">수정취소</button>
+			<button id="updateClubButn" type="button" class="clubButn" style=" float: right;">수정완료</button>
 		</div>
 		<input type="hidden" name="clubNum" value="${clubInfo.clubNum}">
+		<input type="hidden" name="clubImg" value="${clubInfo.clubImg}">
 	</form>
 </div>
