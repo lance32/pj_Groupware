@@ -88,5 +88,6 @@ public class Club {
 	public void setJoinMemberName(String joinMemberName) {
 		this.joinMemberName = joinMemberName;
 	}
+	
 }
 
