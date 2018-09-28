@@ -18,14 +18,14 @@
 
 jQuery(function(){
 	
-	//개설취소버튼 클릭시
+	//수정취소버튼 클릭시
 	jQuery("#cancelButn").click(function(){
-		location.href="<%=cp%>/clubList/clubList";
+		location.href="<%=cp%>/club/alterClubInfo?clubNum=${clubInfo.clubNum}";
 		return;
 	});
 	
 	//개설완료 버튼 클릭시
-	jQuery("#createClubButn").click(function(){
+	jQuery("#updateClubButn").click(function(){
 		var f=document.createClubForm;
 		
 		var str=f.clubName.value;
@@ -51,7 +51,6 @@ jQuery(function(){
 			f.maxPeople.focus();
 			return;
 		}
-		
 		var str=f.clubSubject.value;
 		if(!str){
 			alert("주제는 필수 입력사항 입니다.");
@@ -67,7 +66,7 @@ jQuery(function(){
     		}
     	}    
     	
-		f.action="<%=cp%>/clubList/createClub";
+		f.action="<%=cp%>/clubManage/updateClubInfo";
 		f.submit();
 	});
 	
@@ -77,10 +76,16 @@ jQuery(function(){
 
 </script>
 
-<div style="">
+<ul class="nav nav-tabs">
+  <li role="presentation" class="active"><a>동호회 정보</a></li>
+  <li role="presentation"><a href="<%=cp%>/club/alterCategory?clubNum=${clubInfo.clubNum}">게시판 카테고리 설정</a></li>
+  <li role="presentation" style="float: right;"><a href="<%=cp%>/club/deleteClub?clubNum=${clubInfo.clubNum}" style="color: #B40404;">동호회 삭제</a></li>
+</ul>
+
+<div style="margin: 30px 0px 0px 40px;">
 	<div style="clear: both; margin: 10px 0px 40px 10px;">
 		<span class="glyphicon glyphicon-edit" style="font-size: 28px; margin-left: 10px;"></span> 
-		<span style="font-size: 30px;">&nbsp;동호회 개설</span><br>
+		<span style="font-size: 30px;">&nbsp;동호회 수정</span><br>
 		<div style="clear: both; width: 300px; height: 1px; border-bottom: 3px solid black;"></div>
 	</div>
 	
@@ -88,37 +93,38 @@ jQuery(function(){
 		<table style="margin-left: 50px; border-spacing: 0px;">
 			<tr height="60">
 				<td width="130" style="text-align: left;">동호회 이름</td>
-				<td width="700"><input name="clubName" type="text" class="textInput" style="width: 95%"></td>
+				<td width="700"><input name="clubName" type="text" class="textInput" style="width: 95%" value="${clubInfo.clubName}"></td>
 			</tr>
 			<tr height="90">
 				<td style="text-align: left; padding-top: 20px;" valign="top">동호회 소개글<br>(최대 35글자)</td>
-				<td ><textarea name="clubIntro" class="textInput" style="width:95%; height: 50px;" maxlength="35"></textarea></td>
+				<td ><textarea name="clubIntro" class="textInput" style="width:95%; height: 50px;" maxlength="35">${clubInfo.clubIntro}</textarea></td>
 			</tr>
 			<tr height="60">
 				<td style="text-align: left;">개설자</td>
 				<td >
-					<input type="text" class="textInput" style="width: 40%; background:#F2F2F2;" readonly="readonly" value="${sessionScope.member.userName}">
-					<input type="hidden" name="memberNum" value="${sessionScope.member.userId}">
+					<input type="text" class="textInput" style="width: 40%; background:#F2F2F2;" readonly="readonly" value="${clubInfo.memberName}">
 				</td>
 			</tr>
 			<tr height="60">
 				<td style="text-align: left;">가입 최대 인원수</td>
-				<td ><input name="maxPeople" type="text" class="textInput" style="width: 20%" >&nbsp; 명</td>
+				<td ><input name="maxPeople" type="text" class="textInput" style="width: 20%" value="${clubInfo.maxPeople}">&nbsp; 명</td>
 			</tr>
 			<tr height="60">
 				<td style="text-align: left;">주제</td>
-				<td ><input name="clubSubject" type="text" class="textInput" style="width: 60%"></td>
+				<td ><input name="clubSubject" type="text" class="textInput" style="width: 60%" value="${clubInfo.clubSubject}"></td>
 			</tr>
 			<tr height="60">
 				<td style="text-align: left;">대표 이미지</td>
-				<td ><input name="upload" type="file"></td>
+				<td ><input name="upload" type="file" value="${clubInfo.clubImg}"></td>
 			</tr>
 		</table>
-		
+
 		<div style="width: 830px; height: 100px; margin-left: 40px; padding-top: 50px;">
-			<button type="reset" class="butn" style=" float: left;">초기화</button>
-			<button id="cancelButn" type="button" class="butn" style=" float: right; margin-left: 10px;">개설취소</button>
-			<button id="createClubButn" type="button" class="butn" style=" float: right;">개설완료</button>
+			<button type="reset" class="clubButn" style=" float: left;">초기화</button>
+			<button id="cancelButn" type="button" class="clubButn" style=" float: right; margin-left: 10px;">수정취소</button>
+			<button id="updateClubButn" type="button" class="clubButn" style=" float: right;">수정완료</button>
 		</div>
+		<input type="hidden" name="clubNum" value="${clubInfo.clubNum}">
+		<input type="hidden" name="clubImg" value="${clubInfo.clubImg}">
 	</form>
 </div>

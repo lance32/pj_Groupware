@@ -13,6 +13,7 @@
 #paginate .numBox {border:1px solid #ccc;height:28px;text-decoration:none;padding:4px 7px 4px 7px;margin-left:3px;line-height:normal;vertical-align:middle;}
 </style>
 
+
 <div style="clear: both; margin: 10px 0px 15px 10px;">
 		<span class="glyphicon glyphicon-book" style="font-size: 28px; margin-left: 10px;"></span>
 		<span style="font-size: 30px;">&nbsp;업무 일지</span><br>
@@ -34,14 +35,18 @@
 			<td width="170">번호</td>
 			<td width="190">부서명</td>
 			<td width="auto" style="text-align: center;">업무제목</td>
-			<td width="150">기안일</td>
+			<td width="150">업무일지종류</td>
 		</tr>
 	<c:forEach var = "dto" items = "${list}">
 		<tr class="tr">
 			<td>${dto.listNum}</td>
 			<td>${dto.departmentName}</td>
-			<td style="text-align: left;"><a href="${articleUrl}&workLogNum=${dto.workLogNum}">${dto.subject}</a></td>
-			<td>${dto.makeDate}</td>
+			<td style="text-align: center;"><a href="${articleUrl}&workLogNum=${dto.workLogNum}">${dto.makeDate}${sessionScope.member.userName}</a></td>
+			<td>
+				<c:if test="${dto.num =='1'}">일일업무</c:if>
+				<c:if test="${dto.num =='2'}">주간업무</c:if>
+				<c:if test="${dto.num =='3'}">월간업무</c:if>
+			</td>
 		</tr>
 	</c:forEach>
 	</table>

@@ -55,6 +55,60 @@ public class ClubServiceImpl implements ClubService{
 		}
 		return dto;
 	}
+
+	@Override
+	public String isClubMember(Map<String, Object> map) {
+		String result=null;
+		try {
+			result=dao.selectOne("club.isClubMember", map);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
+	}
+
+	@Override
+	public List<Club> listClubMember(int clubNum) {
+		List<Club> list=null;
+		try {
+			list=dao.selectList("club.listClubMember",clubNum);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return list;
+	}
+
+	@Override
+	public int updateClubInfo(Club dto, String pathname) {
+		int result=0;
+		try {
+			if(dto.getUpload()!=null && !dto.getUpload().isEmpty()) {
+				if(dto.getClubImg().length()!=0) {
+					filemanager.doFileDelete(dto.getClubImg(), pathname);
+				}
+				String filename=filemanager.doFileUpload(dto.getUpload(), pathname);
+				dto.setClubImg(filename);
+			}
+			dao.updateData("club.updateClubInfo", dto);
+			result=1;
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
+	}
+
+	@Override
+	public int deleteClub(int clubNum, String pathname) {
+		int result=0;
+		try {
+			filemanager.removePathname(pathname);
+			dao.deleteData("club.deleteClub", clubNum);
+			result=1;
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
+	}
 	
 
 }

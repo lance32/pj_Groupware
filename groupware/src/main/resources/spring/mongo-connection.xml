@@ -18,7 +18,7 @@
      </bean>
      
      <bean id="mongo" class="org.springframework.data.mongodb.core.MongoClientFactoryBean">
-     	<property name="host" value="localhost"/>
+     	<property name="host" value="211.238.142.190"/>
      	<property name="port" value="27017"/>
      	<property name="mongoClientOptions" ref="mongoClientOptions"/>
      </bean>

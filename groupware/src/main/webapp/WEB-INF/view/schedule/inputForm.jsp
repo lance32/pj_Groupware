@@ -53,7 +53,7 @@
 	<div class="form-group">
 		<label for="title" class="col-sm-2 control-label">작 성 자</label>
 		<div class="col-sm-10" style="padding-top: 5px;">
-			<input type="text" class="form-control" id="schName" name="name" value="${sessionScope.member.userId }" readonly="readonly">
+			<input type="text" class="form-control" id="schName" name="name" value="${sessionScope.member.userName}" readonly="readonly">
 		</div>
 	</div>
 	
@@ -64,7 +64,9 @@
 				<option value="blue">개인일정</option>
 				<option value="black">가족일정</option>
 			  	<option value="red">부서일정</option>
-			  	<option value="green">회사일정</option>
+			  	<c:if test="${sessionScope.member.userId == 'admin'}">
+			  		<option value="green">회사일정</option>
+			  	</c:if>
 			</select>
 		</div>
 	</div>
@@ -80,7 +82,7 @@
 	<div class="form-group">
 		<label for="title" class="col-sm-2 control-label">시 작 일</label>
 		<div class="col-sm-10">
-			<input type="text" class="form-control" id="schStartDay" name="startDay" style="width: 35%; display: inline-block;">
+			<input type="text" class="form-control" id="schStartDay" name="startDay" style="width: 35%; display: inline-block;" readonly="readonly">
 			<select class="form-control" id="schStartTime" name="startTime" style="width: 35%; display: inline-block;">
 				<option value="">선 택</option>
 				<c:forEach var="h" begin="0" end="9">
@@ -98,7 +100,7 @@
 	<div class="form-group">
 		<label for="title" class="col-sm-2 control-label">종 료 일</label>
 		<div class="col-sm-10">
-			<input type="text" class="form-control" id="schEndDay" name="endDay" style="width: 35%; display: inline-block;">
+			<input type="text" class="form-control" id="schEndDay" name="endDay" style="width: 35%; display: inline-block;" readonly="readonly">
 			<select class="form-control" id="schEndTime" name="endTime" style="width: 35%; display: inline-block;">
 				<option value="">선 택</option>
 				<c:forEach var="h" begin="0" end="9">
@@ -124,23 +126,6 @@
 		<label for="content" class="col-sm-2 control-label">내 용</label>
 		<div class="col-sm-10">
 			<textarea class="form-control" name="content" rows="3" style="resize: none;"></textarea>
-		</div>
-	</div>
-	
-	<div class="form-group">
-		<label for="title" class="col-sm-2 control-label">반복여부</label>
-		<div class="col-sm-10">
-			<label class="radio-inline"><input type="radio" name="repeat" id="repeat1" value="1"> 반복</label>
-			<label class="radio-inline"><input type="radio" name="repeat" id="repeat2" value="0"> 반복안함</label>
-		</div>
-	</div>
-	
-	<div class="form-group" id="divCycle" style="display: none;">
-		<label for="title" class="col-sm-2 control-label">반복주기</label>
-		<div class="col-sm-10">
-			<label class="radio-inline"><input type="radio" name="cycle" id="cycle1" value="0"> Week</label>
-			<label class="radio-inline"><input type="radio" name="cycle" id="cycle2" value="1"> Month</label>
-			<label class="radio-inline"><input type="radio" name="cycle" id="cycle2" value="2"> Year</label>
 		</div>
 	</div>
 	<input type="hidden" name="scheduleNum" value="0">

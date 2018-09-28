@@ -7,9 +7,6 @@
 %>
 <script>
 $(function() {
-	$("input[name=sDay]").datepicker();
-	$("input[name=eDay]").datepicker();
-	
 	$("select[name=searchKey]").change(function(){
 		var search = $("option:selected").val();
 		if(search == 'start'){
@@ -32,7 +29,7 @@ function searchList() {
 <div style="clear: both; margin: 10px 0px 15px 10px;">
 	<span class="glyphicon glyphicon-calendar"
 		style="font-size: 28px; margin-left: 10px;"></span> <span
-		style="font-size: 30px;">&nbsp;일 정 검 색</span><br>
+		style="font-size: 30px;">&nbsp;자 원 관 리</span><br>
 	<div
 		style="clear: both; width: 300px; height: 1px; border-bottom: 3px solid black;"></div>
 </div>
@@ -81,10 +78,6 @@ function searchList() {
     	
    		<button type="button" class="butn" onclick="searchList()">검색</button>
    		<div class="form-group" align="center"><br>
-		<div id="searchDay" style="display: none;">
-			검 색 기 간 :&nbsp;&nbsp;<input type="text" class="form-control" name="sDay" style="width: 10%; display: inline;" readonly="readonly"> ~ 
-			<input type="text" class="form-control" name="eDay" style="width: 10%; display: inline;" readonly="readonly">
-		</div>
 		</div>
    	</form>
 

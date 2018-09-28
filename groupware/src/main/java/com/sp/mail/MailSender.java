@@ -76,14 +76,14 @@ public class MailSender {
 			Multipart mp = new MimeMultipart();
 			mp.addBodyPart(mbp1);
 			
-			for (MultipartFile mf : mail.getUpload()) {
-				if (mf.isEmpty())	continue;
-				
+//			for (MultipartFile mf : mail.getUpload()) {
+//				if (mf.isEmpty())	continue;
+				MultipartFile mf = mail.getUpload();
 				try {
 					String saveFilename = fileManager.doFileUpload(mf, pathname);
 					if (saveFilename != null) {
-						mail.getSavePathname().add(pathname + File.separator + saveFilename);
-						
+						//mail.getSavePathname().add(pathname + File.separator + saveFilename);
+						mail.setSavePathname(pathname + File.separator + saveFilename);
 						String originalFilename = mf.getOriginalFilename();
 						MimeBodyPart mbp2 = new MimeBodyPart();
 						FileDataSource fds = new FileDataSource(pathname + File.separator + saveFilename);
@@ -103,7 +103,7 @@ public class MailSender {
 //					System.out.println(e.getMessage());
 					e.printStackTrace();
 				}
-			}
+			//}
 			
 			msg.setContent(mp);
 		}
@@ -174,12 +174,14 @@ public class MailSender {
 			msg.setSentDate(new Date());
 			Transport.send(msg);
 			
-			if (mail.getSavePathname() != null && mail.getSavePathname().size() > 0) {
-				for (String filename : mail.getSavePathname()) {
-					File file = new File(filename);
+		//	if (mail.getSavePathname() != null && mail.getSavePathname().size() > 0) {
+			if (mail.getSavePathname() != null && !mail.getSavePathname().isEmpty()) {
+		//		for (String filename : mail.getSavePathname()) {
+			//		File file = new File(filename);
+					File file = new File(mail.getSavePathname());
 					if (file.exists())
 						file.delete();
-				}
+			//	}
 			}
 			b= true;
 		} catch(Exception e) {

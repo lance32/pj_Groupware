@@ -5,6 +5,10 @@
 <%
 	String cp=request.getContextPath();
 %>
+<script type="text/javascript">
+</script>
+
+
 <script type="text/javascript" src="<%=cp%>/resource/se/js/HuskyEZCreator.js" charset="utf-8"></script>
 
 
@@ -25,6 +29,13 @@ ${sessionScope.member.userName}
 </td>
 </tr>
 
+<tr align="left" height="40" style="border-bottom: 1px solid #cccccc;"> 
+<td width="100" bgcolor="#eeeeee" style="text-align: center;">업무일지</td>
+<td><span class="glyphicon glyphicon-book" style="font-size: 15px;">1</span></td>
+<td><span class="glyphicon glyphicon-book" style="font-size: 15px;">2</span></td>
+<td><span class="glyphicon glyphicon-book" style="font-size: 15px;">3</span></td>
+</tr>
+
 <tr align="left" style="border-bottom: 1px solid #cccccc;"> 
 <td width="100" bgcolor="#eeeeee" style="text-align: center; padding-top:5px;" valign="top">내    용</td>
 <td height="870px;" valign="top" style="padding:5px 0px 5px 10px;" > 
@@ -38,15 +49,10 @@ ${sessionScope.member.userName}
 <td align="center" >
 <button type="submit" class="btn">${mode=='update'?'수정완료':'등록하기'}</button>
 <input type ="hidden" name = "memberNum" value = "${sessionScope.member.userId}">
-<input type ="hidden" name = "makeDate" value = "">
-<input type ="hidden" name = "subject" value = "$('#subject').textContent">
-<input type ="hidden" name = "todayWork" value = "$('#todayWork').textContent">
-<input type ="hidden" name = "nextdayWork" value = "$('#nextdayWork').textContent">
-<input type ="hidden" name = "memo" value = "$('#memo').textContent">
 <button type="reset" class="btn">다시입력</button>
 <button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/workLog/list';">${mode=='update'?'수정취소':'등록취소'}</button>
 <c:if test="${mode=='update'}">
-<input type="hidden" name="num" value="${dto.workLogNum}">
+<input type="hidden" name="workLogNum" value="${dto.workLogNum}">
 <input type="hidden" name="num" value="${dto.num}">
 <input type="hidden" name="page" value="${page}">
 </c:if>
@@ -89,7 +95,7 @@ oEditors.getByIdcontent.exec("UPDATE_CONTENTS_FIELD", []);	// 에디터의 내용이 te
 // 에디터의 내용에 대한 값 검증은 이곳에서 document.getElementById("content").value를 이용해서 처리.
 try {
 // elClickedObj.form.submit();
-return check();
+
 } catch(e) {}
 }
 

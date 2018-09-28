@@ -5,4 +5,6 @@
 <%
 	String cp=request.getContextPath();
 %>
-메인
+<div style="width: 100%; height: 100px; border-radius: 5px; border: 1.2px solid #A4A4A4; margin-bottom: 30px;">
+	동호회 관리 목록
+</div>
