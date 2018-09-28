@@ -84,10 +84,6 @@ public class WorkLogServiceImpl implements WorkLogService{
 		
 		try{
 			dto=dao.selectOne("workLog.readWorkForm", num);
-			if (dto == null)
-				System.out.println("workLog.readWorkForm null");
-			else
-				System.out.println("workLog.readWorkForm not null");
 		} catch(Exception e) {
 			System.out.println(e.toString());
 		}
