@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
 import com.sp.common.MyUtil;
 import com.sp.member.SessionInfo;
@@ -170,41 +171,36 @@ public class ClubController {
 	@RequestMapping(value="/clubManage/updateClubInfo", method=RequestMethod.POST)
 	public String updateClubInfoSubmit(
 			Club dto
-			,@RequestParam int clubNum
 			,RedirectAttributes redirectAttributes
 			,HttpSession session
 			,Model model) {
-		System.out.println("클럽넘 : "+clubNum);
+		
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
 		Club clubInfo=null;
 		String isMember=null;
 		int result=0;
+		
 		try {
-			clubInfo=service.readClubInfo(clubNum);
+			clubInfo=service.readClubInfo(dto.getClubNum()); 
 			
 			if(! info.getUserId().equals(clubInfo.getMemberNum())) {
 				model.addAttribute("message", "잘못된 접근입니다.");
 				return "error/error";
 			}
+			
 			String root=session.getServletContext().getRealPath("/");
 			String pathname=root+"uploads"+File.separator+"club"+
 					File.separator+info.getUserId();
 			result=service.updateClubInfo(dto, pathname);
 			if(result==0) {
+				model.addAttribute("message", "수정에 실패하였습니다.");
 				return "error/error";
 			}
-			Map<String, Object> map=new HashMap<>();
-			map.put("clubNum", clubNum);
-			map.put("memberNum", info.getUserId());
-			isMember=service.isClubMember(map);
-			
-			
 		} catch (Exception e) {
 			return "error/error";
 		}
-		redirectAttributes.addAttribute("isMember", isMember);
-		redirectAttributes.addAttribute("clubInfo", clubInfo);
-		return "redirect:/club/clubManage/updateClubInfo";
+		redirectAttributes.addAttribute("clubNum", dto.getClubNum());
+		return "redirect:/club/alterClubInfo";
 	}
 	
 	

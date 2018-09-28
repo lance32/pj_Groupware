@@ -114,5 +114,6 @@ jQuery(function(){
 			<button id="updateClubButn" type="button" class="butn" style=" float: right;">개설완료</button>
 		</div>
 		<input type="hidden" name="clubNum" value="${clubInfo.clubNum}">
+		<input type="hidden" name="clubImg" value="${clubInfo.clubImg}">
 	</form>
 </div>
