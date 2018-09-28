@@ -42,11 +42,7 @@ public class MemberController {
 		if(login_error!=null) {
 			model.addAttribute("message","아이디 또는 패스워드가 일치하지 않습니다.");
 		}
-		SessionInfo info=(SessionInfo) session.getAttribute("member");
-		if(info!=null) {
-			return "member/logout";
-		}
-			
+	
 		return "/member/login";
 	}
 	
@@ -60,6 +56,7 @@ public class MemberController {
 		
 		return ".member.pwd";
 	}
+	
 	// 변경할 끝 부분 ----------------------------------------------------------------------
 	
 	//멤버 리스트
@@ -221,91 +218,6 @@ public class MemberController {
 		return map;
 	}
 	
-	//최초 로그인시 비밀번호 변경
-	@RequestMapping(value="/member/changepwd", method=RequestMethod.GET)
-	public String pwdForm(
-			String dropout,
-			Model model,
-			HttpSession session
-			) {
-		// 패스워드 확인 폼
-		SessionInfo info=(SessionInfo)session.getAttribute("member");
-		if(info==null) {
-			return "member/login";
-		}
-		
-		if(dropout==null) {
-			model.addAttribute("title", "정보수정");
-			model.addAttribute("mode", "update");
-		} else {
-			model.addAttribute("title", "회원탈퇴");
-			model.addAttribute("mode", "dropout");
-		}
-		return ".member.pwd";
-	}
-	
-	@RequestMapping(value="/member/pwd", method=RequestMethod.POST)
-	public String pwdSubmit(
-			@RequestParam(value="userPwd") String userPwd,
-			@RequestParam(value="mode") String mode,
-			Model model,
-			HttpSession session
-	     ) {
-		// 패스워드 검사
-		
-		SessionInfo info=(SessionInfo)session.getAttribute("member");
-		if(info==null) {
-			return "member/login";
-		}
-		
-		Member dto=service.readMember(info.getUserId());
-		if(dto==null) {
-			session.invalidate();
-			return "redirect:/member/login";
-		}
-		
-		
-		// 패스워드 비교 (userpwd를 암호화 해서 dto.getUserPwd()와 비교하면 안된다.)
-		//			userPwd를 암호화하면 가입할 때의 암호화 값과 다름. 암호화 할때 마다 다른 값.
-		boolean bPwd = bcryptEncoder.matches(userPwd, dto.getPwd());
-		
-		if(bPwd) {
-			if(mode.equals("update")) {
-				model.addAttribute("dto", dto);
-				model.addAttribute("mode", "update");
-				model.addAttribute("title", "회원 정보 수정");
-				return ".member.member";
-			} else if(mode.equals("dropout")) {
-				// 회원 탈퇴
-				
-				if(! info.getUserId().equals("admin"))
-					//service.deleteMember(info.getUserId());
-				
-				session.removeAttribute("member");
-				session.invalidate();
-
-				model.addAttribute("title", "회원 탈퇴");
-				
-				StringBuffer sb=new StringBuffer();
-				sb.append(dto.getName()+ "님의 회원 탈퇴 처리가 정상적으로 처리되었습니다.<br>");
-				sb.append("메인화면으로 이동 하시기 바랍니다.<br>");
-				model.addAttribute("message", sb.toString());
-				
-				return ".member.complete";
-			}
-		}
-		
-		model.addAttribute("message", "패스워드가 일치하지 않습니다.");
-		if(mode.equals("update")) {
-			model.addAttribute("title", "정보 수정");
-			model.addAttribute("mode", "update");
-		} else {
-			model.addAttribute("title", "회원 탈퇴");
-			model.addAttribute("mode", "dropout");
-		}
-		return ".member.pwd";
-	}
-	
 	//사원 수정 폼
 	@RequestMapping(value="/member/update", method=RequestMethod.GET)
 	public String updateForm(
@@ -317,15 +229,8 @@ public class MemberController {
 		if(info==null) {
 			return "member/login";
 		}
-		if(info.getUserId().equalsIgnoreCase("admin")){
-			List<Map<String, Object>> departmentList=service.departmentList();
-			List<Map<String, Object>> positionList=service.positionList();
-			model.addAttribute("departmentList",departmentList);
-			model.addAttribute("positionList",positionList);
-		}
 		
 		Member dto = service.readMember(memberNum);
-		
 		
 		model.addAttribute("dto", dto);
 		model.addAttribute("mode", "update");
@@ -359,7 +264,7 @@ public class MemberController {
 		model.addAttribute("message", sb.toString());
 		
 		
-		return "redirect:/member/logout";
+		return "/member/complete";
 	}
 	
 	//사원 정보 보기
@@ -384,10 +289,21 @@ public class MemberController {
 		
 		// 해당 레코드 가져 오기
 		Member dto = service.readMember(memberNum);
+		
 		if(dto==null)
 			return "redirect:/member/main?"+query;
-	
 		
+		
+		List<Map<String, Object>> qualifyList = service.qualifyList(memberNum);
+		if(qualifyList==null) {
+			String message="등록된 정보가 없습니다.";
+			model.addAttribute("message",message);
+		}else {
+			model.addAttribute("qualifyList",qualifyList);
+		}
+	
+		model.addAttribute("mode","info");
+		model.addAttribute("memberNum",memberNum);
 		model.addAttribute("dto", dto);
 		model.addAttribute("page", page);
 		model.addAttribute("query", query);
@@ -398,37 +314,54 @@ public class MemberController {
 	@RequestMapping(value="/member/updateAdmin",method=RequestMethod.GET)
 	public String updateFormAdmin(
 			@RequestParam String memberNum,
+			@RequestParam String page,
 			HttpSession session,
 			Model model
 			) throws Exception{
 		
 		SessionInfo info=(SessionInfo)session.getAttribute("member");
 		
-		if(info.getUserId().equalsIgnoreCase("admin")){
+		if(info==null) {
+			return "member/login";
+		}
+		
 			List<Map<String, Object>> departmentList=service.departmentList();
 			List<Map<String, Object>> positionList=service.positionList();
 			model.addAttribute("departmentList",departmentList);
 			model.addAttribute("positionList",positionList);
-		}
 		
-		Member dto = service.readMember(memberNum);
-		
-		model.addAttribute("dto", dto);
-		model.addAttribute("mode", "updateAdmin");
+			Member dto = service.readMember(memberNum);
+			
+		model.addAttribute("dto",dto);
+		model.addAttribute("mode","updateAdmin");
+		model.addAttribute("page",page);
 		
 		return ".member.memberinfo";
 	}
 	
+	@RequestMapping(value="/member/updateAdmin",method=RequestMethod.POST)
+	public String updateSubmitAdmin(Member dto,
+			@RequestParam String page,
+			HttpSession session
+			) throws Exception{
 	
-	
+		SessionInfo info=(SessionInfo)session.getAttribute("member");
+		
+		if(info==null) {
+			return "/member/login";
+		}
+		
+		service.updateAdmin(dto);
+		
+		return "redirect:/member/main?page="+page;
+	}
 	
 	@RequestMapping(value="/member/delete")
 	public String deleteMember(@RequestParam String memberNum) {
 		
 		service.deleteMember(memberNum);
-		
-		
-		return ".member.main";
+
+		return ".member.memberinfo";
 	}
 	
 	
@@ -479,4 +412,92 @@ public class MemberController {
 		
 		return model;
 	}
+	
+	//최초 로그인시 비밀번호 변경
+		@RequestMapping(value="/member/changepwd", method=RequestMethod.GET)
+		public String pwdForm(
+				String dropout,
+				Model model,
+				HttpSession session
+				) {
+			// 패스워드 확인 폼
+			SessionInfo info=(SessionInfo)session.getAttribute("member");
+			if(info==null) {
+				return "member/login";
+			}
+			
+			if(dropout==null) {
+				model.addAttribute("title", "정보수정");
+				model.addAttribute("mode", "update");
+			} else {
+				model.addAttribute("title", "회원탈퇴");
+				model.addAttribute("mode", "dropout");
+			}
+			return ".member.pwd";
+		}
+		
+		@RequestMapping(value="/member/pwd", method=RequestMethod.POST)
+		public String pwdSubmit(
+				@RequestParam(value="userPwd") String userPwd,
+				@RequestParam(value="mode") String mode,
+				Model model,
+				HttpSession session
+		     ) {
+			// 패스워드 검사
+			
+			SessionInfo info=(SessionInfo)session.getAttribute("member");
+			if(info==null) {
+				return "member/login";
+			}
+			
+			Member dto=service.readMember(info.getUserId());
+			if(dto==null) {
+				session.invalidate();
+				return "redirect:/member/login";
+			}
+			
+			
+			// 패스워드 비교 (userpwd를 암호화 해서 dto.getUserPwd()와 비교하면 안된다.)
+			//			userPwd를 암호화하면 가입할 때의 암호화 값과 다름. 암호화 할때 마다 다른 값.
+			boolean bPwd = bcryptEncoder.matches(userPwd, dto.getPwd());
+			
+			if(bPwd) {
+				if(mode.equals("update")) {
+					model.addAttribute("dto", dto);
+					model.addAttribute("mode", "update");
+					model.addAttribute("title", "회원 정보 수정");
+					return ".member.member";
+				} else if(mode.equals("dropout")) {
+					// 회원 탈퇴
+					
+					if(! info.getUserId().equals("admin"))
+						//service.deleteMember(info.getUserId());
+					
+					session.removeAttribute("member");
+					session.invalidate();
+
+					model.addAttribute("title", "회원 탈퇴");
+					
+					StringBuffer sb=new StringBuffer();
+					sb.append(dto.getName()+ "님의 회원 탈퇴 처리가 정상적으로 처리되었습니다.<br>");
+					sb.append("메인화면으로 이동 하시기 바랍니다.<br>");
+					model.addAttribute("message", sb.toString());
+					
+					return ".member.complete";
+				}
+			}
+			
+			model.addAttribute("message", "패스워드가 일치하지 않습니다.");
+			if(mode.equals("update")) {
+				model.addAttribute("title", "정보 수정");
+				model.addAttribute("mode", "update");
+			} else {
+				model.addAttribute("title", "회원 탈퇴");
+				model.addAttribute("mode", "dropout");
+			}
+			return ".member.pwd";
+		}
+		
+	
+	
 }

@@ -5,14 +5,12 @@
 
 <!-- 회원 정보 가져오기 -->
     <select id="readMember" resultType="com.sp.member.Member" parameterType="String">
-        SELECT m.memberNum,name,zip,addr1,addr2,status,TO_CHAR(created,'YYYY-MM-DD')created,phone,email,
-        	   saveFilename,originalFilename,m.departmentNum,departmentName,positionName,qualifyCode,qualifyName,serialNum,getDate
+        SELECT m.memberNum,name,birth,tel,phone,zip,addr1,addr2,m.status,TO_CHAR(created,'YYYY-MM-DD')created,email,
+        	   saveFilename,originalFilename,m.departmentNum,departmentName,m.positionNum,positionName
 			FROM member m
 			LEFT OUTER JOIN memberdetailinfo i ON m.memberNum=i.memberNum
-			LEFT OUTER JOIN qualify q ON m.memberNum=q.memberNum
 			LEFT OUTER JOIN department d ON m.departmentNum=d.departmentNum
 			LEFT OUTER JOIN position p ON m.positionNum=p.positionNum
-			 
 		WHERE m.memberNum=#{memberNum}
     </select>
 
@@ -33,10 +31,10 @@
 		INSERT INTO memberauthority(memberNum,Authority) VALUES(#{memberNum},'ROLE_USER')
 	</insert>
 	
-	<!-- <update id="insertMember" parameterType="com.sp.member.Member">
-			 INTO qualify(qualifyNum,memberNum,qualifyCode,qualifyName,serialNum,getDate)
-				 VALUES(qualify_seq.NEXTVAL,#{memberNum},#{qualifyCode},#{qualifyName},#{serialNum},#{getDate})
-	</update> -->
+	<insert id="insertQualify" parameterType="com.sp.member.Member">
+		INSERT INTO qualify(qualifyNum, memberNum, qualifyCode, qualifyName, serialNum, getDate)
+			VALUES(qualify_seq.NEXTVAL,#{memberNum},#{qualifyCode},#{qualifyName},#{serialNum},#{getDate})
+	</insert>
 	
 <!-- 사원조회 검색 조건 -->
 	<sql id="where-list">
@@ -79,10 +77,16 @@
 		SELECT departmentNum,departmentName FROM department WHERE departmentType=1
 	</select>
 	
-	<!-- 직급데이터 -->
+	<!-- 직급 데이터 -->
 	<select id="positionList" resultType="map">
 		SELECT positionNum,positionName FROM position ORDER BY positionstep
 	</select>
+	
+	<!-- 자격정보 데이터 -->
+	<select id="qualifyList" parameterType="String" resultType="map">
+		SELECT qualifyCode,qualifyName,serialNum,TO_CHAR(getDate,'YYYY-MM-DD')getDate FROM qualify WHERE memberNum=#{memberNum}
+	</select>
+	
 	
 	<!-- 사원 조회 리스트 -->
 	<select id="listMember" parameterType="map" resultType="com.sp.member.Member">
@@ -123,6 +127,18 @@
                      zip=#{zip},
                      addr1=#{addr1}, addr2=#{addr2}
                WHERE memberNum=#{memberNum}
+    </update>
+    
+    <update id="updateAdmin" parameterType="com.sp.member.Member">
+    	UPDATE member SET status=#{status},departmentNum=#{departmentNum},positionNum=#{positionNum} 
+    		WHERE memberNum=#{memberNum}
+    </update>
+    
+    <update id="updateQualify" parameterType="com.sp.member.Member">
+    	UPDATE qualify SET qualify qualifyCode=#{qualifyCode},qualifyName=#{qualifyName},serialNum=#{serialNum},
+    		getDate=#{getDate} WHERE memberNum=#{memberNum}
+    	
+    
     </update>
     
 	<update id="deleteMember" parameterType="String">

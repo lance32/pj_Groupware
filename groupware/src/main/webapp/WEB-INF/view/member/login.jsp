@@ -83,13 +83,13 @@ function sendOk(){
 		return;
 	}
 	
-	if(str=='1111'){
+	<%-- if(str=='1111'){
 		f.action="<%=cp%>/member/firstLogin";
 		f.submit();
-	}else{
+	}else{ 	}--%>
+	
 		f.action="<%=cp%>/member/login_check";
 		f.submit();
-	}
 	
 	
 }
