@@ -10,4 +10,5 @@ public interface ClubService {
 	public String isClubMember(Map<String, Object> map);
 	public List<Club> listClubMember(int clubNum);
 	public int updateClubInfo(Club dto, String pathname);
+	public int deleteClub(int clubNum, String pathname);
 }

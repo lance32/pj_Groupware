@@ -116,30 +116,6 @@ public class ClubController {
 		return ".club.clubManage.alterClubInfo";
 	}
 	
-	@RequestMapping(value="/club/alterCategory")
-	public String alterCategory(
-			@RequestParam int clubNum
-			,HttpSession session
-			,Model model) {
-		SessionInfo info = (SessionInfo) session.getAttribute("member");
-		Club dto=null;
-		String isMember=null;
-		try {
-			dto=service.readClubInfo(clubNum);
-			
-			Map<String, Object> map=new HashMap<>();
-			map.put("clubNum", clubNum);
-			map.put("memberNum", info.getUserId());
-			isMember=service.isClubMember(map);
-			
-		} catch (Exception e) {
-			return "error/error";
-		}
-		model.addAttribute("isMember", isMember);
-		model.addAttribute("clubInfo", dto);
-		return ".club.clubManage.alterCategory";
-	}
-	
 	@RequestMapping(value="/clubManage/updateClubInfo", method=RequestMethod.GET)
 	public String updateClubInfoForm(
 			@RequestParam int clubNum
@@ -177,7 +153,6 @@ public class ClubController {
 		
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
 		Club clubInfo=null;
-		String isMember=null;
 		int result=0;
 		
 		try {
@@ -193,7 +168,7 @@ public class ClubController {
 					File.separator+info.getUserId();
 			result=service.updateClubInfo(dto, pathname);
 			if(result==0) {
-				model.addAttribute("message", "수정에 실패하였습니다.");
+				model.addAttribute("message", "수정에 실패했습니다.");
 				return "error/error";
 			}
 		} catch (Exception e) {
@@ -203,20 +178,50 @@ public class ClubController {
 		return "redirect:/club/alterClubInfo";
 	}
 	
-	
-	
-	
-/*
- 	@RequestMapping(value="/clubManage/updateClubInfo")
-	public String updateClubInfo(
+	@RequestMapping(value="/club/deleteClub")
+	public String deleteClub(
 			@RequestParam int clubNum
 			,HttpSession session
 			,Model model) {
-		SessionInfo info = (SessionInfo) session.getAttribute("member");
-		Club dto=null;
+		
+		Club clubInfo=null;
+		try {
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
+			clubInfo=service.readClubInfo(clubNum); 
+			if(! info.getUserId().equals(clubInfo.getMemberNum())) {
+				model.addAttribute("message", "잘못된 접근입니다.");
+				return "error/error";
+			}
+			
+			String root=session.getServletContext().getRealPath("/");
+			String pathname=root+"uploads"+File.separator+"club"+
+					File.separator+info.getUserId();
+			int result=service.deleteClub(clubNum, pathname);
+			if(result==0) {
+				model.addAttribute("message", "삭제에 실패했습니다.");
+				return ".error.error";
+			}
+		} catch (Exception e) {
+			return ".error.error";
+		}
+		return "redirect:/clubList/clubList";
+	}
+	
+	@RequestMapping(value="/club/alterCategory")
+	public String alterCategory(
+			@RequestParam int clubNum
+			,HttpSession session
+			,Model model) {
+		
+		Club clubInfo=null;
 		String isMember=null;
 		try {
-			dto=service.readClubInfo(clubNum);
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
+			clubInfo=service.readClubInfo(clubNum);
+			if(! info.getUserId().equals(clubInfo.getMemberNum())) {
+				model.addAttribute("message", "잘못된 접근입니다.");
+				return "error/error";
+			}
 			
 			Map<String, Object> map=new HashMap<>();
 			map.put("clubNum", clubNum);
@@ -227,9 +232,44 @@ public class ClubController {
 			return "error/error";
 		}
 		model.addAttribute("isMember", isMember);
-		model.addAttribute("clubInfo", dto);
+		model.addAttribute("clubInfo", clubInfo);
 		return ".club.clubManage.alterCategory";
 	}
-*/	
+	
+	
+	
+/*	
+	@RequestMapping(value="/club/alterCategory")
+	public String alterCategory(
+			@RequestParam int clubNum
+			,HttpSession session
+			,Model model) {
+			
+		Club clubInfo=null;
+		String isMember=null;
+		try {
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
+			clubInfo=service.readClubInfo(clubNum);
+			if(! info.getUserId().equals(clubInfo.getMemberNum())) {
+				model.addAttribute("message", "잘못된 접근입니다.");
+				return "error/error";
+			}
+			
+			Map<String, Object> map=new HashMap<>();
+			map.put("clubNum", clubNum);
+			map.put("memberNum", info.getUserId());
+			isMember=service.isClubMember(map);
+			
+		} catch (Exception e) {
+			return "error/error";
+		}
+		model.addAttribute("isMember", isMember);
+		model.addAttribute("clubInfo", clubInfo);
+		return ".club.clubManage.alterCategory";
+	}
+	*/
+
+	
+	
 }
 

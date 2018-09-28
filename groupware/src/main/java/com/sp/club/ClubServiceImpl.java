@@ -96,6 +96,19 @@ public class ClubServiceImpl implements ClubService{
 		}
 		return result;
 	}
+
+	@Override
+	public int deleteClub(int clubNum, String pathname) {
+		int result=0;
+		try {
+			filemanager.removePathname(pathname);
+			dao.deleteData("club.deleteClub", clubNum);
+			result=1;
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
+	}
 	
 
 }

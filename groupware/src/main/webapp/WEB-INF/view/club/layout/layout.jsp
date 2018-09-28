@@ -23,6 +23,14 @@
 
 <script type="text/javascript" src="<%=cp%>/resource/jquery/js/jquery-1.12.4.min.js"></script>
 
+<script type="text/javascript">
+function deleteClubChk(){ 
+	if(confirm("정말 동호회를 삭제하시겠습니까?")){
+		location.href="<%=cp%>/club/deleteClub?clubNum=${clubInfo.clubNum}";
+	}
+}
+</script>
+
 </head>
 <body>
 
