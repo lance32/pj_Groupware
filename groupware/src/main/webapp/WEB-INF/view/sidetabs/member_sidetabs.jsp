@@ -24,7 +24,7 @@
     
     <c:if test="${sessionScope.member.userId=='admin'}">
 	    <tr>
-	    	<td><a href="#">조직 관리</a></td>
+	    	<td><a href="<%=cp%>/department/main">조직 관리</a></td>
 	    </tr>
     </c:if>
 

@@ -14,8 +14,17 @@ public class WorkLog {
 	private int num;
 	private String formName;
 	private String formValue;
+	private String content;
+	
+	
 
 
+	public String getContent() {
+		return content;
+	}
+	public void setContent(String content) {
+		this.content = content;
+	}
 	public int getNum() {
 		return num;
 	}

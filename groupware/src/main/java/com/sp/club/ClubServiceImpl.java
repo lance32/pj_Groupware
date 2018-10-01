@@ -27,6 +27,8 @@ public class ClubServiceImpl implements ClubService{
 			}
 			dao.insertData("club.createClub", dto);
 			dao.insertData("club.insertFounder", dto.getMemberNum());
+			dao.insertData("club.insertBasicCategory");
+			dao.insertData("club.insertBasicCategory_notice");
 			result=1;
 		} catch (Exception e) {
 			System.out.println(e.toString());
@@ -50,11 +52,92 @@ public class ClubServiceImpl implements ClubService{
 		Club dto=null;
 		try {
 			dto=dao.selectOne("club.readClubInfo", clubNum);
+			
 		} catch (Exception e) {
 			System.out.println(e.toString());
 		}
 		return dto;
 	}
+	@Override
+	public List<Category> listClubCategory(int clubNum) {
+		List<Category> list =null;
+		try {
+			list=dao.selectList("club.listClubCategory",clubNum);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return list;
+	}
+	@Override
+	public List<Category> listClubCategoryItems(int clubNum) {
+		List<Category> list =null;
+		try {
+			list=dao.selectList("club.listClubCategoryItems",clubNum);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return list;
+	}
+
+
+	
+	
+	
+	@Override
+	public String isClubMember(Map<String, Object> map) {
+		String result=null;
+		try {
+			result=dao.selectOne("club.isClubMember", map);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
+	}
+
+	@Override
+	public List<Club> listClubMember(int clubNum) {
+		List<Club> list=null;
+		try {
+			list=dao.selectList("club.listClubMember",clubNum);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return list;
+	}
+
+	@Override
+	public int updateClubInfo(Club dto, String pathname) {
+		int result=0;
+		try {
+			if(dto.getUpload()!=null && !dto.getUpload().isEmpty()) {
+				if(dto.getClubImg().length()!=0) {
+					filemanager.doFileDelete(dto.getClubImg(), pathname);
+				}
+				String filename=filemanager.doFileUpload(dto.getUpload(), pathname);
+				dto.setClubImg(filename);
+			}
+			dao.updateData("club.updateClubInfo", dto);
+			result=1;
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
+	}
+
+	@Override
+	public int deleteClub(int clubNum, String pathname) {
+		int result=0;
+		try {
+			filemanager.removePathname(pathname);
+			dao.deleteData("club.deleteClub", clubNum);
+			result=1;
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
+	}
+
+
 	
 
 }

@@ -137,10 +137,9 @@ public class WorkLogController {
 	
 	@RequestMapping(value="/workLog/created", method=RequestMethod.GET)
 	public String createdForm(
-			
+			@RequestParam(value="num", defaultValue= "1") int num,
 			Model model) throws Exception {
 		
-		int num = 1;
 		WorkLog dto=service.readWorkForm(num);
 		
 		model.addAttribute("dto",dto);
@@ -150,10 +149,13 @@ public class WorkLogController {
 	}
 	
 	@RequestMapping(value="/workLog/created", method=RequestMethod.POST)
-	public String createdSubmit(WorkLog dto, HttpSession session){
+	public String createdSubmit(WorkLog dto, 
+			HttpSession session){
+		
 		SessionInfo info=(SessionInfo) session.getAttribute("member");
+		
 		if(info==null) {
-			return "redirect:/member/login";
+			return "error.error";
 		}
 		
 		dto.setMemberNum(info.getUserId());

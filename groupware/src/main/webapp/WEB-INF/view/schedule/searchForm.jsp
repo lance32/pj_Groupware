@@ -1,24 +1,25 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
-<%@ page trimDirectiveWhitespaces="true" %>
+<%@ page trimDirectiveWhitespaces="true"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%
 	String cp=request.getContextPath();
 %>
-
 <script>
 $(function() {
-	$("input[name=startDay]").datepicker();
-	$("input[name=endDay]").datepicker();
+	$("input[name=sDay]").datepicker();
+	$("input[name=eDay]").datepicker();
 	
 	$("select[name=searchKey]").change(function(){
 		var search = $("option:selected").val();
 		if(search == 'start'){
 			$("#searchDay").show();
+			$("input[name=searchValue]").prop("readonly", true);
 		} else {
 			$("#searchDay").hide();
-			$("input[name=startDay]").val("");
-			$("input[name=endDay]").val("");
+			$("input[name=sDay]").val("");
+			$("input[name=eDay]").val("");
+			$("input[name=searchValue]").prop("readonly", false);
 		}
 	});
 });
@@ -81,9 +82,8 @@ function searchList() {
    		<button type="button" class="butn" onclick="searchList()">검색</button>
    		<div class="form-group" align="center"><br>
 		<div id="searchDay" style="display: none;">
-			<input type="text" class="form-control" name="startDay" style="width: 10%; display: inline;" readonly="readonly"> ~ 
-			<input type="text" class="form-control" name="endDay" style="width: 10%; display: inline;" readonly="readonly">
-			<button type="button" class="butn" onclick="searchList()">검색</button>
+			검 색 기 간 :&nbsp;&nbsp;<input type="text" class="form-control" name="sDay" style="width: 10%; display: inline;" readonly="readonly"> ~ 
+			<input type="text" class="form-control" name="eDay" style="width: 10%; display: inline;" readonly="readonly">
 		</div>
 		</div>
    	</form>

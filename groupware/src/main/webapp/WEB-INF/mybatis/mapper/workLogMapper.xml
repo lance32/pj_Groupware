@@ -5,15 +5,12 @@
 
 	<!-- workLog INSERT -->
 	<insert id="insertWorkLog" parameterType="com.sp.workLog.WorkLog">
-		insert into workLog(workLogNum, memberNum, subject, todayWork, nextdayWork, memo)
-			values(workLog_seq.nextval, #{memberNum}, #{subject}, #{todayWork}, #{nextdayWork}, #{memo,jdbcType=VARCHAR})
+		insert into workLog(workLogNum, memberNum, content)
+			values(workLog_seq.nextval, #{memberNum}, #{content})
 	</insert>
 	
 	<!-- 검색 목록  -->
 	<sql id="where-list">
-		<if test="searchKey=='subject'">
-			INSTR(subject,#{searchValue})&gt;0
-		</if>
 		<if test="searchKey=='makeDate'">
 		TO_CHAR(makeDate,'YYYY-MM-DD')makeDate=#{searchValue}
 		OR TO_CHAR(makeDate,'YYYYMMDD')makeDate=#{searchValue}
@@ -35,7 +32,7 @@
 	<select id="listWorkLog" parameterType="map" resultType="com.sp.workLog.WorkLog">
 		SELECT * FROM( 
 		    SELECT ROWNUM rn, ss.* FROM(
-		        SELECT workLogNum, subject, name, departmentName, TO_CHAR(makeDate,'YYYY-MM-DD')makeDate 
+		        SELECT workLogNum, content, name, departmentName, TO_CHAR(makeDate,'YYYY-MM-DD')makeDate 
 		        FROM workLog w JOIN member m ON w.memberNum = m.memberNum
 		        JOIN department d on m.departmentNum = d.departmentNum
 		        <where>
@@ -51,8 +48,7 @@
 	
 	<!-- 글읽기 -->
 	<select id="readWorkLog" resultType="com.sp.workLog.WorkLog" parameterType="Integer">
-		SELECT workLogNum, to_char(makeDate,'YYYY-MM-DD')makeDate, departmentName, name, subject, 
-		todayWork, nextdayWork, memo 
+		SELECT workLogNum, to_char(makeDate,'YYYY-MM-DD')makeDate, departmentName, name, content 
 		FROM workLog w JOIN member m ON w.memberNum =m.memberNum
 		JOIN department d on m.departmentNum = d.departmentNum
 		WHERE workLogNum = #{WorkLogNum}

@@ -286,7 +286,7 @@ jQuery(function(){
 		jQuery("#chatRoomJoinList").append("<p style='color: #58ACFA'>&nbsp;&nbsp;"+sessionUserName+"</p>");
 	
 		jQuery('#chatting-dialog').dialog({
-			  modal: false,
+			  modal: true,
 			  minHeight: 670,
 			  minWidth: 630,
 			  maxHeight: 670,
@@ -495,7 +495,7 @@ function writeToScreen(message) {
 	<div style="clear: both; width: 300px; height: 1px; border-bottom: 3px solid black;"></div>
 </div>
 
-<div style="clear:both; width: 100%; min-width:1550px; padding-left: 10%">
+<div style="clear:both; width: 100%; min-width:1000px; padding-left: 10%">
 	<div id="messageBox" style="clear:both; width: 100%; height: 40px; font-size: 20px; padding-left: 10px;"></div>
 		
 	<div style="width: 490px; height: 600px; float: left;">
