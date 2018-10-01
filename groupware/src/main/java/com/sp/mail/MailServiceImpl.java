@@ -178,7 +178,17 @@ public class MailServiceImpl implements MailService {
 		try {
 			String memberNum = (String)map.get("memberNum");
 			Criteria memNum = Criteria.where("memberNum").is(memberNum);
+			
 			Query query = new Query();
+			query.fields().include("index");
+			query.fields().include("memberNum");
+			query.fields().include("receiveMail");
+			query.fields().include("sendMail");
+			query.fields().include("sendName");
+			query.fields().include("subject");
+			query.fields().include("content");
+			query.fields().include("sendTime");
+			query.fields().include("state");
 			
 			String searchValue = (String)map.get("searchValue");
 			if (searchValue == null || searchValue.isEmpty()) {
@@ -197,7 +207,12 @@ public class MailServiceImpl implements MailService {
 					query.addCriteria(Criteria.where("receiveMail").is(searchValue).andOperator(memNum));
 				}
 			}
-			//query.skip(map.get("page")).limit(map.get("rows"));
+			
+			int start = (int)map.get("start") - 1;
+			int end = (int)map.get("end");
+			query.skip(start).limit(end - start);
+			query.with(new Sort(Sort.Direction.DESC, "index"));
+
 			list = mongo.find(query, Mail.class);
 		} catch(Exception e) {
 			e.printStackTrace();

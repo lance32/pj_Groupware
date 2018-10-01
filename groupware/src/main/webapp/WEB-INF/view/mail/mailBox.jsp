@@ -69,7 +69,7 @@
 				<c:if test="${mailType != 'send'}">
 					<td style="text-align: left;">${dto.sendName}</td>
 				</c:if>
-				<td style="text-align: left;"><a href="#">${dto.subject}</a></td>
+				<td style="text-align: left;"><a href="${mailUrl}&index=${dto.index}">${dto.subject}</a></td>
 				<td>${dto.getFormatSendTime()}</td>
 				<td>&nbsp;</td>
 			</tr>

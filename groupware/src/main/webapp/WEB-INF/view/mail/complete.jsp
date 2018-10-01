@@ -18,7 +18,7 @@
   margin-top: 20px;
   width: 420px; min-height: 150px;
   line-height : 100px;
-  border: 1px solid #DAD9FF;
+  border: 1px solid grey;
   padding: 5px;
   color:#333333;
   font-size:14px;

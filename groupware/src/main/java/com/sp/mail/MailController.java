@@ -1,6 +1,7 @@
 package com.sp.mail;
 
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,13 +64,31 @@ public class MailController {
 		int end = currentPage * rows;
 		map.put("start", start);
 		map.put("end", end);
-				
-		List<Mail>list = mailService.list(info.getUserId());
+		
+		List<Mail>list = mailService.list(map);
+		
+		String query = "";
+		if (searchValue.length() != 0) {
+			query = "searchKey=" + searchKey + "&searchValue=" + URLEncoder.encode(searchValue, "utf-8");
+		}
+		
+		String cp = req.getContextPath();
+		String listUrl = cp + "/mail/mailSend";
+		String mailUrl = cp + "/mail/mailForm?page=" + currentPage;
+		if (query.length() != 0) {
+			listUrl = listUrl + "?" + query;
+			mailUrl += "&" + query;
+		}
+		
+		String paging = myUtil.paging(currentPage,  totalPage, listUrl);
+		
 		model.addAttribute("mailType", "send");
 		model.addAttribute("list", list);
+		model.addAttribute("mailUrl", mailUrl);
 		model.addAttribute("dataCount", dataCount);
-		model.addAttribute("page", 1);
-		model.addAttribute("totalPage", 1);
+		model.addAttribute("page", currentPage);
+		model.addAttribute("totalPage", totalPage);
+		model.addAttribute("paging", paging);
 		
 		return ".mail.mailBox";
 	}
@@ -127,7 +146,35 @@ public class MailController {
 	
 	// 메일 읽기
 	@RequestMapping(value="/mail/mailForm", method=RequestMethod.GET)
-	public String readMail(Model model) throws Exception {
+	public String readMail(
+			@RequestParam(value="index") long index,
+			@RequestParam(value="page") String page,
+			@RequestParam(value="searchKey", defaultValue="subject") String searchKey,
+			@RequestParam(value="searchValue", defaultValue="") String searchValue,
+			@RequestParam(value="mailType", defaultValue="send") String mailType,
+			HttpServletRequest req,
+			Model model) throws Exception {
+		
+		if (req.getMethod().equalsIgnoreCase("GET")) {
+			searchValue = URLDecoder.decode(searchValue, "utf-8");
+		}
+		
+		String query = "page=" + page;
+		if (searchValue.length() != 0) {
+			query += "&searchKey=" + searchKey + "&searchValue=" + URLEncoder.encode(searchValue, "utf-8");
+		}
+		
+		Mail mail = mailService.readMail(index);
+		if (mail == null)
+			return "redirect:/mail/mailSend?" + query;
+		
+		mail.setContent(myUtil.htmlSymbols(mail.getContent()));
+		
+		model.addAttribute("mail", mail);
+		model.addAttribute("page", page);
+		model.addAttribute("query", query);
+		model.addAttribute("mailType", mailType);
+		
 		return ".mail.mailForm";
 	}
 }
