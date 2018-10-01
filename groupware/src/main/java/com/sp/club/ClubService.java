@@ -13,4 +13,8 @@ public interface ClubService {
 	public List<Club> listClubMember(int clubNum);
 	public int updateClubInfo(Club dto, String pathname);
 	public int deleteClub(int clubNum, String pathname);
+	public void insertCategoryPhase1(Category dto);
+	public void insertCategoryPhase2(Category dto);
+	public void deleteClubCategory(int categoryNum);
+	public void updateClubCategory(Category dto);
 }

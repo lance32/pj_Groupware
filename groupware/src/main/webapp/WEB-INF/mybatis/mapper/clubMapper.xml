@@ -20,12 +20,6 @@
 		VALUES(clubBoardCategory_seq.CURRVAL-1, clubBoardCategory_seq.NEXTVAL, '공지', clubInfo_seq1.CURRVAL)
 	</insert>
 	
-	<!-- 카테고리 추가 -->
-	<insert id="insertClubCategory" parameterType="com.sp.club.Club">
-		INSERT INTO clubBoardCategory(categoryNum, categoryName, clubNum, parent) 
-		VALUES(clubBoardCategory_seq.NEXTVAL, #{categoryName}, #{clubNum}, #{parent})
-	</insert>
-
 	<!-- 동호회 목록 -->
 	<select id="clubList" parameterType="map" resultType="com.sp.club.Club">
 		SELECT clubNum, clubName, clubSubject, clubIntro, memberNum, clubImg FROM clubInfo
@@ -38,7 +32,7 @@
 		WHERE clubNum = #{clubNum}
 	</select>
 	<select id="listClubCategory" parameterType="Integer" resultType="com.sp.club.Category">
-		SELECT categoryNum, categoryName FROM clubBoardCategory WHERE clubNum=#{clubNum} AND  NVL(parent,0)=0
+		SELECT categoryNum, categoryName FROM clubBoardCategory WHERE clubNum=#{clubNum} AND  NVL(parent,0)=0 ORDER BY categoryNum
 	</select>
 	<select id="listClubCategoryItems" parameterType="Integer" resultType="com.sp.club.Category">
 		SELECT categoryNum, categoryName, parent categoryParent FROM clubBoardCategory 
@@ -50,19 +44,46 @@
 		SELECT memberNum FROM clubMember WHERE memberNum=#{memberNum} AND clubNum=#{clubNum}
 	</select>
 	
+	<!-- 동호회 멤버 리스트 -->
 	<select id="listClubMember" parameterType="Integer" resultType="com.sp.club.Club">
 		SELECT c.memberNum joinMemberNum, name joinMemberName 
 		FROM clubMember c JOIN member m ON c.memberNum=m.memberNum
 		WHERE clubNum=#{clubNum}
 	</select>
 	
+	<!-- 동호회 수정 -->
 	<update id="updateClubInfo" parameterType="com.sp.club.Club">
 		UPDATE clubInfo SET clubName=#{clubName}, clubSubject=#{clubSubject}, clubIntro=#{clubIntro}, maxPeople=#{maxPeople}, clubImg=#{clubImg} 
 		WHERE clubNum=#{clubNum}
 	</update>
 	
+	<!-- 동호회 삭제 -->
 	<delete id="deleteClub" parameterType="Integer">
 		DELETE FROM clubInfo WHERE clubNum=#{clubNum}
 	</delete>
+	
+	
+	
+	<!-- 카테고리 추가 -->
+	<insert id="insertClubCategoryPhase1" parameterType="com.sp.club.Category">
+		INSERT INTO clubBoardCategory(categoryNum, categoryName, clubNum) 
+		VALUES(clubBoardCategory_seq.NEXTVAL, #{categoryName}, #{clubNum})
+	</insert>
+	<insert id="insertClubCategoryPhase2" parameterType="com.sp.club.Category">
+		INSERT INTO clubBoardCategory(categoryNum, categoryName, clubNum, parent) 
+		VALUES(clubBoardCategory_seq.NEXTVAL, #{categoryName}, #{clubNum}, #{categoryParent})
+	</insert>
+	
+	<!-- 카테고리 삭제 -->
+	<delete id="deleteClubCategory" parameterType="Integer">
+		DELETE FROM clubBoardCategory WHERE categoryNum=#{categoryNum}
+	</delete>
+	
+	<!-- 카테고리 수정 -->
+	<update id="updateClubCategory" parameterType="com.sp.club.Category">
+		UPDATE clubBoardCategory SET categoryName=#{categoryName} WHERE categoryNum=#{categoryNum}
+	</update>
+	
+	
 	
 </mapper>
