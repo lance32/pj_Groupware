@@ -6,9 +6,103 @@
 	String cp = request.getContextPath();
 %>
 
+
+
 <!-- 근태 신청서 페이지  -->
 
 <script type="text/javascript" src="<%=cp%>/resource/se/js/HuskyEZCreator.js" charset="utf-8"></script>
+<script type="text/javascript">
+$(function() {
+	$("#organizationChart").click(function() {
+		var dialog;
+		$.ajax({
+			url:"<%=cp%>/member/organizationChart",
+			type:"get",
+			dataType:"json",
+			success:function(data) {
+				var h = "<table>";
+				var preDeptName = "";
+				var deptClass = "";
+				$.each(data, function(idx, val) {
+					var ws = "";
+					if (val.deptOrder == 1) {
+						deptClass = "dept" + val.deptNum + " ";
+					} else {
+						var deptArray = deptClass.split(" ");
+						deptClass = deptArray[val.deptOrder - 2] + " ";
+						deptClass+= "dept" + val.deptNum + " ";
+					}
+
+					for (var i = 1; i < val.deptOrder; i++) {
+						ws += "&nbsp;&nbsp;&nbsp;&nbsp;";
+					}
+					
+					if (preDeptName != val.deptName) {
+						h += "<tr><td>";
+						h += ws;
+						h += "<input type='checkbox' id='dept" + val.deptNum + "' class='" + deptClass + "' onclick='deptCheck(\"dept"+ val.deptNum +"\");'>";
+						h += val.deptName;
+						h += "</td></tr>";
+						preDeptName = val.deptName;
+					} 
+
+					if(val.memberName != undefined) {
+						h += "<tr><td>";
+						ws += "&nbsp;&nbsp;&nbsp;&nbsp;"
+						h += ws;
+						h += "<input type='checkbox' id='" + val.memberNum + "' class='memberChk " + deptClass + "' data-member-num='" + val.memberNum + "'>";
+						h += val.memberName;
+						h += "&nbsp;";
+						h += val.positionName;
+						h += "</td></tr>";
+					}
+				});
+				h += "</table>";
+				
+				$("#organizationLayout").html(h);
+				dialog = $("#organizationLayout").dialog({
+					height: 400,
+					width: 500,
+					modal: true,
+					open: function () {
+						// 기존 선택된 멤버가 있을 경우, 로드시 조직도에서 체크 되도록 처리
+						// <input type="text" id="toMember" name="toMember"> 에서 읽어옴
+						var member = $("#toMember").val();		
+						if (member.length > 0) {
+							var memberList = member.split(";");
+							for (var i = 0; i < memberList.length; i++) {
+								if (memberList[i] == "") continue;
+								$("#" + memberList[i]).attr("checked", true);
+							}
+						}
+					},
+					buttons: {
+						"확인" : function() {
+							// 조직도에서 선택된 값을 받을 input object에 넣도록 처리
+							// 여기서는 <input type="text" id="toMember" name="toMember"..>
+							var memberList = "";
+							$(".memberChk").each(function() {
+								if (this.checked) {
+									memberList += $(this).data("memberNum") + ";";
+								} 
+							});
+							
+							$("#toMember").val(memberList);
+							$(this).dialog("close");
+						},
+						"취소" : function() {
+							$(this).dialog("close");
+						}	
+					}
+				});
+			},
+			error:function(jqXHR) {
+				console.log(jqXHR.resonseText);
+			}
+		});
+	});
+});
+</script>
 <form id="editform" name="editform" method="post"
 	action="/segio/works/approval/edit_format.php"
 	enctype="multipart/form-data">
@@ -43,7 +137,7 @@
 	<div class="gw_ltext">
 		<span class="doc_left">[문서종류 : 근태신청서]</span>
 	</div>
-
+<div id="organizationLayout" title="조직도"></div>
 	<!-- 결재자 정보 -->
 	<input type="hidden" id="app_uid1" name="app_uid1" value="test6">
 	<input type="hidden" id="app_order1" name="app_order1" value="1">
@@ -144,10 +238,11 @@
 			<tbody>
 				<tr>
 					<th scope="col" class="ebtn1"><span class="gw_btn_pack blue">
-							<button type="button" id="once_regist">결재선 선택</button>
+							<!-- <button type="button" id="once_regist">결재선 선택</button> -->
+							<input type="button" id="organizationChart" value="&nbsp;조직도&nbsp;">
+							
 					</span> <span class="gw_btn_pack black"> <!-- Edited By: anuradha Pasare  On:2014-02-24  Purpose:to set the selected category no in popup window  -->
-							<button type="button" id="btn_approval_line_setting">내
-								결재선 관리</button>
+							<button type="button" id="btn_approval_line_setting">내 결재선 관리</button>
 					</span></th>
 					<th rowspan="3" scope="col" style="background-color: #FFF6F9;"
 						class="ebtn1">결재</th>
