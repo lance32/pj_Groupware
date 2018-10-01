@@ -119,8 +119,13 @@ public class ResourceServiceImpl implements ResourceService{
 
 	@Override
 	public int deleteReserve(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		try {
+			result = dao.deleteData("res1.deleteReserve", map);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
 	}
 
 	@Override

@@ -78,6 +78,11 @@ public class ResourceController {
 		return "schResource/inputForm";
 	}
 	
+	@RequestMapping(value="/scheduler/articleForm")
+	public String articleForm(Model model) throws Exception {
+		return "schResource/articleForm";
+	}
+	
 	@RequestMapping(value="/scheduler/readResourceList")
 	@ResponseBody
 	public Map<String, Object> readResourceList(int resourceNum) throws Exception {
@@ -152,6 +157,27 @@ public class ResourceController {
 		dto.setContent(util.htmlSymbols(dto.getContent()));
 		
 		service.insertReserve(dto);
+		
+		Map<String, Object> model=new HashMap<>();
+		model.put("state", state);
+		return model;
+	}
+	
+	@RequestMapping(value="/scheduler/deleteReservation")
+	@ResponseBody
+	public Map<String, Object> schedulerDelete(int num,
+			HttpSession session
+			) throws Exception {
+		String state="true";
+		
+		SessionInfo info=(SessionInfo)session.getAttribute("member");
+		Map<String, Object> map=new HashMap<>();
+		map.put("memberNum", info.getUserId());
+		map.put("reserveNum", num);
+		
+		int result=service.deleteReserve(map);
+		if(result==0)
+			state="false";
 		
 		Map<String, Object> model=new HashMap<>();
 		model.put("state", state);

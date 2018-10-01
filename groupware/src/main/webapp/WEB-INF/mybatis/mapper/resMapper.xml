@@ -54,4 +54,12 @@
         ORDER BY groupNum, resourceId, reserveNum
 </select>
 
+<delete id="deleteReserve" parameterType="map">
+	DELETE FROM reservation  
+		WHERE reserveNum = #{reserveNum}
+		<if test="memberNum != 'admin'">
+			AND memberNum = #{memberNum}
+		</if>
+</delete>
+
 </mapper>
