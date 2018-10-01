@@ -40,8 +40,13 @@ public class ResourceServiceImpl implements ResourceService{
 
 	@Override
 	public List<Resource> listResourceGroup() {
-		// TODO Auto-generated method stub
-		return null;
+		List<Resource> list = null;
+		try {
+			list = dao.selectList("res1.listResourceGroup");
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return list;
 	}
 
 	@Override
@@ -64,14 +69,24 @@ public class ResourceServiceImpl implements ResourceService{
 
 	@Override
 	public Resource readResourceList(int resourceNum) {
-		// TODO Auto-generated method stub
-		return null;
+		Resource dto = null;
+		try {
+			dto = dao.selectOne("res1.readResourceList", resourceNum);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return dto;
 	}
 
 	@Override
 	public List<Resource> listResourceList(int groupNum) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Resource> list = null;
+		try {
+			list = dao.selectList("res1.listResourceList2", groupNum);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return list;
 	}
 
 	@Override
@@ -87,8 +102,13 @@ public class ResourceServiceImpl implements ResourceService{
 
 	@Override
 	public int insertReserve(Resource dto) {
-		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		try {
+			result = dao.insertData("res1.insertReserve", dto);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
 	}
 
 	@Override
