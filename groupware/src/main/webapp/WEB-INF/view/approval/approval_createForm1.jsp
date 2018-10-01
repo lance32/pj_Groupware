@@ -184,7 +184,7 @@
     </td>
 
     <td rowspan="2" class="esign" scope="row">
-            <div id="app_name1">최민수</div>
+           ${sessionScope.member.userId }
     </td>
     <td rowspan="2" class="esign" scope="row">
             <div id="app_name2"></div>
@@ -359,10 +359,10 @@
 <tr>
 <!-- 제목 -->
 <th scope="row" class="etitle">
-<span>제목</span>
+<span>기 안 자</span>
 </th>
 <td scope="row" class="eleft" colspan="5">
-<input type="text" name="title" value="" class="input_title" title="제목">
+${sessionScope.member.userName }
 </td>
 </tr>
 
