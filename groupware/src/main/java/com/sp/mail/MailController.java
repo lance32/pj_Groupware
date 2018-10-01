@@ -1,7 +1,11 @@
 package com.sp.mail;
 
+import java.net.URLDecoder;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +13,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.sp.common.MyUtil;
 import com.sp.member.SessionInfo;
 
 @Controller("mail.controller")
@@ -20,14 +26,48 @@ public class MailController {
 	@Autowired
 	private MailService mailService;
 	
+	@Autowired
+	private MyUtil myUtil;
+	
 	// 보낸 편지함
 	@RequestMapping(value="/mail/mailSend", method=RequestMethod.GET)
-	public String mailForm(HttpSession session, Model model) throws Exception {
+	public String mailForm(
+			@RequestParam(value="page", defaultValue="1") int currentPage,
+			@RequestParam(value="searchKey", defaultValue="subject") String searchKey,
+			@RequestParam(value="searchValue", defaultValue="") String searchValue,
+			HttpServletRequest req,
+			Model model) throws Exception {
+		int rows = 10;
+		int totalPage = 0;
+		
+		if (req.getMethod().equalsIgnoreCase("GET")) {
+			searchValue = URLDecoder.decode(searchValue, "utf-8");
+		}
+
+		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo)session.getAttribute("member");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("searchKey", searchKey);
+		map.put("searchValue", searchValue);
+		map.put("memberNum", info.getUserId());
+		
+		int dataCount = (int)mailService.dataCount(map);
+		if (dataCount != 0) 
+			totalPage = myUtil.pageCount(rows, dataCount);
+		
+		if (totalPage < currentPage) 
+			currentPage = totalPage;
+		
+		int start = (currentPage - 1) * rows + 1;
+		int end = currentPage * rows;
+		map.put("start", start);
+		map.put("end", end);
+				
 		List<Mail>list = mailService.list(info.getUserId());
 		model.addAttribute("mailType", "send");
 		model.addAttribute("list", list);
-		model.addAttribute("dataCount", 1);
+		model.addAttribute("dataCount", dataCount);
 		model.addAttribute("page", 1);
 		model.addAttribute("totalPage", 1);
 		
@@ -75,6 +115,7 @@ public class MailController {
 			} else {
 				msg += "메일을 전송하는데 실패하였습니다.";
 			}
+			
 			mailService.insertMail(mail);
 		} catch (Exception e) {
 			msg = "오류가 발생했습니다. 관리자에게 문의해 주세요.(" + e.getMessage() + ")";
