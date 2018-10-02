@@ -16,13 +16,13 @@
     </tr>
     
     <tr>
-    	<td><a href="#">연차 사용 내역 조회</a></td>
+    	<td><a href="#">연차 내역 조회</a></td>
     </tr>
     <tr>
-    	<td><a href="#">급여 조회</a></td>
+    	<td><a href="<%=cp%>/pay/main">급여 조회</a></td>
     </tr>
     <tr>
-    	<td><a href="#">증명서 발급</a></td>
+    	<td><a href="<%=cp%>/certificate/main">증명서 발급</a></td>
     </tr>
     
    

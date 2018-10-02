@@ -23,17 +23,18 @@
 		<li><a href="<%=cp%>/message/msgReceive">쪽지</a></li>
 		<li><a href="<%=cp%>/schedule/main">일정</a></li>
 		<li><a href="<%=cp%>/scheduler/main">자원관리</a></li>
-		<li><a href="#">업무지원</a>
+		<li><a href="<%=cp%>/workhelper/main">업무지원</a>
 			<ul class="sub_menu">
 				<li><a href="#">근태조회</a></li>
 				<li><a href="#">연차 내역 조회</a></li>
 				<li><a href="<%=cp%>/pay/main">급여조회</a></li>
-				<li><a href="#">증명서 발급</a></li>
+				<li><a href="<%=cp%>/certificate/main">증명서 발급</a></li>
 			</ul></li>
 		<li><a href="<%=cp%>/notice/list">게시판</a></li>
 		<li><a href="<%=cp%>/member/main">전사 정보</a>
 			<ul class="sub_menu">
 				<li><a href="<%=cp%>/member/main">사원조회</a></li>
+				<li><a href="<%=cp%>/member/main">부서조회</a></li>
 			</ul></li>
 	</ul>
 </div>
