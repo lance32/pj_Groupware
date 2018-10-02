@@ -136,23 +136,35 @@ public class ResourceController {
 			// 받을 사람
 			mdto.setToMember(dto.getToMember());
 			
-			// 시간 처리 중
-//			String created = dto.getStartDay();
-//			SimpleDateFormat sdformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
-//			Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(created);
-//			Calendar cal = Calendar.getInstance();
-//			cal.setTime(date);
-//			cal.add(Calendar.DAY_OF_MONTH, -3);
-//			String resultDay = sdformat.format(cal.getTime());
-//			System.out.println("결과 : "+resultDay);
+			// 하루종일 일정일때 시간 처리
+			if(dto.getAllDay()=="1") {
+				dto.setStartTime("00:00");
+				dto.setEndTime("23:30");
+			}
+			
+			// 알림 메시지 보낼 시간 계산
+			String created = dto.getStartDay()+" "+dto.getStartTime();
+			SimpleDateFormat sdformat = new SimpleDateFormat("yyyy-MM-dd HH:mm"); 
+			Date date = sdformat.parse(created);
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(date);
+			System.out.println("알림시간:"+dto.getAlarmTime());
+			if(dto.getAlarmTime() == 0) {
+				cal.add(Calendar.DAY_OF_MONTH, -1);
+			} else if(dto.getAlarmTime() == 1) {
+				cal.add(Calendar.DAY_OF_MONTH, -2);
+			} else if(dto.getAlarmTime() == 2) {
+				cal.add(Calendar.DAY_OF_MONTH, -3);
+			}
+			
+			String resultDay = sdformat.format(cal.getTime());
+			mdto.setSendTime(resultDay);
 			
 			String members[] = mdto.getToMember().split(";");
 			for(int i=0; i < members.length; i++) {
 				mdto.setToMember(members[i]);
-				msgService.insertMessage(mdto);
+				msgService.insertMessage2(mdto);
 			}
-			
-
 		}
 		dto.setContent(util.htmlSymbols(dto.getContent()));
 		

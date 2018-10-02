@@ -91,6 +91,11 @@
 		VALUES(msg_seq.nextval, #{subject}, #{content}, #{sendMember}, #{toMember, jdbcType=VARCHAR})
 	</insert>
 	
+	<insert id="msgInsert2" parameterType="com.sp.message.Message">
+		INSERT INTO message(msgNum, subject, content, sendMember, toMember, sendTime)
+		VALUES(msg_seq.nextval, #{subject}, #{content}, #{sendMember}, #{toMember, jdbcType=VARCHAR}, TO_DATE(#{sendTime}, 'YYYY-MM-DD HH24:MI'))
+	</insert>
+	
 	<update id="msgUpdateReadTime" parameterType="Integer">
 		UPDATE message SET readTime = SYSDATE WHERE msgNum = #{msgNum} AND readTime IS NULL
 	</update>
