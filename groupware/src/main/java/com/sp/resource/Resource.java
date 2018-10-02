@@ -27,6 +27,7 @@ public class Resource {
 	private int alarmTime;
 	private String alarmTitle;
 	private String alarmContent;
+	private String toMember;
 	
 	private int alarmNum;
 	
@@ -213,5 +214,13 @@ public class Resource {
 
 	public void setAlarmNum(int alarmNum) {
 		this.alarmNum = alarmNum;
+	}
+
+	public String getToMember() {
+		return toMember;
+	}
+
+	public void setToMember(String toMember) {
+		this.toMember = toMember;
 	}
 }

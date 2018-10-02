@@ -70,9 +70,13 @@ public class ClubController {
 			,HttpSession session
 			,Model model) {
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		List<Category> clubCategory=null;
+		List<Category> clubCategoryItem=null;
 		Club dto=null;
 		String isMember=null;
 		try {
+			clubCategory=service.listClubCategory(clubNum);
+			clubCategoryItem=service.listClubCategoryItems(clubNum);
 			dto=service.readClubInfo(clubNum);
 			
 			Map<String, Object> map=new HashMap<>();
@@ -85,6 +89,8 @@ public class ClubController {
 		}
 		model.addAttribute("isMember", isMember);
 		model.addAttribute("clubInfo", dto);
+		model.addAttribute("clubCategory", clubCategory);
+		model.addAttribute("clubCategoryItem", clubCategoryItem);
 		return ".club.main";
 	}
 	
@@ -94,10 +100,14 @@ public class ClubController {
 			,HttpSession session
 			,Model model) {
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		List<Category> clubCategory=null;
+		List<Category> clubCategoryItem=null;
 		Club dto=null;
 		String isMember=null;
 		List<Club> list=null;
 		try {
+			clubCategory=service.listClubCategory(clubNum);
+			clubCategoryItem=service.listClubCategoryItems(clubNum);
 			dto=service.readClubInfo(clubNum);
 			
 			Map<String, Object> map=new HashMap<>();
@@ -113,6 +123,8 @@ public class ClubController {
 		model.addAttribute("isMember", isMember);
 		model.addAttribute("clubInfo", dto);
 		model.addAttribute("joinMemberList", list);
+		model.addAttribute("clubCategory", clubCategory);
+		model.addAttribute("clubCategoryItem", clubCategoryItem);
 		return ".club.clubManage.alterClubInfo";
 	}
 	
@@ -122,9 +134,13 @@ public class ClubController {
 			,HttpSession session
 			,Model model) {
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		List<Category> clubCategory=null;
+		List<Category> clubCategoryItem=null;
 		Club dto=null;
 		String isMember=null;
 		try {
+			clubCategory=service.listClubCategory(clubNum);
+			clubCategoryItem=service.listClubCategoryItems(clubNum);
 			dto=service.readClubInfo(clubNum);
 			
 			if(! info.getUserId().equals(dto.getMemberNum())) {
@@ -141,6 +157,8 @@ public class ClubController {
 		}
 		model.addAttribute("isMember", isMember);
 		model.addAttribute("clubInfo", dto);
+		model.addAttribute("clubCategory", clubCategory);
+		model.addAttribute("clubCategoryItem", clubCategoryItem);
 		return ".club.clubManage.updateClubInfo";
 	}
 	
@@ -215,6 +233,8 @@ public class ClubController {
 		
 		Club clubInfo=null;
 		String isMember=null;
+		List<Category> clubCategory=null;
+		List<Category> clubCategoryItem=null;
 		try {
 			SessionInfo info = (SessionInfo) session.getAttribute("member");
 			clubInfo=service.readClubInfo(clubNum);
@@ -222,6 +242,8 @@ public class ClubController {
 				model.addAttribute("message", "잘못된 접근입니다.");
 				return "error/error";
 			}
+			clubCategory=service.listClubCategory(clubNum);
+			clubCategoryItem=service.listClubCategoryItems(clubNum);
 			
 			Map<String, Object> map=new HashMap<>();
 			map.put("clubNum", clubNum);
@@ -233,6 +255,8 @@ public class ClubController {
 		}
 		model.addAttribute("isMember", isMember);
 		model.addAttribute("clubInfo", clubInfo);
+		model.addAttribute("clubCategory", clubCategory);
+		model.addAttribute("clubCategoryItem", clubCategoryItem);
 		return ".club.clubManage.alterCategory";
 	}
 	
@@ -247,6 +271,8 @@ public class ClubController {
 			
 		Club clubInfo=null;
 		String isMember=null;
+		List<Club> clubCategory=null;
+		List<Category> clubCategoryItem=null;
 		try {
 			SessionInfo info = (SessionInfo) session.getAttribute("member");
 			clubInfo=service.readClubInfo(clubNum);
@@ -254,6 +280,8 @@ public class ClubController {
 				model.addAttribute("message", "잘못된 접근입니다.");
 				return "error/error";
 			}
+			clubCategory=service.listClubCategory(clubNum);
+			clubCategoryItem=service.listClubCategoryItems(clubNum);
 			
 			Map<String, Object> map=new HashMap<>();
 			map.put("clubNum", clubNum);
@@ -265,6 +293,8 @@ public class ClubController {
 		}
 		model.addAttribute("isMember", isMember);
 		model.addAttribute("clubInfo", clubInfo);
+		model.addAttribute("clubCategory", clubCategory);
+		model.addAttribute("clubCategoryItem", clubCategoryItem);
 		return ".club.clubManage.alterCategory";
 	}
 	*/

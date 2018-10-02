@@ -57,11 +57,15 @@
 </style>
 <script type="text/javascript">
 jQuery(function(){
+	//카테고리
+	<c:forEach var="dto" items="${clubCategoryItem}">
+		jQuery("#category${dto.categoryParent}").append("<li class='li-items'>${dto.categoryName}</li>");
+	</c:forEach>
+	
 	jQuery("#manageClubButn").click(function(){
 		location.href="<%=cp%>/club/alterClubInfo?clubNum="+${clubInfo.clubNum};
 		return;
 	});
-	
 	
 });
 
@@ -86,20 +90,14 @@ jQuery(function(){
 </c:if>
 
 <div style="width: 250px; height: auto; border-radius: 5px; border: 1px solid #A4A4A4; padding: 15px 15px 30px 15px; margin-bottom: 30px;">
-	<div style="text-align: left;">
-		<ul class="ul-list">
-			<li class="li-separate">테스트</li>
-			<li class="li-items">테스트1</li>
-			<li class="li-items">테스트2</li>
-		</ul>
-	</div>
-	<div style="text-align: left;">
-		<ul class="ul-list">
-			<li class="li-separate">테스트</li>
-			<li class="li-items">테스트1</li>
-			<li class="li-items">테스트2</li>
-		</ul>
-	</div>
+	<c:forEach var="dto" items="${clubCategory}">
+		<div style="text-align: left;">
+			<ul id="category${dto.categoryNum}" class="ul-list">
+				<li class="li-separate">${dto.categoryName}</li>
+			</ul>
+		</div>
+	</c:forEach>
+	
 </div>
 
 

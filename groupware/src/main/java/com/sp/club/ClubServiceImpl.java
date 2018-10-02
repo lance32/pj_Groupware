@@ -27,6 +27,8 @@ public class ClubServiceImpl implements ClubService{
 			}
 			dao.insertData("club.createClub", dto);
 			dao.insertData("club.insertFounder", dto.getMemberNum());
+			dao.insertData("club.insertBasicCategory");
+			dao.insertData("club.insertBasicCategory_notice");
 			result=1;
 		} catch (Exception e) {
 			System.out.println(e.toString());
@@ -50,12 +52,37 @@ public class ClubServiceImpl implements ClubService{
 		Club dto=null;
 		try {
 			dto=dao.selectOne("club.readClubInfo", clubNum);
+			
 		} catch (Exception e) {
 			System.out.println(e.toString());
 		}
 		return dto;
 	}
+	@Override
+	public List<Category> listClubCategory(int clubNum) {
+		List<Category> list =null;
+		try {
+			list=dao.selectList("club.listClubCategory",clubNum);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return list;
+	}
+	@Override
+	public List<Category> listClubCategoryItems(int clubNum) {
+		List<Category> list =null;
+		try {
+			list=dao.selectList("club.listClubCategoryItems",clubNum);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return list;
+	}
 
+
+	
+	
+	
 	@Override
 	public String isClubMember(Map<String, Object> map) {
 		String result=null;
@@ -109,6 +136,8 @@ public class ClubServiceImpl implements ClubService{
 		}
 		return result;
 	}
+
+
 	
 
 }

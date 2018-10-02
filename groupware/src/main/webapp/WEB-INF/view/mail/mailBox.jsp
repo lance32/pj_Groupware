@@ -69,8 +69,8 @@
 				<c:if test="${mailType != 'send'}">
 					<td style="text-align: left;">${dto.sendName}</td>
 				</c:if>
-				<td style="text-align: left;"><a href="#">${dto.subject}</a></td>
-				<td>${dto.sendTime}</td>
+				<td style="text-align: left;"><a href="${mailUrl}&index=${dto.index}">${dto.subject}</a></td>
+				<td>${dto.getFormatSendTime()}</td>
 				<td>&nbsp;</td>
 			</tr>
 		</c:forEach>
@@ -91,8 +91,7 @@
 				<option value="all">제목+내용</option>
 				<option value="subject">제목</option>
 				<option value="content">내용</option>
-				<option value="sendMember">보낸 사람</option>
-				<option value="receiveMember">받는 사람</option>
+				<option value="receiveMail">받는 사람(이메일)</option>
 			</select>
 			<input type="text" id="searchValue" name="searchValue" class="searchBox">
 			<button type="button" id="searchBtn" class="btn">검색</button>

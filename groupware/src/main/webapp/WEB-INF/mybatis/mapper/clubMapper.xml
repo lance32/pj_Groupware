@@ -6,12 +6,24 @@
 	<!-- 동호회 추가 -->
 	<insert id="createClub" parameterType="com.sp.club.Club">
 		INSERT INTO clubInfo(clubNum, clubName, clubSubject, clubIntro, maxPeople, memberNum, clubImg) 
-    		VALUES(clubInfo_seq1.NEXTVAL, #{clubName}, #{clubSubject}, #{clubIntro}, #{maxPeople}, #{memberNum}, #{clubImg})
+    	VALUES(clubInfo_seq1.NEXTVAL, #{clubName}, #{clubSubject}, #{clubIntro}, #{maxPeople}, #{memberNum}, #{clubImg})
 	</insert>
-	
-	<!-- 동호회 개설자 회원목록에 추가 -->
 	<insert id="insertFounder" parameterType="String">
 		INSERT INTO clubMember(memberNum, clubNum) VALUES(#{memberNum}, clubInfo_seq1.CURRVAL) 
+	</insert>
+	<insert id="insertBasicCategory">
+		INSERT INTO clubBoardCategory(parent,categoryNum, categoryName, clubNum) 
+    	VALUES(NULL, clubBoardCategory_seq.NEXTVAL, '게시판', clubInfo_seq1.CURRVAL)
+	</insert>
+	<insert id="insertBasicCategory_notice">
+		INSERT INTO clubBoardCategory(parent, categoryNum, categoryName, clubNum) 
+		VALUES(clubBoardCategory_seq.CURRVAL-1, clubBoardCategory_seq.NEXTVAL, '공지', clubInfo_seq1.CURRVAL)
+	</insert>
+	
+	<!-- 카테고리 추가 -->
+	<insert id="insertClubCategory" parameterType="com.sp.club.Club">
+		INSERT INTO clubBoardCategory(categoryNum, categoryName, clubNum, parent) 
+		VALUES(clubBoardCategory_seq.NEXTVAL, #{categoryName}, #{clubNum}, #{parent})
 	</insert>
 
 	<!-- 동호회 목록 -->
@@ -24,6 +36,13 @@
 		SELECT clubNum, clubName, clubSubject, clubIntro, maxPeople, c.memberNum, m.name memberName, clubImg 
 		FROM clubInfo c JOIN member m ON c.memberNum=m.memberNum
 		WHERE clubNum = #{clubNum}
+	</select>
+	<select id="listClubCategory" parameterType="Integer" resultType="com.sp.club.Category">
+		SELECT categoryNum, categoryName FROM clubBoardCategory WHERE clubNum=#{clubNum} AND  NVL(parent,0)=0
+	</select>
+	<select id="listClubCategoryItems" parameterType="Integer" resultType="com.sp.club.Category">
+		SELECT categoryNum, categoryName, parent categoryParent FROM clubBoardCategory 
+		WHERE clubNum=#{clubNum} AND  NVL(parent,0)!=0
 	</select>
 	
 	<!-- 동호회 가입한 사람인지.. -->
