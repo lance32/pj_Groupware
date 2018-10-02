@@ -13,7 +13,12 @@
 			LEFT OUTER JOIN position p ON m.positionNum=p.positionNum
 		WHERE m.memberNum=#{memberNum}
     </select>
-
+	
+	<select id="readDetailinfo" resultType="com.sp.member.Member" parameterType="String">
+		SELECT birth,email,tel,phone,zip,addr1,addr2 FROM memberDetailinfo WHERE memberNum=#{memberNum}
+	</select>
+	
+	
 <!-- insert -->
 	<insert id="insertMember" parameterType="com.sp.member.Member">
 		INSERT INTO member(memberNum,name,pwd,positionNum,departmentNum,saveFilename,originalFilename)

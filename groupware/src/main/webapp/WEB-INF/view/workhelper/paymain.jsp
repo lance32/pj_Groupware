@@ -15,20 +15,20 @@
 </style>
 
 <div id="test" style="width:100%; height:600px; ">
-	<%-- 상단 대표글씨 --%>
-	<div style="clear: both; margin: 10px 0px 15px 10px;">
-		<span class="glyphicon glyphicon-th-list" style="font-size: 25px; margin-left: 10px;"></span>
-		<span style="font-size: 25px;">&nbsp;
-				급여조회
-		</span><br>
-		
-<div id="test" style="width:100%; height:600px; ">
 
 	<%-- 상단 대표글씨 --%>
 	<div style="clear: both; margin: 10px 0px 15px 10px;">
 		<span class="glyphicon glyphicon-th-list" style="font-size: 28px; margin-left: 10px;"></span>
-		<span style="font-size: 30px;">&nbsp;테스트</span><br>
+		<span style="font-size: 30px;">&nbsp;급여조회</span><br>
 		<div style="clear: both; width: 300px; height: 1px; border-bottom: 3px solid black;"></div>
+	</div>
+	
+	<div style="text-align:left;">
+	
+		<select class="selectBox">				<%-- 선택박스  --%>
+			<option>테스트 옵션1</option>
+			<option>테스트 옵션2</option>
+		</select>
 	</div>
 	
 	<%-- 목록 --%>
@@ -42,29 +42,17 @@
 		
 		<tr class="cf">
 			<%-- 구분 폭 수정 가능 --%>
-			<td width="170">구분1</td>
-			<td width="auto" style="text-align: left;">구분2</td>
-			<td width="190">구분3</td>
-			<td width="150">구분4</td>
+			<td width="50">번호</td>
+			<td width="100" style="text-align: left;">반방각</td>
+			<td width="100">날짜</td>
+			<td width="750">제목</td>
 		</tr>
 		
 		<tr class="tr">
-			<td>항목1</td>
-			<td style="text-align: left;">1</td>
-			<td>2</td>
-			<td>3</td>
-		</tr>
-		<tr class="tr">
-			<td>항목2</td>
-			<td style="text-align: left;">1</td>
-			<td>2</td>
-			<td>3</td>
-		</tr>
-		<tr class="tr">
-			<td>항목3</td>
-			<td style="text-align: left;">1</td>
-			<td>2</td>
-			<td>3</td>
+			<td>1</td>
+			<td width="100" style="text-align: left;">이름</td>
+			<td width="100">2018-10-02</td>
+			<td width="750">2018년 10월 ooo님의 급여 입니다.</td>
 		</tr>
 	</table>
 	<br>
@@ -76,21 +64,6 @@
 		<a href="#">다음</a>
 	</div>
 	
-	<div style="text-align:center;">
-	
-		<select class="selectBox">				<%-- 선택박스  --%>
-			<option>테스트 옵션1</option>
-			<option>테스트 옵션2</option>
-		</select>
-		
-		<input type="text" class="searchBox">		<%-- 입력창 --%>
-		
-		<button type="button" class="btn">검색</button>		<%-- 버튼 --%>
-		<br>
-		<button type="button" class="btn">테스트12</button>		<%-- 버튼 --%>
-	</div>
 	
 </div>
 
-	</div>
-</div>

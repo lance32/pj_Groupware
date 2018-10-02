@@ -21,5 +21,12 @@ public class workhelperController {
 		return ".workhelper.certificatemain";
 	}
 	
+	@RequestMapping(value="pay/insertpay")
+	public String insertpayForm() {
+		return ".workhelper.insertpay";
+		
+		
+	}
+	
 	
 }

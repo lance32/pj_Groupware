@@ -24,7 +24,17 @@
     <tr>
     	<td><a href="<%=cp%>/certificate/main">증명서 발급</a></td>
     </tr>
-    
+    <c:if test="${sessionScope.member.userId=='admin' }">
+    <tr>
+    	<th>관리자</th>
+    </tr>
+    <tr>
+    	<td><a href="<%=cp%>/pay/insertpay">급여 관리</a></td>
+    </tr>
+    <tr>
+    	<td><a href="#">증명서 관리</a></td>
+    </tr>
+    </c:if>
    
 
 </table>
