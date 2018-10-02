@@ -3,11 +3,28 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="res1">
 <!-- 자원 그룹 -->
+<insert id="insertResourceGroup" parameterType="com.sp.resource.Resource">
+	INSERT INTO resourceGroup(groupNum, groupName) VALUES(resourceGroup_seq.NEXTVAL, #{groupName})
+</insert>
+
+<update id="updateResourceGroup" parameterType="com.sp.resource.Resource">
+	UPDATE resourceGroup SET groupName = #{groupName} WHERE groupNum = #{groupNum}
+</update>
+
+<delete id="deleteResourceGroup" parameterType="Integer">
+	DELETE FROM resourceGroup WHERE groupNum = #{groupNum}
+</delete>
+
 <select id="listResourceGroup" resultType="com.sp.resource.Resource">
 	SELECT groupNum, groupName FROM resourceGroup
 </select>
 
 <!-- 자원 상세 목록 -->
+<insert id="insertResourceList" parameterType="com.sp.resource.Resource">
+	INSERT INTO resourceList(resourceNum, groupNum, resourceName, color, occupancy) 
+		VALUES(resource_seq.NEXTVAL, #{groupNum}, #{resourceName}, #{color}, #{occupancy})
+</insert>
+
 <select id="listResourceList" resultType="com.sp.resource.ResourceJSON">
 	SELECT resourceNum id, rl.groupNum, groupName, resourceName title,
 		color eventColor, occupancy
@@ -16,11 +33,22 @@
 		ORDER BY rl.groupNum, resourceNum
 </select>
 
+<select id="resCount" resultType="Integer">
+	SELECT NVL(COUNT(*), 0) FROM resourceList
+</select>
+
 <select id="listResourceList2" resultType="com.sp.resource.Resource">
 	SELECT resourceNum, resourceName, occupancy
 		FROM resourceList
 		WHERE groupNum = #{groupNum}
 		ORDER By resourceNum
+</select>
+
+<select id="listResourceList3" resultType="com.sp.resource.Resource">
+	SELECT resourceNum, rl.groupNum, groupName, resourceName, occupancy
+		FROM resourceList rl
+		LEFT OUTER JOIN resourceGroup rg ON rl.groupNum = rg.groupNum
+		ORDER BY resourceNum DESC
 </select>
 
 <select id="readResourceList" parameterType="Integer" resultType="com.sp.resource.Resource">
@@ -40,11 +68,12 @@
 </insert>
 
 <select id="listReserve" parameterType="map" resultType="com.sp.resource.ResourceJSON">
-	SELECT reserveNum id, groupName, rs.resourceNum resourceId, title, 
+	SELECT reserveNum id, groupName, rs.resourceNum resourceId, title, content,
 		NVL2(startTime, startDay||'T'||startTime, startDay) "start",
 		NVL2(endTime, endDay||'T'||endTime, endDay) "end",
 			startDay, startTime, endDay, endTime, 
-			rs.memberNum, rs.name, occupancy, rl.resourceName, rl.groupNum, inwon
+			rs.memberNum, rs.name, occupancy, rl.resourceName, rl.groupNum, inwon,
+			alarm, alarmTime, alarmTitle, alarmContent, toMember
         FROM reservation rs
         JOIN resourceList rl ON rs.resourceNum = rl.resourceNum
         JOIN resourceGroup rg ON rl.groupNum = rg.groupNum
@@ -53,6 +82,31 @@
            AND TO_DATE(endDay, 'YYYY-MM-DD') &lt;= #{end}
         ORDER BY groupNum, resourceId, reserveNum
 </select>
+
+<select id="dataCount" resultType="Integer">
+	SELECT NVL(COUNT(*), 0) FROM reservation
+</select>
+
+<select id="listReserve2" parameterType="map" resultType="com.sp.resource.Resource">
+	SELECT * FROM(
+    	SELECT ROWNUM rnum, tb.* FROM(
+        	SELECT rs.reserveNum, rs.resourceNum, rs.resourceName,
+        	title, startDay, endDay, rs.name, rs.created, inwon
+        	FROM reservation rs
+        	LEFT OUTER JOIN resourceList rl ON rl.resourceNum = rs.resourceNum
+        	LEFT OUTER JOIN member m ON m.memberNum = rs.memberNum
+    	)tb WHERE ROWNUM &lt;= #{end}
+	)WHERE rnum &gt;= #{start}
+</select>
+
+<update id="updateReserve" parameterType="com.sp.resource.Resource">
+	UPDATE reservation SET resourceNum = #{resourceNum}, resourceName = #{resourceName}, startDay = #{startDay},
+		endDay = #{endDay}, startTime = #{startTime, jdbcType=VARCHAR}, endTime = #{endTime, jdbcType=VARCHAR},
+		inwon = #{inwon}, title = #{title}, content = #{content}, alarm = #{alarm},
+		alarmTime = #{alarmTime, jdbcType=VARCHAR}, alarmTitle = #{alarmTitle, jdbcType=VARCHAR},
+		alarmContent = #{alarmContent, jdbcType=VARCHAR}, toMember = #{toMember, jdbcType=VARCHAR}
+	WHERE reserveNum = #{reserveNum}
+</update>
 
 <delete id="deleteReserve" parameterType="map">
 	DELETE FROM reservation  

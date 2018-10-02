@@ -161,14 +161,14 @@ $(function() {
 	</div>
 	
 	<div class="form-group">
-		<label for="title" class="col-sm-2 control-label">작 성 자</label>
+		<label class="col-sm-2 control-label">작 성 자</label>
 		<div class="col-sm-10" style="padding-top: 5px;">
 			<input type="text" class="form-control" id="resName" name="name" value="${sessionScope.member.userName}" readonly="readonly">
 		</div>
 	</div>
 	
 	<div class="form-group">
-		<label for="title" class="col-sm-2 control-label">구   분</label>
+		<label class="col-sm-2 control-label">구   분</label>
 		<div class="col-sm-10" style="padding-top: 5px;">
 			<select name="groupNum" class="form-control selectField" onchange="changeGroup('', '');">
 				<c:forEach var="vo" items="${groupList}">
@@ -179,14 +179,21 @@ $(function() {
 	</div>
 	
 	<div class="form-group">
-		<label for="title" class="col-sm-2 control-label">항   목</label>
+		<label class="col-sm-2 control-label">항   목</label>
 		<div class="col-sm-10" style="padding-top: 5px;">
 			<select name="resourceNum" class="form-control selectField"></select>
 		</div>
 	</div>
 	
 	<div class="form-group">
-		<label for="title" class="col-sm-2 control-label">종일일정</label>
+		<label class="col-sm-2 control-label">최 대 인 원</label>
+		<div class="col-sm-10" style="padding-top: 5px;">
+			<label id="resOccupancy"></label>
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label class="col-sm-2 control-label">종일일정</label>
 		<div class="col-sm-10">
 			<label class="radio-inline"><input type="radio" name="allDay" id="allDay3" value="1"> 하루종일</label>
 			<label class="radio-inline"><input type="radio" name="allDay" id="allDay4" value="0" checked="checked"> 시간지정</label>
@@ -265,6 +272,7 @@ $(function() {
 		<div class="col-sm-10">
 			<input type="text" id="toMember" name="toMember">
 			<input type="button" id="organizationChart" value="&nbsp;조직도&nbsp;">
+			<input type="hidden" name="reserveNum" value="0">
 		</div>
 	</div>
 </form>

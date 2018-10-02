@@ -16,20 +16,35 @@ public class ResourceServiceImpl implements ResourceService{
 	
 	@Override
 	public int insertResourceGroup(Resource dto) {
-		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		try {
+			result = dao.insertData("res1.insertResourceGroup", dto);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
 	}
 
 	@Override
 	public int updateResourceGroup(Resource dto) {
-		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		try {
+			result = dao.updateData("res1.updateResourceGroup", dto);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
 	}
 
 	@Override
 	public int deleteResourceGroup(int groupNum) {
-		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		try {
+			result = dao.deleteData("res1.deleteResourceGroup", groupNum);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
 	}
 
 	@Override
@@ -51,8 +66,13 @@ public class ResourceServiceImpl implements ResourceService{
 
 	@Override
 	public int insertResourceList(Resource dto) {
-		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		try {
+			result = dao.insertData("res1.insertResourceList", dto);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
 	}
 
 	@Override
@@ -90,6 +110,28 @@ public class ResourceServiceImpl implements ResourceService{
 	}
 
 	@Override
+	public int resCount() {
+		int result = 0;
+		try {
+			result = dao.selectOne("res1.resCount");
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
+	}
+
+	@Override
+	public List<Resource> listResourceList3(Map<String, Object> map) {
+		List<Resource> list = null;
+		try {
+			list = dao.selectList("res1.listResourceList3", map);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return list;
+	}
+
+	@Override
 	public List<ResourceJSON> listResourceList() {
 		List<ResourceJSON> list=null;
 		try {
@@ -113,8 +155,13 @@ public class ResourceServiceImpl implements ResourceService{
 
 	@Override
 	public int updateReserve(Resource dto) {
-		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		try {
+			result = dao.updateData("res1.updateReserve", dto);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
 	}
 
 	@Override
@@ -144,11 +191,29 @@ public class ResourceServiceImpl implements ResourceService{
 		}
 		return list;
 	}
+	
+	@Override
+	public List<Resource> listReserve2(Map<String, Object> map) {
+		List<Resource> list=null;
+		try {
+			list=dao.selectList("res1.listReserve2", map);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return list;
+	}
 
 	@Override
-	public int insertAlarm(Resource dto) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int dataCount() {
+		int result = 0;
+		try {
+			result = dao.selectOne("res1.dataCount");
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
 	}
+	
+	
 
 }

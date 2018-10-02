@@ -19,7 +19,7 @@
     </tr>
     
     <tr>
-    	<td><a href="<%=cp%>/scheduler/reserveList">예 약 목 록</a></td>
+    	<td><a href="<%=cp%>/scheduler/list">예 약 목 록</a></td>
     </tr>
     
     <tr>
