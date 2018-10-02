@@ -50,6 +50,15 @@ jQuery(function(){
 		}
 	});
 	
+//---
+	
+	//게시글 작성 버튼 클릭시
+	jQuery("#createClubBoardButn").click(function(){
+		location.href="<%=cp%>/clubBoard/createBoard?clubNum=${clubInfo.clubNum}&categoryNum=${categoryNum}";
+		return;
+	});
+	
+	
 });
 
 
@@ -195,7 +204,7 @@ jQuery(function(){
 	</div>
 </div>
 
-<div style="float:right; position: fixed ; right:20px; width: 250px; height: 270px; border: 2px solid #D8D8D8; border-radius:5px; z-index: 900; background: #FFFFFF; margin-top: 30px;">
+<div style="float:right; position: fixed ; right:20px; width: 250px; height: 270px; border: 2px solid #A4A4A4; border-radius:5px; z-index: 900; background: #FFFFFF; margin-top: 30px;">
 	<div style="width: 100%; height: 25px; padding-top: 5px; border-bottom: 1.5px solid #D8D8D8;">
 	
 	</div>
@@ -210,7 +219,7 @@ jQuery(function(){
 		<div style="margin:15px 15px; border-bottom:1px solid #D8D8D8;"></div>
 		
 		<div style="width: 100%; text-align: center; padding-top: 5px;">
-			<button type="button" class="clubBoardManageButn">게시글 작성</button>
+			<button type="button" id="createClubBoardButn" class="clubBoardManageButn">게시글 작성</button>
 		</div>
 	</div>
 	

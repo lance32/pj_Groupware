@@ -55,9 +55,42 @@ public class ClubBoardController {
 		model.addAttribute("clubInfo", clubInfo);
 		model.addAttribute("clubCategory", clubCategory);
 		model.addAttribute("clubCategoryItem", clubCategoryItem);
+		model.addAttribute("categoryNum", categoryNum);
 		return ".club.clubBoard.list";
 	}
 	
+	@RequestMapping(value="/clubBoard/createBoard")
+	public String createBoardForm(
+			@RequestParam int clubNum
+			,@RequestParam int categoryNum
+			,HttpSession session
+			,Model model) {
+		
+		Club clubInfo=null;
+		String isMember=null;
+		List<com.sp.club.Category> clubCategory=null;
+		List<com.sp.club.Category> clubCategoryItem=null;
+		try {
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
+			clubInfo=clubService.readClubInfo(clubNum);
+			clubCategory=clubService.listClubCategory(clubNum);
+			clubCategoryItem=clubService.listClubCategoryItems(clubNum);
+			
+			Map<String, Object> map=new HashMap<>();
+			map.put("clubNum", clubNum);
+			map.put("memberNum", info.getUserId());
+			isMember=clubService.isClubMember(map);
+			
+		} catch (Exception e) {
+			return "error/error";
+		}
+		model.addAttribute("isMember", isMember);
+		model.addAttribute("clubInfo", clubInfo);
+		model.addAttribute("clubCategory", clubCategory);
+		model.addAttribute("clubCategoryItem", clubCategoryItem);
+		model.addAttribute("categoryNum", categoryNum);
+		return ".club.clubBoard.create";
+	}
 	
 	
 	
@@ -78,7 +111,6 @@ public class ClubBoardController {
 		try {
 			SessionInfo info = (SessionInfo) session.getAttribute("member");
 			clubInfo=clubService.readClubInfo(clubNum);
-
 			clubCategory=clubService.listClubCategory(clubNum);
 			clubCategoryItem=clubService.listClubCategoryItems(clubNum);
 			
