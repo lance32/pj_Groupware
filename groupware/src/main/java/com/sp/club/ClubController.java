@@ -14,17 +14,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
-import com.sp.common.MyUtil;
 import com.sp.member.SessionInfo;
 
 @Controller("club.clubController")
 public class ClubController {
 	@Autowired
 	private ClubService service;
-	@Autowired
-	private MyUtil myUtil;
+
 	
 	@RequestMapping(value="/clubList/clubList")
 	public String clubList(Model model) {
@@ -341,10 +338,10 @@ public class ClubController {
 			@RequestParam int clubNum
 			,HttpSession session
 			,Model model) {
-			
+		
 		Club clubInfo=null;
 		String isMember=null;
-		List<Club> clubCategory=null;
+		List<Category> clubCategory=null;
 		List<Category> clubCategoryItem=null;
 		try {
 			SessionInfo info = (SessionInfo) session.getAttribute("member");
