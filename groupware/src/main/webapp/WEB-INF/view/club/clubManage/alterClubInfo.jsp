@@ -69,17 +69,11 @@ jQuery(function(){
 			<tr height="20"><td colspan="2">&nbsp;</td></tr>
 			<tr height="80">
 				<td style="text-align: left;  font-weight: 600;" valign="top">동호회 가입자 목록</td>
-				<td style="text-align: left; border-bottom: 1px solid #BDBDBD; border-top: 1px solid #BDBDBD; overflow-y: scroll; padding-left:5px;" valign="top">
+				<td style="text-align: left; border-bottom: 1px solid #BDBDBD; border-top: 1px solid #BDBDBD; overflow-y: auto; padding-left:5px; background: #FAFAFA;" valign="top">
 					<c:forEach var="dto" items="${joinMemberList}" varStatus="status">
 						${dto.joinMemberName}&nbsp;&nbsp;&nbsp;
 						<c:if test="${status.count%4==0}"><br></c:if>
 					</c:forEach>
-				</td>
-			</tr>
-			<tr height="20"><td colspan="2">&nbsp;</td></tr>
-			<tr height="80">
-				<td style="text-align: left; font-weight: 600;" valign="top">생성된 카테고리</td>
-				<td style="text-align: left; border-bottom: 1px solid #BDBDBD; border-top: 1px solid #BDBDBD; overflow-y: scroll; padding-left:5px;" valign="top">
 				</td>
 			</tr>
 		</table>

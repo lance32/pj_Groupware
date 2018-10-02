@@ -58,13 +58,13 @@ jQuery(function(){
 			return;
 		}
 		var str=f.upload.value;
-    	if(! str) {
-    		if(! /(\.gif|\.jpg|\.png|\.jpeg)$/i.test(f.upload.value)) {
-    			alert("대표 이미지는 이미지 파일만 가능합니다. ");
-    			f.upload.focus();
-    			return false;
-    		}
-    	}    
+	    	if(! str) {
+	    		if(! /(\.gif|\.jpg|\.png|\.jpeg)$/i.test(f.upload.value)) {
+	    			alert("대표 이미지는 이미지 파일만 가능합니다. ");
+	    			f.upload.focus();
+	    			return false;
+	    		}
+	    	}    
     	
 		f.action="<%=cp%>/clubManage/updateClubInfo";
 		f.submit();

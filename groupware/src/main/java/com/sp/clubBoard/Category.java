@@ -1,11 +1,10 @@
-package com.sp.club;
+package com.sp.clubBoard;
 
 public class Category {
 	private int clubNum;
 	private int categoryNum;
 	private String categoryName;
 	private Integer categoryParent;
-	private int separate;
 	
 	public int getClubNum() {
 		return clubNum;
@@ -30,11 +29,5 @@ public class Category {
 	}
 	public void setCategoryParent(Integer categoryParent) {
 		this.categoryParent = categoryParent;
-	}
-	public int getSeparate() {
-		return separate;
-	}
-	public void setSeparate(int separate) {
-		this.separate = separate;
 	}
 }

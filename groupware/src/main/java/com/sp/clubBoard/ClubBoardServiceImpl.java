@@ -1,5 +1,8 @@
 package com.sp.clubBoard;
 
-public class ClubBoardServiceImpl {
+import org.springframework.stereotype.Service;
+
+@Service("clubBoard.clubBoardService")
+public class ClubBoardServiceImpl implements ClubBoardService{
 
 }
