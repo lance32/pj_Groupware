@@ -18,6 +18,11 @@ public class MessageServiceImpl implements MessageService {
 	public void insertMessage(Message msg) throws Exception {
 		dao.insertData("message.msgInsert", msg);
 	}
+	
+	@Override
+	public void insertMessage2(Message msg) throws Exception {
+		dao.insertData("message.msgInsert2", msg);
+	}
 
 	@Override
 	public List<Message> listMessage(Map<String, Object>map) throws Exception {

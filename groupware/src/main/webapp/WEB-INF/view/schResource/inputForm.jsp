@@ -254,9 +254,9 @@ $(function() {
 	<div id="alarmTime" class="form-group" style="display: none;">
 		<label for="content" class="col-sm-2 control-label">알 림 시 간</label>
 		<div class="col-sm-10">
-			<label class="radio-inline"><input type="radio" name="alarmTime" value="0"> 1시간 전</label>
-			<label class="radio-inline"><input type="radio" name="alarmTime" value="1"> 6시간 전</label>
-			<label class="radio-inline"><input type="radio" name="alarmTime" value="2"> 1일 전</label>
+			<label class="radio-inline"><input type="radio" name="alarmTime" value="0"> 1일 전</label>
+			<label class="radio-inline"><input type="radio" name="alarmTime" value="1"> 2일 전</label>
+			<label class="radio-inline"><input type="radio" name="alarmTime" value="2"> 3일 전</label>
 		</div>
 	</div>
 	
