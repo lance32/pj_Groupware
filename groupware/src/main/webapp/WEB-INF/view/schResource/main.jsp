@@ -11,28 +11,18 @@
 <link rel="stylesheet" href="<%=cp%>/resource/fullcalendar/scheduler/scheduler.css" type="text/css">
 
 <style type="text/css">
-/* 모달대화상자 */
-/* 타이틀바 */
-.ui-widget-header {
-	background: none;
-	border: none;
-	height:35px;
-	line-height:35px;
-	border-bottom: 1px solid #cccccc;
-	border-radius: 0px;
-}
 /* 내용 */
 .ui-widget-content {
    /* border: none; */
-   border-color: #cccccc; 
+   border-color: #cccccc;
 }
 
 #calendar {
-    max-width: 900px;
-	margin: 20px auto 20px;
+    max-width: 1000px;
+	margin: 10px auto 10px;
 }
 
-#schLoading {
+#resLoading {
 	display: none;
 	position: absolute;
 	top: 10px;
@@ -74,7 +64,7 @@ $(function() {
 			url: '<%=cp%>/scheduler/resources',
 			type:'post',
 			error: function() {
-				console.log("error...");
+				console.log("error");
 			}
 		},
 		
@@ -96,10 +86,6 @@ $(function() {
 		},
 		
 		select: function(start, end, jsEvent, view, resource) {
-			// var s=start.format();
-			// var e=end.format();
-			// var r=resource ? resource.id : '';
-			
 			insertForm(start, end, resource);
 		},
 		
@@ -120,9 +106,6 @@ $(function() {
 		// schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source'
 		schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives' // 비영리기관라이선스
 	});
-	
-	// var s="<select class='selectField'><option>예제1</option><option>예제2</option></select>";
-	// $(".fc-widget-header .fc-cell-text:first").html(s);
 });
 
 // ---------------------------------------------
@@ -133,7 +116,6 @@ function insertForm(start, end, resource) {
 	
 	if(resource) {
 		resourceNum = resource.id;
-		
 		var url="<%=cp%>/scheduler/readResourceList";
 	    var query="resourceNum="+resourceNum;
 	     $.ajax({
@@ -159,15 +141,15 @@ function insertForm(start, end, resource) {
 		  autoOpen: false,
 		  modal: true,
 		  buttons: {
-		       " 확인 " : function() {
-		    	   insertOk();
-		        },
-		       " 닫기 " : function() {
-		    	   $(this).dialog("close");
-		        }
+		      " 확인 " : function() {
+		   	   insertOk();
+		       },
+		      " 닫기 " : function() {
+		   	   $(this).dialog("close");
+		       }
 		  },
-		  height: 480,
-		  width: 550,
+		  height: 750,
+		  width: 700,
 		  title: "스케쥴러 등록",
 		  close: function(event, ui) {
 		  }
@@ -179,15 +161,22 @@ function insertForm(start, end, resource) {
 		
 		startDay=start.format("YYYY-MM-DD");
 		startTime=start.format("HH:mm");
-
+		
+		endDay=end.format("YYYY-MM-DD");
+		endTime=end.format("HH:mm");
+		
 		$("input[name='startDay']").val(startDay);
+		$("select[name='startTime']").val(startTime);
+		
+		$("input[name='endDay']").val(endDay);
+		$("select[name='endTime']").val(endTime);
 
 		if(start.hasTime()) {
 			// 시간 일정인 경우
-			$("input[name='allDay']")[0].checked = false;
-			$("#startTime").show();
-			$("#endTime").show();
-        
+			$("#allDay4").prop("checked",true);
+			$("#resStartTime").show();
+			$("#resEndTime").show();
+
 			$("input[name='startTime']").val(startTime);
 			if(start.format()!=end.format()) {
 				endDay=end.format("YYYY-MM-DD");
@@ -199,11 +188,11 @@ function insertForm(start, end, resource) {
 			
 		} else {
 			// 하루종일 일정인 경우
-			$("input[name='allDay']")[0].checked = true;
+			$("#allDay3").prop("checked",true);
 			$("input[name='startTime']").val("");
 			$("input[name='endTime']").val("");
-			$("#startTime").hide();
-			$("#endTime").hide();
+			$("#resStartTime").hide();
+			$("#resEndTime").hide();
 			
 			if(start.format()!=end.add("-1", "days").format()) {
 				endDay=end.format("YYYY-MM-DD");
@@ -216,13 +205,14 @@ function insertForm(start, end, resource) {
 		changeGroup(groupNum, resourceNum);
 	     
 		dlg.dialog("open");
-		// calendar.fullCalendar('unselect');
+
 	});
 }
 
+
 function changeGroup(groupNum, resourceNum) {
 	if(groupNum==undefined || groupNum=="") {
-		groupNum=$("form[name=schedulerForm] select[name=groupNum]").val();
+		groupNum=$("form[name=resForm] select[name=groupNum]").val();
 	}
 	
 	if(groupNum==undefined || groupNum==""){
@@ -259,27 +249,13 @@ function changeGroup(groupNum, resourceNum) {
     });
 }
 
-// 종일일정에 따른 시간 입력폼 보이기/숨기기
-$(function(){
-	$(document).on("click","input[name='allDay']",function(){
-		var allDay=$("input[name='allDay']:checkbox:checked").val();
-		if(allDay=='true') {
-			$("#startTime").hide();
-			$("#endTime").hide();
-		} else {
-			$("#startTime").show();
-            $("#endTime").show();
-		}
-	});
-});
-
 // 새로운 일정 등록
 function insertOk() {
 	if(! validCheck())
 		return;
-	
-	var query=$("form[name=schedulerForm]").serialize();
-	var url="<%=cp%>/scheduler/schedulerInsert";
+	var resourceName = $("select[name=resourceNum]").text();
+	var query=$("form[name=resForm]").serialize();
+	var url="<%=cp%>/scheduler/reservationInsert?resourceName="+resourceName;
     
      $.ajax({
         type:"post"
@@ -304,12 +280,16 @@ function validCheck() {
 	var groupNum=$.trim($("select[name='groupNum']").val());
 	var resourceNum=$.trim($("select[name='resourceNum']").val());
 	var title=$.trim($("input[name='title']").val());
+	var content=$.trim($("textarea[name=content]").val());
 	var allDay=$("input[name='allDay']:checked").val();
 	var startDay=$.trim($("input[name='startDay']").val());
 	var endDay=$.trim($("input[name='endDay']").val());
-	var startTime=$.trim($("input[name='startTime']").val());
-	var endTime=$.trim($("input[name='endTime']").val());
+	var startTime=$.trim($("select[name='startTime']").val());
+	var endTime=$.trim($("select[name='endTime']").val());
 	var inwon=$.trim($("input[name='inwon']").val());
+	var alarm=$.trim($("input[name=alarm]:checked").val());
+	var alarmTime=$.trim($("input[name=alarmTime]:checked").val());
+	var toMember = $.trim($("input[name='toMember']").val());
 
 	if(! groupNum) {
 		alert("구분을 선택 하세요 !!!");
@@ -326,41 +306,6 @@ function validCheck() {
 	if(! title) {
 		alert("제목을 입력 하세요 !!!");
 		$("input[name='title']").focus();
-		return false;
-	}
-	
-	 if(! /[12][0-9]{3}-[0-9]{2}-[0-9]{2}/.test(startDay)){
-		alert("날짜를 정확히 입력 하세요 [yyyy-mm-dd] !!! ");
-		$("input[name='startDay']").focus();
-		return false;
-	 }
-	 
-	 if(endDay!="" && ! /[12][0-9]{3}-[0-9]{2}-[0-9]{2}/.test(endDay)){
-		alert("날짜를 정확히 입력 하세요 [yyyy-mm-dd] !!! ");
-		$("input[name='endDay']").focus();
-		return false;
-	 }
-	 if(allDay==undefined && endDay=="") {
-		alert("날짜를 정확히 입력 하세요 [yyyy-mm-dd] !!! ");
-		$("input[name='endDay']").focus();
-		return false;
-	 }
-	 
-	 if(startTime!="" && ! /[0-2][0-9]:[0-5][0-9]/.test(startTime)){
-		alert("시간을 정확히 입력 하세요 [hh:mm] !!! ");
-		$("input[name='startTime']").focus();
-		return false;
-	 }
-	 
-	 if(endTime!="" && ! /[0-2][0-9]:[0-5][0-9]/.test(endTime)){
-		alert("시간을 정확히 입력 하세요 [hh:mm] !!! ");
-		$("input[name='endTime']").focus();
-		return false;
-	 }
-	 
-	if(allDay==undefined && (startTime=="" || endTime=="")) {
-		alert("시간을 정확히 입력 하세요 [hh:mm] !!! ");
-		$("input[name='startTime']").focus();
 		return false;
 	}
 
@@ -383,21 +328,39 @@ function validCheck() {
 		endDay=end.format("YYYY-MM-DD");
     }
     
+    if((startDay == endDay) && startTime >= endTime){
+    	alert("시작시간과 종료시간을 다시 확인하세요!");
+    	return false;
+    }
+    
 	if(! /^(\d+)$/.test(inwon)) {
 		alert("사용 인원수를 입력 하세요 !!! ");
 		$("input[name='inwon']").focus();
 		return false;
 	}
 	
-    $("input[name='endDay']").val(endDay);
-	if(allDay=="true") {
-		$("input[name='startTime']").val("");
-		$("input[name='endTime']").val("");
-	} else {
-		$("input[name='startTime']").val(startTime+":00");
-		$("input[name='endTime']").val(endTime+":00");
+	if(! content) {
+		alert("내용을 입력 하세요 !!!");
+		$("textarea[name='content']").focus();
+		return false;
 	}
-
+	
+    $("input[name='endDay']").val(endDay);
+    
+    if(! alarm) {
+    	alert("알림 여부를 선택하세요!");
+    	return false;
+    }
+    
+    if((alarm == '1') && (! alarmTime)) {
+    	alert("알림 시간을 선택하세요!");
+    	return false;
+    }
+    
+    if((alarm == '1') && (! toMember)) {
+    	alert("알림 메시지를 보낼 대상자를 선택하세요!");
+    	return false;
+    }
 	return true;
 }
 
@@ -407,12 +370,14 @@ function articleForm(calEvent) {
 	var num=calEvent.id;
 	var resourceNum=calEvent.resourceId;
 	var start=calEvent.start.format();
+	
 	var allDay=true;
 	var allDayTitle="종일일정";
 	if(calEvent.start.hasTime()) {
 		allDay=false;
 		allDayTitle="시간일정";
 	}
+	
     var end="";
     if(calEvent.end!=null)
     	end=calEvent.end.format();
@@ -420,8 +385,8 @@ function articleForm(calEvent) {
 	var resourceName=calEvent.resourceName;
 	var groupNum=calEvent.groupNum;
 	var groupName=calEvent.groupName;
-	var userId=calEvent.userId;
-	var userName=calEvent.userName;
+	var userId=calEvent.memberNum;
+	var userName=calEvent.name;
 	var inwon=calEvent.inwon;
 	var startDay=calEvent.startDay;
 	var startTime=calEvent.startTime;
@@ -445,16 +410,24 @@ function articleForm(calEvent) {
 		  modal: true,
 		  buttons: {
 		       " 수정 " : function() {
-		    	   updateForm(num, groupNum, resourceNum, title, allDay, startDay, startTime, endDay, endTime, inwon);
+		    	   if(userName == "${sessionScope.member.userName}"){
+		    		   updateForm(num, groupNum, resourceNum, title, allDay, startDay, startTime, endDay, endTime, inwon);
+		    	   } else {
+		    		   alert("작성자 본인만 수정할 수 있습니다!");
+		    	   }
 		        },
 			   " 삭제 " : function() {
-				   deleteOk(num);
+				   if(userName == "${sessionScope.member.userName}" || userName =="admin"){
+					   deleteOk(num);
+				   } else {
+					   alert("작성자 본인만 삭제할 수 있습니다!");
+				   }
 			   },
 		       " 닫기 " : function() {
 		    	   $(this).dialog("close");
 		        }
 		  },
-		  height: 480,
+		  height: 500,
 		  width: 550,
 		  title: "상세 스케쥴러",
 		  close: function(event, ui) {
@@ -462,14 +435,14 @@ function articleForm(calEvent) {
 	});	
 	
 	$('#resourceModal').load("<%=cp%>/scheduler/articleForm", function() {
-		$("#schGroup").html(groupName);
-		$("#schResource").html(resourceName);
-		$("#schTitle").html(title);
-		$("#schUserName").html(userName);
-		$("#schAllDay").html(allDayTitle);
-		$("#schStartDay").html(startDay+" "+startTime);
-		$("#schEndDay").html(endDay+" "+endTime);
-		$("#schInwon").html(inwon);
+		$("#resGroupArticle").html(groupName);
+		$("#resResourceArticle").html(resourceName);
+		$("#resTitleArticle").html(title);
+		$("#resNameArticle").html(userName);
+		$("#resAllDayArticle").html(allDayTitle);
+		$("#resStartDayArticle").html(startDay+" "+startTime);
+		$("#resEndDayArticle").html(endDay+" "+endTime);
+		$("#resInwonArticle").html(inwon);
 		
 		dlg.dialog("open");
 	});
@@ -551,7 +524,7 @@ function updateOk() {
 
 function deleteOk(num) {
 	if(confirm("삭제 하시겠습니까 ?")) {
-		$.post("<%=cp%>/scheduler/schedulerDelete", {num:num}, function(data){
+		$.post("<%=cp%>/scheduler/deleteReservation", {num:num}, function(data){
 			var state=data.state;
 			if(state=="false") {
 				alert("게시글을 삭제할 수 있는 권한이 없습니다.");	
@@ -630,7 +603,7 @@ function updateDrag(calEvent) {
 }
 </script>
 
-<div class="body-container" style="width: 900px;">
+<div class="body-container" style="width: 1100px;">
 <div style="clear: both; margin: 10px 0px 15px 10px;">
 	<span class="glyphicon glyphicon-credit-card"
 		style="font-size: 28px; margin-left: 10px;"></span> <span
@@ -639,12 +612,10 @@ function updateDrag(calEvent) {
 </div>
 <br>
     <div>
-        <div id='schLoading'>loading...</div>
+        <div id='resLoading'>loading...</div>
         <div id='calendar'></div>
     </div>
  
 </div>
 
 <div id="resourceModal" style="display: none;"></div>
-
-
