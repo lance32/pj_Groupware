@@ -30,28 +30,28 @@ public class MailController {
 	@Autowired
 	private MyUtil myUtil;
 	
-	// 보낸 편지함
-	@RequestMapping(value="/mail/mailSend", method=RequestMethod.GET)
-	public String mailForm(
-			@RequestParam(value="page", defaultValue="1") int currentPage,
-			@RequestParam(value="searchKey", defaultValue="subject") String searchKey,
-			@RequestParam(value="searchValue", defaultValue="") String searchValue,
-			HttpServletRequest req,
-			Model model) throws Exception {
+	private Map<String, Object> mailList(int currentPage, String searchKey, String searchValue, HttpServletRequest req, String type) throws Exception {
 		int rows = 10;
 		int totalPage = 0;
 		
 		if (req.getMethod().equalsIgnoreCase("GET")) {
 			searchValue = URLDecoder.decode(searchValue, "utf-8");
 		}
-
+	
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo)session.getAttribute("member");
-
+	
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("searchKey", searchKey);
 		map.put("searchValue", searchValue);
 		map.put("memberNum", info.getUserId());
+		if (type.equals("send")) {
+			map.put("state", 0);
+		} else if (type.equals("tempBox")) {
+			map.put("state", 2);
+		} else {
+			map.put("state", 1);
+		}
 		
 		int dataCount = (int)mailService.dataCount(map);
 		if (dataCount != 0) 
@@ -73,7 +73,15 @@ public class MailController {
 		}
 		
 		String cp = req.getContextPath();
-		String listUrl = cp + "/mail/mailSend";
+		String listUrl = cp + "/mail/";
+		if (type.equals("send")) {
+			listUrl += "mailSend";
+		} else if (type.equals("tempBox")) {
+			listUrl += "mailTrashbox";
+		} else {
+			listUrl += "mailTempBox";
+		}
+		
 		String mailUrl = cp + "/mail/mailForm?page=" + currentPage;
 		if (query.length() != 0) {
 			listUrl = listUrl + "?" + query;
@@ -82,14 +90,31 @@ public class MailController {
 		
 		String paging = myUtil.paging(currentPage,  totalPage, listUrl);
 		
-		model.addAttribute("mailType", "send");
-		model.addAttribute("list", list);
-		model.addAttribute("mailUrl", mailUrl);
-		model.addAttribute("dataCount", dataCount);
-		model.addAttribute("page", currentPage);
-		model.addAttribute("totalPage", totalPage);
-		model.addAttribute("paging", paging);
+		Map<String, Object>model = new HashMap<String, Object>();
+		model.put("mailType", type);
+		model.put("list", list);
+		model.put("mailUrl", mailUrl);
+		model.put("dataCount", dataCount);
+		model.put("page", currentPage);
+		model.put("totalPage", totalPage);
+		model.put("paging", paging);
 		
+		return model;
+	}
+	
+	// 보낸 편지함
+	@RequestMapping(value="/mail/mailSend", method=RequestMethod.GET)
+	public String mailForm(
+			@RequestParam(value="page", defaultValue="1") int currentPage,
+			@RequestParam(value="searchKey", defaultValue="subject") String searchKey,
+			@RequestParam(value="searchValue", defaultValue="") String searchValue,
+			HttpServletRequest req,
+			Model model) throws Exception {
+
+		Map<String, Object> list = mailList(currentPage, searchKey, searchValue, req, "send");
+		for (String key : list.keySet()) {
+			model.addAttribute(key, list.get(key));
+		}
 		return ".mail.mailBox";
 	}
 	
@@ -101,16 +126,35 @@ public class MailController {
 	}
 	
 	// 임시보관함
-	@RequestMapping(value="/mail/mailTemp", method=RequestMethod.GET)
-	public String tempMail(Model model) throws Exception {
-		model.addAttribute("mailType", "temp");
+	@RequestMapping(value="/mail/mailTempBox", method=RequestMethod.GET)
+	public String tempMail(			
+			@RequestParam(value="page", defaultValue="1") int currentPage,
+			@RequestParam(value="searchKey", defaultValue="subject") String searchKey,
+			@RequestParam(value="searchValue", defaultValue="") String searchValue,
+			HttpServletRequest req,
+			Model model) throws Exception {
+		
+		Map<String, Object> list = mailList(currentPage, searchKey, searchValue, req, "tempBox");
+		for (String key : list.keySet()) {
+			model.addAttribute(key, list.get(key));
+		}
+		
 		return ".mail.mailBox";
 	}
 	
 	// 휴지통
 	@RequestMapping(value="/mail/mailTrashbox", method=RequestMethod.GET)
-	public String trashMail(Model model) throws Exception {
-		model.addAttribute("mailType", "trash");
+	public String trashMail(			
+			@RequestParam(value="page", defaultValue="1") int currentPage,
+			@RequestParam(value="searchKey", defaultValue="subject") String searchKey,
+			@RequestParam(value="searchValue", defaultValue="") String searchValue,
+			HttpServletRequest req,
+			Model model) throws Exception {
+		
+		Map<String, Object> list = mailList(currentPage, searchKey, searchValue, req, "trashbox");
+		for (String key : list.keySet()) {
+			model.addAttribute(key, list.get(key));
+		}
 		return ".mail.mailBox";
 	}
 	
@@ -126,19 +170,33 @@ public class MailController {
 		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		mail.setSendName(info.getUserName());
 		
-		String msg = "<span style='color:blue;'>" + mail.getReceiveMail() + "</span> 님에게<br>";
-		try {
-			boolean send = true;// mailSender.mailSend(mail);
-			if (send) {
-				msg += "메일을 성공적으로 전송 했습니다.";
-			} else {
-				msg += "메일을 전송하는데 실패하였습니다.";
+		String msg = "";
+		String title = "";
+		if (mail.getState() == 0) {				// 상태(0:정상, 1:휴지통, 2:임시보관)
+			title = "메일 발송";
+			msg = "<span style='color:blue;'>" + mail.getReceiveMail() + "</span> 님에게<br>";
+			try {
+				boolean send = true;// mailSender.mailSend(mail);
+				if (send) {
+					msg += "메일을 성공적으로 전송 했습니다.";
+				} else {
+					msg += "메일을 전송하는데 실패하였습니다.";
+				}
+			} catch (Exception e) {
+				msg = "오류가 발생했습니다. 관리자에게 문의해 주세요.(" + e.getMessage() + ")";
 			}
-			
+		} else { // if (mail.getState() == 2) {
+			title = "임시 보관";
+			msg = "<span style='color:blue;'>메일을 임시보관함으로 이동하였습니다.</span>";
+		}
+		
+		try {
 			mailService.insertMail(mail);
 		} catch (Exception e) {
-			msg = "오류가 발생했습니다. 관리자에게 문의해 주세요.(" + e.getMessage() + ")";
+			e.printStackTrace();
 		}
+		
+		model.addAttribute("title", title);
 		model.addAttribute("message", msg);
 		
 		return ".mail.complete";
@@ -176,5 +234,25 @@ public class MailController {
 		model.addAttribute("mailType", mailType);
 		
 		return ".mail.mailForm";
+	}
+	
+	// 메일 삭제
+	@RequestMapping(value="/mail/mailDelete", method=RequestMethod.GET)
+	public String deleteMail(@RequestParam(value="index") Long[] index) throws Exception {
+		for (int i = 0; i < index.length; i++) {
+			mailService.deleteMail(index[i]);
+		}
+		
+		return "redirect:/mail/mailTrashbox";
+	}
+	
+	// 메일 삭제(휴지통으로)
+	@RequestMapping(value="/mail/toMailTrashbox", method=RequestMethod.GET)
+	public String toTrashbox(@RequestParam(value="index") Long[] index) throws Exception {
+		for (int i = 0; i < index.length; i++) {
+			mailService.updateMail(index[i], 1);		// 상태(0:정상, 1:휴지통, 2:임시보관)
+		}
+		
+		return "redirect:/mail/mailTrashBox";
 	}
 }

@@ -6,7 +6,7 @@ import java.util.Map;
 public interface MailService {
 	public void insertMail(Mail dto);
 	public Mail readMail(long index);
-	public List<Mail> list(String memberNum);
+//	public List<Mail> list(String memberNum);
 	public List<Mail> list(Map<String, Object> map);
 	public void updateMail(Mail dto);
 	public void updateMail(long index, int state);

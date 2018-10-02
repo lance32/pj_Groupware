@@ -65,11 +65,17 @@
 	
 	function send() {
 		if ($("#sendMail").val() == undefined || $("#sendMail").val() == "") {
-			alert('보내는 사람의 email이 없습니다.');
+			alert('보내는 사람의 email이 없습니다.\n메일주소를 등록하세요.');
 			return false;
 		}
 
-		if ($("#members").val() == "") {
+		if ($("#subject").val() == "") {
+			alert('메일 제목이 없습니다.');
+			$(this).focus();
+			return false;
+		}
+		
+		if ($("#receiveMail").val() == "") {
 			alert('받는 사람이 없습니다.');
 			$(this).focus();
 			return false;
@@ -84,7 +90,33 @@
 		document.mailWriteForm.submit();
 	}
 	
-	
+	function toTemp() {
+		if ($("#sendMail").val() == undefined || $("#sendMail").val() == "") {
+			alert('보내는 사람의 메일주소가 없습니다.\n메일주소를 등록하세요.');
+			return false;
+		}
+
+		if ($("#subject").val() == "") {
+			alert('메일 제목이 없습니다.');
+			$(this).focus();
+			return false;
+		}
+	/*	
+		if ($("#receiveMail").val() == "") {
+			alert('받는 사람이 없습니다.');
+			$(this).focus();
+			return false;
+		}
+	*/	
+		if ($("#content").val() == "") {
+			alert('내용이 없습니다.');
+			$(this).focus();
+			return false;
+		}
+		
+		$("#state").val(2);					// 상태(0:정상, 1:휴지통, 2:임시보관)
+		document.mailWriteForm.submit();
+	}
 </script>
 <div id="mailWrite" style="width:100%; height: 600px;">
 	<div style="clear: both; margin: 10px 0px 15px 10px;">
@@ -127,6 +159,8 @@
 		</table>
 		<input type="hidden" name="sendMail" id="sendMail">
 		<input type="hidden" name="memberNum" value="${sessionScope.member.userId}">
-		<span><input type="button" value="&nbsp;전송&nbsp;" onclick="send();"></span>
+		<input type="hidden" name="state" id="state" value="0">
+		<span><input type="button" value="&nbsp;메일 보내기&nbsp;" onclick="send();"></span>
+		<span><input type="button" value="&nbsp;임시 보관&nbsp;" onclick="toTemp();"></span>
 	</form>
 </div>

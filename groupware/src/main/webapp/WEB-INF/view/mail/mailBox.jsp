@@ -24,12 +24,12 @@
 			<span class="glyphicon glyphicon-open" style="font-size: 28px; margin-left: 10px;"></span>
 			<span style="font-size: 30px;">&nbsp;보낸 메일함</span><br>
 		</c:if>
-		<c:if test="${mailType == 'temp'}">
+		<c:if test="${mailType == 'tempBox'}">
 			<span class="glyphicon glyphicon-exclamation-sign" style="font-size: 28px; margin-left: 10px;"></span>
 			<span style="font-size: 30px;">&nbsp;임시 보관함</span><br>
 		</c:if>
-		<c:if test="${mailType == 'trash'}">
-			<span class="	glyphicon glyphicon-trash" style="font-size: 28px; margin-left: 10px;"></span>
+		<c:if test="${mailType == 'trashbox'}">
+			<span class="glyphicon glyphicon-trash" style="font-size: 28px; margin-left: 10px;"></span>
 			<span style="font-size: 30px;">&nbsp;휴지통</span><br>
 		</c:if>					
 		<div style="clear: both; width: 300px; height: 1px; border-bottom: 3px solid black;"></div>
@@ -47,15 +47,7 @@
 		<tr class="cf">
 			<%-- 구분 폭 수정 가능 --%>
 			<td width="50">&nbsp;</td>
-			<c:if test="${mailType == 'receive'}">
-				<td width="200" align="left">보낸 사람</td>
-			</c:if>
-			<c:if test="${mailType == 'send'}">
-				<td width="200" align="left">받는 사람</td>
-			</c:if>
-			<c:if test="${mailType == 'keep'}">
-				<td width="200" align="left">보낸(받는) 사람</td>
-			</c:if>
+			<td width="200" align="left">받는 사람</td>
 			<td width="auto" align="left">제목</td>
 			<td width="200">날짜</td>
 			<td width="200">첨부파일</td>
@@ -63,12 +55,7 @@
 		<c:forEach var="dto" items="${list}">
 			<tr class="tr">
 				<td><input type="checkbox" name="chk" data-msg-num="${dto.index}"></td>
-				<c:if test="${mailType == 'send'}">
-					<td style="text-align: left;">${dto.receiveMail}</td>
-				</c:if>
-				<c:if test="${mailType != 'send'}">
-					<td style="text-align: left;">${dto.sendName}</td>
-				</c:if>
+				<td style="text-align: left;">${dto.receiveMail}</td>
 				<td style="text-align: left;"><a href="${mailUrl}&index=${dto.index}">${dto.subject}</a></td>
 				<td>${dto.getFormatSendTime()}</td>
 				<td>&nbsp;</td>
