@@ -5,7 +5,7 @@ import java.util.Map;
 
 public interface MemberService {
 	public Member readMember(String memberNum);
-	
+	public Member readDetailinfo(String memberNum);
 	public int insertMember(Member dto,String pathname) throws Exception ;
 
 	public void firstLoginMember(Member dto) throws Exception;

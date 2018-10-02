@@ -187,9 +187,15 @@ public class MemberServiceImpl implements MemberService {
 				dto.setSaveFilename(saveFilename);
 				dto.setOriginalFilename(dto.getUpload().getOriginalFilename());
 			}
-			
 			dao.updateData("member.updateMember1", dto);
-			dao.updateData("member.updateMember2", dto);
+			
+			Member dto2=dao.selectOne("member.readDetailinfo",dto.getMemberNum());
+			if(dto2==null) {
+				dao.insertData("member.insertMemberDetailinfo",dto);
+			}else {
+				dao.updateData("member.updateMember2", dto);				
+			}
+
 		} catch (Exception e) {
 		}
 		
@@ -233,6 +239,17 @@ public class MemberServiceImpl implements MemberService {
 		} catch (Exception e) {
 		}
 		return 1;
+	}
+
+	@Override
+	public Member readDetailinfo(String memberNum) {
+		Member dto=null;
+		try {
+			dao.selectOne("member.readDetailinfo",memberNum);
+		} catch (Exception e) {
+		}
+		
+		return dto;
 	}
 
 }

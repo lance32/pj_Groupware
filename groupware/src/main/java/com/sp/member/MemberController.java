@@ -52,8 +52,6 @@ public class MemberController {
 	public String firstLoginCheck(Member dto) {
 		
 		
-		
-		
 		return ".member.pwd";
 	}
 	
@@ -231,7 +229,6 @@ public class MemberController {
 		}
 		
 		Member dto = service.readMember(memberNum);
-		
 		model.addAttribute("dto", dto);
 		model.addAttribute("mode", "update");
 		
@@ -255,6 +252,7 @@ public class MemberController {
 		String pathname=root+"upload"+File.separator+"member";
 		
 		service.updateMember(dto, pathname);
+		
 		
 		StringBuffer sb=new StringBuffer();
 		sb.append(dto.getName()+ "님의 회원정보가 정상적으로 변경되었습니다.<br>");
