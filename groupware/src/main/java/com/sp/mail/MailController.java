@@ -103,7 +103,7 @@ public class MailController {
 	}
 	
 	// 보낸 편지함
-	@RequestMapping(value="/mail/mailSend", method=RequestMethod.GET)
+	@RequestMapping(value="/mail/mailSend")
 	public String mailForm(
 			@RequestParam(value="page", defaultValue="1") int currentPage,
 			@RequestParam(value="searchKey", defaultValue="subject") String searchKey,
@@ -119,14 +119,14 @@ public class MailController {
 	}
 	
 	// 받은 편지함
-	@RequestMapping(value="/mail/mailReceive", method=RequestMethod.GET)
+	@RequestMapping(value="/mail/mailReceive")
 	public String receiveMail(Model model) throws Exception {
 		model.addAttribute("mailType", "receive");
 		return ".mail.mailBox";
 	}
 	
 	// 임시보관함
-	@RequestMapping(value="/mail/mailTempBox", method=RequestMethod.GET)
+	@RequestMapping(value="/mail/mailTempBox")
 	public String tempMail(			
 			@RequestParam(value="page", defaultValue="1") int currentPage,
 			@RequestParam(value="searchKey", defaultValue="subject") String searchKey,
@@ -143,7 +143,7 @@ public class MailController {
 	}
 	
 	// 휴지통
-	@RequestMapping(value="/mail/mailTrashbox", method=RequestMethod.GET)
+	@RequestMapping(value="/mail/mailTrashbox")
 	public String trashMail(			
 			@RequestParam(value="page", defaultValue="1") int currentPage,
 			@RequestParam(value="searchKey", defaultValue="subject") String searchKey,
@@ -174,9 +174,9 @@ public class MailController {
 		String title = "";
 		if (mail.getState() == 0) {				// 상태(0:정상, 1:휴지통, 2:임시보관)
 			title = "메일 발송";
-			msg = "<span style='color:blue;'>" + mail.getReceiveMail() + "</span> 님에게<br>";
+			msg = "<span style='color:gray;'>" + mail.getReceiveMail() + "</span> 님에게<br>";
 			try {
-				boolean send = true;// mailSender.mailSend(mail);
+				boolean send = true; //mailSender.mailSend(mail);
 				if (send) {
 					msg += "메일을 성공적으로 전송 했습니다.";
 				} else {
@@ -187,7 +187,7 @@ public class MailController {
 			}
 		} else { // if (mail.getState() == 2) {
 			title = "임시 보관";
-			msg = "<span style='color:blue;'>메일을 임시보관함으로 이동하였습니다.</span>";
+			msg = "<span style='color:gray;'>메일을 임시보관함으로 이동하였습니다.</span>";
 		}
 		
 		try {
@@ -226,7 +226,7 @@ public class MailController {
 		if (mail == null)
 			return "redirect:/mail/mailSend?" + query;
 		
-		mail.setContent(myUtil.htmlSymbols(mail.getContent()));
+		//mail.setContent(myUtil.htmlSymbols(mail.getContent()));
 		
 		model.addAttribute("mail", mail);
 		model.addAttribute("page", page);
@@ -238,21 +238,37 @@ public class MailController {
 	
 	// 메일 삭제
 	@RequestMapping(value="/mail/mailDelete", method=RequestMethod.GET)
-	public String deleteMail(@RequestParam(value="index") Long[] index) throws Exception {
+	public String deleteMail(
+			@RequestParam(value="mailIndex") Long[] index, 
+			@RequestParam(value="page") String page,
+			@RequestParam(value="searchKey", defaultValue="subject") String searchKey,
+			@RequestParam(value="searchValue", defaultValue="") String searchValue,
+			@RequestParam(value="mailType", defaultValue="send") String mailType
+			) throws Exception {
 		for (int i = 0; i < index.length; i++) {
 			mailService.deleteMail(index[i]);
 		}
 		
-		return "redirect:/mail/mailTrashbox";
+		String redirect = "redirect:/mail/mailSend";
+		if (mailType.equals("tempBox")) {
+			redirect = "redirect:/mail/mailTempBox";
+		} else if (mailType.equals("trashbox")) {
+			redirect = "redirect:/mail/mailTrashbox";
+		}
+		redirect += "?page=" + page;
+		if (!searchValue.isEmpty())
+			redirect += "&searchKey=" + searchKey + "&searchValue=" + searchValue;
+		
+		return redirect;
 	}
 	
 	// 메일 삭제(휴지통으로)
 	@RequestMapping(value="/mail/toMailTrashbox", method=RequestMethod.GET)
-	public String toTrashbox(@RequestParam(value="index") Long[] index) throws Exception {
+	public String toTrashbox(@RequestParam(value="mailIndex") Long[] index) throws Exception {
 		for (int i = 0; i < index.length; i++) {
 			mailService.updateMail(index[i], 1);		// 상태(0:정상, 1:휴지통, 2:임시보관)
 		}
 		
-		return "redirect:/mail/mailTrashBox";
+		return "redirect:/mail/mailTrashbox";
 	}
 }

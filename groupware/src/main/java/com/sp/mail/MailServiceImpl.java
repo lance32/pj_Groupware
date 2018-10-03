@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service(value = "mail.service")
 public class MailServiceImpl implements MailService {
@@ -32,6 +33,11 @@ public class MailServiceImpl implements MailService {
 			
 			dto.setIndex(index);
 			dto.setSendTime(new Date());
+			// Mail 첨부파일 처리가 아직 안됨.(List<String> savePathname, List<MultipartFile> upload) 
+			dto.setSavePathname(null);
+			dto.setUpload(null);
+			// ---------------------------------------
+			
 			mongo.insert(dto);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -61,30 +67,6 @@ public class MailServiceImpl implements MailService {
 		}
 		return mail;
 	}
-
-//	@Override
-//	public List<Mail> list(String memberNum) {
-//		List<Mail> list = null;
-//		try {
-//			Query query = new Query();
-//			query.fields().include("index");
-//			query.fields().include("memberNum");
-//			query.fields().include("receiveMail");
-//			query.fields().include("sendMail");
-//			query.fields().include("sendName");
-//			query.fields().include("subject");
-//			query.fields().include("content");
-//			query.fields().include("sendTime");
-//			query.fields().include("state");
-//			// 페이징 & search 처리 필요
-//			query.limit(10);
-//			query.addCriteria(Criteria.where("memberNum").is(memberNum)); //.andOperator(Criteria.where("").is("")));
-//			list = mongo.find(query, Mail.class);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		return list;
-//	}
 
 	@Override
 	public void updateMail(Mail mail) {
@@ -130,7 +112,7 @@ public class MailServiceImpl implements MailService {
 		try {
 			Query query = new Query();
 			query.addCriteria(Criteria.where("index").is(index));
-			
+			query.fields().include("index");
 			Mail mail = mongo.findOne(query, Mail.class);
 			mongo.remove(mail);
 		} catch(Exception e) {
@@ -149,22 +131,24 @@ public class MailServiceImpl implements MailService {
 			Query query = new Query();
 			
 			String searchValue = (String)map.get("searchValue");
+
 			if (searchValue == null || searchValue.isEmpty()) {
 				query.addCriteria(Criteria.where("memberNum").is(memberNum).andOperator(stateCriteria));
 			} else { 
 				if (map.get("searchKey").equals("all")) {
-					Criteria subject = Criteria.where("subject").is(searchValue);
-					Criteria content = Criteria.where("content").is(searchValue);
-					Criteria receive = Criteria.where("receiveMail").is(searchValue);
-					query.addCriteria(new Criteria().orOperator(subject, content, receive).andOperator(memNum).andOperator(stateCriteria));
+					Criteria subject = Criteria.where("subject").regex(searchValue);
+					Criteria content = Criteria.where("content").regex(searchValue);
+					Criteria receive = Criteria.where("receiveMail").regex(searchValue);
+					query.addCriteria(new Criteria().andOperator(memNum, stateCriteria, new Criteria().orOperator(subject, content, receive)));
 				} else if (map.get("searchKey").equals("subject")) {
-					query.addCriteria(Criteria.where("subject").is(searchValue).andOperator(memNum).andOperator(stateCriteria));
+					query.addCriteria(new Criteria().andOperator(memNum, stateCriteria, Criteria.where("subject").regex(searchValue)));
 				} else if (map.get("searchKey").equals("content")) {
-					query.addCriteria(Criteria.where("content").is(searchValue).andOperator(memNum).andOperator(stateCriteria));
+					query.addCriteria(new Criteria().andOperator(memNum, stateCriteria, Criteria.where("content").regex(searchValue)));
 				} else if (map.get("searchKey").equals("receiveMail")) {
-					query.addCriteria(Criteria.where("receiveMail").is(searchValue).andOperator(memNum).andOperator(stateCriteria));
+					query.addCriteria(new Criteria().andOperator(memNum, stateCriteria, Criteria.where("receiveMail").regex(searchValue)));
 				}
 			}
+			
 			result = mongo.count(query, Mail.class);
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -199,16 +183,16 @@ public class MailServiceImpl implements MailService {
 				query.addCriteria(Criteria.where("memberNum").is(memberNum).andOperator(stateCriteria));
 			} else { 
 				if (map.get("searchKey").equals("all")) {
-					Criteria subject = Criteria.where("subject").is(searchValue);
-					Criteria content = Criteria.where("content").is(searchValue);
-					Criteria receive = Criteria.where("receiveMail").is(searchValue);
-					query.addCriteria(new Criteria().orOperator(subject, content, receive).andOperator(memNum).andOperator(stateCriteria));
+					Criteria subject = Criteria.where("subject").regex(searchValue);
+					Criteria content = Criteria.where("content").regex(searchValue);
+					Criteria receive = Criteria.where("receiveMail").regex(searchValue);
+					query.addCriteria(new Criteria().andOperator(memNum, stateCriteria, new Criteria().orOperator(subject, content, receive)));
 				} else if (map.get("searchKey").equals("subject")) {
-					query.addCriteria(Criteria.where("subject").is(searchValue).andOperator(memNum).andOperator(stateCriteria));
+					query.addCriteria(new Criteria().andOperator(memNum, stateCriteria, Criteria.where("subject").regex(searchValue)));
 				} else if (map.get("searchKey").equals("content")) {
-					query.addCriteria(Criteria.where("content").is(searchValue).andOperator(memNum).andOperator(stateCriteria));
+					query.addCriteria(new Criteria().andOperator(memNum, stateCriteria, Criteria.where("content").regex(searchValue)));
 				} else if (map.get("searchKey").equals("receiveMail")) {
-					query.addCriteria(Criteria.where("receiveMail").is(searchValue).andOperator(memNum).andOperator(stateCriteria));
+					query.addCriteria(new Criteria().andOperator(memNum, stateCriteria, Criteria.where("receiveMail").regex(searchValue)));
 				}
 			}
 			
