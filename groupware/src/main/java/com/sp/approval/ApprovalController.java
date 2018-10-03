@@ -1,6 +1,12 @@
 package com.sp.approval;
 
 import java.net.URLDecoder;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -13,8 +19,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sp.common.MyUtil;
+
 
 @Controller("approval.approvalController")
 public class ApprovalController {
@@ -115,10 +123,39 @@ public class ApprovalController {
 		
 	}
 	
-	@RequestMapping(value="/approval/approval_createform1")
-	public String approvalForm1() {
-		return ".approval.approval_createForm1";
-		
+	@RequestMapping(value="/approval/submit")
+	@ResponseBody
+	public int SetApproval(String title, String contents, String comments, String author, String appLine) {
+		try {
+			String driverName = "net.sf.log4jdbc.DriverSpy";
+			String dburl = "jdbc:log4jdbc:oracle:thin:@211.238.142.190:1521:xe";
+			
+			System.out.println("test");
+			
+			Class.forName(driverName);
+			Connection connection = DriverManager.getConnection(dburl, "groupware", "java$!");
+			//Statement stmt = connection.createStatement();
+			CallableStatement cs = connection.prepareCall("{CALL SETAPPROVALDATA(approval_seq.nextval, approvalDocument_seq.nextval, approvalTemplate_seq.NEXTVAL, ?, ?, ?, ?, ?)}"); 
+		    cs.setString(1, title);
+		    cs.setString(2, contents);
+		    cs.setString(3, comments);
+		    cs.setString(4, author);
+		    cs.setString(5, appLine);
+
+		    cs.execute(); 
+		    
+		    cs.close();
+		    connection.close();
+		}catch(SQLException ex) {
+			ex.printStackTrace();
+			System.out.println(ex.getMessage());
+		}catch(Exception ex) {
+			
+		}finally {
+			
+		}
+
+		return 1;
 	}
 
 }

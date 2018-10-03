@@ -95,9 +95,10 @@
 					  "                                           FROM APPROVALPROCESS"+
 					  "                                          WHERE 1=1"+
 					  "                                           AND APPROVALSEQ = 0 "+
-					  "                                           AND MEMBERNUM = 'admin'))"+
+					  "                                           AND MEMBERNUM = 'test'))"+
 					  "   AND DOCUMENTSTATE = 1"+
-					  "   AND ROWNUM < 5";
+					  "   AND ROWNUM < 5"+
+					  " ORDER BY DOCUNUM DESC";
 			
 			rs = stmt.executeQuery(sql);
 			while(rs.next()){
