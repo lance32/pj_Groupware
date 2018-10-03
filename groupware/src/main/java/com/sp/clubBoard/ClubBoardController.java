@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.sp.club.Club;
 import com.sp.club.ClubService;
+import com.sp.common.FileManager;
 import com.sp.common.MyUtil;
 import com.sp.member.SessionInfo;
 
@@ -28,6 +29,8 @@ public class ClubBoardController {
 	private ClubBoardService service;
 	@Autowired
 	private MyUtil util;
+	@Autowired
+	private FileManager fileManager;
 
 	@RequestMapping(value="/clubBoard/list")
 	public String clubBoardList(
@@ -258,6 +261,37 @@ public class ClubBoardController {
 		return "redirect:/clubBoard/list";
 	}
 	
+	@RequestMapping(value="/bbs/deleteFile")
+	public String deleteFile(
+			@RequestParam int clubNum
+			,@RequestParam int categoryNum
+			,@RequestParam int boardNum
+			,HttpSession session
+			,Model model) throws Exception {
+		
+		Board BoardInfo=null;
+		try {
+			SessionInfo info=(SessionInfo)session.getAttribute("member");
+			BoardInfo=service.readClubBoard(boardNum);
+			
+			if(! BoardInfo.getMemberNum().equals(info.getUserId())) {
+				model.addAttribute("message", "잘못된 접근입니다.");
+				return "error/error";
+			}
+			String root=session.getServletContext().getRealPath("/");
+			String pathname=root+"uploads"+File.separator+"clubBoard";
+			if(BoardInfo.getSaveFileName() != null && BoardInfo.getSaveFileName().length()!=0) {
+				  fileManager.doFileDelete(BoardInfo.getSaveFileName(), pathname);
+				  
+				  BoardInfo.setSaveFileName("");
+				  BoardInfo.setOriginalFileName("");
+	       }
+			
+		} catch (Exception e) {
+			return "error/error";
+		}
+		return "redirect:/clubBoard/updateBoard?clubNum="+clubNum+"&categoryNum="+categoryNum+"&boardNum="+boardNum;
+	}
 	
 /*
 	@RequestMapping(value="/clubBoard/list")
