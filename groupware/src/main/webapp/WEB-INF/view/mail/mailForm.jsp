@@ -63,15 +63,15 @@
 		<tr>
 			<td style="border-bottom: 1px dotted #dfdfdf; padding:5px; background: #f7f7f7; color: #595959; text-align:center; width: 15%;">
 				<c:if test="${mailType == 'send'}">받는 사람</c:if>
-				<c:if test="${mailType == 'receive'}">보낸 사람</c:if>
+				<c:if test="${mailType != 'send'}">보낸 사람</c:if>
 			</td>
 			<td style="background: #fff; width: 85%;">
 				<span>
-				<c:if test="${mailType == 'receive'}">
-					<span style="background: #fff; color: #333; width: 80%; border: 1px solid #d7d7d7;">${mail.sendMail}</span>
-				</c:if>
 				<c:if test="${mailType == 'send'}">
 					<span style="background: #fff; color: #333; width: 80%; border: 1px solid #d7d7d7;">${mail.receiveMail}</span>
+				</c:if>
+				<c:if test="${mailType != 'send'}">
+					<span style="background: #fff; color: #333; width: 80%; border: 1px solid #d7d7d7;">${mail.sendMail}</span>
 				</c:if>
 				</span>
 			</td>
@@ -91,11 +91,11 @@
 		<tr>
 			<td style="border-bottom: 1px dotted #dfdfdf; padding:5px; background: #f7f7f7; color: #595959; text-align:center; width: 15%;">
 				<c:if test="${mailType == 'send'}">보낸 날짜</c:if>
-				<c:if test="${mailType == 'receive'}">받은 날짜</c:if>
+				<c:if test="${mailType != 'send'}">받은 날짜</c:if>
 			</td>
 			<td style="background: #fff; width: 85%;">
 				<c:if test="${mailType == 'send'}">${mail.getFormatSendTime()}</c:if>
-				<c:if test="${mailType == 'receive'}">${mail.getFormatSendTime()}</c:if>
+				<c:if test="${mailType != 'send'}">${mail.getFormatSendTime()}</c:if>
 			</td>
 		</tr>		
 		<tr>

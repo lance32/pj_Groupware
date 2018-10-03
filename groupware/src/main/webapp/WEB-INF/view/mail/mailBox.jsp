@@ -117,14 +117,19 @@
 			<tr class="tr">
 				<td><input type="checkbox" name="chk" data-mail-index="${dto.index}"></td>
 				<td style="text-align: left;">${dto.receiveMail}</td>
-				<td style="text-align: left;"><a href="${mailUrl}&index=${dto.index}">${dto.subject}</a></td>
+				<td style="text-align: left;"><a href="${mailUrl}&index=${dto.index}&mailType=${mailType}">${dto.subject}</a></td>
 				<td>${dto.getFormatSendTime()}</td>
 				<td>&nbsp;</td>
 			</tr>
 		</c:forEach>
 	</table>
 	<div style="padding:5px 5px 5px 5px;">
-		<button type="button" id="trashboxBtn">&nbsp;휴&nbsp;지&nbsp;통&nbsp;</button>&nbsp;
+		<c:if test="${mailType != 'trashbox'}">
+			<button type="button" id="trashboxBtn">&nbsp;휴&nbsp;지&nbsp;통&nbsp;</button>&nbsp;
+		</c:if>
+		<c:if test="${mailType == 'trashbox'}">
+			<button type="button" id="trashboxBtn">&nbsp;메일 복원&nbsp;</button>&nbsp;
+		</c:if>
 		<button type="button" id="deleteBtn">&nbsp;바로 삭제&nbsp;</button>
 	</div>
 	<br>
