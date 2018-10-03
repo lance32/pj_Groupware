@@ -2,5 +2,29 @@
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="clubBoard">
+	
+	<insert id="insertClubBoard" parameterType="com.sp.clubBoard.Board">
+		INSERT INTO clubBoard(boardNum, subject, content, saveFileName, originalFileName, memberNum, clubNum, categoryNum)
+		VALUES(clubBoard_seq.NEXTVAL, #{subject}, #{content}, #{saveFileName, jdbcType=VARCHAR}, #{originalFileName, jdbcType=VARCHAR}, #{memberNum}, #{clubNum}, #{categoryNum})
+	</insert>
+	
+	<select id="listClubBoard" parameterType="map" resultType="com.sp.clubBoard.Board">
+		SELECT boardNum, subject, content, cb.created, cb.saveFileName, cb.originalFileName, cb.memberNum, m.name memberName, clubNum, categoryNum
+		FROM clubBoard cb JOIN member m ON cb.memberNum=m.memberNum
+		WHERE clubNum=#{clubNum} AND categoryNum=#{categoryNum}
+	</select>
+
+	<delete id="deleteClubBoard" parameterType="Integer">
+		DELETE FROM clubBoard WHERE boardNum=#{boardNum}
+	</delete>
+	
+	<select id="readClubBoard" parameterType="Integer" resultType="com.sp.clubBoard.Board">
+		SELECT boardNum, subject, content, created, saveFileName, originalFileName, memberNum, categoryNum
+		FROM clubBoard WHERE boardNum=#{boardNum}
+	</select>
+	
+	<update id="updateClubBoard" parameterType="com.sp.clubBoard.Board">
+		UPDATE clubBoard SET subject=#{subject}, content=#{content} WHERE boardNum=#{boardNum}
+	</update>
 
 </mapper>
