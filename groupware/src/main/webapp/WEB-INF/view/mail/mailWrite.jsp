@@ -65,11 +65,17 @@
 	
 	function send() {
 		if ($("#sendMail").val() == undefined || $("#sendMail").val() == "") {
-			alert('보내는 사람의 email이 없습니다.');
+			alert('보내는 사람의 email이 없습니다.\n메일주소를 등록하세요.');
 			return false;
 		}
 
-		if ($("#members").val() == "") {
+		if ($("#subject").val() == "") {
+			alert('메일 제목이 없습니다.');
+			$(this).focus();
+			return false;
+		}
+		
+		if ($("#receiveMail").val() == "") {
 			alert('받는 사람이 없습니다.');
 			$(this).focus();
 			return false;
@@ -84,7 +90,33 @@
 		document.mailWriteForm.submit();
 	}
 	
-	
+	function toTemp() {
+		if ($("#sendMail").val() == undefined || $("#sendMail").val() == "") {
+			alert('보내는 사람의 메일주소가 없습니다.\n메일주소를 등록하세요.');
+			return false;
+		}
+
+		if ($("#subject").val() == "") {
+			alert('메일 제목이 없습니다.');
+			$(this).focus();
+			return false;
+		}
+	/*	
+		if ($("#receiveMail").val() == "") {
+			alert('받는 사람이 없습니다.');
+			$(this).focus();
+			return false;
+		}
+	*/	
+		if ($("#content").val() == "") {
+			alert('내용이 없습니다.');
+			$(this).focus();
+			return false;
+		}
+		
+		$("#state").val(2);					// 상태(0:정상, 1:휴지통, 2:임시보관)
+		document.mailWriteForm.submit();
+	}
 </script>
 <div id="mailWrite" style="width:100%; height: 600px;">
 	<div style="clear: both; margin: 10px 0px 15px 10px;">
@@ -98,20 +130,20 @@
 			<tr>
 				<td style="border-bottom: 1px dotted #dfdfdf; padding:5px; background: #f7f7f7; color: #595959; text-align:center; width: 15%;">받는 사람</td>
 				<td style="background: #fff; width: 85%;">
-					<span><input type="text" id="receiveMail" name="receiveMail" style="background: #fff; color: #333; width: 80%; border: 1px solid #d7d7d7;"></span>
+					<span><input type="text" id="receiveMail" name="receiveMail" style="background: #fff; color: #333; width: 80%; border: 1px solid #d7d7d7;" value="${mail.receiveMail}"></span>
 				</td>
 			</tr>
 			<tr>
 				<td class="textLabel">참조</td>
-				<td class="tdInput"><input type="text" id="cc" name="cc" class="textInput"></td>
+				<td class="tdInput"><input type="text" id="cc" name="cc" class="textInput" value="${mail.cc}"></td>
 			</tr>
 			<tr>
 				<td class="textLabel">숨은 참조</td>
-				<td class="tdInput"><input type="text" id="bcc" name="bcc" class="textInput"></td>
+				<td class="tdInput"><input type="text" id="bcc" name="bcc" class="textInput" value="${mail.bcc}"></td>
 			</tr>				
 			<tr>
 				<td class="textLabel">제목</td>
-				<td class="tdInput"><input type="text" id="subject" name="subject" class="textInput"></td>
+				<td class="tdInput"><input type="text" id="subject" name="subject" class="textInput" value="${mail.subject}"></td>
 			</tr>
 			<tr>
 				<td class="textLabel">첨부파일</td>
@@ -122,11 +154,20 @@
 		</table>
 		<table style="width:100%;">
 			<tr>
-				<td colspan="2"><div style="padding-top: 5px;"><textarea id="content" name="content" rows="15" cols="45" style="width: 83%;"></textarea></div></td>
+				<td colspan="2"><div style="padding-top: 5px;"><textarea id="content" name="content" rows="15" cols="45" style="width: 83%;">${mail.content}</textarea></div></td>
 			</tr>
 		</table>
 		<input type="hidden" name="sendMail" id="sendMail">
 		<input type="hidden" name="memberNum" value="${sessionScope.member.userId}">
-		<span><input type="button" value="&nbsp;전송&nbsp;" onclick="send();"></span>
+		<input type="hidden" name="state" id="state" value="0">
+		<span><input type="button" value="&nbsp;메일 보내기&nbsp;" onclick="send();"></span>
+		<c:if test="${mailType != 'tempBox'}">
+			<span><input type="button" value="&nbsp;임시 보관&nbsp;" onclick="toTemp();"></span>
+			<input type="hidden" name="index" value="-1">
+		</c:if>
+		<c:if test="${mailType == 'tempBox'}">
+			<span><input type="button" value="&nbsp;취소&nbsp;" onclick="javascript:location.href='<%=cp%>/mail/mailTempBox'"></span>
+			<input type="hidden" name="index" value="${mail.index}">
+		</c:if>
 	</form>
 </div>

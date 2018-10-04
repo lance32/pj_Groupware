@@ -15,14 +15,16 @@ public interface ResourceService {
 	public int updateResourceList(Resource dto);
 	public int deleteResourceList(int resourceNum);
 	public Resource readResourceList(int resourceNum);
+	public int resCount();
 	public List<Resource> listResourceList(int groupNum);
+	public List<Resource> listResourceList3(Map<String, Object> map);
 	public List<ResourceJSON> listResourceList();
 	
 	public int insertReserve(Resource dto);
 	public int updateReserve(Resource dto);
 	public int deleteReserve(Map<String, Object> map);
+	public int dataCount(Map<String, Object> map);
 	public Resource readReserve(int reserveNum);
+	public List<Resource> listReserve2(Map<String, Object> map);
 	public List<ResourceJSON> listReserve(Map<String, Object> map);
-	
-	public int insertAlarm(Resource dto);
 }

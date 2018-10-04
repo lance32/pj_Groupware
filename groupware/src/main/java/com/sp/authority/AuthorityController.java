@@ -1,5 +1,4 @@
-package com.sp.workLog;
-
+package com.sp.authority;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -10,36 +9,33 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sp.common.MyUtil;
-import com.sp.member.SessionInfo;
 
-@Controller("workLog.workLogController")
-public class WorkLogController {
+@Controller("authority.authorityController")
+public class AuthorityController {
 	
 	@Autowired
-	private WorkLogService service;
+	private AuthorityService service;
 	
 	@Autowired
 	private MyUtil util;
-	
-	@RequestMapping(value="/workLog/list")
+
+	@RequestMapping(value="/authority/authoritylist")
 	public String list(@RequestParam(value="page",defaultValue="1") int current_page,
-			@RequestParam(defaultValue="subject") String serchKey,
+			@RequestParam(defaultValue="name") String serchKey,
 			@RequestParam(defaultValue="") String searchValue,
 			HttpServletRequest req,
 			Model model) throws Exception {
 		
-		int rows=5; 
+		int rows=10; 
 		int dataCount=0; 
 		int total_page=0; 
 		
@@ -68,14 +64,14 @@ public class WorkLogController {
 		map.put("start", start);
 		map.put("end", end);
 		
-		List<WorkLog> list=service.listWorkLog(map);
+		List<Authority> list=service.listAuthority(map);
 		
 		int listNum, n=0;
 		
-		Iterator<WorkLog> it = list.iterator();
+		Iterator<Authority> it = list.iterator();
 		
 		while(it.hasNext()) {
-			WorkLog data=it.next();
+			Authority data=it.next();
 			listNum=dataCount - (start+n-1);
 			data.setListNum(listNum);
 			n++;
@@ -84,8 +80,8 @@ public class WorkLogController {
 		
 		String cp=req.getContextPath();
 		String query="";
-		String listUrl=cp+"/workLog/list";
-		String articleUrl=cp+"/workLog/article?page="+current_page;
+		String listUrl=cp+"/authority/authoritylist";
+		String articleUrl=cp+"/authority/article?page="+current_page;
 		if(query.length()!=0) {
 			listUrl=listUrl+"?"+query;
 			articleUrl=articleUrl+"&"+query;
@@ -100,12 +96,12 @@ public class WorkLogController {
 		model.addAttribute("page",current_page);
 		model.addAttribute("paging",paging);
 
-		return ".workLog.list";
+		return ".authority.authoritylist";
 	}
 	
-	@RequestMapping(value="/workLog/article")
+	@RequestMapping(value="/authority/article")
 	@ResponseBody
-	public Map<String, Object> readWorkLog(@RequestParam(value="workLogNum") int workLogNum,
+	public Map<String, Object> readAuthority(@RequestParam(value="memberNum") String memberNum,
 			@RequestParam(defaultValue="subject")String searchKey,
 			@RequestParam(defaultValue="")String searchValue,
 			@RequestParam(value="page")String page,
@@ -118,55 +114,19 @@ public class WorkLogController {
 			query="&searchKey="+searchKey+"&searchValue="+URLEncoder.encode(searchValue, "utf-8");
 		}
 		
-		WorkLog dto=service.readWorkLog(workLogNum);
-		/*if(dto==null) {
-			return "redirect:/workLog/list?"+query;
-		}*/
 		Map<String, Object> map = new HashMap<>();
-		
-		map.put("workLogNum", workLogNum);
+		List<Authority> list=service.listTalbe(map);
+		Authority authority=service.readAuthority(memberNum);
+		map.put("memberNum", memberNum);
 		map.put("searchKey", searchKey);
 		map.put("searchValue", searchValue);
-		map.put("dto", dto);
+		map.put("authority", authority);
+		map.put("list", list);
 		model.addAttribute("query",query);
-		model.addAttribute("dto",dto);
-		model.addAttribute("page",page);
+//		model.addAttribute("dto",dto);
+//		model.addAttribute("page",page);
+//		model.addAttribute("list",list);
 		
 		return map;
 	}
-	
-	@RequestMapping(value="/workLog/created", method=RequestMethod.GET)
-	public String createdForm(
-			@RequestParam(value="num", defaultValue= "1") int num,
-			Model model) throws Exception {
-		
-		WorkLog dto=service.readWorkForm(num);
-		
-		model.addAttribute("dto",dto);
-		model.addAttribute("num",num);
-		model.addAttribute("mode","created");
-		
-		return ".workLog.created";
-	}
-	
-	@RequestMapping(value="/workLog/created", method=RequestMethod.POST)
-	public String createdSubmit(WorkLog dto, 
-			HttpSession session){
-		
-		SessionInfo info=(SessionInfo) session.getAttribute("member");
-		
-		if(info==null) {
-			return "error.error";
-		}
-		
-		dto.setMemberNum(info.getUserId());
-		service.insertWorkLog(dto);
-		
-		return "redirect:/workLog/list";
-	}
 }
-
-
-
-
-

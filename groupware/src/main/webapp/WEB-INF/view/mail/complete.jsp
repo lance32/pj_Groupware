@@ -30,7 +30,7 @@
     font-size: 15px; 
     border:none;
     color:#ffffff;
-    background:#507CD1;
+    background:#384a68;
     width: 360px;
     height: 50px;
     line-height: 50px;
@@ -42,7 +42,7 @@
 
     <div style="margin: 0px auto; padding-top:90px; width:420px;">
     	<div style="text-align: center;">
-        	<span style="font-weight: bold; font-size:27px; color: #424951;">메일 전송</span>
+        	<span style="font-weight: bold; font-size:27px; color: #424951;">${title}</span>
         </div>
         
         <div class="messageBox">

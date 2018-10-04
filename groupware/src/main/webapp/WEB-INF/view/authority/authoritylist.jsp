@@ -13,46 +13,31 @@
 #paginate .numBox {border:1px solid #ccc;height:28px;text-decoration:none;padding:4px 7px 4px 7px;margin-left:3px;line-height:normal;vertical-align:middle;}
 </style>
 
-<script type="text/javascript">
-
-/*
-$(function() {
-	$("#article").click(function() {
-		var workLogNum = $(this).data("num");
-		var query = "${articleUrl}&workLogNum="+workLogNum; 
-		$.ajax({
-			type:"get",
-			url: query,
-			dataType:"json",
-			success:function(data) {
-				console.log(data.dto.content);
-				$("#article-dialog").html(data.dto.content);
-				 $("#article-dialog").dialog({
-					height: 700,
-					width: 800,
-					modal: true
-					
-				});
-			},
-			error:function(jqXHR) {
-				console.log(jqXHR.resonseText);
-			}
-		});
-	});
-});
-*/
-
-function getData(workLogNum) {
+<script>
+function getData(memberNum) {
 	
-	var query = "${articleUrl}&workLogNum="+workLogNum; 
+	var query = "${articleUrl}&memberNum="+memberNum; 
 	$.ajax({
 		type:"get",
 		url: query,
 		dataType:"json",
 		success:function(data) {
-			console.log(data.dto.content);
-			$("#article-dialog").html(data.dto.content);
-			 $("#article-dialog").dialog({
+			var ath = "";
+			console.log(query);
+			$.each(authority, function (idx, val) {
+			console.log(val.idx)
+			console.log(val.departmentName);
+			console.log(val.departmentName);
+			console.log(val.name);
+			console.log(val.memberNum);
+			console.log(val.grants);
+			console.log(val.positionName);
+		
+		});
+			
+			
+			$("#authority-dialog").html(ath);
+			 $("#authority-dialog").dialog({
 				height: 700,
 				width: 800,
 				modal: true
@@ -65,7 +50,6 @@ function getData(workLogNum) {
 	});
 }
 </script>
-
 
 
 <div style="clear: both; margin: 10px 0px 15px 10px;">
@@ -85,45 +69,41 @@ function getData(workLogNum) {
 		</tr>
 		
 		<tr class="cf">
-			<%-- 구분 폭 수정 가능 --%>
+			<%-- 구분 폭 수정 가능 --%>			
 			<td width="170">번호</td>
+			<td width="170">사원번호</td>
 			<td width="190">부서명</td>
-			<td width="auto" style="text-align: center;">업무제목</td>
-			<td width="150">업무일지종류</td>
+			<td width="190">직급명</td>
+			<td width="150">이름</td>
+			<td width="auto" style="text-align: center;">비고</td>
 		</tr>
 	<c:forEach var = "dto" items = "${list}">
 		<tr class="tr">
 			<td>${dto.listNum}</td>
+			<td>${dto.memberNum}</td>			
 			<td>${dto.departmentName}</td>
-			<td  style="text-align: center;"><span onclick="getData('${dto.workLogNum}');" style="color: blue;" data-num="${dto.workLogNum}">${dto.makeDate}${sessionScope.member.userName}</span></td>
-			<td>
-				<c:if test="${dto.num =='1'}">일일업무</c:if>
-				<c:if test="${dto.num =='2'}">주간업무</c:if>
-				<c:if test="${dto.num =='3'}">월간업무</c:if>
-			</td>
+			<td>${dto.positionName}</td>
+			<td>${dto.name}</td>
+			<td><button type="button" id = "authority" onclick="getData('${dto.memberNum}');" style="color: blue;" data-String="${dto.memberNum}">권한설정</button></td>
 		</tr>
 	</c:forEach>
 	</table>
 	<br>
 	<div id='paginate'>	<%-- MyUtil.java 안에 있음. ${paging}으로 써야됨. --%>
-		<a href="#">처음</a>
-		<span class="curBox">1</span>
-		<a href="#" class="numBox">2</a>
-		<a href="#" class="numBox">3</a>
-		<a href="#">다음</a>
+		${paging}		
 	</div>
 	
 	<div style="text-align:center;">
 	
 		<select class="selectBox">				<%-- 선택박스  --%>
-			<option>제목</option>
-			<option>기안일</option>
+			<option>이름</option>
+			<option>부서명</option>
+			<option>직급명</option>
 		</select>
 		<input type="text" class="searchBox">		<%-- 입력창 --%>
 		
-		<button type="button" class="btn">검색</button>		<%-- 버튼 --%>
+		<button type="button" class="btn" >검색</button>		<%-- 버튼 --%>
 	</div>
 </div>
-
-<div id= "article-dialog">
+<div id="authority-dialog">
 </div>

@@ -44,4 +44,21 @@ public class ApprovalServiceImpl implements ApprovalService{
 		return 0;
 	}
 
+	@Override
+	public Approval readApproval(int approvalNum) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int approvalCount(Map<String, Object> map) {
+		int result=0;
+		try {
+			result=dao.selectOne("approval.approvalCount", map);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
+	}
+
 }
