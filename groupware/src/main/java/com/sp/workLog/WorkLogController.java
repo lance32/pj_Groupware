@@ -18,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sp.common.MyUtil;
 import com.sp.member.SessionInfo;
@@ -38,7 +39,7 @@ public class WorkLogController {
 			HttpServletRequest req,
 			Model model) throws Exception {
 		
-		int rows=2; 
+		int rows=5; 
 		int dataCount=0; 
 		int total_page=0; 
 		
@@ -103,7 +104,8 @@ public class WorkLogController {
 	}
 	
 	@RequestMapping(value="/workLog/article")
-	public String readWorkLog(@RequestParam(value="workLogNum") int workLogNum,
+	@ResponseBody
+	public Map<String, Object> readWorkLog(@RequestParam(value="workLogNum") int workLogNum,
 			@RequestParam(defaultValue="subject")String searchKey,
 			@RequestParam(defaultValue="")String searchValue,
 			@RequestParam(value="page")String page,
@@ -116,23 +118,21 @@ public class WorkLogController {
 			query="&searchKey="+searchKey+"&searchValue="+URLEncoder.encode(searchValue, "utf-8");
 		}
 		
-
-		
 		WorkLog dto=service.readWorkLog(workLogNum);
-		if(dto==null) {
+		/*if(dto==null) {
 			return "redirect:/workLog/list?"+query;
-		}
+		}*/
 		Map<String, Object> map = new HashMap<>();
 		
 		map.put("workLogNum", workLogNum);
 		map.put("searchKey", searchKey);
 		map.put("searchValue", searchValue);
-	
+		map.put("dto", dto);
 		model.addAttribute("query",query);
 		model.addAttribute("dto",dto);
 		model.addAttribute("page",page);
 		
-		return ".workLog.article";
+		return map;
 	}
 	
 	@RequestMapping(value="/workLog/created", method=RequestMethod.GET)
@@ -143,6 +143,7 @@ public class WorkLogController {
 		WorkLog dto=service.readWorkForm(num);
 		
 		model.addAttribute("dto",dto);
+		model.addAttribute("num",num);
 		model.addAttribute("mode","created");
 		
 		return ".workLog.created";

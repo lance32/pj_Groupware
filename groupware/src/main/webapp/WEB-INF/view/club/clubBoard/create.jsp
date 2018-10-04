@@ -40,6 +40,15 @@ jQuery(function(){
 		SEresetContent(resetContent);
 	});
 	
+	jQuery("#inputFileDiv").hide();
+	//첨부된 파일에서 삭제 버튼 클릭시
+	jQuery("#deleteFileButn").click(function(){
+		jQuery("#insertedFileDiv").hide();
+		jQuery("#inputFileDiv").show();
+		jQuery("#inputTagDiv").append("<input name='upload' type='file' style='margin-bottom: 10px;'>");
+		jQuery("#inputTagDiv").append("<input name='isDeleteFile' type='hidden' value='true'>");
+	});
+	
 });
 
 function check() {
@@ -68,7 +77,7 @@ function check() {
 
 <div style="clear: both; margin: 10px 0px 40px 70px;">
 	<span class="glyphicon glyphicon-pencil" style="font-size: 28px; margin-left: 10px;"></span> 
-	<span style="font-size: 30px;">&nbsp;게시글 작성</span><br>
+	<span style="font-size: 30px;">&nbsp;게시글 <c:if test="${mode=='create'}">작성</c:if><c:if test="${mode=='update'}">수정</c:if></span><br>
 	<div style="clear: both; width: 300px; height: 1px; border-bottom: 3px solid black;"></div>
 </div>
 
@@ -89,22 +98,29 @@ function check() {
 		<div style="clear:both; width: 100%; border-top: 1px solid #BDBDBD; border-bottom: 1px solid #BDBDBD;">
 			<textarea name="content" id="content" style="width: 100%; min-height: 400px;">${BoardInfo.content}</textarea>		
 		</div>
+		<c:if test="${empty BoardInfo.originalFileName}">
 		<div style="clear:both; width: 100%; min-height:50px; height:auto; border-bottom: 2px solid #BDBDBD; display: flex;">
-			<c:if test="${empty BoardInfo.originalFileName}">
-				<div style="float: left; width: 200px; display: flex; background: #F2F2F2; font-weight: 600; padding:10px 20px; margin-right: 40px;">파일 첨부</div>
-				<div style="float: left; width: 900px; padding-top: 10px;">
-					<input name="upload" type="file" style="margin-bottom: 10px;">
-				</div>
-			</c:if>
-			<c:if test="${not empty BoardInfo.originalFileName}">
-				<div style="float: left; width: 200px; display: flex; background: #F2F2F2; font-weight: 600; padding:10px 20px; margin-right: 40px;">첨부된 파일</div>
-				<div style="float: left; width: 900px; padding-top: 10px;">
-					<span class="glyphicon glyphicon-floppy-disk" style="font-size: 13px;"></span> 
-					${BoardInfo.originalFileName}
-					<a href="<%=cp%>/clubBoard/deleteFile" style="margin-left: 10px;">|삭제</a>
-				</div>
-			</c:if>
+			<div style="float: left; width: 200px; display: flex; background: #F2F2F2; font-weight: 600; padding:10px 20px; margin-right: 40px;">파일 첨부</div>
+			<div style="float: left; width: 900px; padding-top: 10px;">
+				<input name="upload" type="file" style="margin-bottom: 10px;">
+				<input name='isDeleteFile' type='hidden' value='none'>
+			</div>
 		</div>
+		</c:if>
+		<c:if test="${not empty BoardInfo.originalFileName}">
+		<div id="insertedFileDiv" style="clear:both; width: 100%; min-height:50px; height:auto; border-bottom: 2px solid #BDBDBD; display: flex;">
+			<div style="float: left; width: 200px; display: flex; background: #F2F2F2; font-weight: 600; padding:10px 20px; margin-right: 40px;">첨부된 파일</div>
+			<div style="float: left; width: 900px; padding-top: 10px;">
+				<span class="glyphicon glyphicon-floppy-disk" style="font-size: 13px;"></span> 
+				${BoardInfo.originalFileName}
+				<button id="deleteFileButn" type="button" style="margin-left: 10px;">삭제</button>
+			</div>
+		</div>
+		<div id="inputFileDiv" style="clear:both; width: 100%; min-height:50px; height:auto; border-bottom: 2px solid #BDBDBD; display: flex;">
+			<div style="float: left; width: 200px; display: flex; background: #F2F2F2; font-weight: 600; padding:10px 20px; margin-right: 40px;">파일 첨부</div>
+			<div id="inputTagDiv" style="float: left; width: 900px; padding-top: 10px;">   </div>
+		</div>
+		</c:if>
 			
 		<div style="clear:both; width: 100%; height: 60px; padding: 10px 5px;">
 			<button id="resetButn" type="button" class="clubButn">초기화</button>
@@ -121,6 +137,7 @@ function check() {
 		<input type="hidden" name="clubNum" value="${clubInfo.clubNum}">
 		<c:if test="${mode=='update'}">
 			<input type="hidden" name="boardNum" value="${BoardInfo.boardNum}">
+			<input type="hidden" name="saveFileName" value="${BoardInfo.saveFileName}">
 		</c:if>
 	</form>
 </div>

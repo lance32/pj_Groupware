@@ -1,7 +1,9 @@
 package com.sp.mail;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -21,10 +23,10 @@ public class Mail {
 	private String content;				// 내용
 	private String cc;					// 참조
 	private String bcc;					// 숨은 참조
-//	private List<MultipartFile> upload;
-//	private List<String> savePathname = new ArrayList<String>();
-	private MultipartFile upload;
-	private String savePathname;
+	private List<MultipartFile> upload;
+	private List<String> savePathname; //= new ArrayList<String>();
+//	private MultipartFile upload;
+//	private String savePathname;
 	@DateTimeFormat(iso=ISO.DATE_TIME)
 	private Date sendTime;				// 보낸 날짜
 	private int state;					// 상태(0:정상, 1:휴지통, 2:임시보관)
@@ -95,28 +97,16 @@ public class Mail {
 	public void setContent(String content) {
 		this.content = content;
 	}
-//	public List<MultipartFile> getUpload() {
-//		return upload;
-//	}
-//	public void setUpload(List<MultipartFile> upload) {
-//		this.upload = upload;
-//	}
-//	public List<String> getSavePathname() {
-//		return savePathname;
-//	}
-//	public void setSavePathname(List<String> savePathname) {
-//		this.savePathname = savePathname;
-//	}
-	public MultipartFile getUpload() {
+	public List<MultipartFile> getUpload() {
 		return upload;
 	}
-	public void setUpload(MultipartFile upload) {
+	public void setUpload(List<MultipartFile> upload) {
 		this.upload = upload;
 	}
-	public String getSavePathname() {
+	public List<String> getSavePathname() {
 		return savePathname;
 	}
-	public void setSavePathname(String savePathname) {
+	public void setSavePathname(List<String> savePathname) {
 		this.savePathname = savePathname;
 	}
 	public String getFormatSendTime() {

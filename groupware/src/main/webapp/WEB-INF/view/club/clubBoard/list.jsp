@@ -6,6 +6,24 @@
 	String cp=request.getContextPath();
 %>
 <style type="text/css">
+/* 
+.clubButn{
+	width: auto;
+	height: auto;
+	padding: 5px 10px;
+	border-radius: 5px;
+	background: #424242;
+	color: #F2F2F2;
+	border:none;
+	outline: 0;
+	font-size: 15px;
+}
+.clubButn:hover{
+	background: #151515;
+	color: #ffffff;
+	cursor: pointer;
+}
+ */
 .clubBoardManageButn{
 	width: 90%;
 	height: auto;
@@ -72,35 +90,58 @@
 	outline: 0;
 	font-size: 15px;
 }
+
+.createReplyButn{
+	width: auto;
+	height: auto;
+	padding: 5px 10px;
+	border-radius: 5px;
+	background: #424242;
+	color: #F2F2F2;
+	border:none;
+	outline: 0;
+	font-size: 15px;
+}
+.createReplyButn:hover{
+	background: #151515;
+	color: #ffffff;
+	cursor: pointer;
+}
 </style>
 
 <script type="text/javascript">
 
 jQuery(function(){
-	jQuery(".replyListDiv").hide();
-	jQuery(".replyAnswerDiv").hide();
-	
+	jQuery(".replyDiv").hide();
 	//댓글 버튼 클릭시
 	jQuery(".showReplyButn").click(function(){
-		var replyDiv = jQuery(this).parent("div").parent("div").parent("div").children(".replyListDiv");
+		var replyDiv = jQuery(this).parent("div").parent("div").parent("div").children(".replyDiv");
 		if(replyDiv.css("display") == "none"){
 			replyDiv.show();
 		}else{
 			replyDiv.hide();
 		}
+		var listReplyDiv=replyDiv.children(".listReply");
+		var boardNum=jQuery(this).val();
+		listPage(1,listReplyDiv,boardNum);
 	});
 	
 	//댓글의 답글 버튼 클릭시
-	jQuery(".showReplyAnswerButn").click(function(){
-		var replyAnswerDiv = jQuery(this).parent("div").parent("div").parent("div").children(".replyAnswerDiv");
+	jQuery(document).on("click", ".showReplyAnswerButn", function(){
+		var replyAnswerDiv = jQuery(this).parent("div").parent("div").next(".replyAnswerDiv");
 		if(replyAnswerDiv.css("display") == "none"){
 			replyAnswerDiv.show();
 		}else{
 			replyAnswerDiv.hide();
 		}
 	});
+
 	
-//---
+	//새로고침 버튼 클릭시
+	jQuery("#refreshClubBoardButn").click(function(){
+		location.href="<%=cp%>/clubBoard/list?clubNum=${clubInfo.clubNum}&categoryNum=${categoryNum}";
+		return;
+	});
 	
 	//게시글 작성 버튼 클릭시
 	jQuery("#createClubBoardButn").click(function(){
@@ -108,7 +149,87 @@ jQuery(function(){
 		return;
 	});
 	
+	//댓글달기 버튼 클릭시
+	jQuery(".createReplyButn").click(function(){
+		
+		var replyContent=jQuery("#replyContentInput").val();
+	    if(!replyContent) {
+			alert("내용을 입력하세요.");
+	       	jQuery("#replyContentInput").focus();
+	       	return;
+	    }
+		var clubNum=jQuery("#replyClubNumInput").val();
+		var boardNum=jQuery("#replyBoardNumInput").val();
+		var categoryNum=jQuery("#replyCategoryNumInput").val();
+		
+	    createReply(replyContent, clubNum, boardNum, categoryNum);
+	});
+	
 });
+
+//댓글 추가
+function createReply(replyContent, clubNum, boardNum, categoryNum) {
+	
+	replyContent = encodeURIComponent(replyContent);
+	
+	var query="replyContent="+replyContent+"&clubNum="+clubNum+"&boardNum="+boardNum+"&categoryNum="+categoryNum;
+	var url="<%=cp%>/clubBoard/insertReply";
+	$.ajax({
+		type:"post"
+		,url:url
+		,data:query
+		,dataType:"json"
+		,success:function(data) {
+			jQuery("#replyContentInput").val("");
+			
+			var state=data.state;
+			if(state=="true") {
+				listPage(1);
+			} else if(state=="false") {
+				alert("댓글추가에 실패했습니다.");
+			}
+		}
+		,beforeSend : function(jqXHR) {
+	        jqXHR.setRequestHeader("AJAX", true);
+	    }
+	    ,error:function(jqXHR) {
+	    	if(jqXHR.status==403) {
+	    		login();
+	    		return;
+	    	}
+	    	console.log(jqXHR.responseText);
+	    }
+	});
+	
+}
+
+
+
+//댓글 리스트
+function listPage(page,listReplyDiv,boardNum) {
+	var url="<%=cp%>/clubBoard/listReply";
+	var query="boardNum="+boardNum+"&pageNo="+page;
+	
+	jQuery.ajax({
+		type:"get"
+		,url:url
+		,data:query
+		,success:function(data) {
+			jQuery(listReplyDiv).html(data);
+		}
+	    ,beforeSend :function(jqXHR) {
+	    	jqXHR.setRequestHeader("AJAX", true);
+	    }
+	    ,error:function(jqXHR) {
+	    	if(jqXHR.status==403) {
+	    		login();
+	    		return;
+	    	}
+	    	console.log(jqXHR.responseText);
+	    }
+	});
+
+}
 
 //삭제 a태그 클릭시
 function deleteClubBoard(boardNum){
@@ -117,7 +238,6 @@ function deleteClubBoard(boardNum){
 	}
 	return;
 }
-
 </script>
 
 
@@ -140,19 +260,19 @@ function deleteClubBoard(boardNum){
 					<span style="color: #848484;">작성자 : ${dto.memberName}</span>
 					<span style="float: right; color: #A4A4A4; padding-right: 10px;">작성 날짜 : ${dto.created}</span>
 				</div>
-				<div style="width: 100%; padding: 10px; min-height: 140px;">
+				<div style="width: 100%; padding: 10px; min-height: 160px;">
 					${dto.content}
 				</div>
-				<div style="clear: both; width: 100%; height:45px; margin: 20px 0px 0px 10px;">
+				<div style="clear: both; width: 100%; height:45px; margin: 40px 0px 0px 10px;">
 					<div style="float: left; width: 520px; padding-bottom: 10px">
-						<button type="button" class="showReplyButn">댓글 (0)</button>
+						<button type="button" class="showReplyButn" value="${dto.boardNum}">댓글 (0)</button>
 						<button type="button" class="likeButn" style="float: right;">좋아요&nbsp;3</button>
 					</div>
 					
 					<%-- 파일첨부 --%>
 					<c:if test="${not empty dto.saveFileName}">
 						<div style="width: 300px; height:40px; float: right; background: #F2F2F2; margin: 5px 10px 0px 0px; padding: 10px 20px; overflow: hidden;">
-							<a href="<%=cp%>/bbs/download?num=${dto.boardNum}" style="color: #585858;">
+							<a href="<%=cp%>/clubBoard/download?boardNum=${dto.boardNum}" style="color: #585858;">
 								<span class="glyphicon glyphicon-floppy-disk" style="font-size: 13px;"></span> 
 								<span>${dto.originalFileName}</span>
 							</a>
@@ -161,51 +281,19 @@ function deleteClubBoard(boardNum){
 				</div>
 				
 				
-				<div class="replyListDiv">
+				<div class="replyDiv">
 					<%-- 댓글 input --%>
 					<div style="width: 100%; padding: 10px 30px; border-top: 1px solid #BDBDBD;">
-						<textarea style="max-width: 100%; min-width:100%; min-height: 90px; border: 2px solid #D8D8D8; padding-left: 5px;"></textarea>
+						<textarea id="replyContentInput" style="max-width: 100%; min-width:100%; min-height: 90px; border: 2px solid #D8D8D8; padding-left: 5px;"></textarea>
 						<div style="clear: both; width: 100%; height: 30px;">
-							<button class="clubButn" style="float: right;">댓글달기</button>
+							<button type="button" class="createReplyButn" style="float: right;">댓글달기</button>
 						</div>
+						<input type="hidden" id="replyClubNumInput" value="${clubInfo.clubNum}">
+						<input type="hidden" id="replyBoardNumInput" value="${dto.boardNum}">
+						<input type="hidden" id="replyCategoryNumInput" value="${categoryNum}">
 					</div>
-				
-					<div style="width: 100%; padding: 10px 30px; border-top: 1px solid #BDBDBD;">
-						<%-- 댓글 목록 --%>
-						<div style="width: 100%; clear: both; border-bottom: 1px solid #D8D8D8;">
-							<div style="width: 100%; height: 20px; clear: both;">
-								<span style="font-size: 15px;">테스트2</span>
-								<span style="color: #6E6E6E; font-size: 13px;">&nbsp; | 2018-10-02 15:35</span>
-							</div>
-							<div style="width: 100%; clear: both; padding: 10px; color: #6E6E6E;">
-								댓글
-							</div>
-							<div style="clear: both; width: 100%; height: 40px;">
-								<button class="showReplyAnswerButn">답글 (0)</button>
-							</div>
-						</div>
-						
-						<div class="replyAnswerDiv">
-							<%-- 답글 input --%>
-							<div style="clear: both; width: 100%; padding: 10px 20px; background: #FCFCFC; border-bottom: 1px solid #D8D8D8;">
-								<span style="width: 3%; vertical-align: top; font-size: 18px;">└</span>
-								<textarea style="max-width: 97%; min-width:97%; min-height: 80px; border: 1.2px solid #A4A4A4; padding-left: 5px;"></textarea>
-								<div style="clear: both; width: 100%; height: 30px; padding-right: 5px;">
-									<button class="clubButn" style="float: right;">답글달기</button>
-								</div>
-							</div>
-						
-							<%-- 답글 목록 --%>
-							<div style="clear: both; width: 100%; padding: 10px 20px; background: #FAFAFA; border-bottom: 1px solid #D8D8D8;">
-								<span style="width: 3%; vertical-align: top; font-size: 18px;">└</span>
-								<span style="font-size: 15px;">테스트3</span>
-								<span style="color: #6E6E6E; font-size: 13px;">&nbsp; | 2018-10-02 15:35</span>
-								<div style="clear: both; width: 100%; padding: 5px 20px;">
-									답글
-								</div>
-							</div>
-						</div>
-						
+					
+					<div class="listReply" style="width: 100%; padding: 10px 30px; border-top: 1px solid #BDBDBD;">
 					</div>
 				</div>
 				
@@ -224,7 +312,7 @@ function deleteClubBoard(boardNum){
 		<input type="text" style="width: 180px;">
 		<button class="clubButn">검색</button>
 		<div style="width: 100%; text-align: center; padding-top: 10px;">
-			<button type="button" class="clubBoardManageButn">새로고침</button>
+			<button type="button" id="refreshClubBoardButn" class="clubBoardManageButn">새로고침</button>
 		</div>
 		
 		<div style="margin:15px 15px; border-bottom:1px solid #D8D8D8;"></div>

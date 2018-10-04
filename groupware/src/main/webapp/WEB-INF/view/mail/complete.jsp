@@ -30,7 +30,7 @@
     font-size: 15px; 
     border:none;
     color:#ffffff;
-    background:#507CD1;
+    background:#384a68;
     width: 360px;
     height: 50px;
     line-height: 50px;

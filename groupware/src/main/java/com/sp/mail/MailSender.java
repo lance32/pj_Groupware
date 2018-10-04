@@ -2,7 +2,9 @@ package com.sp.mail;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 
 import javax.activation.DataHandler;
@@ -30,14 +32,14 @@ import com.sp.common.MyUtil;
 @Service("mail.mailService")
 public class MailSender {
 	// 메일 서버 정보
-	private final String SMTPAuthenticatorName = "lance32@naver.com";			// 인증 정보 - 메일 주소
-	private final String SMTPAuthenticatorPwd = "";								// 인증 정보 - 비번
-	private final String mailSmtpUser = "lance32";								// 사용자
-	private final String mailSmtpHost = "smtp.naver.com";						// 메일 서버 주소
-	private final String mailSmtpPort = "465";									// 메일 서버 포트
-	private final String mailSmtpStarttlsEnable = "465";						// ?
-	private final String mailSmtpAuth = "true";									// 인증 사용
-	private final String mailSmtpDebug = "true";								// debug
+	private final String SMTPAuthenticatorName = "";			// 인증 정보 - 메일 주소
+	private final String SMTPAuthenticatorPwd = "";				// 인증 정보 - 비번
+	private final String mailSmtpUser = "";						// 사용자
+	private final String mailSmtpHost = "smtp.naver.com";		// 메일 서버 주소
+	private final String mailSmtpPort = "465";					// 메일 서버 포트
+	private final String mailSmtpStarttlsEnable = "465";		// ?
+	private final String mailSmtpAuth = "true";					// 인증 사용
+	private final String mailSmtpDebug = "true";				// debug
 	private final String smtpSocketFactoryPort = "465";
 	
 	@Autowired
@@ -85,14 +87,18 @@ public class MailSender {
 			Multipart mp = new MimeMultipart();
 			mp.addBodyPart(mbp1);
 			
-//			for (MultipartFile mf : mail.getUpload()) {
-//				if (mf.isEmpty())	continue;
-				MultipartFile mf = mail.getUpload();
+			for (MultipartFile mf : mail.getUpload()) {
+				if (mf.isEmpty())	continue;
+
 				try {
 					String saveFilename = fileManager.doFileUpload(mf, pathname);
 					if (saveFilename != null) {
-						//mail.getSavePathname().add(pathname + File.separator + saveFilename);
-						mail.setSavePathname(pathname + File.separator + saveFilename);
+						List<String> savePathname = mail.getSavePathname();
+						if (savePathname == null)
+							savePathname = new ArrayList<String>();
+						
+						savePathname.add(pathname + File.separator + saveFilename);
+
 						String originalFilename = mf.getOriginalFilename();
 						MimeBodyPart mbp2 = new MimeBodyPart();
 						FileDataSource fds = new FileDataSource(pathname + File.separator + saveFilename);
@@ -112,7 +118,7 @@ public class MailSender {
 //					System.out.println(e.getMessage());
 					e.printStackTrace();
 				}
-			//}
+			}
 			
 			msg.setContent(mp);
 		}
@@ -183,14 +189,13 @@ public class MailSender {
 			msg.setSentDate(new Date());
 			Transport.send(msg);
 			
-		//	if (mail.getSavePathname() != null && mail.getSavePathname().size() > 0) {
-			if (mail.getSavePathname() != null && !mail.getSavePathname().isEmpty()) {
-		//		for (String filename : mail.getSavePathname()) {
-			//		File file = new File(filename);
-					File file = new File(mail.getSavePathname());
+			if (mail.getSavePathname() != null && mail.getSavePathname().size() > 0) {
+	
+				for (String filename : mail.getSavePathname()) {
+					File file = new File(filename);
 					if (file.exists())
 						file.delete();
-			//	}
+				}
 			}
 			b= true;
 		} catch(Exception e) {

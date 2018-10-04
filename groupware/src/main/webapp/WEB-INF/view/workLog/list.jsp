@@ -13,6 +13,60 @@
 #paginate .numBox {border:1px solid #ccc;height:28px;text-decoration:none;padding:4px 7px 4px 7px;margin-left:3px;line-height:normal;vertical-align:middle;}
 </style>
 
+<script type="text/javascript">
+
+/*
+$(function() {
+	$("#article").click(function() {
+		var workLogNum = $(this).data("num");
+		var query = "${articleUrl}&workLogNum="+workLogNum; 
+		$.ajax({
+			type:"get",
+			url: query,
+			dataType:"json",
+			success:function(data) {
+				console.log(data.dto.content);
+				$("#article-dialog").html(data.dto.content);
+				 $("#article-dialog").dialog({
+					height: 700,
+					width: 800,
+					modal: true
+					
+				});
+			},
+			error:function(jqXHR) {
+				console.log(jqXHR.resonseText);
+			}
+		});
+	});
+});
+*/
+
+function getData(workLogNum) {
+	
+	var query = "${articleUrl}&workLogNum="+workLogNum; 
+	$.ajax({
+		type:"get",
+		url: query,
+		dataType:"json",
+		success:function(data) {
+			console.log(data.dto.content);
+			$("#article-dialog").html(data.dto.content);
+			 $("#article-dialog").dialog({
+				height: 700,
+				width: 800,
+				modal: true
+				
+			});
+		},
+		error:function(jqXHR) {
+			console.log(jqXHR.resonseText);
+		}
+	});
+}
+</script>
+
+
 
 <div style="clear: both; margin: 10px 0px 15px 10px;">
 		<span class="glyphicon glyphicon-book" style="font-size: 28px; margin-left: 10px;"></span>
@@ -41,7 +95,7 @@
 		<tr class="tr">
 			<td>${dto.listNum}</td>
 			<td>${dto.departmentName}</td>
-			<td style="text-align: center;"><a href="${articleUrl}&workLogNum=${dto.workLogNum}">${dto.makeDate}${sessionScope.member.userName}</a></td>
+			<td  style="text-align: center;"><span onclick="getData('${dto.workLogNum}');" style="color: blue;" data-num="${dto.workLogNum}">${dto.makeDate}${sessionScope.member.userName}</span></td>
 			<td>
 				<c:if test="${dto.num =='1'}">일일업무</c:if>
 				<c:if test="${dto.num =='2'}">주간업무</c:if>
@@ -69,5 +123,7 @@
 		
 		<button type="button" class="btn">검색</button>		<%-- 버튼 --%>
 	</div>
-	
+</div>
+
+<div id= "article-dialog">
 </div>

@@ -6,6 +6,22 @@
 	String cp=request.getContextPath();
 %>
 <script type="text/javascript">
+
+function getData() {
+	var query = "<%=cp%>/workLog/created"; 
+	console.log(query)
+	$.ajax({
+		type:"get",
+		url: query,
+		dataType:"json",
+		success:function(data) {
+			console.log(data);		
+		},
+		error:function() {
+			console.log("eroer");
+		}
+	});
+}
 </script>
 
 
@@ -31,9 +47,9 @@ ${sessionScope.member.userName}
 
 <tr align="left" height="40" style="border-bottom: 1px solid #cccccc;"> 
 <td width="100" bgcolor="#eeeeee" style="text-align: center;">诀公老瘤</td>
-<td><span class="glyphicon glyphicon-book" style="font-size: 15px;">1</span></td>
-<td><span class="glyphicon glyphicon-book" style="font-size: 15px;">2</span></td>
-<td><span class="glyphicon glyphicon-book" style="font-size: 15px;">3</span></td>
+<td><span class="glyphicon glyphicon-book" style="font-size: 15px;" onclick="getData()">老老</span></td>
+<td><span class="glyphicon glyphicon-book" style="font-size: 15px;" onclick="getData()">林埃</span></td>
+<td><span class="glyphicon glyphicon-book" style="font-size: 15px;" onclick="getData()">岿埃</span></td>
 </tr>
 
 <tr align="left" style="border-bottom: 1px solid #cccccc;"> 

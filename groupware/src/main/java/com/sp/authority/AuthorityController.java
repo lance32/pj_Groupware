@@ -2,6 +2,7 @@ package com.sp.authority;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sp.common.MyUtil;
 
@@ -62,7 +64,7 @@ public class AuthorityController {
 		map.put("start", start);
 		map.put("end", end);
 		
-		List<Authority> list=service.ListAuthority(map);
+		List<Authority> list=service.listAuthority(map);
 		
 		int listNum, n=0;
 		
@@ -79,18 +81,52 @@ public class AuthorityController {
 		String cp=req.getContextPath();
 		String query="";
 		String listUrl=cp+"/authority/authoritylist";
+		String articleUrl=cp+"/authority/article?page="+current_page;
 		if(query.length()!=0) {
 			listUrl=listUrl+"?"+query;
+			articleUrl=articleUrl+"&"+query;
 		}
 		
 		String paging=util.paging(current_page, total_page, listUrl);
 		
 		model.addAttribute("list",list);
+		model.addAttribute("articleUrl",articleUrl);
 		model.addAttribute("dataCount",dataCount);
 		model.addAttribute("total_page",total_page);
 		model.addAttribute("page",current_page);
 		model.addAttribute("paging",paging);
 
 		return ".authority.authoritylist";
+	}
+	
+	@RequestMapping(value="/authority/article")
+	@ResponseBody
+	public Map<String, Object> readAuthority(@RequestParam(value="memberNum") String memberNum,
+			@RequestParam(defaultValue="subject")String searchKey,
+			@RequestParam(defaultValue="")String searchValue,
+			@RequestParam(value="page")String page,
+			Model model) throws Exception {
+	
+		
+		String query="page"+page;
+		searchValue=URLDecoder.decode(searchValue, "utf-8");
+		if(searchValue.length()!=0) {
+			query="&searchKey="+searchKey+"&searchValue="+URLEncoder.encode(searchValue, "utf-8");
+		}
+		
+		Map<String, Object> map = new HashMap<>();
+		List<Authority> list=service.listTalbe(map);
+		Authority authority=service.readAuthority(memberNum);
+		map.put("memberNum", memberNum);
+		map.put("searchKey", searchKey);
+		map.put("searchValue", searchValue);
+		map.put("authority", authority);
+		map.put("list", list);
+		model.addAttribute("query",query);
+//		model.addAttribute("dto",dto);
+//		model.addAttribute("page",page);
+//		model.addAttribute("list",list);
+		
+		return map;
 	}
 }
