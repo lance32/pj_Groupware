@@ -287,10 +287,8 @@ public class MemberController {
 		
 		// 해당 레코드 가져 오기
 		Member dto = service.readMember(memberNum);
-		
 		if(dto==null)
 			return "redirect:/member/main?"+query;
-		
 		
 		List<Map<String, Object>> qualifyList = service.qualifyList(memberNum);
 		if(qualifyList==null) {
@@ -299,7 +297,8 @@ public class MemberController {
 		}else {
 			model.addAttribute("qualifyList",qualifyList);
 		}
-	
+		
+		System.out.println(qualifyList);
 		model.addAttribute("mode","info");
 		model.addAttribute("memberNum",memberNum);
 		model.addAttribute("dto", dto);
@@ -353,16 +352,6 @@ public class MemberController {
 		
 		return "redirect:/member/main?page="+page;
 	}
-	
-	@RequestMapping(value="/member/delete")
-	public String deleteMember(@RequestParam String memberNum) {
-		
-		service.deleteMember(memberNum);
-
-		return ".member.memberinfo";
-	}
-	
-	
 	
 	@RequestMapping(value="/member/noAuthorized")
 	public String noAuth() throws Exception{

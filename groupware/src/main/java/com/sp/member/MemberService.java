@@ -21,8 +21,6 @@ public interface MemberService {
 	public int updateAdmin(Member dto) throws Exception;
 	
 //	public int updateLastLogin(String userId);
-//	
-	public int deleteMember(String memberNum);
 	
 //	public int insertAuthority(Member dto);
 //	public int updateAuthority(Member dto);

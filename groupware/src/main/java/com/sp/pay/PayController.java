@@ -8,13 +8,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class PayController {
 
 	//급여 조회 리스트
-	@RequestMapping(value="")
+	@RequestMapping(value="/pay/main")
 	public String payList() {
 		
 		
-		return "";
+		return ".workhelper.paymain";
 	}
 	
+	@RequestMapping(value="/pay/adminMain")
+	public String adminPayList() {
+		return ".workhelper.adminMain";
+		
+		
+	}
 	
 	@RequestMapping(value="/pay/insertpay",method=RequestMethod.GET)
 	public String insertPayForm() {

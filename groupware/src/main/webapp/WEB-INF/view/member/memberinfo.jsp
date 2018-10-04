@@ -136,7 +136,7 @@ function submitMemberAdmin(){
 		<tr style="border-top: 2px solid #cccccc; border-bottom: 1px solid #cccccc;">
 			<td rowspan="5" style="width:270px; height:250px;">
 			<img src="<%=cp%>/upload/member/${dto.saveFilename}"
-			style="width:270px; height:250px;">
+			style="width:260px; height:240px;">
 			</td>
 			<td class="info-subject">
 			이름
@@ -179,7 +179,7 @@ function submitMemberAdmin(){
 			<td class="info-subject">
 			  부서
 			</td>
-			<td colspan="3" class="info-value">
+			<td class="info-value">
 				<c:if test="${mode=='updateAdmin'}">
 					<select class="selectField" id="departmentNum" name="departmentNum" >
 					<option value="">선 택</option>
@@ -192,6 +192,20 @@ function submitMemberAdmin(){
 				${dto.departmentName}
 				</c:if>
 			</td>
+			<c:if test="${sessionScope.member.userId=='admin' || sessionScope.member.userId==dto.memberNum}">
+			<td class="info-subject">
+				기본급 
+			</td>
+			
+			<td class="info-value">
+					<c:if test="${mode!='updateAdmin'}">
+					${dto.basicpay}
+					</c:if>
+					<c:if test="${mode=='updateAdmin'}">
+					<input type="text" name="basicpay" value="${dto.basicpay}" >
+					</c:if>
+			</td>
+			</c:if>
 		</tr>
 		
 		<tr style="border-bottom: 1px solid #cccccc;">
@@ -266,7 +280,7 @@ function submitMemberAdmin(){
 					추가
 				</td>
 			</tr>
-			<tbody id="tb">
+			
 			<c:if test="${mode=='updateAdmin'}">
 			<tr style="border-bottom: 1px solid #cccccc; height:20px;" >
 				<td>
@@ -286,22 +300,24 @@ function submitMemberAdmin(){
 				</td>
 			</tr>
 			</c:if>
-			</tbody>
+			
 			<c:if test="${not empty qualifyList}">
-				<c:forEach var="list" items="${qualifyList}">
+				<c:forEach var="qualifyList" items="${qualifyList}">
 				<tr style="border-bottom: 1px solid #cccccc; height:20px;">
-					
 					<td>
-						${list.qualifyName}
+						${qualifyList.QUALIFYNAME}
 					</td>
 					<td>
-						${list.getDate}
+						${qualifyList.GETDATE}
 					</td>
 					<td>
-						${list.qualifyCode}
+						${qualifyList.QUALIFYCODE}
 					</td>
 					<td>
-						${list.serialNum}
+						${qualifyList.SERIALNUM}
+					</td>
+					<td>
+					<a>삭제</a>
 					</td>
 				</tr>
 				</c:forEach>
@@ -324,10 +340,6 @@ function submitMemberAdmin(){
 				<c:if test="${mode=='updateAdmin'}">
 					<button type="reset" class="btn">다시입력</button>
 					<button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/member/memberinfo?page=${page}&memberNum=${dto.memberNum}';">수정취소</button>
-				</c:if>
-			
-				<c:if test="${sessionScope.member.userId=='admin'}">				    
-					<button type="button" class="btn" onclick="deletemember();">삭제</button>
 				</c:if>
 			</td>
 			

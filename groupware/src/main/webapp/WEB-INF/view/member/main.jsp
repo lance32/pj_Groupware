@@ -107,7 +107,7 @@ $(document).ready(function(){
 
 	</table>
 	<br>
-	<div id='paginate'>	<%-- MyUtil.java 안에 있음. ${paging}으로 써야됨. --%>
+	<div id=''>	<%-- MyUtil.java 안에 있음. ${paging}으로 써야됨. --%>
 		${paging}
 	</div>
 

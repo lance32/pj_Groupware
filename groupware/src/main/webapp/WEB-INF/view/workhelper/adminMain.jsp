@@ -14,54 +14,70 @@
 #paginate .numBox {border:1px solid #ccc;height:28px;text-decoration:none;padding:4px 7px 4px 7px;margin-left:3px;line-height:normal;vertical-align:middle;}
 </style>
 
-	<div id="test" style="width:100%; height:600px; ">
+
+<div id="test" style="width:100%; height:600px; ">
 	<%-- 상단 대표글씨 --%>
 	<div style="clear: both; margin: 10px 0px 15px 10px;">
 		<span class="glyphicon glyphicon-th-list" style="font-size: 25px; margin-left: 10px;"></span>
-		<span style="font-size: 25px;">&nbsp;급여조회</span><br>
+		<span style="font-size: 25px;">&nbsp;급여관리</span><br>
 		<div style="clear: both; width: 300px; height: 1px; border-bottom: 3px solid black;"></div>
 	</div>
-
-
-	<%-- 목록 --%>
-	<table id="tb" style="width: 1000px;"><%-- 테이블 길이 수정 가능 --%>
+	<%-- --%>
+	<form name="thismember" method="post">
+	<table id="tb" style="width: 100%;"><%-- 테이블 길이 수정 가능 --%>
 		<tr>
 			<td id="count" colspan="2">
-				3개(1/1 페이지)
+				${dataCount}개(${page}/${total_page} 페이지)
 			</td>
-			<td></td>
-			<td align="right">
-			<select class="selectBox">				<%-- 선택박스  --%>
-				<option>2018년도</option>
-				<option>2017년도</option>
-				</select>
-			</td>
+			<td></td><td></td>
 		</tr>
+
 		
 		<tr class="cf">
 			<%-- 구분 폭 수정 가능 --%>
 			<td width="50">번호</td>
-			<td width="100" style="text-align: left;">반방각</td>
-			<td width="100">날짜</td>
-			<td width="900">제목</td>
+			<td width="100">부서</td>
+			<td width="150">직위</td>
+			<td width="150">입사일</td>
+			<td width="190">이름</td>
+			<td width="150">기본급</td>
+			<td width="150">수당</td>
+			
 		</tr>
 		
+		<c:forEach var="list" items="${list}">
 		<tr class="tr">
-			<td>1</td>
-			<td width="100" style="text-align: left;">이름</td>
-			<td width="100">2018-10-02</td>
-			<td width="750">2018년 10월 ooo님의 급여 입니다.</td>
+			<td>${list.listmemberNum}</td>
+			<td style="text-align: center;">${list.departmentName}</td>
+			<td>${list.positionName }</td>
+			<td>${list.created }</td>
+			<td>
+				<a href="${articleUrl}&memberNum=${list.memberNum}">${list.name}</a>
+			</td>
+			<td>${list.email}</td>
+			<td>${list.phone}</td>
+			
 		</tr>
+		</c:forEach>
+
 	</table>
 	<br>
-	<div id='paginate'>	<%-- MyUtil.java 안에 있음. ${paging}으로 써야됨. --%>
-		<a href="#">처음</a>
-		<span class="curBox">1</span>
-		<a href="#" class="numBox">2</a>
-		<a href="#" class="numBox">3</a>
-		<a href="#">다음</a>
+	<div id=''>	<%-- MyUtil.java 안에 있음. ${paging}으로 써야됨. --%>
+		${paging}
 	</div>
-	
-	
-</div>
 
+	</form>
+	
+	<table id="tb" style="width: 100%; padding-top: 10px;">
+		<tr>
+			<td>
+			<button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/member/main';" >새로고침</button>
+			</td>
+			<c:if test="${sessionScope.member.userId=='admin'}">
+				<td style="text-align: right;">
+					<button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/pay/insertpay';">급여 입력</button>
+				</td>
+			</c:if>
+		</tr>
+	</table>
+</div>
