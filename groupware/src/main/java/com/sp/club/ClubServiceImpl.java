@@ -137,6 +137,42 @@ public class ClubServiceImpl implements ClubService{
 		return result;
 	}
 
+	@Override
+	public void insertCategoryPhase1(Category dto) {
+		try {
+			dao.insertData("club.insertClubCategoryPhase1", dto);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+	}
+
+	@Override
+	public void insertCategoryPhase2(Category dto) {
+		try {
+			dao.insertData("club.insertClubCategoryPhase2", dto);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+	}
+
+	@Override
+	public void deleteClubCategory(int categoryNum) {
+		try {
+			dao.deleteData("club.deleteClubCategory", categoryNum);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+	}
+
+	@Override
+	public void updateClubCategory(Category dto) {
+		try {
+			dao.updateData("club.updateClubCategory", dto);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+	}
+
 
 	
 

@@ -148,7 +148,7 @@ function insertForm(start, end, resource) {
 		   	   $(this).dialog("close");
 		       }
 		  },
-		  height: 750,
+		  height: 810,
 		  width: 700,
 		  title: "스케쥴러 등록",
 		  close: function(event, ui) {
@@ -233,8 +233,10 @@ function changeGroup(groupNum, resourceNum) {
         	for(var idx=0; idx<data.list.length; idx++) {
         		var num=data.list[idx].resourceNum;
         		var name=data.list[idx].resourceName;
+        		var occupancy = data.list[idx].occupancy;
         		
         		$("select[name=resourceNum]").append("<option value='"+num+"'>"+name+"</option>");
+        		$("#resOccupancy").text(occupancy);
         	}
         	
         	$("select[name=groupNum]").val(groupNum);
@@ -277,6 +279,7 @@ function insertOk() {
 
 // 일정 등록 및 수정에서 검사
 function validCheck() {
+	// 최대인원, 입력 인원 비교 필요함.
 	var groupNum=$.trim($("select[name='groupNum']").val());
 	var resourceNum=$.trim($("select[name='resourceNum']").val());
 	var title=$.trim($("input[name='title']").val());
@@ -290,7 +293,8 @@ function validCheck() {
 	var alarm=$.trim($("input[name=alarm]:checked").val());
 	var alarmTime=$.trim($("input[name=alarmTime]:checked").val());
 	var toMember = $.trim($("input[name='toMember']").val());
-
+	var occupancy = $("#resOccupancy").text();
+	
 	if(! groupNum) {
 		alert("구분을 선택 하세요 !!!");
 		$("select[name='groupNum']").focus();
@@ -336,6 +340,11 @@ function validCheck() {
 	if(! /^(\d+)$/.test(inwon)) {
 		alert("사용 인원수를 입력 하세요 !!! ");
 		$("input[name='inwon']").focus();
+		return false;
+	}
+	
+	if(parseInt(inwon) > parseInt(occupancy)){
+		alert("최대 인원보다 많은 사용자를 입력할 수 없습니다.");
 		return false;
 	}
 	
@@ -387,6 +396,7 @@ function articleForm(calEvent) {
 	var groupName=calEvent.groupName;
 	var userId=calEvent.memberNum;
 	var userName=calEvent.name;
+	var occupancy = calEvent.occupancy;
 	var inwon=calEvent.inwon;
 	var startDay=calEvent.startDay;
 	var startTime=calEvent.startTime;
@@ -460,8 +470,8 @@ function updateForm(num, groupNum, resourceNum, title, allDay, startDay, startTi
 		    	   $(this).dialog("close");
 		        }
 		  },
-		  height: 480,
-		  width: 550,
+		  height: 810,
+		  width: 700,
 		  title: "스케쥴러 수정",
 		  close: function(event, ui) {
 		  }
@@ -469,23 +479,22 @@ function updateForm(num, groupNum, resourceNum, title, allDay, startDay, startTi
 	
 	$('#resourceModal').load("<%=cp%>/scheduler/inputForm", function() {
 		$("select[name='groupNum']").val(groupNum);
-		// $("select[name='resourceNum']").val(resourceNum);
 		$("input[name='title']").val(title);
 		$("input[name='startDay']").val(startDay);
-		$("input[name='startTime']").val(startTime);
+		$("select[name='startTime']").val(startTime);
 		$("input[name='endDay']").val(endDay);
-		$("input[name='endTime']").val(endTime);
+		$("select[name='endTime']").val(endTime);
 		$("input[name='inwon']").val(inwon);
-		$("input[name='num']").val(num);
+		$("input[name='reserveNum']").val(num);
 		
 		if(allDay==true) {
-			$("input[name='allDay']").prop('checked', true);
-			$("#startTime").hide();
-			$("#endTime").hide();
+			$("#allDay3").prop('checked', true);
+			$("#resStartTime").hide();
+			$("#resEndTime").hide();
 		} else {
-			$("input[name='allDay']").prop('checked', false);
-			$("#startTime").show();
-			$("#endTime").show();
+			$("#allDay4").prop('checked', true);
+			$("#resStartTime").show();
+			$("#resEndTime").show();
 		}
 		$("input[name='title']").focus();
 
@@ -498,9 +507,9 @@ function updateForm(num, groupNum, resourceNum, title, allDay, startDay, startTi
 function updateOk() {
 	if(! validCheck())
 		return;
-	
-	var query=$("form[name=schedulerForm]").serialize();
-	var url="<%=cp%>/scheduler/schedulerUpdate";
+	var resourceName = $("select[name=resourceNum]").text();
+	var query=$("form[name=resForm]").serialize();
+	var url="<%=cp%>/scheduler/updateReservation?resourceName="+resourceName;
     
      $.ajax({
         type:"post"
@@ -536,7 +545,6 @@ function deleteOk(num) {
 	 $("#resourceModal").dialog("close");
 }
 
-//-------------------------------------------------------
 // 일정을 드래그하거나 일정의 크기를 변경할 때 일정 수정
 function updateDrag(calEvent) {
 	var num=calEvent.id;
@@ -546,7 +554,7 @@ function updateDrag(calEvent) {
 	var startTime="";
 	if(calEvent.start.hasTime()) {
 		allDay=false;
-		startTime=calEvent.start.format("HH:mm")+":00";
+		startTime=calEvent.start.format("HH:mm");
 	}
 	var endDay="";
 	if(calEvent.end!=null) {
@@ -558,29 +566,42 @@ function updateDrag(calEvent) {
 	}
 	var endTime="";
 	if(calEvent.end!=null && calEvent.end.hasTime()) {
-		endTime=calEvent.end.format("HH:mm")+":00";
+		endTime=calEvent.end.format("HH:mm");
 	}
 	
 	var title=calEvent.title;
+	var content = calEvent.content;
 	var resourceName=calEvent.resourceName;
 	var groupNum=calEvent.groupNum;
 	var groupName=calEvent.groupName;
 	var userId=calEvent.userId;
 	var userName=calEvent.userName;
 	var inwon=calEvent.inwon;
+	var alarm = calEvent.alarm;
+	var alarmTime = calEvent.alarmTime;
+	var alarmTitle = calEvent.alarmTitle;
+	var alarmContent = calEvent.alarmContent;
+	var toMember = calEvent.toMember;
 	
-	var query="num="+num
+	var query="reserveNum="+num
         +"&groupNum="+groupNum
         +"&resourceNum="+resourceNum
+        +"&resourceName="+resourceName
         +"&title="+title
+        +"&content="+content
         +"&allDay="+allDay
         +"&startDay="+startDay
         +"&startTime="+startTime
         +"&endDay="+endDay
         +"&endTime="+endTime
+        +"&alarm="+alarm
+        +"&alarmTime="+alarmTime
+        +"&alarmTitle="+alarmTitle
+        +"&alarmContent="+alarmContent
+        +"&toMember="+toMember
         +"&inwon="+inwon;
 	
-	var url="<%=cp%>/scheduler/schedulerUpdate";
+	var url="<%=cp%>/scheduler/updateReservation";
 
 	$.ajax({
       type:"POST"
@@ -589,11 +610,12 @@ function updateDrag(calEvent) {
 	  ,dataType:"json"
 	  ,success:function(data) {
 	      var state=data.state;
-	      if(state=="false") {
-	    	  alert("게시글을 수정할 수 있는 권한이 없습니다.");
+	      
+	      if(state=="true") {
 	    	  calendar.fullCalendar('refetchEvents');
 	      } else {
-	    	  calendar.fullCalendar('refetchEvents');
+	    	  alert("게시글을 수정할 수 있는 권한이 없습니다.");
+	    	  return false;
 	      }
       }
       ,error:function(e) {
@@ -606,8 +628,8 @@ function updateDrag(calEvent) {
 <div class="body-container" style="width: 1100px;">
 <div style="clear: both; margin: 10px 0px 15px 10px;">
 	<span class="glyphicon glyphicon-credit-card"
-		style="font-size: 28px; margin-left: 10px;"></span> <span
-		style="font-size: 30px;">&nbsp;자 원 예 약</span><br>
+		style="font-size: 28px; margin-left: 10px;"></span> 
+		<span style="font-size: 30px;">&nbsp;자 원 예 약</span><br>
 	<div style="clear: both; width: 300px; height: 1px; border-bottom: 3px solid black;"></div>
 </div>
 <br>

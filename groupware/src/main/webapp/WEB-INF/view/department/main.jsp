@@ -20,9 +20,12 @@ function searchMember(){
 	f.submit();
 }
 
+function 
+
 $(document).ready(function(){
-	var checkedValue = $("input[name=chk_status]:checked").val();
-	//alert(checkedValue);
+	var checkedValue = $(":input:radio[name=chk_status]:checked").val();
+	//var checkedValue = document.chk_status.value;
+	alert(checkedValue);
 });
 </script>
 
@@ -35,13 +38,13 @@ $(document).ready(function(){
 		<div style="clear: both; width: 300px; height: 1px; border-bottom: 3px solid black;"></div>
 	</div>
 	<div style="width:100%; text-align:right;">
-
+		
 			<input type="radio" name="chk_status" value="all" checked="checked">전체
 			<input type="radio" name="chk_status" value="1">재직
 			<input type="radio" name="chk_status" value="2">휴직
 			<input type="radio" name="chk_status" value="3">정직
 			<input type="radio" name="chk_status" value="0">퇴사
-	
+
 	<form name="memberSearchForm" action="<%=cp%>/member/main" method="post">
 	
 			

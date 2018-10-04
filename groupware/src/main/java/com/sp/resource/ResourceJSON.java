@@ -4,6 +4,7 @@ public class ResourceJSON {
 	private int id; // reserveNum
 	private String groupName;
 	private String title;
+	private String content;
 	private String eventColor;  // color
 	private int resourceId; // resourceNum
 	private String start, end;
@@ -15,6 +16,12 @@ public class ResourceJSON {
 	private int inwon;
 	private String memberNum, name;
 	private String created;
+	
+	private int alarm;
+	private int alarmTime;
+	private String alarmTitle;
+	private String alarmContent;
+	private String toMember;
 	
 	public int getId() {
 		return id;
@@ -123,5 +130,41 @@ public class ResourceJSON {
 	}
 	public void setCreated(String created) {
 		this.created = created;
+	}
+	public String getContent() {
+		return content;
+	}
+	public void setContent(String content) {
+		this.content = content;
+	}
+	public int getAlarm() {
+		return alarm;
+	}
+	public void setAlarm(int alarm) {
+		this.alarm = alarm;
+	}
+	public int getAlarmTime() {
+		return alarmTime;
+	}
+	public void setAlarmTime(int alarmTime) {
+		this.alarmTime = alarmTime;
+	}
+	public String getAlarmTitle() {
+		return alarmTitle;
+	}
+	public void setAlarmTitle(String alarmTitle) {
+		this.alarmTitle = alarmTitle;
+	}
+	public String getAlarmContent() {
+		return alarmContent;
+	}
+	public void setAlarmContent(String alarmContent) {
+		this.alarmContent = alarmContent;
+	}
+	public String getToMember() {
+		return toMember;
+	}
+	public void setToMember(String toMember) {
+		this.toMember = toMember;
 	}
 }

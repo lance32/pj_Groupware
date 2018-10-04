@@ -1,10 +1,18 @@
 package com.sp.club;
 
 public class Category {
+	private int clubNum;
 	private int categoryNum;
 	private String categoryName;
-	private int categoryParent;
+	private Integer categoryParent;
+	private int separate;
 	
+	public int getClubNum() {
+		return clubNum;
+	}
+	public void setClubNum(int clubNum) {
+		this.clubNum = clubNum;
+	}
 	public int getCategoryNum() {
 		return categoryNum;
 	}
@@ -17,10 +25,16 @@ public class Category {
 	public void setCategoryName(String categoryName) {
 		this.categoryName = categoryName;
 	}
-	public int getCategoryParent() {
+	public Integer getCategoryParent() {
 		return categoryParent;
 	}
-	public void setCategoryParent(int categoryParent) {
+	public void setCategoryParent(Integer categoryParent) {
 		this.categoryParent = categoryParent;
+	}
+	public int getSeparate() {
+		return separate;
+	}
+	public void setSeparate(int separate) {
+		this.separate = separate;
 	}
 }
