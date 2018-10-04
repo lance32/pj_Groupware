@@ -170,9 +170,6 @@ public class ScheduleController {
 			searchValue = URLDecoder.decode(searchValue, "UTF-8");
 		}
 		
-		System.out.println("sDay : "+ sDay);
-		System.out.println("eDay : "+ eDay);
-		
 		paramMap.put("searchKey", searchKey);
 		paramMap.put("searchValue", searchValue);
 		paramMap.put("sDay", sDay);

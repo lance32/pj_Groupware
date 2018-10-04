@@ -83,18 +83,43 @@
         ORDER BY groupNum, resourceId, reserveNum
 </select>
 
+<sql id="where-list">
+	<if test="searchKey=='title'">
+		INSTR(title, #{searchValue}) &gt; 0
+	</if>
+	   
+	<if test="searchKey=='writer'">
+		INSTR(rs.name, #{searchValue}) &gt; 0
+	</if>
+	   
+	<if test="searchKey=='rName'">
+		INSTR(rs.resourceName, #{searchValue}) &gt; 0
+	</if>
+</sql>
+
 <select id="dataCount" resultType="Integer">
-	SELECT NVL(COUNT(*), 0) FROM reservation
+	SELECT NVL(COUNT(*), 0) FROM reservation rs
+	JOIN member m ON m.memberNum = rs.memberNum
+	<where>
+		<if test="searchValue != null and searchValue != ''">
+			<include refid="where-list"/>
+		</if>
+	</where>
 </select>
 
 <select id="listReserve2" parameterType="map" resultType="com.sp.resource.Resource">
 	SELECT * FROM(
     	SELECT ROWNUM rnum, tb.* FROM(
-        	SELECT rs.reserveNum, rs.resourceNum, rs.resourceName,
+        	SELECT reserveNum, rs.resourceNum, rs.resourceName,
         	title, startDay, endDay, rs.name, rs.created, inwon
         	FROM reservation rs
         	LEFT OUTER JOIN resourceList rl ON rl.resourceNum = rs.resourceNum
         	LEFT OUTER JOIN member m ON m.memberNum = rs.memberNum
+        	<where>
+				<if test="searchValue != null and searchValue != ''">
+					<include refid="where-list"/>
+				</if>
+			</where>
     	)tb WHERE ROWNUM &lt;= #{end}
 	)WHERE rnum &gt;= #{start}
 </select>

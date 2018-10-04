@@ -204,10 +204,10 @@ public class ResourceServiceImpl implements ResourceService{
 	}
 
 	@Override
-	public int dataCount() {
+	public int dataCount(Map<String, Object> map) {
 		int result = 0;
 		try {
-			result = dao.selectOne("res1.dataCount");
+			result = dao.selectOne("res1.dataCount", map);
 		} catch (Exception e) {
 			System.out.println(e.toString());
 		}

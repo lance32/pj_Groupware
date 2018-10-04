@@ -1,5 +1,7 @@
 package com.sp.resource;
 
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -184,15 +186,24 @@ public class ResourceController {
 	@RequestMapping(value="/scheduler/list")
 	public String listReservation(
 			Map<String, Object> paramMap,
+			@RequestParam(value="searchKey", defaultValue="title") String searchKey,
+			@RequestParam(value="searchValue", defaultValue="") String searchValue,
 			HttpServletRequest req,
 			Model model,
 			@RequestParam(value="page", defaultValue="1") int current_page
-			) {
+			) throws Exception {
 		int rows = 10;
 		int dataCount;
 		int total_page;
 		
-		dataCount = service.dataCount();
+		if(req.getMethod().equalsIgnoreCase("GET")) {
+			searchValue = URLDecoder.decode(searchValue, "UTF-8");
+		}
+		
+		paramMap.put("searchKey", searchKey);
+		paramMap.put("searchValue", searchValue);
+		
+		dataCount = service.dataCount(paramMap);
 		total_page = util.pageCount(rows, dataCount);
 		
 		if(current_page > total_page)
@@ -207,6 +218,10 @@ public class ResourceController {
 		
 		String cp = req.getContextPath();
 		String listUrl = cp+"/scheduler/list";
+		
+		if(searchValue.length() != 0) {
+			listUrl += "?searchKey="+searchKey+"&searchValue="+URLEncoder.encode(searchValue, "UTF-8");
+		}
 		
 		String paging = util.paging(current_page, total_page, listUrl);
 		

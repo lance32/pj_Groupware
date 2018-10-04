@@ -186,21 +186,6 @@ function insertResource() {
 	</c:forEach>
 </table>
 <br>
-<div style="text-align: center;">
-	<form name="searchResForm" action="<%=cp%>/scheduler/resList" method="post">
-		${paging }
-		<br>
-		<button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/schedule/list';">새 로 고 침</button>
-   		<select name="searchKey" class="selectBox" style="margin-bottom: 5px;">
-          	<option value="content">항 목 명</option>
-      	</select>
-    	<input type="text" name="searchValue" class="searchBox">
-    	
-   		<button type="button" class="butn" onclick="searchList()">검색</button>
-   		<div class="form-group" align="center"><br>
-		</div>
-   	</form>
-
-</div>
+${paging }
 
 <div id="insertModal" style="display: none;"></div>
