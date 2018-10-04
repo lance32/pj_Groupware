@@ -1,10 +1,13 @@
 package com.sp.clubBoard;
 
 import java.io.File;
+import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +32,9 @@ public class ClubBoardController {
 	private ClubBoardService service;
 	@Autowired
 	private MyUtil util;
-
+	@Autowired
+	private FileManager fileManager;
+	
 	@RequestMapping(value="/clubBoard/list")
 	public String clubBoardList(
 			@RequestParam int clubNum
@@ -262,6 +267,106 @@ public class ClubBoardController {
 		redirectAttributes.addAttribute("categoryNum", BoardInfo.getCategoryNum());
 		redirectAttributes.addAttribute("clubNum", dto.getClubNum());
 		return "redirect:/clubBoard/list";
+	}
+	
+	@RequestMapping(value="/clubBoard/download")
+	public void fileDownload(
+			@RequestParam int boardNum,
+			HttpServletResponse resp,
+			HttpSession session) throws Exception{
+		
+		String root=session.getServletContext().getRealPath("/");
+		String pathname=root+"uploads"+File.separator+"clubBoard";
+		Board dto=service.readClubBoard(boardNum);
+		boolean flag=false;
+		
+		if(dto!=null) {
+			flag=fileManager.doFileDownload(
+					     dto.getSaveFileName(), 
+					     dto.getOriginalFileName(), pathname, resp);
+		}
+		if(! flag) {
+			resp.setContentType("text/html;charset=utf-8");
+			PrintWriter out=resp.getWriter();
+			out.print("<script>alert('파일 다운로드가 실패했습니다.');history.back();</script>");
+		}
+	}
+	
+	
+	@RequestMapping(value="/clubBoard/insertReply", method=RequestMethod.POST)
+	public String createReply(
+			@RequestParam int clubNum
+			,@RequestParam int categoryNum
+			,Reply dto
+			,HttpSession session
+			,Model model) {
+		
+		try {
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
+			
+			Map<String, Object> map=new HashMap<>();
+			map.put("clubNum", clubNum);
+			map.put("memberNum", info.getUserId());
+			String isMember=clubService.isClubMember(map);
+			if(isMember==null) {
+				model.addAttribute("message", "잘못된 접근입니다.");
+				return "error/error";
+			}
+			dto.setMemberNum(info.getUserId());
+
+			int result=service.insertReply(dto);
+			if(result==0) {
+				model.addAttribute("message", "댓글 등록에 실패했습니다.");
+				return "error/error";
+			}
+			
+		} catch (Exception e) {
+			return "error/error";
+		}
+		return "redirect:/clubBoard/list?clubNum="+clubNum+"&categoryNum="+categoryNum;
+	}
+	
+	@RequestMapping(value="/clubBoard/listReply")
+	public String listReply(
+			@RequestParam int boardNum,
+			@RequestParam(value="pageNo", defaultValue="1") int current_page,
+			Model model) throws Exception {
+		int rows=5;
+		int total_page=0;
+		int dataCount=0;
+		List<Reply> listReply=null;
+		String paging=null;
+		try {
+			
+			Map<String, Object> map=new HashMap<String, Object>();
+			map.put("boardNum", boardNum);
+			
+			dataCount=service.replyCount(map);
+			total_page=util.pageCount(rows, dataCount);
+			if(current_page>total_page) {
+				current_page=total_page;
+			}
+			
+			int start=(current_page-1)*rows+1;
+			int end=current_page*rows;
+			map.put("start", start);
+			map.put("end", end);
+			listReply=service.listReply(map);
+			
+			for(Reply dto:listReply) {
+				dto.setReplyContent(util.htmlSymbols(dto.getReplyContent()));
+			}
+			paging=util.paging(current_page, total_page);
+		} catch (Exception e) {
+			return "error/error";
+		}
+		
+		model.addAttribute("listReply", listReply);
+		model.addAttribute("pageNo", current_page);
+		model.addAttribute("replyCount", dataCount);
+		model.addAttribute("total_page", total_page);
+		model.addAttribute("paging", paging);
+		return "club/clubBoard/listReply";
 	}
 	
 /*

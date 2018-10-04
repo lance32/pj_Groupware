@@ -10,4 +10,7 @@ public interface ClubBoardService {
 	public Board readClubBoard(int boardNum);
 	public int updateClubBoard(Board dto, String pathname, String isDeleteFile);
 	
+	public int insertReply(Reply dto);
+	public List<Reply> listReply(Map<String, Object> map);
+	public int replyCount(Map<String, Object> map);
 }

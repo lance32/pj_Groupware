@@ -102,4 +102,39 @@ public class ClubBoardServiceImpl implements ClubBoardService{
 		return result;
 	}
 
+	
+	@Override
+	public int insertReply(Reply dto) {
+		int result=0;
+		try {
+			dao.insertData("clubBoard.insertReply", dto);
+			result=1;
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
+	}
+
+	@Override
+	public List<Reply> listReply(Map<String, Object> map) {
+		List<Reply> list=null;
+		try {
+			list=dao.selectList("clubBoard.listReply", map);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return list;
+	}
+
+	@Override
+	public int replyCount(Map<String, Object> map) {
+		int result=0;
+		try {
+			result=dao.selectOne("clubBoard.replyCount", map);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
+	}
+
 }
