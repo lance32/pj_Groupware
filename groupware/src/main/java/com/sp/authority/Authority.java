@@ -7,9 +7,16 @@ public class Authority {
 	private String departmentName;
 	private String positionName;
 	private String name;
+	private String comments;
 	private int grants;
 	
 	
+	public String getComments() {
+		return comments;
+	}
+	public void setComments(String comments) {
+		this.comments = comments;
+	}
 	public int getListNum() {
 		return listNum;
 	}

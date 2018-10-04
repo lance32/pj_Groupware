@@ -16,7 +16,7 @@ public class AuthorityServiceImpl implements AuthorityService {
 	private CommonDAO dao;
 	
 	@Override
-	public List<Authority> ListAuthority(Map<String, Object> map) {
+	public List<Authority> listAuthority(Map<String, Object> map) {
 		
 		List<Authority> list=null;
 		try {
@@ -39,6 +39,31 @@ public class AuthorityServiceImpl implements AuthorityService {
 		}
 
 		return result;
+	}
+
+	@Override
+	public Authority readAuthority(String memberNum) {
+		Authority dto=null;
+		
+		try{
+			dto=dao.selectOne("authority.readAuthority", memberNum);
+		} catch(Exception e) {
+			System.out.println(e.toString());
+		}
+		
+		return dto;
+	}
+
+	@Override
+	public List<Authority> listTalbe(Map<String, Object> map) {
+		List<Authority> list=null;
+		try {
+			list=dao.selectList("authority.listTable", map);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+			
+		return list;
 	}
 
 }

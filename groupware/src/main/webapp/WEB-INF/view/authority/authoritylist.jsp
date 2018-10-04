@@ -13,6 +13,44 @@
 #paginate .numBox {border:1px solid #ccc;height:28px;text-decoration:none;padding:4px 7px 4px 7px;margin-left:3px;line-height:normal;vertical-align:middle;}
 </style>
 
+<script>
+function getData(memberNum) {
+	
+	var query = "${articleUrl}&memberNum="+memberNum; 
+	$.ajax({
+		type:"get",
+		url: query,
+		dataType:"json",
+		success:function(data) {
+			var ath = "";
+			console.log(query);
+			$.each(authority, function (idx, val) {
+			console.log(val.idx)
+			console.log(val.departmentName);
+			console.log(val.departmentName);
+			console.log(val.name);
+			console.log(val.memberNum);
+			console.log(val.grants);
+			console.log(val.positionName);
+		
+		});
+			
+			
+			$("#authority-dialog").html(ath);
+			 $("#authority-dialog").dialog({
+				height: 700,
+				width: 800,
+				modal: true
+				
+			});
+		},
+		error:function(jqXHR) {
+			console.log(jqXHR.resonseText);
+		}
+	});
+}
+</script>
+
 
 <div style="clear: both; margin: 10px 0px 15px 10px;">
 		<span class="glyphicon glyphicon-book" style="font-size: 28px; margin-left: 10px;"></span>
@@ -37,7 +75,7 @@
 			<td width="190">부서명</td>
 			<td width="190">직급명</td>
 			<td width="150">이름</td>
-			<td width="auto" style="text-align: center;">권한</td>
+			<td width="auto" style="text-align: center;">비고</td>
 		</tr>
 	<c:forEach var = "dto" items = "${list}">
 		<tr class="tr">
@@ -46,7 +84,7 @@
 			<td>${dto.departmentName}</td>
 			<td>${dto.positionName}</td>
 			<td>${dto.name}</td>
-			<td><input type="checkbox" name = "read">읽기<input type="checkbox" name = "write">쓰기<input type="checkbox" name = "modify">수정<input type="checkbox" name = "delete">삭제</td>
+			<td><button type="button" id = "authority" onclick="getData('${dto.memberNum}');" style="color: blue;" data-String="${dto.memberNum}">권한설정</button></td>
 		</tr>
 	</c:forEach>
 	</table>
@@ -64,7 +102,8 @@
 		</select>
 		<input type="text" class="searchBox">		<%-- 입력창 --%>
 		
-		<button type="button" class="btn">검색</button>		<%-- 버튼 --%>
+		<button type="button" class="btn" >검색</button>		<%-- 버튼 --%>
 	</div>
-	
+</div>
+<div id="authority-dialog">
 </div>
