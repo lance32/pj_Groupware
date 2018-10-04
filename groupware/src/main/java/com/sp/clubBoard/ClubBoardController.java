@@ -298,7 +298,6 @@ public class ClubBoardController {
 	@ResponseBody
 	public Map<String, Object> createReply(
 			@RequestParam int clubNum
-			,@RequestParam int categoryNum
 			,Reply dto
 			,HttpSession session) {
 		

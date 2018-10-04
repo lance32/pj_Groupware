@@ -172,8 +172,10 @@ function createReply(replyContent, clubNum, boardNum, categoryNum) {
 	
 	replyContent = encodeURIComponent(replyContent);
 	
-	var query="replyContent="+replyContent+"&clubNum="+clubNum+"&boardNum="+boardNum+"&categoryNum="+categoryNum;
+	var query="replyContent="+replyContent+"&clubNum="+clubNum+"&boardNum="+boardNum;
 	var url="<%=cp%>/clubBoard/insertReply";
+	var listReplyDiv=jQuery(".showReplyButn[value="+boardNum+"]").parent("div").parent("div").parent("div").children(".replyDiv").children(".listReply");
+	
 	$.ajax({
 		type:"post"
 		,url:url
@@ -184,7 +186,7 @@ function createReply(replyContent, clubNum, boardNum, categoryNum) {
 			
 			var state=data.state;
 			if(state=="true") {
-				listPage(1);
+				listPage(1,listReplyDiv,boardNum);
 			} else if(state=="false") {
 				alert("댓글추가에 실패했습니다.");
 			}
