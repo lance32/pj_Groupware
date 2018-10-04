@@ -33,13 +33,13 @@ import com.sp.common.MyUtil;
 public class MailSender {
 	// 메일 서버 정보
 	private final String SMTPAuthenticatorName = "";			// 인증 정보 - 메일 주소
-	private final String SMTPAuthenticatorPwd = "";								// 인증 정보 - 비번
-	private final String mailSmtpUser = "";								// 사용자
-	private final String mailSmtpHost = "smtp.naver.com";						// 메일 서버 주소
-	private final String mailSmtpPort = "465";									// 메일 서버 포트
-	private final String mailSmtpStarttlsEnable = "465";						// ?
-	private final String mailSmtpAuth = "true";									// 인증 사용
-	private final String mailSmtpDebug = "true";								// debug
+	private final String SMTPAuthenticatorPwd = "";				// 인증 정보 - 비번
+	private final String mailSmtpUser = "";						// 사용자
+	private final String mailSmtpHost = "smtp.naver.com";		// 메일 서버 주소
+	private final String mailSmtpPort = "465";					// 메일 서버 포트
+	private final String mailSmtpStarttlsEnable = "465";		// ?
+	private final String mailSmtpAuth = "true";					// 인증 사용
+	private final String mailSmtpDebug = "true";				// debug
 	private final String smtpSocketFactoryPort = "465";
 	
 	@Autowired
