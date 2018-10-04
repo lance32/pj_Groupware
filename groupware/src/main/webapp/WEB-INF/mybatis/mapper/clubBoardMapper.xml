@@ -23,6 +23,12 @@
 		FROM clubBoard WHERE boardNum=#{boardNum}
 	</select>
 	
+	<update id="updateClubBoard_withFile" parameterType="com.sp.clubBoard.Board">
+		UPDATE clubBoard 
+		SET subject=#{subject}, content=#{content}, saveFileName=#{saveFileName, jdbcType=VARCHAR}, originalFileName=#{originalFileName, jdbcType=VARCHAR} 
+		WHERE boardNum=#{boardNum}
+	</update>
+	
 	<update id="updateClubBoard" parameterType="com.sp.clubBoard.Board">
 		UPDATE clubBoard SET subject=#{subject}, content=#{content} WHERE boardNum=#{boardNum}
 	</update>

@@ -29,8 +29,6 @@ public class ClubBoardController {
 	private ClubBoardService service;
 	@Autowired
 	private MyUtil util;
-	@Autowired
-	private FileManager fileManager;
 
 	@RequestMapping(value="/clubBoard/list")
 	public String clubBoardList(
@@ -229,7 +227,8 @@ public class ClubBoardController {
 	
 	@RequestMapping(value="/clubBoard/updateBoard", method=RequestMethod.POST)
 	public String updateBoardSubmit(
-			Board dto
+			@RequestParam(defaultValue="false") String isDeleteFile
+			,Board dto
 			,HttpSession session
 			,Model model
 			,RedirectAttributes redirectAttributes) {
@@ -246,8 +245,12 @@ public class ClubBoardController {
 			
 			String root=session.getServletContext().getRealPath("/");
 			String pathname=root+"uploads"+File.separator+"clubBoard";
+			int result=0;
+			if(isDeleteFile.equals("true")) {
+				dto.setSaveFileName(BoardInfo.getSaveFileName());
+			}
+			result=service.updateClubBoard(dto, pathname, isDeleteFile);
 			
-			int result=service.updateClubBoard(dto, pathname);
 			if(result==0) {
 				model.addAttribute("message", "게시글 수정에 실패했습니다.");
 				return "error/error";
@@ -259,38 +262,6 @@ public class ClubBoardController {
 		redirectAttributes.addAttribute("categoryNum", BoardInfo.getCategoryNum());
 		redirectAttributes.addAttribute("clubNum", dto.getClubNum());
 		return "redirect:/clubBoard/list";
-	}
-	
-	@RequestMapping(value="/bbs/deleteFile")
-	public String deleteFile(
-			@RequestParam int clubNum
-			,@RequestParam int categoryNum
-			,@RequestParam int boardNum
-			,HttpSession session
-			,Model model) throws Exception {
-		
-		Board BoardInfo=null;
-		try {
-			SessionInfo info=(SessionInfo)session.getAttribute("member");
-			BoardInfo=service.readClubBoard(boardNum);
-			
-			if(! BoardInfo.getMemberNum().equals(info.getUserId())) {
-				model.addAttribute("message", "잘못된 접근입니다.");
-				return "error/error";
-			}
-			String root=session.getServletContext().getRealPath("/");
-			String pathname=root+"uploads"+File.separator+"clubBoard";
-			if(BoardInfo.getSaveFileName() != null && BoardInfo.getSaveFileName().length()!=0) {
-				  fileManager.doFileDelete(BoardInfo.getSaveFileName(), pathname);
-				  
-				  BoardInfo.setSaveFileName("");
-				  BoardInfo.setOriginalFileName("");
-	       }
-			
-		} catch (Exception e) {
-			return "error/error";
-		}
-		return "redirect:/clubBoard/updateBoard?clubNum="+clubNum+"&categoryNum="+categoryNum+"&boardNum="+boardNum;
 	}
 	
 /*
