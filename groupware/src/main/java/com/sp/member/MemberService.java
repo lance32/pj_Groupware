@@ -12,14 +12,15 @@ public interface MemberService {
 	
 	public int dataCount(Map<String, Object> map);
 	public List<Member> ListMember(Map<String, Object> map);
-	public List<Map<String, Object>> qualifyList(String memberNum);
 	
+	public List<Map<String, Object>> qualifyList(String memberNum);
 	public List<Map<String, Object>> departmentList();
 	public List<Map<String, Object>> positionList();
 	
 	public int updateMember(Member dto,String pathname) throws Exception;
 	public int updateAdmin(Member dto) throws Exception;
 	
+	public int DeleteQualify(String serialNum) throws Exception;
 //	public int updateLastLogin(String userId);
 	
 //	public int insertAuthority(Member dto);

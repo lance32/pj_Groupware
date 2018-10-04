@@ -66,28 +66,14 @@ function updateMemberAdmin() {
 	location.href=url;
 </c:if> 
 	
-};
+}
 
 function submitMemberAdmin(){
 	var f=document.adminForm;
 	f.action="<%=cp%>/member/updateAdmin";
 	
 	f.submit();	
-};
-
-function qualifyDelete() {
-	<c:if test="${sessionScope.member.userId=='admin'}">
-	var serialNum = "${dto.serialNum}";
-	var page = "${page}";
-	var query = "page="+page+"&serialNum="+serialNum;
-	var url = "<%=cp%>/member/deleteQualify?" + query;
-
-	if(confirm("정보를 삭제 하시 겠습니까 ? ")) {
-			location.href=url;
-	};
-	</c:if>
-};
-
+}
 </script>
 
 <!-- <script type="text/javascript">
@@ -262,7 +248,7 @@ function qualifyDelete() {
 			${dto.created}
 			</td>
 		</tr>
-		<tr style="border-bottom: 1px solid #cccccc;">
+		<tr>
 			<td class="info-subject" style="border-bottom: 1px solid #cccccc;">
 			주소
 			</td>
@@ -290,15 +276,32 @@ function qualifyDelete() {
 				<td>
 					식별번호
 				</td>
-				<c:if test="${mode=='updateAdmin'}">
 				<td>
 					추가
 				</td>
-				</c:if>
 			</tr>
 			
-
-			<c:if test="${mode!='updateAdmin' && not empty qualifyList }">
+			<c:if test="${mode=='updateAdmin'}">
+			<tr style="border-bottom: 1px solid #cccccc; height:20px;" >
+				<td>
+					<input type="text" name="qualifyName">
+				</td>
+				<td>
+					<input type="text" name="getDate">
+				</td>
+				<td>
+					<input type="text" name="qualifyCode">
+				</td>
+				<td>
+					<input type="text" name="serialNum">
+				</td>
+				<td>
+					<input type="button" id="addrows" name="addrows" value="+">
+				</td>
+			</tr>
+			</c:if>
+			
+			<c:if test="${not empty qualifyList}">
 				<c:forEach var="qualifyList" items="${qualifyList}">
 				<tr style="border-bottom: 1px solid #cccccc; height:20px;">
 					<td>
@@ -313,49 +316,12 @@ function qualifyDelete() {
 					<td>
 						${qualifyList.SERIALNUM}
 					</td>
-			
+					<td>
+					<a>삭제</a>
+					</td>
 				</tr>
 				</c:forEach>
 			</c:if>
-			<c:if test="${mode=='updateAdmin' && not empty qualifyList }">
-				<c:forEach var="qualifyList" items="${qualifyList}">
-					<tr style="border-bottom: 1px solid #cccccc; height:20px;">
-						<td>
-							${qualifyList.QUALIFYNAME}
-						</td>
-						<td>
-							${qualifyList.GETDATE}
-						</td>
-						<td>
-							${qualifyList.QUALIFYCODE}
-						</td>
-						<td>
-							${qualifyList.SERIALNUM}
-						</td>
-						<td>
-							<button type="button" onclick="qualifyDelete()">삭제</button>
-						</td>
-					</tr>
-				</c:forEach>
-			<tr style="border-bottom: 1px solid #cccccc; height:20px;" >
-				<td>
-					<input type="text" name="qualifyName" >
-				</td>
-				<td>
-					<input type="text" name="getDate" >
-				</td>
-				<td>
-					<input type="text" name="qualifyCode" >
-				</td>
-				<td>
-					<input type="text" name="serialNum" >
-				</td>
-				<td>
-					<input type="button" id="addrows" name="addrows" value="+">
-				</td>
-			</tr>
-			</c:if>
-
 		</table>
 	</div>
 	

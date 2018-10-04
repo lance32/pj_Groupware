@@ -12,13 +12,16 @@
 			LEFT OUTER JOIN department d ON m.departmentNum=d.departmentNum
 			LEFT OUTER JOIN position p ON m.positionNum=p.positionNum
 			LEFT OUTER JOIN basicpay b ON m.memberNum=b.memberNum
+			
 		WHERE m.memberNum=#{memberNum}
     </select>
 	
 	<select id="readDetailinfo" resultType="com.sp.member.Member" parameterType="String">
 		SELECT birth,email,tel,phone,zip,addr1,addr2 FROM memberDetailinfo WHERE memberNum=#{memberNum}
 	</select>
-	
+	<select id="readBasicpay" resultType="com.sp.member.Member" parameterType="String">
+		SELECT memberNum,basicpay FROM basicpay WHERE memberNum=#{memberNum}
+	</select>
 	
 <!-- insert -->
 	<insert id="insertMember" parameterType="com.sp.member.Member">
@@ -57,11 +60,18 @@
 	 	 INSTR(positionName,#{searchValue})&gt;=1
 	  </if>
 	  <if test="searchKey=='department'">
-	      INSTR(departmanetName,#{searchValue})&gt;=1 
+	      INSTR(departmentName,#{searchValue})&gt;=1 
 	  </if>
 	  <if test="searchKey=='created'">
 	      (TO_CHAR(created, 'YYYY-MM-DD') = #{searchValue}
             OR TO_CHAR(created, 'YYYYMMDD') = #{searchValue})
+	  </if>
+	  <if test="searchKey=='birth'">
+	      (TO_CHAR(birth, 'YYYY-MM-DD') = #{searchValue}
+            OR TO_CHAR(birth, 'YYYYMMDD') = #{searchValue})
+	  </if>
+	  <if test="searchKey=='phone'">
+	      INSTR(phone,#{searchValue})&gt;=1
 	  </if>
 	</sql>
 	
@@ -76,7 +86,8 @@
 	<select id="dataCount" parameterType="map" resultType="Integer">
 		SELECT NVL(COUNT(*),0) FROM member m JOIN department d 
 			ON m.departmentNum=d.departmentNum JOIN position p 
-			ON m.positionNum=p.positionNum
+			ON m.positionNum=p.positionNum 
+			LEFT OUTER JOIN memberDetailinfo i ON m.memberNum=i.memberNum
 		<where>
 			<if test="searchValue != null and searchValue != ''">
 				<include refid="where-list"/>
@@ -154,6 +165,12 @@
     	UPDATE qualify SET qualify qualifyCode=#{qualifyCode},qualifyName=#{qualifyName},serialNum=#{serialNum},
     		getDate=#{getDate} WHERE memberNum=#{memberNum}
     </update>
+    
+    
+<!-- DELETE -->
+	<delete id="deleteQualify" parameterType="String">
+		DELETE FROM qualify WHERE serialNum=#{serialNum} 
+	</delete>    
     
 	<select id="organizationChart" resultType="com.sp.member.OrganizationChart">
 		SELECT d1.departmentNum, d1.parentDepartment, d2.departmentName parentDeptName, d1.departmentName

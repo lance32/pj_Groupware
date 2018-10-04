@@ -3,6 +3,7 @@ package com.sp.member;
 import java.io.File;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -36,8 +37,8 @@ public class MemberController {
 	
 	// 변경할 시작 부분 ----------------------------------------------------------------------
 	@RequestMapping(value="/login", method=RequestMethod.GET)
-	public String loginForm(String login_error, HttpSession session, Model model) {
-		// 로그인 폼
+	public String login(String login_error, HttpSession session, Model model) {
+		// 로그인
 		
 		if(login_error!=null) {
 			model.addAttribute("message","아이디 또는 패스워드가 일치하지 않습니다.");
@@ -251,6 +252,10 @@ public class MemberController {
 		String root=session.getServletContext().getRealPath("/");
 		String pathname=root+"upload"+File.separator+"member";
 		
+		//기본급이 없거나  0보다 작으면 0으로 초기화
+		if(dto.getBasicpay()<=0) {
+			dto.setBasicpay(0);
+		}
 		service.updateMember(dto, pathname);
 		
 		
@@ -291,14 +296,16 @@ public class MemberController {
 			return "redirect:/member/main?"+query;
 		
 		List<Map<String, Object>> qualifyList = service.qualifyList(memberNum);
-		if(qualifyList==null) {
-			String message="등록된 정보가 없습니다.";
-			model.addAttribute("message",message);
-		}else {
+		if(qualifyList!=null) {
 			model.addAttribute("qualifyList",qualifyList);
 		}
+		System.out.println("====================="+dto.getSerialNum());
 		
-		System.out.println(qualifyList);
+		//기본급 출력시 값에 , 추가
+		DecimalFormat df= new DecimalFormat("###,###");
+		String basicpay=df.format(dto.getBasicpay());
+		
+		model.addAttribute("basicpay",basicpay);
 		model.addAttribute("mode","info");
 		model.addAttribute("memberNum",memberNum);
 		model.addAttribute("dto", dto);
@@ -322,6 +329,11 @@ public class MemberController {
 			return "member/login";
 		}
 		
+		List<Map<String, Object>> qualifyList = service.qualifyList(memberNum);
+		if(qualifyList!=null) {
+			model.addAttribute("qualifyList",qualifyList);
+		}
+
 			List<Map<String, Object>> departmentList=service.departmentList();
 			List<Map<String, Object>> positionList=service.positionList();
 			model.addAttribute("departmentList",departmentList);
@@ -399,6 +411,18 @@ public class MemberController {
 		
 		return model;
 	}
+	
+	@RequestMapping(value="/member/deleteQualify")
+	public String deleteQualify(String serialNum,
+			String memberNum,
+			@RequestParam String page
+			) throws Exception{
+			System.out.println("==========================="+serialNum);
+			service.DeleteQualify(serialNum);
+		
+		return "redirect:/member/memberinfo?page="+page+"&memberNum="+memberNum;
+	}
+	
 	
 	//최초 로그인시 비밀번호 변경
 		@RequestMapping(value="/member/changepwd", method=RequestMethod.GET)

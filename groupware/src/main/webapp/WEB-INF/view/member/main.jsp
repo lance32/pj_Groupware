@@ -59,11 +59,11 @@ $(document).ready(function(){
 				<option value="name">이름</option>
 				<option value="department">부서</option>
 				<option value="position">직위</option>
-				<option value="tel">휴대전화</option>
+				<option value="phone">휴대전화</option>
+				<option value="created">입사일</option>	
 			</select>
 			
 			<input type="text" class="searchBox" name="searchValue">		<%-- 입력창 --%>
-			
 			<button type="button" class="btn" onclick="searchMember();">검색</button>		<%-- 버튼 --%>
 		</form>
 	</div>

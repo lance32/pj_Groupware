@@ -282,9 +282,8 @@ function memberNumCheck() {
 			      </td>
 			      <td style="padding: 0 0 15px 15px;">
 			        <p style="margin-top: 1px; margin-bottom: 5px;">
-			            <input type="text" name="name" value="${dto.name}" maxlength="30" class="boxTF"
-		                      style="width: 95%;"
-		                      placeholder="기본급">
+			            <input type="text" name="name" value="" maxlength="30" class="boxTF"
+		                      style="width: 95%;" readonly="readonly">
 			        </p>
 			      </td>
 			  </tr>
@@ -295,9 +294,9 @@ function memberNumCheck() {
 			      </td>
 			      <td style="padding: 0 0 15px 15px;">
 			        <p style="margin-top: 1px; margin-bottom: 5px;">
-			            <input type="text" name="name" value="${dto.name}" maxlength="30" class="boxTF"
+			            <input type="text" name="basicpay" value="" maxlength="30" class="boxTF"
 		                      style="width: 95%;"
-		                      placeholder="기본급">
+		                      placeholder="">
 			        </p>
 			      </td>
 			  </tr>

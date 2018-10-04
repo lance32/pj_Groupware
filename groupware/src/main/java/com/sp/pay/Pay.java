@@ -1,9 +1,10 @@
 package com.sp.pay;
 
-public class pay {
+public class Pay {
 	private int listmemberNum;
 	
 	private String memberNum;
+	private String name;
 	
 	//지급 연월일
 	private int year;
@@ -20,8 +21,35 @@ public class pay {
 	private int accidentTax; //산재
 	private int pensionTax; //국민
 	private int incomeTax; //소득
+	private int realPay; //실수령액
+	//부서 직급 정보
+	private String departmentName;
+	private String positionName;
 	
-	
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getDepartmentName() {
+		return departmentName;
+	}
+	public void setDepartmentName(String departmentName) {
+		this.departmentName = departmentName;
+	}
+	public String getPositionName() {
+		return positionName;
+	}
+	public void setPositionName(String positionName) {
+		this.positionName = positionName;
+	}
+	public int getRealPay() {
+		return realPay;
+	}
+	public void setRealPay(int realPay) {
+		this.realPay = realPay;
+	}
 	public int getListmemberNum() {
 		return listmemberNum;
 	}

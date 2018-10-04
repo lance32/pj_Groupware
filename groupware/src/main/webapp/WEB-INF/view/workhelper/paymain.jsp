@@ -41,16 +41,15 @@
 		<tr class="cf">
 			<%-- 구분 폭 수정 가능 --%>
 			<td width="50">번호</td>
-			<td width="100" style="text-align: left;">반방각</td>
+			<td width="100" style="text-align: center;">이름</td>
 			<td width="100">날짜</td>
 			<td width="900">제목</td>
 		</tr>
-		
 		<tr class="tr">
 			<td>1</td>
-			<td width="100" style="text-align: left;">이름</td>
+			<td width="100" style="text-align: center;">이름</td>
 			<td width="100">2018-10-02</td>
-			<td width="750">2018년 10월 ooo님의 급여 입니다.</td>
+			<td width="750"><a>2018년 10월 ooo님의 급여 입니다.</a></td>
 		</tr>
 	</table>
 	<br>

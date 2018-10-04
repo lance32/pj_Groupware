@@ -148,6 +148,20 @@ function memberOk() {
         f.positionNum.focus();
         return;
     }
+    
+    str = f.basicpay.value;
+    str = str.trim();
+    if(!str) {
+        alert("기본급을 입력해주세요");
+        f.basicpay.focus();
+        return;
+    }
+    
+    if(!/^(\d+)$/.test(str)) {
+        alert("숫자만 가능합니다.");
+        f.tel3.focus();
+        return;
+    }
 </c:if> 
 
     str = f.phone1.value;

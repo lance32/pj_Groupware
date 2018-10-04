@@ -87,7 +87,7 @@ public class MemberServiceImpl implements MemberService {
 			dao.insertData("address.insertGeneralGroup", dto.getMemberNum());
 			result=1;
 		} catch (Exception e) {
-			throw e;
+			System.out.println(e.toString());
 		}
 		return result;
 	}
@@ -104,6 +104,7 @@ public class MemberServiceImpl implements MemberService {
 		try {
 			result = dao.selectOne("member.dataCount", map);
 		} catch (Exception e) {
+			System.out.println(e.toString());
 		}
 
 		return result;
@@ -117,6 +118,7 @@ public class MemberServiceImpl implements MemberService {
 		try {
 			listmember = dao.selectList("member.listMember", map);
 		} catch (Exception e) {
+			System.out.println(e.toString());
 		}
 		return listmember;
 	}
@@ -129,6 +131,7 @@ public class MemberServiceImpl implements MemberService {
 		try {
 			listqualify = dao.selectList("member.qualifyList",memberNum);
 		} catch (Exception e) {
+			System.out.println(e.toString());
 		}
 
 		return listqualify;
@@ -141,7 +144,7 @@ public class MemberServiceImpl implements MemberService {
 		try {
 			departmentList = dao.selectList("member.departmentList");
 		} catch (Exception e) {
-
+			System.out.println(e.toString());
 		}
 		return departmentList;
 	}
@@ -153,7 +156,7 @@ public class MemberServiceImpl implements MemberService {
 			try {
 				positionList=dao.selectList("member.positionList");
 			} catch (Exception e) {
-				
+				System.out.println(e.toString());
 			}
 			
 		return positionList;
@@ -198,6 +201,7 @@ public class MemberServiceImpl implements MemberService {
 			}
 
 		} catch (Exception e) {
+			System.out.println(e.toString());
 		}
 		
 		return 1;
@@ -226,6 +230,7 @@ public class MemberServiceImpl implements MemberService {
 			}
 			
 		} catch (Exception e) {
+			System.out.println(e.toString());
 		}
 		return 1;
 	}
@@ -236,9 +241,20 @@ public class MemberServiceImpl implements MemberService {
 		try {
 			dao.selectOne("member.readDetailinfo",memberNum);
 		} catch (Exception e) {
+			System.out.println(e.toString());
 		}
 		
 		return dto;
+	}
+
+	@Override
+	public int DeleteQualify(String serialNum) throws Exception {
+		try {
+			dao.deleteData("member.deleteQualify",serialNum);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return 1;
 	}
 
 }

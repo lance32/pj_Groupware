@@ -3,7 +3,7 @@ package com.sp.workhelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@Controller(".workhelper.workhelperController")
+@Controller("workhelper.workhelperController")
 public class workhelperController {
 	
 	@RequestMapping(value="/workhelper/main")
