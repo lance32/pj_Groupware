@@ -10,5 +10,9 @@ public interface ApprovalService {
 	public List<Approval> listApproval(Map<String, Object> map);
 	
 	public int dataCount(Map<String, Object> map);
+	
+	public Approval readApproval(int approvalNum);
+
+	public int approvalCount(Map<String, Object> map);
 
 }

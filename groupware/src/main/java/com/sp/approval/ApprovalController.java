@@ -4,24 +4,25 @@ import java.net.URLDecoder;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sp.common.MyUtil;
+import com.sp.member.SessionInfo;
 
 
 @Controller("approval.approvalController")
@@ -156,6 +157,28 @@ public class ApprovalController {
 		}
 
 		return 1;
+	}
+	@RequestMapping(value="approval/getApprovalCount", method=RequestMethod.GET)
+	public Map<String, Object> approvalCount(HttpSession session) throws Exception{
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		Map<String, Object>map=new HashMap<String, Object>();
+		map.put("memberNum", info.getUserId());
+		map.put("type", "progress");
+		int progress=service.approvalCount(map);
+		
+		map.put("type", "complete");
+		int complete=service.approvalCount(map);
+		
+		map.put("type", "reject");
+		int reject=service.approvalCount(map);
+		
+		Map<String, Object>model= new HashMap<String, Object>();
+		model.put("progress", progress);
+		model.put("complete", complete);
+		model.put("reject", reject);
+		
+		return model;
+		
 	}
 
 }
