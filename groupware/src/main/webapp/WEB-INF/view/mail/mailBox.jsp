@@ -52,6 +52,24 @@
 		});
 	});
 	
+	$("#toSendMailBtn").click(function() {
+		var mailIndex = [];
+		var index = 0;
+		$("input[name='chk']").each(function() {
+			if (this.checked) {
+				mailIndex[index++] = $(this).data("mailIndex");
+			}
+		});
+		
+		if (index == 0) {
+			alert('선택된 메일이 없습니다.');
+			return false;
+		}
+		
+		if (confirm('메일을 복원 하시겠습니까?'))
+			location.href="<%=cp%>/mail/toMailSend?page=${page}&mailType=${mailType}&searchKey=${searchKey}&searchValue=${searchValue}&mailIndex=${mail.index}";
+	});
+	
 	function search() {
 		var f = document.searchForm;
 		
@@ -124,11 +142,11 @@
 		</c:forEach>
 	</table>
 	<div style="padding:5px 5px 5px 5px;">
-		<c:if test="${mailType != 'trashbox'}">
+		<c:if test="${mailType == 'send'}">
 			<button type="button" id="trashboxBtn">&nbsp;휴&nbsp;지&nbsp;통&nbsp;</button>&nbsp;
 		</c:if>
 		<c:if test="${mailType == 'trashbox'}">
-			<button type="button" id="trashboxBtn">&nbsp;메일 복원&nbsp;</button>&nbsp;
+			<button type="button" id="toSendMailBtn">&nbsp;메일 복원&nbsp;</button>&nbsp;
 		</c:if>
 		<button type="button" id="deleteBtn">&nbsp;바로 삭제&nbsp;</button>
 	</div>
