@@ -148,22 +148,62 @@ jQuery(function(){
 		location.href="<%=cp%>/clubBoard/createBoard?clubNum=${clubInfo.clubNum}&categoryNum=${categoryNum}";
 		return;
 	});
-//---
 	
 	//댓글달기 버튼 클릭시
 	jQuery(".createReplyButn").click(function(){
-		var f = document.createReplyForm;
-
-		var str = f.replyContent.value;
-	    	if(!str) {
+		
+		var replyContent=jQuery("#replyContentInput").val();
+	    if(!replyContent) {
 			alert("내용을 입력하세요.");
-	        	f.replyContent.focus();
-	        	return;
-	    	}
-		f.action="<%=cp%>/clubBoard/insertReply";
-		f.submit();
+	       	jQuery("#replyContentInput").focus();
+	       	return;
+	    }
+		var clubNum=jQuery("#replyClubNumInput").val();
+		var boardNum=jQuery("#replyBoardNumInput").val();
+		var categoryNum=jQuery("#replyCategoryNumInput").val();
+		
+	    createReply(replyContent, clubNum, boardNum, categoryNum);
 	});
+	
 });
+
+//댓글 추가
+function createReply(replyContent, clubNum, boardNum, categoryNum) {
+	
+	replyContent = encodeURIComponent(replyContent);
+	
+	var query="replyContent="+replyContent+"&clubNum="+clubNum+"&boardNum="+boardNum+"&categoryNum="+categoryNum;
+	var url="<%=cp%>/clubBoard/insertReply";
+	$.ajax({
+		type:"post"
+		,url:url
+		,data:query
+		,dataType:"json"
+		,success:function(data) {
+			jQuery("#replyContentInput").val("");
+			
+			var state=data.state;
+			if(state=="true") {
+				listPage(1);
+			} else if(state=="false") {
+				alert("댓글추가에 실패했습니다.");
+			}
+		}
+		,beforeSend : function(jqXHR) {
+	        jqXHR.setRequestHeader("AJAX", true);
+	    }
+	    ,error:function(jqXHR) {
+	    	if(jqXHR.status==403) {
+	    		login();
+	    		return;
+	    	}
+	    	console.log(jqXHR.responseText);
+	    }
+	});
+	
+}
+
+
 
 //댓글 리스트
 function listPage(page,listReplyDiv,boardNum) {
@@ -244,15 +284,13 @@ function deleteClubBoard(boardNum){
 				<div class="replyDiv">
 					<%-- 댓글 input --%>
 					<div style="width: 100%; padding: 10px 30px; border-top: 1px solid #BDBDBD;">
-						<form name="createReplyForm" method="post">
-							<textarea name="replyContent" style="max-width: 100%; min-width:100%; min-height: 90px; border: 2px solid #D8D8D8; padding-left: 5px;"></textarea>
-							<div style="clear: both; width: 100%; height: 30px;">
-								<button type="button" class="createReplyButn" style="float: right;">댓글달기</button>
-							</div>
-							<input type="hidden" name="clubNum" value="${clubInfo.clubNum}">
-							<input type="hidden" name="boardNum" value="${dto.boardNum}">
-							<input type="hidden" name="categoryNum" value="${categoryNum}">
-						</form>
+						<textarea id="replyContentInput" style="max-width: 100%; min-width:100%; min-height: 90px; border: 2px solid #D8D8D8; padding-left: 5px;"></textarea>
+						<div style="clear: both; width: 100%; height: 30px;">
+							<button type="button" class="createReplyButn" style="float: right;">댓글달기</button>
+						</div>
+						<input type="hidden" id="replyClubNumInput" value="${clubInfo.clubNum}">
+						<input type="hidden" id="replyBoardNumInput" value="${dto.boardNum}">
+						<input type="hidden" id="replyCategoryNumInput" value="${categoryNum}">
 					</div>
 					
 					<div class="listReply" style="width: 100%; padding: 10px 30px; border-top: 1px solid #BDBDBD;">

@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.sp.club.Club;
@@ -294,13 +295,15 @@ public class ClubBoardController {
 	
 	
 	@RequestMapping(value="/clubBoard/insertReply", method=RequestMethod.POST)
-	public String createReply(
+	@ResponseBody
+	public Map<String, Object> createReply(
 			@RequestParam int clubNum
 			,@RequestParam int categoryNum
 			,Reply dto
-			,HttpSession session
-			,Model model) {
+			,HttpSession session) {
 		
+		String state="false";
+		Map<String, Object> model = new HashMap<>(); 
 		try {
 			SessionInfo info = (SessionInfo) session.getAttribute("member");
 			
@@ -309,21 +312,24 @@ public class ClubBoardController {
 			map.put("memberNum", info.getUserId());
 			String isMember=clubService.isClubMember(map);
 			if(isMember==null) {
-				model.addAttribute("message", "잘못된 접근입니다.");
-				return "error/error";
+				model.put("state", state);
+				return model;
 			}
 			dto.setMemberNum(info.getUserId());
 
 			int result=service.insertReply(dto);
 			if(result==0) {
-				model.addAttribute("message", "댓글 등록에 실패했습니다.");
-				return "error/error";
+				model.put("state", state);
+				return model;
 			}
+			state="true";
+			model.put("state", state);
 			
 		} catch (Exception e) {
-			return "error/error";
+			model.put("state", state);
+			return model;
 		}
-		return "redirect:/clubBoard/list?clubNum="+clubNum+"&categoryNum="+categoryNum;
+		return model;
 	}
 	
 	@RequestMapping(value="/clubBoard/listReply")
