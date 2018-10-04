@@ -71,22 +71,66 @@ public class ClubBoardServiceImpl implements ClubBoardService{
 	}
 
 	@Override
-	public int updateClubBoard(Board dto, String pathname) {
+	public int updateClubBoard(Board dto, String pathname, String isDeleteFile) {
 		int result=0;
 		try {
-			if(dto.getUpload()!=null && !dto.getUpload().isEmpty()) {
+			if(isDeleteFile.equals("false")) {
+				dao.updateData("clubBoard.updateClubBoard", dto);
+			}else if(isDeleteFile.equals("true") || isDeleteFile.equals("none")){
 				// 이전파일 지우기
-				if(dto.getSaveFileName().length()!=0)
+				if(dto.getSaveFileName().length()!=0 && dto.getSaveFileName()!=null) {
 					fileManager.doFileDelete(dto.getSaveFileName(), pathname);
-				
-				String newFilename = fileManager.doFileUpload(dto.getUpload(), pathname);
-				if (newFilename != null) {
-					dto.setOriginalFileName(dto.getUpload().getOriginalFilename());
-					dto.setSaveFileName(newFilename);
 				}
+				//새로운 파일을 추가함
+				if(dto.getUpload()!=null && !dto.getUpload().isEmpty()) {
+					String newFilename = fileManager.doFileUpload(dto.getUpload(), pathname);
+					if (newFilename != null) {
+						dto.setOriginalFileName(dto.getUpload().getOriginalFilename());
+						dto.setSaveFileName(newFilename);
+					}
+				//새로운 파일을 추가 안함
+				}else {
+					dto.setSaveFileName("");
+					dto.setOriginalFileName("");
+			    }
+				dao.updateData("clubBoard.updateClubBoard_withFile", dto);
 			}
-			dao.updateData("clubBoard.updateClubBoard", dto);
 			result=1;
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
+	}
+
+	
+	@Override
+	public int insertReply(Reply dto) {
+		int result=0;
+		try {
+			dao.insertData("clubBoard.insertReply", dto);
+			result=1;
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
+	}
+
+	@Override
+	public List<Reply> listReply(Map<String, Object> map) {
+		List<Reply> list=null;
+		try {
+			list=dao.selectList("clubBoard.listReply", map);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return list;
+	}
+
+	@Override
+	public int replyCount(Map<String, Object> map) {
+		int result=0;
+		try {
+			result=dao.selectOne("clubBoard.replyCount", map);
 		} catch (Exception e) {
 			System.out.println(e.toString());
 		}

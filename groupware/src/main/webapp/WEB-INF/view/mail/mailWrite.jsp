@@ -130,20 +130,20 @@
 			<tr>
 				<td style="border-bottom: 1px dotted #dfdfdf; padding:5px; background: #f7f7f7; color: #595959; text-align:center; width: 15%;">받는 사람</td>
 				<td style="background: #fff; width: 85%;">
-					<span><input type="text" id="receiveMail" name="receiveMail" style="background: #fff; color: #333; width: 80%; border: 1px solid #d7d7d7;"></span>
+					<span><input type="text" id="receiveMail" name="receiveMail" style="background: #fff; color: #333; width: 80%; border: 1px solid #d7d7d7;" value="${mail.receiveMail}"></span>
 				</td>
 			</tr>
 			<tr>
 				<td class="textLabel">참조</td>
-				<td class="tdInput"><input type="text" id="cc" name="cc" class="textInput"></td>
+				<td class="tdInput"><input type="text" id="cc" name="cc" class="textInput" value="${mail.cc}"></td>
 			</tr>
 			<tr>
 				<td class="textLabel">숨은 참조</td>
-				<td class="tdInput"><input type="text" id="bcc" name="bcc" class="textInput"></td>
+				<td class="tdInput"><input type="text" id="bcc" name="bcc" class="textInput" value="${mail.bcc}"></td>
 			</tr>				
 			<tr>
 				<td class="textLabel">제목</td>
-				<td class="tdInput"><input type="text" id="subject" name="subject" class="textInput"></td>
+				<td class="tdInput"><input type="text" id="subject" name="subject" class="textInput" value="${mail.subject}"></td>
 			</tr>
 			<tr>
 				<td class="textLabel">첨부파일</td>
@@ -154,13 +154,20 @@
 		</table>
 		<table style="width:100%;">
 			<tr>
-				<td colspan="2"><div style="padding-top: 5px;"><textarea id="content" name="content" rows="15" cols="45" style="width: 83%;"></textarea></div></td>
+				<td colspan="2"><div style="padding-top: 5px;"><textarea id="content" name="content" rows="15" cols="45" style="width: 83%;">${mail.content}</textarea></div></td>
 			</tr>
 		</table>
 		<input type="hidden" name="sendMail" id="sendMail">
 		<input type="hidden" name="memberNum" value="${sessionScope.member.userId}">
 		<input type="hidden" name="state" id="state" value="0">
 		<span><input type="button" value="&nbsp;메일 보내기&nbsp;" onclick="send();"></span>
-		<span><input type="button" value="&nbsp;임시 보관&nbsp;" onclick="toTemp();"></span>
+		<c:if test="${mailType != 'tempBox'}">
+			<span><input type="button" value="&nbsp;임시 보관&nbsp;" onclick="toTemp();"></span>
+			<input type="hidden" name="index" value="-1">
+		</c:if>
+		<c:if test="${mailType == 'tempBox'}">
+			<span><input type="button" value="&nbsp;취소&nbsp;" onclick="javascript:location.href='<%=cp%>/mail/mailTempBox'"></span>
+			<input type="hidden" name="index" value="${mail.index}">
+		</c:if>
 	</form>
 </div>

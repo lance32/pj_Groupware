@@ -30,7 +30,12 @@
 		$("#deleteBtn").click(function() {
 			if (confirm('메일을 삭제 하시겠습니까?'))
 				location.href="<%=cp%>/mail/mailDelete?page=${page}&mailType=${mailType}&searchKey=${searchKey}&searchValue=${searchValue}&mailIndex=${mail.index}";
-		});		
+		});
+		
+		$("#toSendMailBtn").click(function() {
+			if (confirm('메일을 복원 하시겠습니까?'))
+				location.href="<%=cp%>/mail/toMailSend?page=${page}&mailType=${mailType}&searchKey=${searchKey}&searchValue=${searchValue}&mailIndex=${mail.index}";
+		});
 	});
 </script>
 
@@ -106,8 +111,13 @@
 	</table>
 	<div style="padding-top: 5px;">
 		<button type="button" id="listBtn">&nbsp;리스트&nbsp;</button>&nbsp;
-		<button type="button" id="trashboxBtn">&nbsp;휴&nbsp;지&nbsp;통&nbsp;</button>&nbsp;
-		<button type="button" id="deleteBtn">&nbsp;바로 삭제&nbsp;</button>		
+		<c:if test="${mailType == 'send'}">
+			<button type="button" id="trashboxBtn">&nbsp;휴&nbsp;지&nbsp;통&nbsp;</button>&nbsp;
+		</c:if>
+		<c:if test="${mailType == 'trashbox'}">
+			<button type="button" id="toSendMailBtn">&nbsp;메일 복원&nbsp;</button>&nbsp;
+		</c:if>
+			<button type="button" id="deleteBtn">&nbsp;바로 삭제&nbsp;</button>		
 	</div>
 
 </div>

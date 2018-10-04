@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sp.common.MyUtil;
 import com.sp.member.SessionInfo;
@@ -83,6 +84,9 @@ public class MailController {
 		}
 		
 		String mailUrl = cp + "/mail/mailForm?page=" + currentPage;
+		if (type.equals("tempBox"))
+			mailUrl = cp + "/mail/mailWrite?page=" + currentPage;
+		
 		if (query.length() != 0) {
 			listUrl = listUrl + "?" + query;
 			mailUrl += "&" + query;
@@ -160,13 +164,28 @@ public class MailController {
 	
 	// 메일  쓰기
 	@RequestMapping(value="/mail/mailWrite", method=RequestMethod.GET)
-	public String writeMail(Model model) throws Exception {
+	public String writeMail(
+			@RequestParam(value="index", defaultValue="-1") long index,
+			@RequestParam(value="mailType", defaultValue="") String mailType,
+			Model model) throws Exception {
+		
+		if (index != -1) {
+			Mail mail = mailService.readMail(index);
+			if (mail == null)
+				return "redirect:/mail/sendMail";
+			
+			model.addAttribute("mail", mail);
+			model.addAttribute("mailType", mailType);
+		}
+		
 		return ".mail.mailWrite";
 	}
 	
 	// 메일 보내기
 	@RequestMapping(value="/mail/send", method=RequestMethod.POST)
-	public String writeMailSubmit(Mail mail, HttpSession session, Model model) throws Exception {
+	public String writeMailSubmit(Mail mail,
+			HttpSession session, 
+			Model model) throws Exception {
 		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		mail.setSendName(info.getUserName());
 		
@@ -191,7 +210,13 @@ public class MailController {
 		}
 		
 		try {
+			if (mail.getIndex() != -1) {
+				// 임시 저장에서 메일 보내기를 한 경우, 임시 저장 메일은 삭제 처리
+				mailService.deleteMail(mail.getIndex());
+			}
+			
 			mailService.insertMail(mail);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -262,13 +287,58 @@ public class MailController {
 		return redirect;
 	}
 	
-	// 메일 삭제(휴지통으로)
+	// 메일 휴지통으로
 	@RequestMapping(value="/mail/toMailTrashbox", method=RequestMethod.GET)
-	public String toTrashbox(@RequestParam(value="mailIndex") Long[] index) throws Exception {
+	public String toTrashbox(@RequestParam(value="mailIndex") Long[] index,
+			@RequestParam(value="page") String page,
+			@RequestParam(value="searchKey", defaultValue="subject") String searchKey,
+			@RequestParam(value="searchValue", defaultValue="") String searchValue
+			) throws Exception {
 		for (int i = 0; i < index.length; i++) {
 			mailService.updateMail(index[i], 1);		// 상태(0:정상, 1:휴지통, 2:임시보관)
 		}
 		
-		return "redirect:/mail/mailTrashbox";
+		return "redirect:/mail/mailSend?page=" + page + "&searckKey=" + searchKey + "&searchValue=" + searchValue;
+	}
+	
+	// 메일 복원
+	@RequestMapping(value="/mail/toMailSend", method=RequestMethod.GET)
+	public String toMailSend(@RequestParam(value="mailIndex") Long[] index,
+			@RequestParam(value="page") String page,
+			@RequestParam(value="searchKey", defaultValue="subject") String searchKey,
+			@RequestParam(value="searchValue", defaultValue="") String searchValue
+			) throws Exception {
+		for (int i = 0; i < index.length; i++) {
+			mailService.updateMail(index[i], 0);		// 상태(0:정상, 1:휴지통, 2:임시보관)
+		}
+		
+		return "redirect:/mail/mailTrashbox?page=" + page + "&searckKey=" + searchKey + "&searchValue=" + searchValue;
+	}
+	
+	// 메일 카운트
+	@RequestMapping(value="/mail/mailCount", method=RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> getMailCount(HttpSession session) throws Exception {
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		Map<String, Object> model = new HashMap<String, Object>();
+		if (info != null) {
+			String memberNum = info.getUserId();
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("memberNum", memberNum);
+			map.put("state", 0);				// 보낸 메일 개수
+			int send = (int)mailService.dataCount(map);
+			
+			map.put("state", 1);				// 휴지통 메일 개수
+			int trashbox = (int)mailService.dataCount(map);
+			
+			map.put("state", 2);				// 임시보관 메일 개수
+			int tempBox = (int)mailService.dataCount(map);
+			
+			model.put("send", send);
+			model.put("trashbox", trashbox);
+			model.put("tempBox", tempBox);
+		}
+		
+		return model;
 	}
 }
