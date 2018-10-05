@@ -57,6 +57,10 @@
 	WHERE resourceNum = #{resourceNum}
 </select>
 
+<delete id="deleteResourceList" parameterType="Integer">
+	DELETE FROM resourceList WHERE resourceNum = #{resourceNum}
+</delete>
+
 <!-- 자원 예약 -->
 <insert id="insertReserve">
 	INSERT INTO reservation(reserveNum, memberNum, name, resourceNum, resourceName, startDay, endDay,

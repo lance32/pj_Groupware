@@ -99,6 +99,26 @@ public class ResourceController {
 		return model;
 	}
 	
+	@RequestMapping(value="/scheduler/resourceDelete")
+	@ResponseBody
+	public Map<String, Object> deleteResource(
+			@RequestParam(value="chkNum") String chkNum 
+			) {
+		String state = "true";
+		int result = 0;
+		
+		String numbers[] = chkNum.split(";");
+		for(int i=0; i < numbers.length; i++) {
+			result = service.deleteResourceList(Integer.parseInt(numbers[i]));
+		}
+		if(result == 0) {
+			state = "false";
+		}
+		Map<String, Object> model = new HashMap<>();
+		model.put("state", state);
+		return model;
+	}
+	
 	@RequestMapping(value="/scheduler/inputGroupForm")
 	public String inputGroupForm(Model model) throws Exception {
 		return "schResource/inputGroupForm";

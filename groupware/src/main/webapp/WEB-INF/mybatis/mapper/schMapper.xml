@@ -76,7 +76,7 @@
 		SELECT NVL(COUNT(*), 0) FROM schedule s
 			JOIN member m ON s.memberNum = m.memberNum
 			<where>
-				<if test="searchValue != null and searchValue != ''">
+				<if test="(searchValue != null and searchValue != '') or (sDay != null) or (eDay != null)">
 					<include refid="where-list"/>
 				</if>
 			</where>
