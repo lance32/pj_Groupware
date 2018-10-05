@@ -1,5 +1,7 @@
 package com.sp.authority;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class Authority {
 	private int listNum;
 	
@@ -8,9 +10,30 @@ public class Authority {
 	private String positionName;
 	private String name;
 	private String comments;
-	private int grants;
+	private MultipartFile upload;
+	private String saveFilename;
+	private Long grants;
 	
 	
+	public Long getGrants() {
+		return grants;
+	}
+	public void setGrants(Long grants) {
+		this.grants = grants;
+	}
+	
+	public MultipartFile getUpload() {
+		return upload;
+	}
+	public void setUpload(MultipartFile upload) {
+		this.upload = upload;
+	}
+	public String getSaveFilename() {
+		return saveFilename;
+	}
+	public void setSaveFilename(String saveFilename) {
+		this.saveFilename = saveFilename;
+	}
 	public String getComments() {
 		return comments;
 	}
@@ -47,12 +70,7 @@ public class Authority {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public int getGrants() {
-		return grants;
-	}
-	public void setGrants(int grants) {
-		this.grants = grants;
-	}
+
 	
 	
 

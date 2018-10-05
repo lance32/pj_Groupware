@@ -46,7 +46,7 @@
 	
 	<!-- 글읽기 -->
 	<select id="readAuthority" resultType="com.sp.authority.Authority" parameterType="String">
-		SELECT memberNum, name, departmentName, positionName, grants
+		SELECT memberNum, name, departmentName, positionName, grants, saveFilename
 		        FROM member m JOIN department d on m.departmentNum = d.departmentNum
 		        JOIN position p ON m.positionNum = p.positionNum
 		WHERE memberNum = #{memberNum}
