@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.sp.common.dao.CommonDAO;
 
-@Service(value="pay.payService")
+@Service("pay.payService")
 public class PayServiceImpl implements PayService{
 
 	@Autowired

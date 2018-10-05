@@ -41,13 +41,13 @@ public class ApprovalController {
 	}
 	
 	@RequestMapping(value="/approval/approval_list")
-	public String ApprovalList(@RequestParam(value="page", defaultValue="1") int current_page,
+	public String ApprovalProgressList(@RequestParam(value="page", defaultValue="1") int current_page,
 	                                    @RequestParam(defaultValue="subject") String searchKey,
 	                                    @RequestParam(defaultValue="") String searchValue,
 	                                    HttpServletRequest req,
 	                                    Model model) throws Exception{
 		
-		int rows=2;
+		int rows=10;
 		int dataCount=0;
 		int total_page=0;
 		
@@ -59,10 +59,14 @@ public class ApprovalController {
 			}
 		}
 		
-		Map<String, Object> map=new HashMap<>();
-		
+		Map<String, Object> map=new HashMap<String, Object>();		
 		map.put("searchKey", searchKey);
 		map.put("searchValue", searchValue);
+		
+		HttpSession session=req.getSession();
+		SessionInfo info=(SessionInfo)session.getAttribute("member");
+		map.put("memberNum", info.getUserId());
+		map.put("type", "progress");
 		
 		dataCount=service.dataCount(map);
 		
@@ -158,7 +162,8 @@ public class ApprovalController {
 
 		return 1;
 	}
-	@RequestMapping(value="approval/getApprovalCount", method=RequestMethod.GET)
+	@RequestMapping(value="/approval/approvalCount", method=RequestMethod.GET)
+	@ResponseBody
 	public Map<String, Object> approvalCount(HttpSession session) throws Exception{
 		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		Map<String, Object>map=new HashMap<String, Object>();
@@ -172,6 +177,7 @@ public class ApprovalController {
 		map.put("type", "reject");
 		int reject=service.approvalCount(map);
 		
+		System.out.println("progress(" + progress + "), complete(" + complete + "), reject(" + reject + ")");
 		Map<String, Object>model= new HashMap<String, Object>();
 		model.put("progress", progress);
 		model.put("complete", complete);

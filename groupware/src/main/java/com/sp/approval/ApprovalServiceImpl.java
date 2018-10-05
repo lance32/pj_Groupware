@@ -32,7 +32,6 @@ public class ApprovalServiceImpl implements ApprovalService{
 		try {
 			list=dao.selectList("approval.approval_list", map);
 		} catch (Exception e) {
-			// TODO: handle exception
 		}
 		
 		return null;
