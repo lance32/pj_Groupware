@@ -12,6 +12,7 @@ public interface PayService {
 	
 	public int dataCount(Map<String, Object> map);
 	public List<Pay> ListPayMember(Map<String, Object> map);
+	public List<Pay> ListPayMemberAdmin(Map<String, Object> map);
 	
 //	public List<Map<String, Object>> qualifyList(String memberNum);
 //	public List<Map<String, Object>> departmentList();

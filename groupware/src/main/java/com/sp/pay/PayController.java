@@ -74,9 +74,9 @@ public class PayController {
         map.put("searchValue", searchValue);
 
         dataCount = service.dataCount(map);
-        System.out.println("============================================="+dataCount);
+        
         if(dataCount != 0)
-            total_page = util.pageCount(rows, dataCount) ;
+            total_page = util.pageCount(rows, dataCount);
 
         // 다른 사람이 자료를 삭제하여 전체 페이지수가 변화 된 경우
         if(total_page < current_page) 
@@ -89,8 +89,9 @@ public class PayController {
         map.put("end", end);
         System.out.println("==========="+start+"=================="+end);
         // 급여 리스트
-        List<Pay> paylist = service.ListPayMember(map);
+        List<Pay> paylist = service.ListPayMemberAdmin(map);
         
+  
         // 리스트의 번호
         int listmemberNum, n = 0;
         Iterator<Pay> it=paylist.iterator();

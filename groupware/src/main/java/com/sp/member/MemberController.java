@@ -229,6 +229,14 @@ public class MemberController {
 			return "member/login";
 		}
 		
+		//부서,직급에 대한 정보를 가져와 리스트로 저장
+		List<Map<String, Object>> departmentList=service.departmentList();
+		List<Map<String, Object>> positionList=service.positionList();
+		
+		
+		model.addAttribute("departmentList",departmentList);
+		model.addAttribute("positionList",positionList);
+		
 		Member dto = service.readMember(memberNum);
 		model.addAttribute("dto", dto);
 		model.addAttribute("mode", "update");

@@ -268,7 +268,7 @@ function memberNumCheck() {
 			      </td>
 			      <td style="padding: 0 0 15px 15px;">
 			        <p style="margin-top: 1px; margin-bottom: 5px;">
-			            <input type="text" name="memberNum" id="memberNum" value="${dto.memberNum}"
+			            <input type="text" name="memberNum" id="memberNum" value=""
                          onchange="memberNumCheck();" style="width: 95%;" placeholder=""
                          maxlength="15" class="boxTF" placeholder="사원 번호">
 			        </p>
@@ -287,38 +287,57 @@ function memberNumCheck() {
 			        </p>
 			      </td>
 			  </tr>
-			  
-			   <tr>
-			      <td width="100" valign="top" style="text-align: right; padding-top: 5px;">
-			            <label style="font-weight: 900;">기본급</label>
-			      </td>
-			      <td style="padding: 0 0 15px 15px;">
-			        <p style="margin-top: 1px; margin-bottom: 5px;">
-			            <input type="text" name="basicpay" value="" maxlength="30" class="boxTF"
-		                      style="width: 95%;"
-		                      placeholder="">
-			        </p>
-			      </td>
-			  </tr>
-			  
-			  
-			  
-			  
-			  
-			  
+
 			  <tr>
 			      <td width="100" valign="top" style="text-align: right; padding-top: 5px;">
 			            <label style="font-weight: 900;">수당</label>
 			      </td>
-			      <td style="padding: 0 0 15px 15px;">
+			      <td style="padding: 0 0 15px 15px;" colspan="7">
 			        <p style="margin-top: 1px; margin-bottom: 5px;">
-			            <input type="text" name="birth" value="${dto.birth}" maxlength="10" 
+			            <input type="text" name="birth" value="" maxlength="10" 
 			                       class="boxTF" style="width: 95%;" placeholder="수당">
 			        </p>
 			        <p class="help-block"></p>
 			      </td>
 			  </tr>
-			  
+			   <tr>
+			      <td width="50" valign="top" style="text-align: right; padding-top: 5px;">
+			            <label style="font-weight: 900;">지급일</label>
+			      </td>
+		
+			      <td style="padding: 0 0 15px 15px;">
+			        <p style="margin-top: 1px; margin-bottom: 5px;">
+			            <input type="text" name="year" value="" maxlength="30" class="boxTF"
+		                      style="width: 95%; text-align: right;"
+		                      placeholder="2018">
+			        </p>
+			      </td>
+			      <td width="30" valign="top" style="text-align: left; padding-top: 5px;">
+			            <label style="font-weight: 900;">년도</label>
+			      </td>
+			      
+			      <td style="padding: 0 0 15px 15px;">
+			        <p style="margin-top: 1px; margin-bottom: 5px;">
+			            <input type="text" name="month" value="" maxlength="30" class="boxTF"
+		                      style="width: 95%; text-align: right;"
+		                      placeholder="02">
+			        </p>
+			      </td>
+			      <td width="30" valign="top" style="text-align: left; padding-top: 5px;">
+			            <label style="font-weight: 900;">월</label>
+			      </td>
+			      <td style="padding: 0 0 15px 15px;">
+			        <p style="margin-top: 1px; margin-bottom: 5px;">
+			            <input type="text" name="day" value="" maxlength="30" class="boxTF"
+		                      style="width: 95%; text-align: right;"
+		                      placeholder="09">
+			        </p>
+			      </td>
+			      <td width="30" valign="top" style="text-align: left; padding-top: 5px;">
+			            <label style="font-weight: 900;">일</label>
+			      </td>
+			  </tr>
+
 			  </table>
 			
 			  <table style="width: 100%; margin: 0px auto; border-spacing: 0px; margin-top:10px;">
