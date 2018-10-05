@@ -23,7 +23,7 @@ public interface ResourceService {
 	public int insertReserve(Resource dto);
 	public int updateReserve(Resource dto);
 	public int deleteReserve(Map<String, Object> map);
-	public int dataCount();
+	public int dataCount(Map<String, Object> map);
 	public Resource readReserve(int reserveNum);
 	public List<Resource> listReserve2(Map<String, Object> map);
 	public List<ResourceJSON> listReserve(Map<String, Object> map);

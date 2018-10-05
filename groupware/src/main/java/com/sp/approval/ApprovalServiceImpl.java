@@ -32,7 +32,6 @@ public class ApprovalServiceImpl implements ApprovalService{
 		try {
 			list=dao.selectList("approval.approval_list", map);
 		} catch (Exception e) {
-			// TODO: handle exception
 		}
 		
 		return null;
@@ -42,6 +41,23 @@ public class ApprovalServiceImpl implements ApprovalService{
 	public int dataCount(Map<String, Object> map) {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public Approval readApproval(int approvalNum) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int approvalCount(Map<String, Object> map) {
+		int result=0;
+		try {
+			result=dao.selectOne("approval.approvalCount", map);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
 	}
 
 }

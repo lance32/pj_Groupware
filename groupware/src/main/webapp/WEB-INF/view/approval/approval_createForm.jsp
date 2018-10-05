@@ -11,8 +11,47 @@
 <!-- 근태 신청서 페이지  -->
 
 <script type="text/javascript" src="<%=cp%>/resource/se/js/HuskyEZCreator.js" charset="utf-8"></script>
+
+<script type="text/javascript">
+	function Click_table(obj)
+		
+
+</script>
 <script type="text/javascript">
 $(function() {
+	$("#save").click(function() {
+		var vTitle = $("#title").val(); // title
+		var vContents = $("#content").val(); // contents
+		var vComments = "vComments"; // comments
+		var vWriter = $("#session").val(); // writer
+		var vAppLine = $("#session").val() + "|"; // approval line
+		for(var i = 0; i <  8; i++){
+			if($("#toMember"+i).val() != ""){
+				vAppLine += $("#toMember"+i).val() + "|";
+			}
+		}
+
+		$.ajax({
+			url:"<%=cp%>/approval/submit",
+			type:"get",
+			dataType:"json",
+			data:{
+				title : vTitle,
+				contents : vContents,
+				comments : vComments,
+				author : vWriter,
+				appLine : vAppLine				
+			},
+			
+			success:function(data) { 
+				alert("sss");
+			},
+			error:function(jqXHR) {
+				console.log(jqXHR.resonseText);
+			}
+		});
+	
+	});
 	$("#organizationChart").click(function() {
 		var dialog;
 		$.ajax({
@@ -20,6 +59,7 @@ $(function() {
 			type:"get",
 			dataType:"json",
 			success:function(data) {
+				debugger;
 				var h = "<table>";
 				var preDeptName = "";
 				var deptClass = "";
@@ -40,7 +80,7 @@ $(function() {
 					if (preDeptName != val.deptName) {
 						h += "<tr><td>";
 						h += ws;
-						h += "<input type='checkbox' id='dept" + val.deptNum + "' class='" + deptClass + "' onclick='deptCheck(\"dept"+ val.deptNum +"\");'>";
+						//h += "<input type='checkbox' id='dept" + val.deptNum + "' class='" + deptClass + "' onclick='deptCheck(\"dept"+ val.deptNum +"\");'>";
 						h += val.deptName;
 						h += "</td></tr>";
 						preDeptName = val.deptName;
@@ -51,7 +91,7 @@ $(function() {
 						ws += "&nbsp;&nbsp;&nbsp;&nbsp;"
 						h += ws;
 						h += "<input type='checkbox' id='" + val.memberNum + "' class='memberChk " + deptClass + "' data-member-num='" + val.memberNum + "'>";
-						h += val.memberName;
+						h += val.memberName; 
 						h += "&nbsp;";
 						h += val.positionName;
 						h += "</td></tr>";
@@ -80,14 +120,25 @@ $(function() {
 						"확인" : function() {
 							// 조직도에서 선택된 값을 받을 input object에 넣도록 처리
 							// 여기서는 <input type="text" id="toMember" name="toMember"..>
+							debugger;
 							var memberList = "";
 							$(".memberChk").each(function() {
 								if (this.checked) {
 									memberList += $(this).data("memberNum") + ";";
 								} 
 							});
+							var memberSibal = memberList.split(';');
 							
-							$("#toMember").val(memberList);
+							if(memberSibal.length > 8){
+								alert("too much member");
+							}
+							else {							
+							for(var i = 0; i <  memberSibal.length; i++){
+								$("#toMember"+i).val(memberSibal[i]);
+							}
+							}
+							
+							//$("#toMember").val(memberList);
 							$(this).dialog("close");
 						},
 						"취소" : function() {
@@ -106,6 +157,7 @@ $(function() {
 <form id="editform" name="editform" method="post"
 	action="/segio/works/approval/edit_format.php"
 	enctype="multipart/form-data">
+	<input type="hidden" id="session" name="session" value=${sessionScope.member.userId }>
 	<input type="submit" title="" value="" style="display: none"> <input
 		type="hidden" name="mode" value="text_insert"> <input
 		type="hidden" name="no" value=""> <input type="hidden"
@@ -247,27 +299,35 @@ $(function() {
 					<th rowspan="3" scope="col" style="background-color: #FFF6F9;"
 						class="ebtn1">결재</th>
 					<th scope="col" class="ebtn1">
+						<span><input type="text" id="toMember0" name="toMember" style="background: #fff; color: #333; width: 80%; border: 1px solid #d7d7d7;" readOnly="readOnly"></span>
 						<div id="app_class1"></div>
 					</th>
 					<th scope="col" class="ebtn1">
+						<span><input type="text" id="toMember1" name="toMember" style="background: #fff; color: #333; width: 80%; border: 1px solid #d7d7d7;" readOnly="readOnly"></span>
 						<div id="app_class2"></div>
 					</th>
 					<th scope="col" class="ebtn1">
+						<span><input type="text" id="toMember2" name="toMember" style="background: #fff; color: #333; width: 80%; border: 1px solid #d7d7d7;" readOnly="readOnly"></span>
 						<div id="app_class3"></div>
 					</th>
 					<th scope="col" class="ebtn1">
+						<span><input type="text" id="toMember3" name="toMember" style="background: #fff; color: #333; width: 80%; border: 1px solid #d7d7d7;" readOnly="readOnly"></span>
 						<div id="app_class4"></div>
 					</th>
 					<th scope="col" class="ebtn1">
+						<span><input type="text" id="toMember4" name="toMember" style="background: #fff; color: #333; width: 80%; border: 1px solid #d7d7d7;" readOnly="readOnly"></span>
 						<div id="app_class5"></div>
 					</th>
 					<th scope="col" class="ebtn1">
+						<span><input type="text" id="toMember5" name="toMember" style="background: #fff; color: #333; width: 80%; border: 1px solid #d7d7d7;" readOnly="readOnly"></span>
 						<div id="app_class6"></div>
 					</th>
 					<th scope="col" class="ebtn1">
+						<span><input type="text" id="toMember6" name="toMember" style="background: #fff; color: #333; width: 80%; border: 1px solid #d7d7d7;" readOnly="readOnly"></span>
 						<div id="app_class7"></div>
 					</th>
 					<th scope="col" class="ebtn1">
+						<span><input type="text" id="toMember7" name="toMember" style="background: #fff; color: #333; width: 80%; border: 1px solid #d7d7d7;" readOnly="readOnly"></span>
 						<div id="app_class8"></div>
 					</th>
 				</tr>
@@ -453,7 +513,7 @@ $(function() {
 					<tr>
 						<!-- 제목 -->
 						<th scope="row" class="etitle"><span>제목</span></th>
-						<td scope="row" class="eleft" colspan="5"><input type="text"
+						<td scope="row" class="eleft" colspan="5"><input type="text" id="title"
 							name="title" value="" class="input_title" title="제목"></td>
 					</tr>
 

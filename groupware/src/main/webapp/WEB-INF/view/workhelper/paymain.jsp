@@ -14,45 +14,42 @@
 #paginate .numBox {border:1px solid #ccc;height:28px;text-decoration:none;padding:4px 7px 4px 7px;margin-left:3px;line-height:normal;vertical-align:middle;}
 </style>
 
-<div id="test" style="width:100%; height:600px; ">
-
+	<div id="test" style="width:100%; height:600px; ">
 	<%-- 상단 대표글씨 --%>
 	<div style="clear: both; margin: 10px 0px 15px 10px;">
-		<span class="glyphicon glyphicon-th-list" style="font-size: 28px; margin-left: 10px;"></span>
-		<span style="font-size: 30px;">&nbsp;급여조회</span><br>
+		<span class="glyphicon glyphicon-th-list" style="font-size: 25px; margin-left: 10px;"></span>
+		<span style="font-size: 25px;">&nbsp;급여조회</span><br>
 		<div style="clear: both; width: 300px; height: 1px; border-bottom: 3px solid black;"></div>
 	</div>
-	
-	<div style="text-align:left;">
-	
-		<select class="selectBox">				<%-- 선택박스  --%>
-			<option>테스트 옵션1</option>
-			<option>테스트 옵션2</option>
-		</select>
-	</div>
-	
+
+
 	<%-- 목록 --%>
 	<table id="tb" style="width: 1000px;"><%-- 테이블 길이 수정 가능 --%>
 		<tr>
 			<td id="count" colspan="2">
 				3개(1/1 페이지)
 			</td>
-			<td></td><td></td>
+			<td></td>
+			<td align="right">
+			<select class="selectBox">				<%-- 선택박스  --%>
+				<option>2018년도</option>
+				<option>2017년도</option>
+				</select>
+			</td>
 		</tr>
 		
 		<tr class="cf">
 			<%-- 구분 폭 수정 가능 --%>
 			<td width="50">번호</td>
-			<td width="100" style="text-align: left;">반방각</td>
+			<td width="100" style="text-align: center;">이름</td>
 			<td width="100">날짜</td>
-			<td width="750">제목</td>
+			<td width="900">제목</td>
 		</tr>
-		
 		<tr class="tr">
 			<td>1</td>
-			<td width="100" style="text-align: left;">이름</td>
+			<td width="100" style="text-align: center;">이름</td>
 			<td width="100">2018-10-02</td>
-			<td width="750">2018년 10월 ooo님의 급여 입니다.</td>
+			<td width="750"><a>2018년 10월 ooo님의 급여 입니다.</a></td>
 		</tr>
 	</table>
 	<br>

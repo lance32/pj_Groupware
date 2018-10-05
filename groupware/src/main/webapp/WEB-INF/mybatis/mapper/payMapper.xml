@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pay">
+<!-- select -->
+	<!--  -->
+	<select id="listPayMemberAdmin" parameterType="map" resultType="com.sp.pay.Pay">
+		SELECT * FROM (
+		    SELECT ROWNUM rnum, tb.* FROM (
+			     SELECT m.memberNum,departmentName,positionName,name,NVL(basicpay,0)basicpay
+					FROM member m 
+					LEFT OUTER JOIN department d ON m.departmentNum = d.departmentNum
+					LEFT OUTER JOIN position p ON m.positionNum = p.positionNum
+					LEFT OUTER JOIN basicpay b ON m.memberNum = b.memberNum
+                    <where>
+                         <if test="searchValue != null and searchValue != ''">
+			                  <include refid="where-list"/>
+			                  
+		                 </if>
+	                </where>
+					ORDER BY m.memberNum DESC
+	        ) tb WHERE ROWNUM &lt;= #{end}
+	    ) WHERE rnum &gt;= #{start}
+	</select>
+	
+	<select id="listPayMember" parameterType="map" resultType="com.sp.pay.Pay">
+		SELECT * FROM (
+		    SELECT ROWNUM rnum, tb.* FROM (
+			     SELECT m.memberNum,departmentName,positionName,name,basicpay
+					FROM member m 
+					LEFT OUTER JOIN department d ON m.departmentNum = d.departmentNum
+					LEFT OUTER JOIN position p ON m.positionNum = p.positionNum
+					LEFT OUTER JOIN basicpay b ON m.memberNum = b.memberNum
+                    WHERE m.memberNum=#{memberNum}
+					ORDER BY m.memberNum DESC
+	        ) tb WHERE ROWNUM &lt;= #{end}
+	    ) WHERE rnum &gt;= #{start}
+	</select>	
+	
+	
+<!-- 총 사원 카운트 -->
+	<select id="dataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*),0) FROM member m 
+		LEFT OUTER JOIN department d ON m.departmentNum=d.departmentNum
+		LEFT OUTER JOIN position p ON m.positionNum=p.positionNum
+		<where>
+			<if test="searchValue != null and searchValue != ''">
+				<include refid="where-list"/>
+			</if>
+		</where>
+	</select>
+	
+<!-- insert -->
+
+
+
+
+
+<!-- 사원조회 검색 조건 -->
+	<sql id="where-list">
+	  <if test="searchKey=='name'">
+	      INSTR(name,#{searchValue})&gt;=1
+	  </if>
+	  <if test="searchKey=='position'">
+	 	 INSTR(positionName,#{searchValue})&gt;=1
+	  </if>
+	  <if test="searchKey=='department'">
+	      INSTR(departmanetName,#{searchValue})&gt;=1 
+	  </if>
+	</sql>
+
+</mapper>

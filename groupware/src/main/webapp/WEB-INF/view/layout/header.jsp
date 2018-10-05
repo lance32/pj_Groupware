@@ -35,7 +35,8 @@
 			<ul class="sub_menu">
 				<li><a href="<%=cp%>/member/main">사원조회</a></li>
 				<li><a href="<%=cp%>/member/main">부서조회</a></li>
-			</ul></li>
+			</ul>
+		</li>
 	</ul>
 </div>
 <div id="blank"></div>

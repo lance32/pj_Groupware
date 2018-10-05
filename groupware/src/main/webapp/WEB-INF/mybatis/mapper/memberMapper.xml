@@ -6,18 +6,23 @@
 <!-- 회원 정보 가져오기 -->
     <select id="readMember" resultType="com.sp.member.Member" parameterType="String">
         SELECT m.memberNum,name,birth,tel,phone,zip,addr1,addr2,m.status,TO_CHAR(created,'YYYY-MM-DD')created,email,
-        	   saveFilename,originalFilename,m.departmentNum,departmentName,m.positionNum,positionName
+        	   saveFilename,originalFilename,m.departmentNum,departmentName,m.positionNum,positionName,b.basicpay,
+        	   TO_CHAR(modified,'YYYY-MM-DD') modified
 			FROM member m
 			LEFT OUTER JOIN memberdetailinfo i ON m.memberNum=i.memberNum
 			LEFT OUTER JOIN department d ON m.departmentNum=d.departmentNum
 			LEFT OUTER JOIN position p ON m.positionNum=p.positionNum
+			LEFT OUTER JOIN basicpay b ON m.memberNum=b.memberNum
+			
 		WHERE m.memberNum=#{memberNum}
     </select>
 	
 	<select id="readDetailinfo" resultType="com.sp.member.Member" parameterType="String">
 		SELECT birth,email,tel,phone,zip,addr1,addr2 FROM memberDetailinfo WHERE memberNum=#{memberNum}
 	</select>
-	
+	<select id="readBasicpay" resultType="com.sp.member.Member" parameterType="String">
+		SELECT memberNum,basicpay FROM basicpay WHERE memberNum=#{memberNum}
+	</select>
 	
 <!-- insert -->
 	<insert id="insertMember" parameterType="com.sp.member.Member">
@@ -31,6 +36,12 @@
 				 VALUES(#{memberNum},#{birth},#{email},#{tel},#{phone},
 				 #{zip},#{addr1},#{addr2})
 	</insert>
+	
+	<insert id="insertBasicpay" parameterType="com.sp.member.Member">
+		INSERT INTO basicpay(memberNum, basicpay, changeDate) 
+			VALUES(#{memberNum},#{basicpay},SYSDATE)
+	</insert>
+	
 	
 	<insert id="insertMemberAuthority" parameterType="com.sp.member.Member">
 		INSERT INTO memberauthority(memberNum,Authority) VALUES(#{memberNum},'ROLE_USER')
@@ -50,11 +61,18 @@
 	 	 INSTR(positionName,#{searchValue})&gt;=1
 	  </if>
 	  <if test="searchKey=='department'">
-	      INSTR(departmanetName,#{searchValue})&gt;=1 
+	      INSTR(departmentName,#{searchValue})&gt;=1 
 	  </if>
 	  <if test="searchKey=='created'">
 	      (TO_CHAR(created, 'YYYY-MM-DD') = #{searchValue}
             OR TO_CHAR(created, 'YYYYMMDD') = #{searchValue})
+	  </if>
+	  <if test="searchKey=='birth'">
+	      (TO_CHAR(birth, 'YYYY-MM-DD') = #{searchValue}
+            OR TO_CHAR(birth, 'YYYYMMDD') = #{searchValue})
+	  </if>
+	  <if test="searchKey=='phone'">
+	      INSTR(phone,#{searchValue})&gt;=1
 	  </if>
 	</sql>
 	
@@ -69,7 +87,8 @@
 	<select id="dataCount" parameterType="map" resultType="Integer">
 		SELECT NVL(COUNT(*),0) FROM member m JOIN department d 
 			ON m.departmentNum=d.departmentNum JOIN position p 
-			ON m.positionNum=p.positionNum
+			ON m.positionNum=p.positionNum 
+			LEFT OUTER JOIN memberDetailinfo i ON m.memberNum=i.memberNum
 		<where>
 			<if test="searchValue != null and searchValue != ''">
 				<include refid="where-list"/>
@@ -106,7 +125,7 @@
                          <if test="searchValue != null and searchValue != ''">
 			                  <include refid="where-list"/>
 		                 </if>
-		                 AND m.departmentNum is NOT NULL AND p.positionNum is NOT NULL 
+		                 AND i.memberNum IS NOT NULL 
 		           
 	                </where>
 					ORDER BY m.memberNum DESC
@@ -121,7 +140,7 @@
     </update>
 	
 	<update id="updateMember1" parameterType="com.sp.member.Member">
-		UPDATE member SET name=#{name},pwd=#{pwd},modified=sysdate,
+		UPDATE member SET name=#{name},pwd=#{pwd},modified=SYSDATE,
 			saveFilename=#{saveFilename}
 			WHERE memberNum=#{memberNum}
 	</update>
@@ -134,6 +153,10 @@
                WHERE memberNum=#{memberNum}
     </update>
     
+    <update id="updateBasicpay" parameterType="com.sp.member.Member">
+    	UPDATE basicpay SET basicpay=#{basicpay},changeDate=SYSDATE WHERE memberNum=#{memberNum}
+    </update>
+    
     <update id="updateAdmin" parameterType="com.sp.member.Member">
     	UPDATE member SET status=#{status},departmentNum=#{departmentNum},positionNum=#{positionNum} 
     		WHERE memberNum=#{memberNum}
@@ -142,14 +165,17 @@
     <update id="updateQualify" parameterType="com.sp.member.Member">
     	UPDATE qualify SET qualify qualifyCode=#{qualifyCode},qualifyName=#{qualifyName},serialNum=#{serialNum},
     		getDate=#{getDate} WHERE memberNum=#{memberNum}
-    	
-    
     </update>
     
-	<update id="deleteMember" parameterType="String">
-		UPDATE member SET status=0 WHERE memberNum=#{memberNum}
-	</update>
-	
+    <update id="updateFirstLogin" parameterType="com.sp.member.Member">
+    	UPDATE member SET pwd = #{pwd}, modified = sysdate WHERE memberNum = #{memberNum}
+    </update>
+    
+<!-- DELETE -->
+	<delete id="deleteQualify" parameterType="String">
+		DELETE FROM qualify WHERE serialNum=#{serialNum} 
+	</delete>    
+    
 	<select id="organizationChart" resultType="com.sp.member.OrganizationChart">
 		SELECT d1.departmentNum, d1.parentDepartment, d2.departmentName parentDeptName, d1.departmentName
 				, d1.deptGroup, d1.deptOrder, m.memberNum, m.name, p.positionName, p.positionStep

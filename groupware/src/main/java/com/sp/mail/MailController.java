@@ -78,9 +78,9 @@ public class MailController {
 		if (type.equals("send")) {
 			listUrl += "mailSend";
 		} else if (type.equals("tempBox")) {
-			listUrl += "mailTrashbox";
-		} else {
 			listUrl += "mailTempBox";
+		} else {
+			listUrl += "mailTrashbox";
 		}
 		
 		String mailUrl = cp + "/mail/mailForm?page=" + currentPage;

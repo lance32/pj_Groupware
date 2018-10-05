@@ -151,6 +151,59 @@ function insertResource() {
     });
     $("#resourceModal").dialog("close");
 }
+
+$(function(){
+	$("#chkAll").click(function(){
+		if($("#chkAll").prop("checked")){
+			$("input[name=chkbtn]").prop("checked", true);
+		} else {
+			$("input[name=chkbtn]").prop("checked", false);
+		}
+	});
+});
+
+$(function(){
+	$("#delResource").click(function(){
+		var chkNum="";
+		$("input[name=chkbtn]:checked").each(function(){
+			chkNum += $(this).val()+";";
+		});
+		chkNum = chkNum.substring(0,chkNum.lastIndexOf(";"));
+		if(chkNum == ""){
+			alert("삭제할 항목을 선택하세요!");
+			return false;
+		}
+		var url = "<%=cp%>/scheduler/resourceDelete";
+		query = "chkNum="+chkNum;
+		if(confirm("게시물을 삭제 하시겠습니까?")){
+			$.ajax({
+				type:"post"
+				,url:url
+				,data:query
+				,dataType:"json"
+				,success:function(data) {
+					var state=data.state;
+					if(state=="true") {
+						location.reload();
+					} else if(state=="false") {
+						alert("항목을 삭제하지 못했습니다.");
+						location.reload();
+					}
+				}
+				,beforeSend : function(jqXHR) {
+			        jqXHR.setRequestHeader("AJAX", true);
+			    }
+			    ,error:function(jqXHR) {
+			    	if(jqXHR.status==403) {
+			    		location.href="<%=cp%>/login";
+			    		return;
+			    	}
+			    	console.log(jqXHR.responseText);
+			    }
+			});
+		}
+	});
+});
 </script>
 <div style="clear: both; margin: 10px 0px 15px 10px;">
 	<span class="glyphicon glyphicon-calendar"
@@ -167,18 +220,19 @@ function insertResource() {
 		<td align="right">
 			<button id="addGroup" type="button" class="butn">그 룹 추 가</button>
 			<button id="addResource" type="button" class="butn">항 목 추 가</button>
+			<button id="delResource" type="button" class="butn">선 택 삭 제</button>
 		</td>
 	</tr>
 
 	<tr class="cf">
-		<td width="190">번 호</td>
+		<td width="70"><input id="chkAll" type="checkbox" value="all"></td>
 		<td width="190">구 분</td>
 		<td width="350" style="text-align: center;">항 목 명</td>
 		<td width="250">최 대 인 원</td>
 	</tr>
 	<c:forEach var="dto" items="${list}">
 		<tr class="tr">
-			<td>${dto.resourceNum }</td>
+			<td><input type="checkbox" name="chkbtn" value="${dto.resourceNum }"></td>
 			<td>${dto.groupName }</td>
 			<td>${dto.resourceName }</td>
 			<td>${dto.occupancy }</td>
@@ -186,21 +240,6 @@ function insertResource() {
 	</c:forEach>
 </table>
 <br>
-<div style="text-align: center;">
-	<form name="searchResForm" action="<%=cp%>/scheduler/resList" method="post">
-		${paging }
-		<br>
-		<button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/schedule/list';">새 로 고 침</button>
-   		<select name="searchKey" class="selectBox" style="margin-bottom: 5px;">
-          	<option value="content">항 목 명</option>
-      	</select>
-    	<input type="text" name="searchValue" class="searchBox">
-    	
-   		<button type="button" class="butn" onclick="searchList()">검색</button>
-   		<div class="form-group" align="center"><br>
-		</div>
-   	</form>
-
-</div>
+${paging }
 
 <div id="insertModal" style="display: none;"></div>

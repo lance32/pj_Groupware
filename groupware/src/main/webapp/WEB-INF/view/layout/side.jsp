@@ -11,7 +11,7 @@
 <table class="sidetable" border ="1">
 	
 		<tr>
-			<td rowspan = "5" style="width:90px;">
+			<td rowspan = "5" style="width:90px; height: 99%;">
 				<c:if test="${not empty sessionScope.member.saveFilename}">
 					<img src = "<%=cp%>/upload/member/${sessionScope.member.saveFilename}" width="110" height = "125">
 				</c:if>
@@ -23,7 +23,7 @@
 					<td align="center">${sessionScope.member.departmentName}</td>
 				</c:if>
 				<c:if test="${empty sessionScope.member.userId}">
-					<td align="center">부서</td>
+					<td align="center">부 서</td>
 			</c:if>
 	
 		</tr>

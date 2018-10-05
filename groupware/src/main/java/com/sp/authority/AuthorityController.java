@@ -101,22 +101,25 @@ public class AuthorityController {
 	
 	@RequestMapping(value="/authority/article")
 	@ResponseBody
-	public Map<String, Object> readAuthority(@RequestParam(value="memberNum") String memberNum,
+	public Map<String, Object> readAuthority(
+			@RequestParam(value="memberNum") String memberNum,
 			@RequestParam(defaultValue="subject")String searchKey,
 			@RequestParam(defaultValue="")String searchValue,
 			@RequestParam(value="page")String page,
 			Model model) throws Exception {
-	
+		
 		
 		String query="page"+page;
 		searchValue=URLDecoder.decode(searchValue, "utf-8");
 		if(searchValue.length()!=0) {
 			query="&searchKey="+searchKey+"&searchValue="+URLEncoder.encode(searchValue, "utf-8");
 		}
-		
+	
 		Map<String, Object> map = new HashMap<>();
-		List<Authority> list=service.listTalbe(map);
 		Authority authority=service.readAuthority(memberNum);
+		List<Authority> list=service.listTalbe(map);
+		
+		
 		map.put("memberNum", memberNum);
 		map.put("searchKey", searchKey);
 		map.put("searchValue", searchValue);
@@ -129,4 +132,5 @@ public class AuthorityController {
 		
 		return map;
 	}
+	
 }

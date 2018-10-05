@@ -15,40 +15,87 @@
 
 <script>
 function getData(memberNum) {
-	
 	var query = "${articleUrl}&memberNum="+memberNum; 
 	$.ajax({
 		type:"get",
 		url: query,
 		dataType:"json",
 		success:function(data) {
-			var ath = "";
-			console.log(query);
-			$.each(authority, function (idx, val) {
-			console.log(val.idx)
-			console.log(val.departmentName);
-			console.log(val.departmentName);
-			console.log(val.name);
-			console.log(val.memberNum);
-			console.log(val.grants);
-			console.log(val.positionName);
-		
-		});
+			var chk = 0;
+			var tot ="<form name='authorityForm' id='authorityForm' method='post' enctype='multipart/form-data'>";
+			$.each(data, function (idx, val) {		
+				data.list.grants = data.authority.grants;			
+				var aut = ""; //authority
+				if (idx == 'authority') {
+					aut = "<table style = 'width:100%; border: 1px;'>";
+							aut+= "<tr>";
+							aut+= "<td rowspan='2' style='width:130px; height:150px;'>";
+							aut+= "<img src=";
+							aut+= "'<%=cp%>/upload/member/" +val.saveFileName+ "'";
+							aut+= "style='width:130px; height:150px;'>";
+							aut+= "</td><td>사원번호</td><td>"+val.memberNum+"</td>";
+							aut+= "<td>이름</td><td>"+val.name+"</td></tr>";
+							aut+= "<tr><td>부서</td><td>"+val.departmentName+"</td>";
+							aut+= "<td>직급</td><td>"+val.positionName+"</td></tr></table>";
+					tot+=aut;			
+				} 
+				
+				
+				if (idx == 'list') {
+					var inf = ""; //list
+					inf ="<table style='width: 70%;'>";
+					inf+= "<td style='border-bottom:1px;'>권한</td>";
+				
+					for(var i=0; i<val.length; i++){
+						inf+= "<tr><td>"+val[i].comments+"</td>";
+						inf+= "<td><input type='checkbox' id='auth1"+i+"' value='1'>읽기</td>";
+						inf+= "<td><input type='checkbox' id='auth2"+i+"' value='2'>쓰기</td></tr>";
+					}
+					
+					inf+= "</table><button type='button' id = 'btnsend' onclick='s();'>수정</button></form>";
+					tot+=inf;
+					
+					$(function () {
+						var listGrants = data.list.grants;
+						
+						if(chk == 0) {	
+							console.log($("#auth10"));
+							$("#auth10").attr("checked", true);
+							chk = 1;
+							console.log("["+chk+"]");
+							
+						}
+					});
+				};
+			});
 			
-			
-			$("#authority-dialog").html(ath);
+			$("#authority-dialog").html(tot);
 			 $("#authority-dialog").dialog({
 				height: 700,
 				width: 800,
-				modal: true
-				
+				modal: true,
+				open:function() {
+					$("#auth10").attr("checked", true);
+				}
 			});
+			
 		},
 		error:function(jqXHR) {
 			console.log(jqXHR.resonseText);
 		}
 	});
+
+	
 }
+
+function s() {
+	var f = document.authorityForm;
+	console.log(f);
+	f.action = "<%=cp%>/authority/update";
+	f.submit();
+}
+// list 출력시  tablelist 옮기기 metadata 날자 확인
+	
 </script>
 
 
@@ -70,7 +117,6 @@ function getData(memberNum) {
 		
 		<tr class="cf">
 			<%-- 구분 폭 수정 가능 --%>			
-			<td width="170">번호</td>
 			<td width="170">사원번호</td>
 			<td width="190">부서명</td>
 			<td width="190">직급명</td>
@@ -79,7 +125,6 @@ function getData(memberNum) {
 		</tr>
 	<c:forEach var = "dto" items = "${list}">
 		<tr class="tr">
-			<td>${dto.listNum}</td>
 			<td>${dto.memberNum}</td>			
 			<td>${dto.departmentName}</td>
 			<td>${dto.positionName}</td>

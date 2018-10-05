@@ -15,10 +15,6 @@
 </style>
 
 <script type="text/javascript">
-function searchMember(){
-	var f=document.memberSearchForm;
-	f.submit();
-}
 </script>
 
 

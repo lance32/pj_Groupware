@@ -3,6 +3,7 @@ package com.sp.member;
 import java.io.File;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -36,23 +37,41 @@ public class MemberController {
 	
 	// 변경할 시작 부분 ----------------------------------------------------------------------
 	@RequestMapping(value="/login", method=RequestMethod.GET)
-	public String loginForm(String login_error, HttpSession session, Model model) {
-		// 로그인 폼
+	public String login(String login_error, HttpSession session, Model model) {
+		// 로그인
 		
 		if(login_error!=null) {
 			model.addAttribute("message","아이디 또는 패스워드가 일치하지 않습니다.");
 		}
-	
 		return "/member/login";
 	}
 	
 
 	//최초 로그인 체크
-	@RequestMapping(value="/member/firstLogin", method=RequestMethod.POST)
-	public String firstLoginCheck(Member dto) {
+	@RequestMapping(value="/member/firstLogin")
+	public String firstLoginCheck(HttpSession session) {
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		Member dto = service.readMember(info.getUserId());
+
+		if(dto.getModified()==null) {
+			// 독립된 화면으로 구성해야할 것 같음. 수정필요.
+			return ".member.pwd";		
+		}
+		return ".mainLayout";
+	}
+	
+	@RequestMapping(value="/member/firstLoginSubmit", method=RequestMethod.POST)
+	public String updateFirstLogin(
+			Member dto,
+			HttpSession session) throws Exception {
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		
+		String encPwd=bcryptEncoder.encode(dto.getPwd());
+		dto.setPwd(encPwd);
+		dto.setMemberNum(info.getUserId());
 		
-		return ".member.pwd";
+		service.firstLoginMember(dto);
+		return ".mainLayout";
 	}
 	
 	// 변경할 끝 부분 ----------------------------------------------------------------------
@@ -228,6 +247,14 @@ public class MemberController {
 			return "member/login";
 		}
 		
+		//부서,직급에 대한 정보를 가져와 리스트로 저장
+		List<Map<String, Object>> departmentList=service.departmentList();
+		List<Map<String, Object>> positionList=service.positionList();
+		
+		
+		model.addAttribute("departmentList",departmentList);
+		model.addAttribute("positionList",positionList);
+		
 		Member dto = service.readMember(memberNum);
 		model.addAttribute("dto", dto);
 		model.addAttribute("mode", "update");
@@ -251,6 +278,10 @@ public class MemberController {
 		String root=session.getServletContext().getRealPath("/");
 		String pathname=root+"upload"+File.separator+"member";
 		
+		//기본급이 없거나  0보다 작으면 0으로 초기화
+		if(dto.getBasicpay()<=0) {
+			dto.setBasicpay(0);
+		}
 		service.updateMember(dto, pathname);
 		
 		
@@ -287,19 +318,20 @@ public class MemberController {
 		
 		// 해당 레코드 가져 오기
 		Member dto = service.readMember(memberNum);
-		
 		if(dto==null)
 			return "redirect:/member/main?"+query;
 		
-		
 		List<Map<String, Object>> qualifyList = service.qualifyList(memberNum);
-		if(qualifyList==null) {
-			String message="등록된 정보가 없습니다.";
-			model.addAttribute("message",message);
-		}else {
+		if(qualifyList!=null) {
 			model.addAttribute("qualifyList",qualifyList);
 		}
-	
+		System.out.println("====================="+dto.getSerialNum());
+		
+		//기본급 출력시 값에 , 추가
+		DecimalFormat df= new DecimalFormat("###,###");
+		String basicpay=df.format(dto.getBasicpay());
+		
+		model.addAttribute("basicpay",basicpay);
 		model.addAttribute("mode","info");
 		model.addAttribute("memberNum",memberNum);
 		model.addAttribute("dto", dto);
@@ -323,6 +355,11 @@ public class MemberController {
 			return "member/login";
 		}
 		
+		List<Map<String, Object>> qualifyList = service.qualifyList(memberNum);
+		if(qualifyList!=null) {
+			model.addAttribute("qualifyList",qualifyList);
+		}
+
 			List<Map<String, Object>> departmentList=service.departmentList();
 			List<Map<String, Object>> positionList=service.positionList();
 			model.addAttribute("departmentList",departmentList);
@@ -353,16 +390,6 @@ public class MemberController {
 		
 		return "redirect:/member/main?page="+page;
 	}
-	
-	@RequestMapping(value="/member/delete")
-	public String deleteMember(@RequestParam String memberNum) {
-		
-		service.deleteMember(memberNum);
-
-		return ".member.memberinfo";
-	}
-	
-	
 	
 	@RequestMapping(value="/member/noAuthorized")
 	public String noAuth() throws Exception{
@@ -410,6 +437,18 @@ public class MemberController {
 		
 		return model;
 	}
+	
+	@RequestMapping(value="/member/deleteQualify")
+	public String deleteQualify(String serialNum,
+			String memberNum,
+			@RequestParam String page
+			) throws Exception{
+			System.out.println("==========================="+serialNum);
+			service.DeleteQualify(serialNum);
+		
+		return "redirect:/member/memberinfo?page="+page+"&memberNum="+memberNum;
+	}
+	
 	
 	//최초 로그인시 비밀번호 변경
 		@RequestMapping(value="/member/changepwd", method=RequestMethod.GET)

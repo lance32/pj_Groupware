@@ -29,7 +29,7 @@
     	<th>관리자</th>
     </tr>
     <tr>
-    	<td><a href="<%=cp%>/pay/insertpay">급여 관리</a></td>
+    	<td><a href="<%=cp%>/pay/adminMain">급여 관리</a></td>
     </tr>
     <tr>
     	<td><a href="#">증명서 관리</a></td>

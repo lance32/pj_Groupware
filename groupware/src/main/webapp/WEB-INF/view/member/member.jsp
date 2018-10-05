@@ -148,6 +148,20 @@ function memberOk() {
         f.positionNum.focus();
         return;
     }
+    
+    str = f.basicpay.value;
+    str = str.trim();
+    if(!str) {
+        alert("기본급을 입력해주세요");
+        f.basicpay.focus();
+        return;
+    }
+    
+    if(!/^(\d+)$/.test(str)) {
+        alert("숫자만 가능합니다.");
+        f.tel3.focus();
+        return;
+    }
 </c:if> 
 
     str = f.phone1.value;
@@ -377,6 +391,19 @@ function memberNumCheck() {
 			        </p>
 			      </td>
 			  </tr>
+			  <tr>
+			      <td width="100" valign="top" style="text-align: right; padding-top: 5px;">
+			            <label style="font-weight: 900;">기본급</label>
+			      </td>
+			      <td style="padding: 0 0 15px 15px;">
+			        <p style="margin-top: 1px; margin-bottom: 5px;">
+			            <input type="text" name="basicpay" value="" maxlength="10" 
+			                       class="boxTF" style="width: 95%;" placeholder="기본급">
+			        </p>
+			        <p class="help-block">기본급은 숫자로만 입력 합니다.</p>
+			      </td>
+			  </tr>
+			  
 			</c:if>
 
 			  <tr>
