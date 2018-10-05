@@ -8,7 +8,7 @@ public interface MemberService {
 	public Member readDetailinfo(String memberNum);
 	public int insertMember(Member dto,String pathname) throws Exception ;
 
-	public void firstLoginMember(Member dto) throws Exception;
+	public int firstLoginMember(Member dto) throws Exception;
 	
 	public int dataCount(Map<String, Object> map);
 	public List<Member> ListMember(Map<String, Object> map);

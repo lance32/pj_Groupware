@@ -31,22 +31,29 @@ input{
 function pwdOk() {
 	var f = document.pwdForm;
 	var str;
-
-	str = f.pwd.value;
-	str = str.trim();
+	var str2;
+	var pwFormat = /^(?=.*[a-z])(?=.*[!@#$%^*+=-]|.*[0-9]).{5,10}$/i;
+	
+	str = f.pwd.value.trim();
+	str2 = $("input[name=pwdCheck]").val().trim();
+	
 	if(!str) {
-		alert("비밀번호를 입력하세요. ");
+		alert("비밀번호를 입력하세요.");
 		f.pwd.focus();
 		return;
 	}
 	
-	if(!/^[0-9]{4,8}$/i.test(str)) { 
-		alert("아이디는 5~10자이며 첫글자는 영문자이어야 합니다.");
-		f.memberNum.focus();
+	if(! pwFormat.test(str)){
+		alert("비밀번호는 영어 + 숫자 or 특수문자를 조합해 5~10자로 입력하세요.");
 		return;
 	}
-
-   	f.action = "<%=cp%>/groupware/main";
+	
+	if(str != str2){
+		alert("비밀번호가 일치하지 않습니다. 다시 확인하세요.");
+		return;
+	}
+	
+   	f.action = "<%=cp%>/member/firstLoginSubmit";
 
     f.submit();
 }
@@ -97,7 +104,7 @@ function pwdOk() {
 			      <td align="center" >
 			        <button type="button" name="sendButton" class="btn" onclick="pwdOk();">변경</button>
 			        <button type="reset" class="btn">다시입력</button>
-			        <button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/member/main';">변경 취소</button>
+			        <button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/member/logout';">변경 취소</button>
 			      </td>
 			    </tr>
 			    <tr height="30">

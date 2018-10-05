@@ -65,7 +65,7 @@
   
 
     <beans:bean id="authenticationSuccessHandler" class="com.sp.member.MyAuthenticationSuccessHandler">
-    	<beans:property name="defaultTargetUrl" value="/main"/>
+    	<beans:property name="defaultTargetUrl" value="/member/firstLogin"/>
     	<beans:property name="alwaysUseDefaultTargetUrl" value="true"/>
     </beans:bean>
 
