@@ -1,7 +1,7 @@
 package com.sp.pay;
 
 public class Pay {
-	private int listmemberNum;
+	private int listNum;
 	
 	private String memberNum;
 	private String name;
@@ -26,6 +26,12 @@ public class Pay {
 	private String departmentName;
 	private String positionName;
 	
+	public int getListNum() {
+		return listNum;
+	}
+	public void setListNum(int listNum) {
+		this.listNum = listNum;
+	}
 	public String getName() {
 		return name;
 	}
@@ -49,12 +55,6 @@ public class Pay {
 	}
 	public void setRealPay(int realPay) {
 		this.realPay = realPay;
-	}
-	public int getListmemberNum() {
-		return listmemberNum;
-	}
-	public void setListmemberNum(int listmemberNum) {
-		this.listmemberNum = listmemberNum;
 	}
 	public String getMemberNum() {
 		return memberNum;

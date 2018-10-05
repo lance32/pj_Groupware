@@ -41,15 +41,15 @@ public class PayServiceImpl implements PayService{
 
 	@Override
 	public List<Pay> ListPayMemberAdmin(Map<String, Object> map) {
-		List<Pay> payList=null;
+		List<Pay> adminpayList=null;
 		
 		try {
-			dao.selectList("pay.listPayMemberAdmin",map);
+			adminpayList=dao.selectList("pay.listPayMemberAdmin", map);
 		} catch (Exception e) {
 			System.out.println(e.toString());
 		}
 		
-	return payList;
+	return adminpayList;
 	}
 
 }

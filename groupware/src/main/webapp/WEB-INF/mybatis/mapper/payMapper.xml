@@ -7,7 +7,7 @@
 	<select id="listPayMemberAdmin" parameterType="map" resultType="com.sp.pay.Pay">
 		SELECT * FROM (
 		    SELECT ROWNUM rnum, tb.* FROM (
-			     SELECT m.memberNum,departmentName,positionName,name,NVL(basicpay,0)
+			     SELECT m.memberNum,departmentName,positionName,name,NVL(basicpay,0)basicpay
 					FROM member m 
 					LEFT OUTER JOIN department d ON m.departmentNum = d.departmentNum
 					LEFT OUTER JOIN position p ON m.positionNum = p.positionNum

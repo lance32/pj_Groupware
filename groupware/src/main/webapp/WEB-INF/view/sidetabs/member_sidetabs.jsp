@@ -21,11 +21,16 @@
 	    	</a>
     	</td>
     </tr>
-    
-    <c:if test="${sessionScope.member.userId=='admin'}">
-	    <tr>
-	    	<td><a href="<%=cp%>/department/main">조직 관리</a></td>
-	    </tr>
-    </c:if>
-
+     <tr>
+    	<td>
+	    	<a href="#">
+	    	<c:if test="${sessionScope.member.userId!='admin'}">
+	    		부서 조회
+	    	</c:if>
+	    	<c:if test="${sessionScope.member.userId=='admin'}">
+	    		부서 관리
+	    	</c:if>
+	    	</a>
+    	</td>
+    </tr>
 </table>

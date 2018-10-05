@@ -59,8 +59,16 @@ function searchPayMember(){
 			<td width="150">직위</td>
 			<td width="150">이름</td>
 			<td width="150">기본급</td>
-			
 		</tr>
+		<c:forEach var="list" items="${paylist}">
+			<tr class="tr">
+				<td>${list.listNum}</td>
+				<td>${list.departmentName}</td>
+				<td>${list.positionName}</td>
+				<td>${list.name}</td>
+				<td>${list.basicpay}</td>
+			</tr>
+		</c:forEach>
 		
 
 	</table>

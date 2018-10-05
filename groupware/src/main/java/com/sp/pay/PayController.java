@@ -87,18 +87,18 @@ public class PayController {
         int end = current_page * rows;
         map.put("start", start);
         map.put("end", end);
-        System.out.println("==========="+start+"=================="+end);
+        
         // 급여 리스트
         List<Pay> paylist = service.ListPayMemberAdmin(map);
         
-  
+        System.out.println("사이즈"+paylist.size());
         // 리스트의 번호
-        int listmemberNum, n = 0;
+        int listNum, n = 0;
         Iterator<Pay> it=paylist.iterator();
         while(it.hasNext()) {
             Pay data = it.next();
-            listmemberNum = dataCount - (start + n - 1);
-            data.setListmemberNum(listmemberNum);
+            listNum = dataCount - (start + n - 1);
+            data.setListNum(listNum);
             n++;
         }
         

@@ -124,7 +124,7 @@
                          <if test="searchValue != null and searchValue != ''">
 			                  <include refid="where-list"/>
 		                 </if>
-		                 AND m.departmentNum is NOT NULL AND p.positionNum is NOT NULL 
+		                 AND i.memberNum IS NOT NULL 
 		           
 	                </where>
 					ORDER BY m.memberNum DESC
