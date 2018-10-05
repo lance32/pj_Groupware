@@ -97,4 +97,15 @@
 			) tb WHERE ROWNUM &lt;= #{end}
 		) WHERE rnum &gt;= #{start}
 	</select>
+	
+	<select id="listSchedule_main" resultType="com.sp.schedule.Schedule" parameterType="map">
+		SELECT * FROM(
+			SELECT ROWNUM rnum, tb.* FROM(
+				SELECT scheduleNum, title, color, startDay, place
+				FROM schedule
+				ORDER BY created 
+			) tb WHERE ROWNUM &lt;= #{end}
+		) WHERE rnum &gt;= #{start}
+	</select>
+	
 </mapper>

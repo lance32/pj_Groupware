@@ -11,4 +11,5 @@ public interface ScheduleService {
 	public List<Schedule> listMonthSchedule(Map<String, Object> map) throws Exception;
 	public int dataCount(Map<String, Object> map) throws Exception;
 	public List<Schedule> listSchedule(Map<String, Object> map) throws Exception;
+	public List<Schedule> listSchedule_main(Map<String, Object> map) throws Exception;
 }
