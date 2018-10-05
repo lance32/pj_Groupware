@@ -43,7 +43,6 @@ public class MemberController {
 		if(login_error!=null) {
 			model.addAttribute("message","아이디 또는 패스워드가 일치하지 않습니다.");
 		}
-	
 		return "/member/login";
 	}
 	
@@ -51,7 +50,7 @@ public class MemberController {
 	//최초 로그인 체크
 	@RequestMapping(value="/member/firstLogin", method=RequestMethod.POST)
 	public String firstLoginCheck(Member dto) {
-		
+		System.out.println();
 		
 		return ".member.pwd";
 	}
