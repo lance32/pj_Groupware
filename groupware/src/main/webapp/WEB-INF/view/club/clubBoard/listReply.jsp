@@ -14,10 +14,13 @@ jQuery(function(){
 				
 	<c:forEach var="listReply" items="${listReply}">
 	<%-- 댓글 목록 --%>
-	<div style="width: 100%; clear: both; border-bottom: 1px solid #D8D8D8;">
+	<div style="width: 100%; clear: both; border-bottom: 1px solid #D8D8D8; padding-top: 15px;">
 		<div style="width: 100%; height: 20px; clear: both;">
 			<span style="font-size: 15px;">${listReply.memberName}</span>
 				<span style="color: #6E6E6E; font-size: 13px;">&nbsp; | ${listReply.replyCreated}</span>
+				<c:if test="${sessionScope.member.userId == listReply.memberNum}">
+				<a onclick="deleteReply('${listReply.replyNum}','${listReply.boardNum}','${listReply.memberNum}')" style="float: right; margin-right: 10px; cursor: pointer; color: #B40404;">삭제</a>
+				</c:if>
 			</div>
 		<div style="width: 100%; clear: both; padding: 10px; color: #6E6E6E;">
 			${listReply.replyContent}

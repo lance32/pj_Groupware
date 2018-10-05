@@ -83,7 +83,7 @@
 	height: auto;
 	padding: 5px 10px;
 	border-radius: 4px;
-	background: #FAFAFA;
+	background: #FFFFFF;
 	color: #848484;
 	border:none;
 	border: 2px solid #F5A9A9;
@@ -151,6 +151,9 @@ jQuery(function(){
 	
 	//댓글달기 버튼 클릭시
 	jQuery(".createReplyButn").click(function(){
+		if(! confirm("댓글을 생성 하시겠습니까?")){
+			return;
+		}
 		
 		var replyContent=jQuery("#replyContentInput").val();
 	    if(!replyContent) {
@@ -166,6 +169,14 @@ jQuery(function(){
 	});
 	
 });
+
+//게시물 삭제 a태그 클릭시
+function deleteClubBoard(boardNum){
+	if(confirm("게시물을 정말 삭제하시겠습니까?")){
+		location.href="<%=cp%>/clubBoard/deleteBoard?boardNum="+boardNum+"&clubNum=${clubInfo.clubNum}"
+	}
+	return;
+}
 
 //댓글 추가
 function createReply(replyContent, clubNum, boardNum, categoryNum) {
@@ -233,13 +244,42 @@ function listPage(page,listReplyDiv,boardNum) {
 
 }
 
-//삭제 a태그 클릭시
-function deleteClubBoard(boardNum){
-	if(confirm("게시물을 정말 삭제하시겠습니까?")){
-		location.href="<%=cp%>/clubBoard/deleteBoard?boardNum="+boardNum+"&clubNum=${clubInfo.clubNum}"
+//댓글 삭제
+function deleteReply(replyNum,boardNum,memberNum) {
+	if(! confirm("댓글을 삭제 하시겠습니까?")){
+		return;
 	}
-	return;
+	
+	var query="replyNum="+replyNum+"&boardNum="+boardNum+"&memberNum="+memberNum;
+	var url="<%=cp%>/clubBoard/deleteReply";
+	var listReplyDiv=jQuery(".showReplyButn[value="+boardNum+"]").parent("div").parent("div").parent("div").children(".replyDiv").children(".listReply");
+	
+	$.ajax({
+		type:"post"
+		,url:url
+		,data:query
+		,dataType:"json"
+		,success:function(data) {
+			var state=data.state;
+			if(state=="true") {
+				listPage(1,listReplyDiv,boardNum);
+			} else if(state=="false") {
+				alert("댓글삭제에 실패했습니다.");
+			}
+		}
+		,beforeSend : function(jqXHR) {
+	        jqXHR.setRequestHeader("AJAX", true);
+	    }
+	    ,error:function(jqXHR) {
+	    	if(jqXHR.status==403) {
+	    		login();
+	    		return;
+	    	}
+	    	console.log(jqXHR.responseText);
+	    }
+	});
 }
+
 </script>
 
 
@@ -273,7 +313,7 @@ function deleteClubBoard(boardNum){
 					
 					<%-- 파일첨부 --%>
 					<c:if test="${not empty dto.saveFileName}">
-						<div style="width: 300px; height:40px; float: right; background: #F2F2F2; margin: 5px 10px 0px 0px; padding: 10px 20px; overflow: hidden;">
+						<div style="width: 300px; height:40px; float: right; background: #F2F2F2; margin: 5px 10px 0px 0px; padding: 10px 20px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
 							<a href="<%=cp%>/clubBoard/download?boardNum=${dto.boardNum}" style="color: #585858;">
 								<span class="glyphicon glyphicon-floppy-disk" style="font-size: 13px;"></span> 
 								<span>${dto.originalFileName}</span>
@@ -295,7 +335,7 @@ function deleteClubBoard(boardNum){
 						<input type="hidden" id="replyCategoryNumInput" value="${categoryNum}">
 					</div>
 					
-					<div class="listReply" style="width: 100%; padding: 10px 30px; border-top: 1px solid #BDBDBD;">
+					<div class="listReply" style="width: 100%; padding: 0px 30px 10px 30px; border-top: 1px solid #BDBDBD;">
 					</div>
 				</div>
 				

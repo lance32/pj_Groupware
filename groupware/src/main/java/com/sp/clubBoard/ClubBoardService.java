@@ -13,4 +13,5 @@ public interface ClubBoardService {
 	public int insertReply(Reply dto);
 	public List<Reply> listReply(Map<String, Object> map);
 	public int replyCount(Map<String, Object> map);
+	public int deleteReply(int replyNum);
 }

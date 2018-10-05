@@ -315,7 +315,8 @@ public class ClubBoardController {
 				return model;
 			}
 			dto.setMemberNum(info.getUserId());
-
+			dto.setReplyContent(util.htmlSymbols(dto.getReplyContent()));
+			
 			int result=service.insertReply(dto);
 			if(result==0) {
 				model.put("state", state);
@@ -358,9 +359,6 @@ public class ClubBoardController {
 			map.put("end", end);
 			listReply=service.listReply(map);
 			
-			for(Reply dto:listReply) {
-				dto.setReplyContent(util.htmlSymbols(dto.getReplyContent()));
-			}
 			paging=util.paging(current_page, total_page);
 		} catch (Exception e) {
 			return "error/error";
@@ -373,6 +371,39 @@ public class ClubBoardController {
 		model.addAttribute("paging", paging);
 		return "club/clubBoard/listReply";
 	}
+	
+	@RequestMapping(value="/clubBoard/deleteReply")
+	@ResponseBody
+	public Map<String, Object> deleteReply(
+			@RequestParam int replyNum
+			,@RequestParam String memberNum
+			,HttpSession session){
+		
+		String state="false";
+		Map<String, Object> model = new HashMap<>(); 
+		try {
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
+			
+			if(! memberNum.equals(info.getUserId())) {
+				model.put("state", state);
+				return model;
+			}
+			
+			int result=service.deleteReply(replyNum);
+			if(result==0) {
+				model.put("state", state);
+				return model;
+			}
+			state="true";
+			model.put("state", state);
+			
+		} catch (Exception e) {
+			model.put("state", state);
+			return model;
+		}
+		return model;
+	}
+	
 	
 /*
 	@RequestMapping(value="/clubBoard/list")

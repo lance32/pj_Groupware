@@ -137,4 +137,15 @@ public class ClubBoardServiceImpl implements ClubBoardService{
 		return result;
 	}
 
+	@Override
+	public int deleteReply(int replyNum) {
+		int result=0;
+		try {
+			result=dao.deleteData("clubBoard.deleteReply", replyNum);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
+	}
+
 }
