@@ -365,9 +365,6 @@ public class ClubBoardController {
 		}
 		
 		model.addAttribute("listReply", listReply);
-		model.addAttribute("pageNo", current_page);
-		model.addAttribute("replyCount", dataCount);
-		model.addAttribute("total_page", total_page);
 		model.addAttribute("paging", paging);
 		return "club/clubBoard/listReply";
 	}
@@ -402,6 +399,59 @@ public class ClubBoardController {
 			return model;
 		}
 		return model;
+	}
+	
+	@RequestMapping(value="/clubBoard/insertReplyAnswer", method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> createReplyAnswer(
+			@RequestParam int clubNum
+			,Reply dto
+			,HttpSession session){
+		String state="false";
+		Map<String, Object> model = new HashMap<>(); 
+		try {
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
+			
+			Map<String, Object> map=new HashMap<>();
+			map.put("clubNum", clubNum);
+			map.put("memberNum", info.getUserId());
+			String isMember=clubService.isClubMember(map);
+			if(isMember==null) {
+				model.put("state", state);
+				return model;
+			}
+			dto.setMemberNum(info.getUserId());
+			dto.setReplyContent(util.htmlSymbols(dto.getReplyContent()));
+			
+			int result=service.insertReplyAnswer(dto);
+			
+			if(result==0) {
+				model.put("state", state);
+				return model;
+			}
+			state="true";
+			model.put("state", state);
+			
+		} catch (Exception e) {
+			model.put("state", state);
+			return model;
+		}
+		return model;
+	}
+	
+	@RequestMapping(value="/clubBoard/listReplyAnswer")
+	public String listReplyAnswer(
+			@RequestParam int answer,
+			Model model) throws Exception {
+		List<Reply> listReplyAnswer=null;
+		try {
+			listReplyAnswer=service.listReplyAnswer(answer);
+		} catch (Exception e) {
+			return "error/error";
+		}
+		
+		model.addAttribute("listReplyAnswer", listReplyAnswer);
+		return "club/clubBoard/listReplyAnswer";
 	}
 	
 	

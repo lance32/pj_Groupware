@@ -26,7 +26,7 @@ jQuery(function(){
 			${listReply.replyContent}
 		</div>
 		<div style="clear: both; width: 100%; height: 40px;">
-			<button class="showReplyAnswerButn">답글 (${listReply.answerCount})</button>
+			<button class="showReplyAnswerButn" value="${listReply.replyNum}">답글 (${listReply.answerCount})</button>
 		</div>
 	</div>
 						
@@ -34,21 +34,17 @@ jQuery(function(){
 		<%-- 답글 input --%>
 		<div style="clear: both; width: 100%; padding: 10px 20px; background: #FCFCFC; border-bottom: 1px solid #D8D8D8;">
 			<span style="width: 3%; vertical-align: top; font-size: 18px;">└</span>
-			<textarea style="max-width: 97%; min-width:97%; min-height: 80px; border: 1.2px solid #A4A4A4; padding-left: 5px;"></textarea>
+			<textarea class="replyAnswerContent" style="max-width: 97%; min-width:97%; min-height: 80px; border: 1.2px solid #A4A4A4; padding-left: 5px;"></textarea>
 			<div style="clear: both; width: 100%; height: 30px; padding-right: 5px;">
-				<button class="clubButn" style="float: right;">답글달기</button>
+				<button class="createReplyAnswerButn" value="${listReply.replyNum}" style="float: right;">답글달기</button>
 			</div>
+			<input type="hidden" class="replyAnswerBoardNum" value="${listReply.boardNum}">
 		</div>
-						
-		<%-- 답글 목록 --%>
-		<div style="clear: both; width: 100%; padding: 10px 20px; background: #FAFAFA; border-bottom: 1px solid #D8D8D8;">
-			<span style="width: 3%; vertical-align: top; font-size: 18px;">└</span>
-			<span style="font-size: 15px;">테스트3</span>
-			<span style="color: #6E6E6E; font-size: 13px;">&nbsp; | 2018-10-02 15:35</span>
-			<div style="clear: both; width: 100%; padding: 5px 20px;">
-				답글
-			</div>
+		
+		<div class="listReplyAnswer">
+		
 		</div>
+		
 	</div>
 	</c:forEach>
 	<div style="width: 100%; clear: both; height: 40px; text-align: center; line-height: 40px;">${paging}</div>	

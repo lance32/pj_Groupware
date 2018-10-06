@@ -148,4 +148,28 @@ public class ClubBoardServiceImpl implements ClubBoardService{
 		return result;
 	}
 
+	@Override
+	public int insertReplyAnswer(Reply dto) {
+		int result=0;
+		try {
+			System.out.println("insertReplyAnswer며럊더러ㅑㄷ");
+			dao.insertData("clubBoard.insertReplyAnswer", dto);
+			result=1;
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
+	}
+
+	@Override
+	public List<Reply> listReplyAnswer(int answer) {
+		List<Reply> list =null;
+		try {
+			list=dao.selectList("clubBoard.listReplyAnswer", answer);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return list;
+	}
+
 }

@@ -37,10 +37,6 @@
 		INSERT INTO clubBoardReply(replyNum, replyContent, boardNum, memberNum)
 		VALUES(clubBoardReply_seq.NEXTVAL, #{replyContent}, #{boardNum}, #{memberNum})
 	</insert>
-	<insert id="insertReplyAnswer" parameterType="com.sp.clubBoard.Reply">
-		INSERT INTO clubBoardReply(replyNum, replyContent, boardNum, memberNum,  answer)
-		VALUES(clubBoardReply_seq.NEXTVAL, #{replyContent}, #{boardNum}, #{memberNum}, #{answer})
-	</insert>
 	
 	<select id="listReply" parameterType="map" resultType="com.sp.clubBoard.Reply">
 		SELECT * FROM (
@@ -69,5 +65,19 @@
 	<delete id="deleteReply" parameterType="Integer">
 		DELETE FROM clubBoardReply WHERE replyNum=#{replyNum}
 	</delete>
+	
+	
+	<insert id="insertReplyAnswer" parameterType="com.sp.clubBoard.Reply">
+		INSERT INTO clubBoardReply(replyNum, replyContent, boardNum, memberNum,  answer)
+		VALUES(clubBoardReply_seq.NEXTVAL, #{replyContent}, #{boardNum}, #{memberNum}, #{answer})
+	</insert>
+	
+	<select id="listReplyAnswer" parameterType="Integer" resultType="com.sp.clubBoard.Reply">
+		SELECT replyNum, replyContent, replyCreated, r.memberNum, m.name memberName, answer
+		FROM clubBoardReply r JOIN member m ON r.memberNum=m.memberNum
+		WHERE answer=#{answer}
+		ORDER BY replyNum DESC
+	</select>	
+	
 	
 </mapper>
