@@ -2,11 +2,12 @@ package com.sp.clubBoard;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.net.URLDecoder;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -40,7 +41,11 @@ public class ClubBoardController {
 	public String clubBoardList(
 			@RequestParam int clubNum
 			,@RequestParam int categoryNum
+			,@RequestParam(value="page", defaultValue="1") int current_page
+			,@RequestParam(defaultValue="subject") String searchKey
+			,@RequestParam(defaultValue="") String searchValue
 			,HttpSession session
+			,HttpServletRequest req
 			,Model model) {
 		
 		Club clubInfo=null;
@@ -49,6 +54,9 @@ public class ClubBoardController {
 		List<com.sp.club.Category> clubCategoryItem=null;
 		
 		List<Board> boardList=null;
+		int rows = 3;
+		int total_page = 0;
+		int dataCount = 0;
 		try {
 			SessionInfo info = (SessionInfo) session.getAttribute("member");
 			clubInfo=clubService.readClubInfo(clubNum);
@@ -61,7 +69,34 @@ public class ClubBoardController {
 			isMember=clubService.isClubMember(map);
 			
 			map.put("categoryNum", categoryNum);
+			
+			if(req.getMethod().equalsIgnoreCase("GET")) {
+				searchValue = URLDecoder.decode(searchValue, "utf-8");
+			}
+	        map.put("searchKey", searchKey);
+	        map.put("searchValue", searchValue);
+			
+	        dataCount = service.clubBoardCount(map);
+	        if(dataCount != 0) {
+	        	total_page = util.pageCount(rows, dataCount) ;
+	        }
+	        if(total_page < current_page) {
+	        	current_page = total_page;
+	        }
+	        int start = (current_page - 1) * rows + 1;
+	        int end = current_page * rows;
+	        map.put("start", start);
+	        map.put("end", end);
+	        
 			boardList=service.listClubBoard(map);
+			String result=null;
+			for(Board dto: boardList) {
+				map.put("boardNum", dto.getBoardNum());
+				result=service.isBoardLike(map);
+				if(result!=null) {
+					dto.setIsBoardLike(1);
+				}
+			}
 			
 		} catch (Exception e) {
 			return "error/error";
@@ -72,6 +107,7 @@ public class ClubBoardController {
 		model.addAttribute("clubCategoryItem", clubCategoryItem);
 		model.addAttribute("categoryNum", categoryNum);
 		model.addAttribute("boardList", boardList);
+		model.addAttribute("searchKey", searchKey);
 		return ".club.clubBoard.list";
 	}
 	
@@ -449,50 +485,88 @@ public class ClubBoardController {
 		} catch (Exception e) {
 			return "error/error";
 		}
-		
 		model.addAttribute("listReplyAnswer", listReplyAnswer);
 		return "club/clubBoard/listReplyAnswer";
 	}
 	
-	
-/*
-	@RequestMapping(value="/clubBoard/list")
-	public String clubBoardList(
+	@RequestMapping(value="/clubBoard/insertBoardLike", method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> insertBoardLike(
 			@RequestParam int clubNum
-			,@RequestParam int categoryNum
-			,HttpSession session
-			,Model model) {
-		
-		Club clubInfo=null;
-		String isMember=null;
-		List<com.sp.club.Category> clubCategory=null;
-		List<com.sp.club.Category> clubCategoryItem=null;
+			,@RequestParam int boardNum
+			,HttpSession session){
+		String state="false";
+		Map<String, Object> model = new HashMap<>(); 
 		try {
 			SessionInfo info = (SessionInfo) session.getAttribute("member");
-			clubInfo=clubService.readClubInfo(clubNum);
-			clubCategory=clubService.listClubCategory(clubNum);
-			clubCategoryItem=clubService.listClubCategoryItems(clubNum);
 			
 			Map<String, Object> map=new HashMap<>();
 			map.put("clubNum", clubNum);
 			map.put("memberNum", info.getUserId());
-			isMember=clubService.isClubMember(map);
+			String isMember=clubService.isClubMember(map);
+			if(isMember==null) {
+				model.put("state", state);
+				return model;
+			}
+			map.put("boardNum", boardNum);
+			
+			int result=service.insertBoardLike(map);
+			if(result==0) {
+				model.put("state", "moreLike");
+				return model;
+			}
+			
+			int boardLikeCount=service.boardLikeCount(boardNum);
+			model.put("likeCount", boardLikeCount);
+			
+			state="true";
+			model.put("state", state);
 			
 		} catch (Exception e) {
-			return "error/error";
+			model.put("state", state);
+			return model;
 		}
-		model.addAttribute("isMember", isMember);
-		model.addAttribute("clubInfo", clubInfo);
-		model.addAttribute("clubCategory", clubCategory);
-		model.addAttribute("clubCategoryItem", clubCategoryItem);
-		return ".club.clubBoard.list";
+		return model;
 	}
- */
-/*
-	if(! info.getUserId().equals(clubInfo.getMemberNum())) {
-		model.addAttribute("message", "잘못된 접근입니다.");
-		return "error/error";
+	
+	@RequestMapping(value="/clubBoard/cancleBoardLike", method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> cancleBoardLike(
+			@RequestParam int clubNum
+			,@RequestParam int boardNum
+			,HttpSession session){
+		String state="false";
+		Map<String, Object> model = new HashMap<>(); 
+		try {
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
+			
+			Map<String, Object> map=new HashMap<>();
+			map.put("clubNum", clubNum);
+			map.put("memberNum", info.getUserId());
+			String isMember=clubService.isClubMember(map);
+			if(isMember==null) {
+				model.put("state", state);
+				return model;
+			}
+			map.put("boardNum", boardNum);
+			
+			int result=service.deleteBoardLike(map);
+			if(result==0) {
+				model.put("state", state);
+				return model;
+			}
+			
+			int boardLikeCount=service.boardLikeCount(boardNum);
+			model.put("likeCount", boardLikeCount);
+			
+			state="true";
+			model.put("state", state);
+			
+		} catch (Exception e) {
+			model.put("state", state);
+			return model;
+		}
+		return model;
 	}
-*/
 	
 }

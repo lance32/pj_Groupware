@@ -7,12 +7,68 @@
 		INSERT INTO clubBoard(boardNum, subject, content, saveFileName, originalFileName, memberNum, clubNum, categoryNum)
 		VALUES(clubBoard_seq.NEXTVAL, #{subject}, #{content}, #{saveFileName, jdbcType=VARCHAR}, #{originalFileName, jdbcType=VARCHAR}, #{memberNum}, #{clubNum}, #{categoryNum})
 	</insert>
+
+	<sql id="where-list">
+		<if test="searchKey=='all'">
+			AND (INSTR(subject, #{searchValue}) &gt; 0
+			OR INSTR(content, #{searchValue}) &gt; 0)
+		</if>
+		<if test="searchKey=='userName'">
+			AND m.name=#{searchValue}
+		</if>
+		<if test="searchKey=='subject'">
+			AND INSTR(subject, #{searchValue}) &gt; 0
+		</if>
+		<if test="searchKey=='content'">
+			AND INSTR(content, #{searchValue}) &gt; 0
+		</if>
+		<if test="searchKey=='created'">
+			AND (INSTR(TO_CHAR(b.created, 'YYYY-MM-DD'),#{searchValue})&gt;0 
+				OR INSTR(TO_CHAR(b.created, 'YYYYMMDD'),#{searchValue})&gt;0)
+		</if>
+		<if test="searchKey=='userId'">
+			AND b.memberNum=#{searchValue}
+		</if>
+	</sql>
 	
 	<select id="listClubBoard" parameterType="map" resultType="com.sp.clubBoard.Board">
-		SELECT boardNum, subject, content, cb.created, cb.saveFileName, cb.originalFileName, cb.memberNum, m.name memberName, clubNum, categoryNum
-		FROM clubBoard cb JOIN member m ON cb.memberNum=m.memberNum
-		WHERE clubNum=#{clubNum} AND categoryNum=#{categoryNum}
+		SELECT * FROM (
+			SELECT ROWNUM rnum, tb.* FROM (
+				SELECT b.boardNum, subject, content, b.created, b.saveFileName, b.originalFileName
+						, b.memberNum, m.name memberName, b.clubNum, b.categoryNum
+						,NVL(replyCount, 0) replyCount
+						,NVL(likeCount, 0) likeCount
+				FROM clubBoard b 
+				JOIN member m ON b.memberNum=m.memberNum
+				LEFT OUTER JOIN (
+					SELECT boardNum, NVL(COUNT(*),0) replyCount FROM clubBoardReply
+					WHERE NVL(answer,0) = 0
+					GROUP BY boardNum
+				) r ON b.boardNum = r.boardNum
+				
+				LEFT OUTER JOIN (
+				     SELECT boardNum, COUNT(*) likeCount
+				     FROM clubBoardLike GROUP BY boardNum
+				) l ON b.boardNum = l.boardNum
+				
+				WHERE b.clubNum=#{clubNum} AND b.categoryNum=#{categoryNum}
+				<if test="searchValue != null and searchValue != ''">
+					<include refid="where-list"/>
+				</if>
+				ORDER BY b.boardNum DESC
+			) tb WHERE ROWNUM &lt;= #{end}
+		) WHERE rnum &gt;= #{start}
 	</select>
+
+	<select id="clubBoardCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0) FROM clubBoard b
+		JOIN member m ON b.memberNum=m.memberNum
+	  	WHERE clubNum=#{clubNum} AND categoryNum=#{categoryNum}
+	    <if test="searchValue!=null and searchValue!='' ">
+	   		<include refid="where-list"/>
+	   	</if>
+	</select>
+	
 
 	<delete id="deleteClubBoard" parameterType="Integer">
 		DELETE FROM clubBoard WHERE boardNum=#{boardNum}
@@ -66,18 +122,36 @@
 		DELETE FROM clubBoardReply WHERE replyNum=#{replyNum}
 	</delete>
 	
-	
 	<insert id="insertReplyAnswer" parameterType="com.sp.clubBoard.Reply">
 		INSERT INTO clubBoardReply(replyNum, replyContent, boardNum, memberNum,  answer)
 		VALUES(clubBoardReply_seq.NEXTVAL, #{replyContent}, #{boardNum}, #{memberNum}, #{answer})
 	</insert>
 	
 	<select id="listReplyAnswer" parameterType="Integer" resultType="com.sp.clubBoard.Reply">
-		SELECT replyNum, replyContent, replyCreated, r.memberNum, m.name memberName, answer
+		SELECT replyNum, replyContent, replyCreated, r.memberNum, m.name memberName, answer, boardNum
 		FROM clubBoardReply r JOIN member m ON r.memberNum=m.memberNum
 		WHERE answer=#{answer}
 		ORDER BY replyNum DESC
 	</select>	
+	
+	
+	<insert id="insertBoardLike" parameterType="map">
+		INSERT INTO clubBoardLike(boardNum, memberNum) VALUES(#{boardNum}, #{memberNum})
+	</insert>
+	
+	<select id="boardLikeCount" resultType="Integer" parameterType="Integer">
+	   SELECT  NVL(COUNT(*), 0) boardLikeCount FROM clubBoardLike 
+	   WHERE boardNum=#{boardNum}
+	</select>
+	
+	<select id="isBoardLike" resultType="String" parameterType="map">
+	   SELECT  memberNum FROM clubBoardLike 
+	   WHERE memberNum=#{memberNum} AND boardNum=#{boardNum}
+	</select>
+	
+	<delete id="deleteBoardLike" parameterType="map">
+		DELETE FROM clubBoardLike WHERE memberNum=#{memberNum} AND boardNum=#{boardNum}
+	</delete>
 	
 	
 </mapper>

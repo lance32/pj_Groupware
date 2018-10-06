@@ -17,7 +17,7 @@
 	</insert>
 	<insert id="insertBasicCategory_notice">
 		INSERT INTO clubBoardCategory(parent, categoryNum, categoryName, clubNum) 
-		VALUES(clubBoardCategory_seq.CURRVAL-1, clubBoardCategory_seq.NEXTVAL, '공지', clubInfo_seq1.CURRVAL)
+		VALUES(clubBoardCategory_seq.CURRVAL-1, clubBoardCategory_seq.NEXTVAL, '게시판', clubInfo_seq1.CURRVAL)
 	</insert>
 	
 	<!-- 동호회 목록 -->
@@ -84,6 +84,21 @@
 		UPDATE clubBoardCategory SET categoryName=#{categoryName} WHERE categoryNum=#{categoryNum}
 	</update>
 	
+	
+	<!-- 동호회 가입 멤버추가 -->
+	<insert id="insertClubMember" parameterType="map">
+		INSERT INTO clubMember(memberNum, clubNum) VALUES(#{memberNum}, #{clubNum}) 
+	</insert>
+	
+	<!-- 동호회 탈퇴 -->
+	<delete id="deleteClubMember" parameterType="map">
+		DELETE FROM clubMember WHERE memberNum=#{memberNum} AND clubNum=#{clubNum}
+	</delete>
+	
+	<!-- 동호회 멤버수 -->
+	<select id="clubMemberCount" parameterType="Integer" resultType="Integer">
+		SELECT COUNT(*) FROM clubMember WHERE clubNum=#{clubNum}
+	</select>
 	
 	
 </mapper>

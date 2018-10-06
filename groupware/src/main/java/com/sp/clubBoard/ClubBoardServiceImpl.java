@@ -45,6 +45,17 @@ public class ClubBoardServiceImpl implements ClubBoardService{
 	}
 
 	@Override
+	public int clubBoardCount(Map<String, Object> map) {
+		int result=0;
+		try {
+			result=dao.selectOne("clubBoard.clubBoardCount", map);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
+	}
+	
+	@Override
 	public int deleteClubBoard(int boardNum, String saveFilename, String pathname) {
 		int result=0;
 		try {
@@ -152,7 +163,6 @@ public class ClubBoardServiceImpl implements ClubBoardService{
 	public int insertReplyAnswer(Reply dto) {
 		int result=0;
 		try {
-			System.out.println("insertReplyAnswer며럊더러ㅑㄷ");
 			dao.insertData("clubBoard.insertReplyAnswer", dto);
 			result=1;
 		} catch (Exception e) {
@@ -171,5 +181,52 @@ public class ClubBoardServiceImpl implements ClubBoardService{
 		}
 		return list;
 	}
+
+	@Override
+	public int insertBoardLike(Map<String, Object> map) {
+		int result=0;
+		try {
+			dao.insertData("clubBoard.insertBoardLike", map);
+			result=1;
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
+	}
+
+	@Override
+	public int boardLikeCount(int boardNum) {
+		int result=0;
+		try {
+			result=dao.selectOne("clubBoard.boardLikeCount", boardNum);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
+	}
+
+	@Override
+	public int deleteBoardLike(Map<String, Object> map) {
+		int result=0;
+		try {
+			dao.deleteData("clubBoard.deleteBoardLike", map);
+			result=1;
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
+	}
+
+	@Override
+	public String isBoardLike(Map<String, Object> map) {
+		String result =null;
+		try {
+			result=dao.selectOne("clubBoard.isBoardLike", map);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
+	}
+
 
 }

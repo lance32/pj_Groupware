@@ -12,6 +12,9 @@
 		<span style="width: 3%; vertical-align: top; font-size: 18px;">└</span>
 		<span style="font-size: 15px;">${listReplyAnswer.memberName}</span>
 		<span style="color: #6E6E6E; font-size: 13px;">&nbsp; | ${listReplyAnswer.replyCreated}</span>
+		<c:if test="${sessionScope.member.userId == listReplyAnswer.memberNum}">
+		<a onclick="deleteReply('${listReplyAnswer.replyNum}','${listReplyAnswer.boardNum}','${listReplyAnswer.memberNum}','answer','${listReplyAnswer.answer}')" style="float: right; margin-right: 10px; cursor: pointer; color: #B40404;">삭제</a>
+		</c:if>
 		<div style="clear: both; width: 100%; padding: 5px 20px;">
 			${listReplyAnswer.replyContent}
 		</div>

@@ -39,13 +39,17 @@ function checkTime(i) {
 	return i;
 }
 function checkHour(i){
+	if(i==0){
+		i="오전&nbsp;&nbsp;&nbsp;"+12;
+		return i;
+	}
 	if(i>=12){
 		if(i>=13){
 			i = i-12;
 		}
 		i = "오후&nbsp;&nbsp;&nbsp;"+i;
 	}else{
-		i="오전&nbsp;&nbsp;&nbsp;;"+i;
+		i="오전&nbsp;&nbsp;&nbsp;"+i;
 	}
 	return i;
 }
