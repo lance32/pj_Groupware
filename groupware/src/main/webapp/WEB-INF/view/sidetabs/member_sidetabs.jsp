@@ -23,7 +23,7 @@
     </tr>
      <tr>
     	<td>
-	    	<a href="#">
+	    	<a href="<%=cp%>/department/main">
 	    	<c:if test="${sessionScope.member.userId!='admin'}">
 	    		부서 조회
 	    	</c:if>

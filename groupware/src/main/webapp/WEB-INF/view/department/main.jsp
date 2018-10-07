@@ -12,6 +12,10 @@
 #paginate a:hover, a:active {border:1px solid #147FCC;color:#0174DF;vertical-align:middle;line-height:normal;}
 #paginate .curBox{border:1px solid #424242; background: #4e4e4e; color:#ffffff; font-weight:bold;height:28px;padding:4px 8px 4px 8px;margin-left:3px;line-height:normal;vertical-align:middle;}
 #paginate .numBox {border:1px solid #ccc;height:28px;text-decoration:none;padding:4px 7px 4px 7px;margin-left:3px;line-height:normal;vertical-align:middle;}
+ul {
+	list-style-type: none;
+	padding-left: 20px;
+}
 </style>
 
 <script type="text/javascript">
@@ -28,7 +32,11 @@
 	<div id="organization" style="border: 1px solid gray;">
 		<ul>
 		<c:forEach var="dto" items="${list}" >
+			<li>
+			<ul>
 			<li>${dto.departmentName}</li>
+			</ul>
+			</li>
 		</c:forEach>
 		</ul>
 	</div>

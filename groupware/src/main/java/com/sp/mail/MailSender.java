@@ -26,27 +26,33 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.sp.common.AES256Util;
 import com.sp.common.FileManager;
 import com.sp.common.MyUtil;
+import com.sp.config.Config;
+import com.sp.config.ConfigService;
 
 @Service("mail.mailService")
 public class MailSender {
 	// 메일 서버 정보
-	private final String SMTPAuthenticatorName = "";			// 인증 정보 - 메일 주소
-	private final String SMTPAuthenticatorPwd = "";				// 인증 정보 - 비번
-	private final String mailSmtpUser = "";						// 사용자
-	private final String mailSmtpHost = "smtp.naver.com";		// 메일 서버 주소
-	private final String mailSmtpPort = "465";					// 메일 서버 포트
-	private final String mailSmtpStarttlsEnable = "465";		// ?
-	private final String mailSmtpAuth = "true";					// 인증 사용
-	private final String mailSmtpDebug = "true";				// debug
-	private final String smtpSocketFactoryPort = "465";
+	private String SMTPAuthenticatorName;			// 인증 정보 - 메일 주소
+	private String SMTPAuthenticatorPwd;			// 인증 정보 - 비번
+	private String mailSmtpUser;					// 사용자
+	private String mailSmtpHost;					// 메일 서버 주소
+	private String mailSmtpPort;					// 메일 서버 포트
+	private String mailSmtpStarttlsEnable;		// ?
+	private String mailSmtpAuth;					// 인증 사용
+	private String mailSmtpDebug;					// debug
+	private String smtpSocketFactoryPort;
 	
 	@Autowired
 	private MyUtil myUtil;
 	
 	@Autowired
 	private FileManager fileManager;
+	
+	@Autowired
+	private ConfigService configService;
 	
 	private String mailType;
 	private String encType;
@@ -57,6 +63,14 @@ public class MailSender {
 		this.mailType = "text/html; charset=euc-kr";
 		this.pathname = "c:" + File.separator + "temp" + File.separator + "mail";
 	}
+	
+//	public void setMailServer() throws Exception {
+//		if (SMTPAuthenticatorName.isEmpty() || SMTPAuthenticatorPwd.isEmpty()) {
+//			List<Config> list = configService.selectConfigByGroup("mail");
+//			if (list == null || list.size() == 0)
+//				throw new Exception();
+//		}		
+//	}
 	
 	public void setMailType(String mailType, String encType) {
 		this.mailType = mailType;
