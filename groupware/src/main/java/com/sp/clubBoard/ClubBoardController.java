@@ -38,25 +38,19 @@ public class ClubBoardController {
 	private FileManager fileManager;
 	
 	@RequestMapping(value="/clubBoard/list")
-	public String clubBoardList(
+	public String clubBoardMain(
 			@RequestParam int clubNum
 			,@RequestParam int categoryNum
-			,@RequestParam(value="page", defaultValue="1") int current_page
-			,@RequestParam(defaultValue="subject") String searchKey
-			,@RequestParam(defaultValue="") String searchValue
+			,@RequestParam(required=false) String modeScroll
+			,@RequestParam(defaultValue="0") int updateBoardNum
+			,@RequestParam(defaultValue="1") int pageNo
 			,HttpSession session
-			,HttpServletRequest req
 			,Model model) {
 		
 		Club clubInfo=null;
 		String isMember=null;
 		List<com.sp.club.Category> clubCategory=null;
 		List<com.sp.club.Category> clubCategoryItem=null;
-		
-		List<Board> boardList=null;
-		int rows = 3;
-		int total_page = 0;
-		int dataCount = 0;
 		try {
 			SessionInfo info = (SessionInfo) session.getAttribute("member");
 			clubInfo=clubService.readClubInfo(clubNum);
@@ -68,29 +62,71 @@ public class ClubBoardController {
 			map.put("memberNum", info.getUserId());
 			isMember=clubService.isClubMember(map);
 			
+		} catch (Exception e) {
+			return "error/error";
+		}
+		model.addAttribute("isMember", isMember);
+		model.addAttribute("clubInfo", clubInfo);
+		model.addAttribute("clubCategory", clubCategory);
+		model.addAttribute("clubCategoryItem", clubCategoryItem);
+		model.addAttribute("categoryNum", categoryNum);
+		model.addAttribute("modeScroll", modeScroll);
+		model.addAttribute("updateBoardNum", updateBoardNum);
+		model.addAttribute("pageNo", pageNo);
+		return ".club.clubBoard.list";
+	}
+
+	@RequestMapping(value="/clubBoard/listBoard")
+	public String clubBoardList(
+			@RequestParam int clubNum
+			,@RequestParam int categoryNum
+			,@RequestParam(required=false) String state
+			,@RequestParam(value="pageNo", defaultValue="1") int current_page
+			,@RequestParam(defaultValue="subject") String searchKey
+			,@RequestParam(defaultValue="") String searchValue
+			,HttpServletRequest req
+			,HttpSession session
+			,Model model) {
+		
+		List<Board> boardList=null;
+		int rows = 10;
+		int total_page = 0;
+		int dataCount = 0;
+		try {
+			Map<String, Object> map=new HashMap<>();
+			map.put("clubNum", clubNum);
 			map.put("categoryNum", categoryNum);
 			
 			if(req.getMethod().equalsIgnoreCase("GET")) {
 				searchValue = URLDecoder.decode(searchValue, "utf-8");
 			}
-	        map.put("searchKey", searchKey);
-	        map.put("searchValue", searchValue);
+			map.put("searchKey", searchKey);
+			map.put("searchValue", searchValue);
 			
-	        dataCount = service.clubBoardCount(map);
-	        if(dataCount != 0) {
-	        	total_page = util.pageCount(rows, dataCount) ;
-	        }
-	        if(total_page < current_page) {
-	        	current_page = total_page;
-	        }
-	        int start = (current_page - 1) * rows + 1;
-	        int end = current_page * rows;
-	        map.put("start", start);
-	        map.put("end", end);
-	        
+			dataCount = service.clubBoardCount(map);
+			if(dataCount != 0) {
+				total_page = util.pageCount(rows, dataCount) ;
+			}
+			if(total_page < current_page) {
+				current_page = total_page;
+			}
+			int start = (current_page - 1) * rows + 1;
+			if(current_page!=1) {
+				start=start-1;
+			}
+			int end = current_page * rows;
+			if(state.equals("pre")) {
+				end=end+1;
+			}
+			map.put("start", start);
+			map.put("end", end);
+			
 			boardList=service.listClubBoard(map);
+			
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
 			String result=null;
 			for(Board dto: boardList) {
+				map.put("memberNum", info.getUserId());
 				map.put("boardNum", dto.getBoardNum());
 				result=service.isBoardLike(map);
 				if(result!=null) {
@@ -101,16 +137,14 @@ public class ClubBoardController {
 		} catch (Exception e) {
 			return "error/error";
 		}
-		model.addAttribute("isMember", isMember);
-		model.addAttribute("clubInfo", clubInfo);
-		model.addAttribute("clubCategory", clubCategory);
-		model.addAttribute("clubCategoryItem", clubCategoryItem);
-		model.addAttribute("categoryNum", categoryNum);
 		model.addAttribute("boardList", boardList);
 		model.addAttribute("searchKey", searchKey);
-		return ".club.clubBoard.list";
+		model.addAttribute("total_page", total_page);
+		model.addAttribute("categoryNum", categoryNum);
+		model.addAttribute("pageNo", current_page);
+		return "club/clubBoard/listBoard";
 	}
-	
+
 	@RequestMapping(value="/clubBoard/createBoard", method=RequestMethod.GET)
 	public String createBoardForm(
 			@RequestParam int clubNum
@@ -227,6 +261,7 @@ public class ClubBoardController {
 			@RequestParam int clubNum
 			,@RequestParam int categoryNum
 			,@RequestParam int boardNum
+			,@RequestParam int pageNo
 			,HttpSession session
 			,Model model) {
 		
@@ -264,12 +299,14 @@ public class ClubBoardController {
 		model.addAttribute("categoryNum", categoryNum);
 		model.addAttribute("BoardInfo", dto);
 		model.addAttribute("mode", "update");
+		model.addAttribute("pageNo", pageNo);
 		return ".club.clubBoard.create";
 	}
 	
 	@RequestMapping(value="/clubBoard/updateBoard", method=RequestMethod.POST)
 	public String updateBoardSubmit(
 			@RequestParam(defaultValue="false") String isDeleteFile
+			,@RequestParam int pageNo
 			,Board dto
 			,HttpSession session
 			,Model model
@@ -303,6 +340,9 @@ public class ClubBoardController {
 		}
 		redirectAttributes.addAttribute("categoryNum", BoardInfo.getCategoryNum());
 		redirectAttributes.addAttribute("clubNum", dto.getClubNum());
+		redirectAttributes.addAttribute("modeScroll", "update");
+		redirectAttributes.addAttribute("updateBoardNum", dto.getBoardNum());
+		redirectAttributes.addAttribute("pageNo", pageNo);
 		return "redirect:/clubBoard/list";
 	}
 	

@@ -68,7 +68,11 @@ function check() {
     if(! confirm("작업을 완료하시겠습니까?")){
         return false;
     }
-	f.action="<%=cp%>/clubBoard/${mode}Board";
+    if(${mode}=='update'){
+		f.action="<%=cp%>/clubBoard/updateBoard?pageNo=${pageNo}";
+    }else{
+		f.action="<%=cp%>/clubBoard/createBoard";
+    }
     return true;
 }
 

@@ -26,7 +26,7 @@ jQuery(function(){
 			${listReply.replyContent}
 		</div>
 		<div style="clear: both; width: 100%; height: 40px;">
-			<button class="showReplyAnswerButn" value="${listReply.replyNum}">답글 (${listReply.answerCount})</button>
+			<button class="showReplyAnswerButn" value="${listReply.replyNum}">답글 (<span>${listReply.answerCount}</span>)</button>
 		</div>
 	</div>
 						
