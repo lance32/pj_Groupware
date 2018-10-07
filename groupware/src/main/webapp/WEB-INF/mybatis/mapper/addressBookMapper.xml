@@ -10,33 +10,54 @@
 		INSERT INTO addressBookGroup VALUES(#{memberNum},addressBookGroup_seq.NEXTVAL,#{groupName})
 	</insert>
 	
+	<delete id="deleteGroup" parameterType="Integer">
+		DELETE FROM addressBookGroup WHERE groupNum=#{groupNum}
+	</delete>
+	
+	<update id="updateGroup" parameterType="map">
+		UPDATE addressBookGroup SET groupName=#{groupName} WHERE groupNum=#{groupNum}
+	</update>
+	
+	
 	<select id="groupList" parameterType="String" resultType="com.sp.addressBook.AddressBook">
 		select groupNum,groupName FROM addressBookGroup WHERE memberNum=#{memberNum}
 	</select>
 	
 	<insert id="insertAdress" parameterType="com.sp.addressBook.AddressBook">
 		INSERT INTO addressBook(addressBookNum, memberNum, name, tel, fax, email, belongto, zip, addr1, addr2, groupNum)
-    			VALUES (addressBook_seq.NEXTVAL, #{memberNum}, #{name}, #{tel}, #{fax}, #{email}, #{belongto}, #{zip}, #{addr1}, #{addr2}, #{groupNum})
+    	VALUES (addressBook_seq.NEXTVAL, #{memberNum}, #{name}, #{tel}, #{fax}, #{email}, #{belongto}, #{zip}, #{addr1}, #{addr2}, #{groupNum})
 	</insert>
 	
-	<select id="addressList" parameterType="String" resultType="com.sp.addressBook.AddressBook">
+	<sql id="where-list">
+		AND INSTR(name, #{searchValue}) &gt; 0
+	</sql>
+	
+	<select id="addressList" parameterType="map" resultType="com.sp.addressBook.AddressBook">
 		SELECT addressBookNum, name, tel, groupName FROM addressBook a 
-			JOIN addressBookGroup g ON a.memberNum=g.memberNum 
-			WHERE a.memberNum=#{memberNum}
-			ORDER BY name
+		JOIN addressBookGroup g ON a.groupNum=g.groupNum 
+		WHERE a.memberNum=#{memberNum}
+		<if test="searchValue != null and searchValue != ''">
+			<include refid="where-list"/>
+		</if>
+		ORDER BY name
 	</select>
 	
 	<select id="readAddressInfo" parameterType="Integer" resultType="com.sp.addressBook.AddressBook">
 		SELECT addressBookNum, a.memberNum, name, tel
 				, NVL(fax,'-') fax, NVL(email,'-') email, NVL(belongto,'없음') belongto
 				, NVL(zip,'-') zip, NVL(addr1,'-') addr1, NVL(addr2,'-') addr2, a.groupNum, groupName 
-			FROM addressBook a 
-	    		JOIN addressBookGroup g ON a.memberNum=g.memberNum 
-	    		WHERE addressBookNum=#{addressBookNum}
+		FROM addressBook a 
+	    JOIN addressBookGroup g ON a.groupNum=g.groupNum 
+	    WHERE addressBookNum=#{addressBookNum}
 	</select>
 	
 	<delete id="deleteAddress" parameterType="Integer">
 		DELETE FROM addressBook WHERE addressBookNum=#{addressBookNum}
 	</delete>
+	
+	<update id="updateAddress" parameterType="com.sp.addressBook.AddressBook">
+		UPDATE addressBook SET name=#{name}, tel=#{tel}, fax=#{fax}, email=#{email}, belongto=#{belongto}, zip=#{zip}, addr1=#{addr1}, addr2=#{addr2}, groupNum=#{groupNum} 
+		WHERE addressBookNum=#{addressBookNum}
+	</update>
 	
 </mapper>
