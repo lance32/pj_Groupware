@@ -50,7 +50,7 @@ public class NoticeController {
 			@RequestParam(value="searchKey", defaultValue="subject") String searchKey,
 			@RequestParam(value="searchValue", defaultValue="") String searchValue) throws Exception {
 		
-		int rows = 5;
+		int rows = 10;
 		int total_page;
 		int dataCount;
 		

@@ -128,7 +128,6 @@ function insertForm(start, end, resource) {
 	        	   if(state=="false") {
 	        		   return;
 	        	   }
-	        	   
 	        	   groupNum=data.dto.groupNum;
 	          }
 	          ,error:function(e) {
@@ -234,15 +233,16 @@ function changeGroup(groupNum, resourceNum) {
         		var num=data.list[idx].resourceNum;
         		var name=data.list[idx].resourceName;
         		var occupancy = data.list[idx].occupancy;
-        		
-        		$("select[name=resourceNum]").append("<option value='"+num+"'>"+name+"</option>");
-        		$("#resOccupancy").text(occupancy);
+        		$("select[name=resourceNum]").append("<option value='"+num+"' data-occupancy='"+occupancy+"'>"+name+"</option>");
         	}
         	
         	$("select[name=groupNum]").val(groupNum);
 
-        	if(resourceNum!=undefined && resourceNum!="")
+        	if(resourceNum!=undefined && resourceNum!="") {
         	    $("select[name=resourceNum]").val(resourceNum);
+        	    var occu = $("select[name=resourceNum] option:selected").attr("data-occupancy");
+        		$("#resOccupancy").text(occu);       	
+        	}
         	
         }
         ,error:function(e) {
@@ -251,11 +251,18 @@ function changeGroup(groupNum, resourceNum) {
     });
 }
 
+$(function(){
+	$("body").on("change", "select[name=resourceNum]", function(){
+		var occu = $("select[name=resourceNum] option:selected").attr("data-occupancy");
+		$("#resOccupancy").text(occu);
+	});
+});
+
 // 새로운 일정 등록
 function insertOk() {
 	if(! validCheck())
 		return;
-	var resourceName = $("select[name=resourceNum]").text();
+	var resourceName = $("select[name=resourceNum] option:selected").text();
 	var query=$("form[name=resForm]").serialize();
 	var url="<%=cp%>/scheduler/reservationInsert?resourceName="+resourceName;
     

@@ -22,8 +22,12 @@
 			 	color = #{group}
 			 	AND m.departmentNum = #{departmentNum}
 			 </if>
- 
-			<if test="(group !='all') and (group !='red')">
+			 
+ 			<if test="group == 'green'">
+ 				color = #{group}
+ 			</if>
+ 			
+			<if test="(group !='all') and (group !='red') and (group !='green')">
 				s.memberNum = #{memberNum}
 				AND color = #{group}
 			</if>
