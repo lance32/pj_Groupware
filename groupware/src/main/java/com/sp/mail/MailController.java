@@ -25,8 +25,6 @@ import com.sp.member.SessionInfo;
 
 @Controller("mail.controller")
 public class MailController {
-	private static String key256 = "projectgroupware";
-	
 	@Autowired
 	private MailSender mailSender;
 	
@@ -209,7 +207,7 @@ public class MailController {
 			title = "메일 발송";
 			msg = "<span style='color:gray;'>" + mail.getReceiveMail() + "</span> 님에게<br>";
 			try {
-				boolean send = true; //mailSender.mailSend(mail);
+				boolean send = mailSender.mailSend(mail);
 				if (send) {
 					msg += "메일을 성공적으로 전송 했습니다.";
 				} else {
@@ -356,129 +354,96 @@ public class MailController {
 		return model;
 	}
 	
-//	// 메일 서버 설정
-//	@RequestMapping(value="/mail/mailServerConfig", method=RequestMethod.GET)
-//	public String getMailServerInfo(Model model) throws Exception {
-//		AES256Util aes = new AES256Util(key256);
-//		
-//		List<Config> list = configService.selectConfigByGroup("mail");
-//		MailServerInfo info = new MailServerInfo();
-//		for (Config config : list) {
-//			String name = config.getName();
-//			if (name.equalsIgnoreCase("SMTPAuthenticatorName")) {
-//				String nameValue = aes.aesDecode(config.getValue());
-//				info.setSmtpAuthenticatorName(nameValue);
-//			} else if (name.equalsIgnoreCase("SMTPAuthenticatorPwd")) {
-//				String pwd = aes.aesDecode(config.getValue()); 
-//				info.setSmtpAuthenticatorPwd(pwd);
-//			} else if (name.equalsIgnoreCase("mailSmtpUser")) {
-//				String mailSmtpUser = aes.aesDecode(config.getValue());
-//				info.setMailSmtpUser(mailSmtpUser);
-//			} else if (name.equalsIgnoreCase("mailSmtpHost")) {
-//				info.setMailSmtpHost(config.getValue());
-//			} else if (name.equalsIgnoreCase("mailSmtpPort")) {
-//				info.setMailSmtpPort(config.getValue());
-//			} else if (name.equalsIgnoreCase("mailSmtpStarttlsEnable")) {
-//				info.setMailSmtpStarttlsEnable(config.getValue());
-//			} else if (name.equalsIgnoreCase("mailSmtpAuth")) {
-//				info.setMailSmtpAuth(config.getValue());
-//			} else if (name.equalsIgnoreCase("mailSmtpDebug")) {
-//				info.setMailSmtpDebug(config.getValue());
-//			} else if (name.equalsIgnoreCase("smtpSocketFactoryPort")) {
-//				info.setSmtpSocketFactoryPort(config.getValue());
-//			}
-//		}
-//		
-//		model.addAttribute("list", list);
-//		
-//		if (list == null || list.size() == 0)
-//			info.setType("insert");
-//		else
-//			info.setType("update");
-//		
-//		return ".mail.mailConfig";
-//	}
-//	
-//	// 메일 서버 설정 저장
-//	@RequestMapping(value="/mail/mailServerConfig", method=RequestMethod.POST)
-//	public String setMailServerInfo(MailServerInfo info) throws Exception {
-//		AES256Util aes = new AES256Util(key256);
-//		Config config = new Config();
-//		config.setGroups("mail");
-//		if (info.getType().equals("insert")) {
-//			config.setName("SMTPAuthenticatorName");
-//			config.setValue(aes.aesEncode(info.getSmtpAuthenticatorName()));
-//			configService.insertConfig(config);
-//			
-//			config.setName("SMTPAuthenticatorPwd");
-//			config.setValue(aes.aesEncode(info.getSmtpAuthenticatorPwd()));
-//			configService.insertConfig(config);
-//			
-//			config.setName("mailSmtpUser");
-//			config.setValue(aes.aesEncode(info.getMailSmtpUser()));
-//			configService.insertConfig(config);
-//
-//			config.setName("mailSmtpHost");
-//			config.setValue(aes.aesEncode(info.getMailSmtpHost()));
-//			configService.insertConfig(config);
-//
-//			config.setName("mailSmtpPort");
-//			config.setValue(aes.aesEncode(info.getMailSmtpPort()));
-//			configService.insertConfig(config);
-//
-//			config.setName("mailSmtpStarttlsEnable");
-//			config.setValue(aes.aesEncode(info.getMailSmtpStarttlsEnable()));
-//			configService.insertConfig(config);
-//
-//			config.setName("mailSmtpAuth");
-//			config.setValue(aes.aesEncode(info.getMailSmtpAuth()));
-//			configService.insertConfig(config);
-//
-//			config.setName("mailSmtpDebug");
-//			config.setValue(aes.aesEncode(info.getMailSmtpDebug()));
-//			configService.insertConfig(config);
-//			
-//			config.setName("smtpSocketFactoryPort");
-//			config.setValue(aes.aesEncode(info.getSmtpSocketFactoryPort()));
-//			configService.insertConfig(config);			
-//		} else {
-//			config.setName("SMTPAuthenticatorName");
-//			config.setValue(aes.aesEncode(info.getSmtpAuthenticatorName()));
-//			configService.updateConfig(config);
-//			
-//			config.setName("SMTPAuthenticatorPwd");
-//			config.setValue(aes.aesEncode(info.getSmtpAuthenticatorPwd()));
-//			configService.updateConfig(config);
-//			
-//			config.setName("mailSmtpUser");
-//			config.setValue(aes.aesEncode(info.getMailSmtpUser()));
-//			configService.updateConfig(config);
-//
-//			config.setName("mailSmtpHost");
-//			config.setValue(aes.aesEncode(info.getMailSmtpHost()));
-//			configService.updateConfig(config);
-//
-//			config.setName("mailSmtpPort");
-//			config.setValue(aes.aesEncode(info.getMailSmtpPort()));
-//			configService.updateConfig(config);
-//
-//			config.setName("mailSmtpStarttlsEnable");
-//			config.setValue(aes.aesEncode(info.getMailSmtpStarttlsEnable()));
-//			configService.updateConfig(config);
-//
-//			config.setName("mailSmtpAuth");
-//			config.setValue(aes.aesEncode(info.getMailSmtpAuth()));
-//			configService.updateConfig(config);
-//
-//			config.setName("mailSmtpDebug");
-//			config.setValue(aes.aesEncode(info.getMailSmtpDebug()));
-//			configService.updateConfig(config);
-//			
-//			config.setName("smtpSocketFactoryPort");
-//			config.setValue(aes.aesEncode(info.getSmtpSocketFactoryPort()));
-//			configService.updateConfig(config);	
-//		}
-//		
-//		return "redirect:/mail/mailServerConfig";
-//	}
+	// 메일 서버 설정
+	@RequestMapping(value="/mail/mailServerConfig", method=RequestMethod.GET)
+	public String getMailServerInfo(Model model) throws Exception {
+		AES256Util aes = new AES256Util();
+		
+		List<Config> list = configService.selectConfigByGroup("mail");
+		MailServerInfo info = new MailServerInfo();
+		for (Config config : list) {
+			String name = config.getName();
+			if (name.equalsIgnoreCase("SMTPAuthenticatorName")) {
+				String nameValue = aes.aesDecode(config.getValue());
+				info.setSmtpAuthenticatorName(nameValue);
+			} else if (name.equalsIgnoreCase("SMTPAuthenticatorPwd")) {
+				String pwd = aes.aesDecode(config.getValue()); 
+				info.setSmtpAuthenticatorPwd(pwd);
+			} else if (name.equalsIgnoreCase("mailSmtpUser")) {
+				String mailSmtpUser = aes.aesDecode(config.getValue());
+				info.setMailSmtpUser(mailSmtpUser);
+			} else if (name.equalsIgnoreCase("mailSmtpHost")) {
+				String mailSmtpHost = aes.aesDecode(config.getValue());
+				info.setMailSmtpHost(mailSmtpHost);
+			} else if (name.equalsIgnoreCase("mailSmtpPort")) {
+				String mailSmtpPort = aes.aesDecode(config.getValue());
+				info.setMailSmtpPort(mailSmtpPort);
+			}
+		}
+		
+		if (list == null || list.size() == 0)
+			info.setType("insert");
+		else
+			info.setType("update");
+		
+		model.addAttribute("MailServerInfo", info);
+		
+		return ".mail.mailConfig";
+	}
+	
+	// 메일 서버 설정 저장
+	@RequestMapping(value="/mail/mailServerConfig", method=RequestMethod.POST)
+	public String setMailServerInfo(MailServerInfo info, Model model) throws Exception {
+		AES256Util aes = new AES256Util();
+		Config config = new Config();
+		config.setGroups("mail");
+		
+		if (info.getType().equals("insert")) {
+			config.setName("SMTPAuthenticatorName");
+			config.setValue(aes.aesEncode(info.getSmtpAuthenticatorName()));
+			configService.insertConfig(config);
+			
+			config.setName("SMTPAuthenticatorPwd");
+			config.setValue(aes.aesEncode(info.getSmtpAuthenticatorPwd()));
+			configService.insertConfig(config);
+			
+			config.setName("mailSmtpUser");
+			config.setValue(aes.aesEncode(info.getMailSmtpUser()));
+			configService.insertConfig(config);
+
+			config.setName("mailSmtpHost");
+			config.setValue(aes.aesEncode(info.getMailSmtpHost()));
+			configService.insertConfig(config);
+
+			config.setName("mailSmtpPort");
+			config.setValue(aes.aesEncode(info.getMailSmtpPort()));
+			configService.insertConfig(config);
+		} else {
+			config.setName("SMTPAuthenticatorName");
+			config.setValue(aes.aesEncode(info.getSmtpAuthenticatorName()));
+			configService.updateConfig(config);
+			
+			config.setName("SMTPAuthenticatorPwd");
+			config.setValue(aes.aesEncode(info.getSmtpAuthenticatorPwd()));
+			configService.updateConfig(config);
+			
+			config.setName("mailSmtpUser");
+			config.setValue(aes.aesEncode(info.getMailSmtpUser()));
+			configService.updateConfig(config);
+
+			config.setName("mailSmtpHost");
+			config.setValue(aes.aesEncode(info.getMailSmtpHost()));
+			configService.updateConfig(config);
+
+			config.setName("mailSmtpPort");
+			config.setValue(aes.aesEncode(info.getMailSmtpPort()));
+			configService.updateConfig(config);
+		}
+		
+		//return "redirect:/mail/mailServerConfig";
+		model.addAttribute("title", "메일 서버 환경 설정");
+		model.addAttribute("message", "메일 서버 환경 설정이 완료 되었습니다.");
+		
+		return ".mail.complete";
+	}
 }

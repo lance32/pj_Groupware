@@ -3,7 +3,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="config">
 	<insert id="insertConfig" parameterType="com.sp.config.Config">
-		INSERT INTO config(name, value) VALUES(#{name}, #{value})
+		INSERT INTO config(name, value, groups) VALUES(#{name}, #{value}, #{groups, jdbcType=VARCHAR})
 	</insert>
 	
 	<select id="selectConfigByGroup" parameterType="String" resultType="com.sp.config.Config">
@@ -15,7 +15,7 @@
 	</select>
 	
 	<update id="updateConfig" parameterType="com.sp.config.Config">
-		UPDATE config SET value = #{value}, groups = #{groups}, modifyDate = SYSDATE WHERE name = #{name} 
+		UPDATE config SET value = #{value}, groups = #{groups}, modified = SYSDATE WHERE name = #{name} 
 	</update>
 	
 	<delete id="deleteConfig" parameterType="String">

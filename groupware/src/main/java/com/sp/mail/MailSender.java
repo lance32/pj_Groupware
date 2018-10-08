@@ -40,11 +40,12 @@ public class MailSender {
 	private String mailSmtpUser;					// 사용자
 	private String mailSmtpHost;					// 메일 서버 주소
 	private String mailSmtpPort;					// 메일 서버 포트
-	private String mailSmtpStarttlsEnable;		// ?
-	private String mailSmtpAuth;					// 인증 사용
-	private String mailSmtpDebug;					// debug
-	private String smtpSocketFactoryPort;
-	
+
+	private final String mailSmtpStarttlsEnable = "true";			// ?
+	private final String mailSmtpAuth = "true";						// 인증 사용
+	private final String mailSmtpDebug = "true";					// debug
+	private final String smtpSocketFactoryPort = "465";
+
 	@Autowired
 	private MyUtil myUtil;
 	
@@ -64,13 +65,27 @@ public class MailSender {
 		this.pathname = "c:" + File.separator + "temp" + File.separator + "mail";
 	}
 	
-//	public void setMailServer() throws Exception {
-//		if (SMTPAuthenticatorName.isEmpty() || SMTPAuthenticatorPwd.isEmpty()) {
-//			List<Config> list = configService.selectConfigByGroup("mail");
-//			if (list == null || list.size() == 0)
-//				throw new Exception();
-//		}		
-//	}
+	public void loadMailServer() {
+		try {
+			List<Config> list = configService.selectConfigByGroup("mail");
+			AES256Util aes = new AES256Util();
+			
+			for (Config config : list) {
+				if (config.getName().equals("SMTPAuthenticatorName"))
+					this.SMTPAuthenticatorName = aes.aesDecode(config.getValue());
+				else if (config.getName().equals("SMTPAuthenticatorPwd"))
+					this.SMTPAuthenticatorPwd = aes.aesDecode(config.getValue());
+				else if (config.getName().equals("mailSmtpUser"))
+					this.mailSmtpUser = aes.aesDecode(config.getValue());
+				else if (config.getName().equals("mailSmtpHost"))
+					this.mailSmtpHost = aes.aesDecode(config.getValue());		
+				else if (config.getName().equals("mailSmtpPort"))
+					this.mailSmtpPort = aes.aesDecode(config.getValue());
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}		
+	}
 	
 	public void setMailType(String mailType, String encType) {
 		this.mailType = mailType;
@@ -140,6 +155,8 @@ public class MailSender {
 	
 	public boolean mailSend(Mail mail) throws Exception {
 		boolean b = false;
+		
+		loadMailServer();
 		
 		Properties p = new Properties();
 		p.put("mail.smtp.user", mailSmtpUser);
