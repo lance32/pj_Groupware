@@ -11,10 +11,14 @@ public class Board {
 	private String memberName;
 	private int clubNum;
 	private int categoryNum;
+	private int replyCount;
+	private int likeCount;
 	
 	private MultipartFile upload; 
 	private String saveFileName;
 	private String originalFileName;
+	
+	private int isBoardLike;
 	
 	public int getBoardNum() {
 		return boardNum;
@@ -64,6 +68,18 @@ public class Board {
 	public void setCategoryNum(int categoryNum) {
 		this.categoryNum = categoryNum;
 	}
+	public int getReplyCount() {
+		return replyCount;
+	}
+	public void setReplyCount(int replyCount) {
+		this.replyCount = replyCount;
+	}
+	public int getLikeCount() {
+		return likeCount;
+	}
+	public void setLikeCount(int likeCount) {
+		this.likeCount = likeCount;
+	}
 	public MultipartFile getUpload() {
 		return upload;
 	}
@@ -81,5 +97,11 @@ public class Board {
 	}
 	public void setOriginalFileName(String originalFileName) {
 		this.originalFileName = originalFileName;
+	}
+	public int getIsBoardLike() {
+		return isBoardLike;
+	}
+	public void setIsBoardLike(int isBoardLike) {
+		this.isBoardLike = isBoardLike;
 	}
 }

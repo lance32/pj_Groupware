@@ -17,4 +17,8 @@ public interface ClubService {
 	public void insertCategoryPhase2(Category dto);
 	public void deleteClubCategory(int categoryNum);
 	public void updateClubCategory(Category dto);
+	
+	public int insertClubMember(Map<String, Object> map);
+	public int deleteClubMember(Map<String, Object> map);
+	public int clubMemberCount(int clubNum);
 }

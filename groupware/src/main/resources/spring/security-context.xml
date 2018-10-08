@@ -38,13 +38,13 @@
 		
 		<intercept-url pattern="/**" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')"/>
 		
-		<form-login login-page="/login" 
+		<form-login login-page="/login"
 					login-processing-url="/member/login_check"
 					username-parameter="memberNum"
 					password-parameter="pwd"
 					authentication-failure-url="/login?login_error"
 					authentication-success-handler-ref="authenticationSuccessHandler"
-					default-target-url="/main"
+					default-target-url="/member/firstLogin"
 					always-use-default-target="true"
 		/>
 		
@@ -65,7 +65,7 @@
   
 
     <beans:bean id="authenticationSuccessHandler" class="com.sp.member.MyAuthenticationSuccessHandler">
-    	<beans:property name="defaultTargetUrl" value="/main"/>
+    	<beans:property name="defaultTargetUrl" value="/member/firstLogin"/>
     	<beans:property name="alwaysUseDefaultTargetUrl" value="true"/>
     </beans:bean>
 

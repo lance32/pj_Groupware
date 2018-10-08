@@ -54,6 +54,11 @@
 .li-items:hover{
 	background: #E6E6E6;
 }
+
+#sideCategory *{
+	text-overflow: ellipsis; white-space: nowrap; overflow: hidden;
+}
+
 </style>
 <script type="text/javascript">
 jQuery(function(){
@@ -63,26 +68,44 @@ jQuery(function(){
 	</c:forEach>
 	
 	jQuery("#manageClubButn").click(function(){
-		location.href="<%=cp%>/club/alterClubInfo?clubNum="+${clubInfo.clubNum};
+		location.href="<%=cp%>/club/alterClubInfo?clubNum=${clubInfo.clubNum}";
 		return;
 	});
 	
 	jQuery("#joinClubButn").click(function(){
-		
+		if(! confirm("동호회에 가입하시겠습니까?")){
+			return;
+		}
+		location.href="<%=cp%>/club/joinClub?clubNum=${clubInfo.clubNum}";
+		alert("동호회에 가입되었습니다.");
+		return;
+	});
+	
+	jQuery("#leaveClubA").click(function(){
+		if(! confirm("동호회를 탈퇴하시겠습니까?")){
+			return;
+		}
+		location.href="<%=cp%>/club/leaveClub?clubNum=${clubInfo.clubNum}";
+		return;
+	});
+	
+	jQuery("#sideClubImg").click(function(){
+		location.href="<%=cp%>/club/main?clubNum=${clubInfo.clubNum}";
+		return;
 	});
 });
 
 </script>
 
-<div style="width: 250px; height: 280px; border-radius: 5px; border: 1.2px solid #A4A4A4; margin-bottom: 20px;">
-	<div style="width: 230px; height: 180px; margin: 10px auto; line-height: 170px; text-align: center;  border: 1.5px solid #D8D8D8; background: #FAFAFA;">
+<div style="width: 250px; height: 290px; border-radius: 5px; border: 1.2px solid #A4A4A4; margin-bottom: 20px;">
+	<div id="sideClubImg" style="width: 230px; height: 180px; margin: 10px auto; line-height: 170px; text-align: center; border: 1.5px solid #D8D8D8; background: #FAFAFA; cursor: pointer;">
 		<img class="representimg" src="<%=cp%>/uploads/club/${clubInfo.memberNum}/${clubInfo.clubImg}">
 	</div>
-	<div style="width: 100%; height: 75px; padding-left: 20px;">
-		<p>${clubInfo.clubName}</p>
-		<span>${clubInfo.clubIntro}</span>
+	<div style="width: 100%; height: 75px; padding:0px 15px;">
+		<div style="width:100%; height:25px; padding-left:5px; margin-bottom: 5px; font-size: 17px; font-weight: 600; overflow: hidden; background:#F2F2F2; border-left: 5px solid #BDBDBD;">${clubInfo.clubName}</div>
+		<span style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">${clubInfo.clubIntro}</span>
 	</div>
-
+	
 </div>
 
 <c:if test="${empty isMember}">
@@ -92,7 +115,7 @@ jQuery(function(){
 	<div class="tabsTop"><button class="clubSideButn" id="manageClubButn">동호회 관리</button></div>
 </c:if>
 
-<div style="width: 250px; height: auto; border-radius: 5px; border: 1px solid #A4A4A4; padding: 15px 15px 30px 15px; margin-bottom: 30px;">
+<div id="sideCategory" style="width: 250px; height: auto; border-radius: 5px; border: 1px solid #A4A4A4; padding: 15px 15px 30px 15px; margin-bottom: 10px;">
 	<c:forEach var="dto" items="${clubCategory}">
 		<div style="text-align: left;">
 			<ul id="category${dto.categoryNum}" class="ul-list">
@@ -100,7 +123,11 @@ jQuery(function(){
 			</ul>
 		</div>
 	</c:forEach>
-	
+</div>
+<div style="width: 250px; padding: 0px 10px; margin-bottom: 30px;">
+	<c:if test="${not empty isMember}">
+	<a id="leaveClubA" style="color: #8A0808; cursor: pointer; font-size: 13px;">동호회 탈퇴</a>
+	</c:if>
 </div>
 
 

@@ -76,7 +76,7 @@
 		SELECT NVL(COUNT(*), 0) FROM schedule s
 			JOIN member m ON s.memberNum = m.memberNum
 			<where>
-				<if test="searchValue != null and searchValue != ''">
+				<if test="(searchValue != null and searchValue != '') or (sDay != null) or (eDay != null)">
 					<include refid="where-list"/>
 				</if>
 			</where>
@@ -97,4 +97,15 @@
 			) tb WHERE ROWNUM &lt;= #{end}
 		) WHERE rnum &gt;= #{start}
 	</select>
+	
+	<select id="listSchedule_main" resultType="com.sp.schedule.Schedule" parameterType="map">
+		SELECT * FROM(
+			SELECT ROWNUM rnum, tb.* FROM(
+				SELECT scheduleNum, title, color, startDay, place
+				FROM schedule
+				ORDER BY created 
+			) tb WHERE ROWNUM &lt;= #{end}
+		) WHERE rnum &gt;= #{start}
+	</select>
+	
 </mapper>

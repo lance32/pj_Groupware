@@ -12,7 +12,8 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
+
+import com.sp.config.ConfigService;
 
 @Service(value = "mail.service")
 public class MailServiceImpl implements MailService {
@@ -208,5 +209,4 @@ public class MailServiceImpl implements MailService {
 		
 		return list;
 	}
-
 }

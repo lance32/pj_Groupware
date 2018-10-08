@@ -15,9 +15,6 @@ public class WorkLog {
 	private String formName;
 	private String formValue;
 	private String content;
-	
-	
-
 
 	public String getContent() {
 		return content;

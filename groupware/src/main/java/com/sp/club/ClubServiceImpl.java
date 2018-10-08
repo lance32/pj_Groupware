@@ -173,6 +173,41 @@ public class ClubServiceImpl implements ClubService{
 		}
 	}
 
+	@Override
+	public int insertClubMember(Map<String, Object> map) {
+		int result=0;
+		try {
+			dao.insertData("club.insertClubMember", map);
+			result=1;
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
+	}
+
+	@Override
+	public int deleteClubMember(Map<String, Object> map) {
+		int result=0;
+		try {
+			dao.insertData("club.deleteClubMember", map);
+			result=1;
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
+	}
+
+	@Override
+	public int clubMemberCount(int clubNum) {
+		int result=0;
+		try {
+			result=dao.selectOne("club.clubMemberCount", clubNum);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
+	}
+
 
 	
 

@@ -24,8 +24,134 @@ $(function() {
 	});
 });
 
+function setInputDate(option, value) {
+	var date = new Date();
+
+	$("#endDate").val(dateToString(date));
+	if(option=="day") {
+		$("#startDate").val(dateToString(date));
+	} else if(option=="week") {
+		date.setDate(date.getDate()-7);
+		$("#startDate").val(dateToString(date));
+	} else if(option=="month") {
+		date.setMonth(date.getMonth()-value);
+		date.setDate(date.getDate()+1);
+		$("#startDate").val(dateToString(date));
+	} else if(option=="year") {
+		date.setFullYear(date.getFullYear()-value);
+		date.setDate(date.getDate()+1);
+		$("#startDate").val(dateToString(date));
+	}
+}
+
+// 날짜를 문자열로
+function dateToString(date) {
+    var y = date.getFullYear();
+    var m = date.getMonth() + 1;
+    if(m < 10) m='0'+m;
+    var d = date.getDate();
+    if(d < 10) d='0'+d;
+    
+    return y + '-' + m + '-' + d;
+}
+
+// 문자열을 날짜로
+function stringToDate(value) {
+	var format=/(\.)|(\-)|(\/)/g;
+	value=value.replace(format, "");
+    
+    format = /[12][0-9]{3}[0-9]{2}[0-9]{2}/;
+    if(! format.test(value))
+        return "";
+    
+    var y = parseInt(value.substr(0, 4));
+    var m = parseInt(value.substr(4, 2));
+    var d = parseInt(value.substr(6, 2));
+    
+    return new Date(y, m-1, d);
+}
+
+function isValidDateFormat(data){
+    var regexp = /[12][0-9]{3}[\.|\-|\/]?[0-9]{2}[\.|\-|\/]?[0-9]{2}/;
+    if(! regexp.test(data))
+        return false;
+
+    regexp=/(\.)|(\-)|(\/)/g;
+    data=data.replace(regexp, "");
+    
+	var y=parseInt(data.substr(0, 4));
+    var m=parseInt(data.substr(4, 2));
+    if(m<1||m>12) 
+    	return false;
+    var d=parseInt(data.substr(6));
+    var lastDay = (new Date(y, m, 0)).getDate();
+    if(d<1||d>lastDay)
+    	return false;
+		
+	return true;     
+}
+
+// 두 날짜 사이의 일자 구하기
+function diffDays(startDate, endDate) {
+    var format=/(\.)|(\-)|(\/)/g;
+    startDate=startDate.replace(format, "");
+    endDate=endDate.replace(format, "");
+    
+    format = /[12][0-9]{3}[0-9]{2}[0-9]{2}/;
+    if(! format.test(startDate))
+        return "";
+    if(! format.test(endDate))
+        return "";
+    
+    var sy = parseInt(startDate.substr(0, 4));
+    var sm = parseInt(startDate.substr(4, 2));
+    var sd = parseInt(startDate.substr(6, 2));
+    
+    var ey = parseInt(endDate.substr(0, 4));
+    var em = parseInt(endDate.substr(4, 2));
+    var ed = parseInt(endDate.substr(6, 2));
+
+    var fromDate=new Date(sy, sm-1, sd);
+    var toDate=new Date(ey, em-1, ed);
+    
+    var sn=fromDate.getTime();
+    var en=toDate.getTime();
+    
+    var diff=en-sn;
+    var day=Math.floor(diff/(24*3600*1000));
+    
+    return day;
+}
+
 function searchList() {
 	var f=document.searchForm;
+		var search = $("option:selected").val();
+		if(search == 'start'){
+			$("#searchDay").show();
+			$("input[name=searchValue]").prop("readonly", true);
+			
+			if(! isValidDateFormat(f.startDate.value)) {
+				f.startDate.focus();
+				return;
+			}
+			
+			if(! isValidDateFormat(f.endDate.value)) {
+				f.endDate.focus();
+				return;
+			}
+			
+			if(diffDays(f.startDate.value, f.endDate.value) < 0) {
+				alert("시작일은 종료일보다 클수 없습니다.");
+				f.startDate.focus();
+				return;
+			}
+		} else {
+			$("#searchDay").hide();
+			$("input[name=sDay]").val("");
+			$("input[name=eDay]").val("");
+			$("input[name=searchValue]").prop("readonly", false);
+		}
+
 	f.submit();
 }
 </script>
@@ -81,9 +207,18 @@ function searchList() {
     	
    		<button type="button" class="butn" onclick="searchList()">검색</button>
    		<div class="form-group" align="center"><br>
+		
 		<div id="searchDay" style="display: none;">
-			검 색 기 간 :&nbsp;&nbsp;<input type="text" class="form-control" name="sDay" style="width: 10%; display: inline;" readonly="readonly"> ~ 
-			<input type="text" class="form-control" name="eDay" style="width: 10%; display: inline;" readonly="readonly">
+       		<button type="button" class="butn" onclick="setInputDate('day', 0);">오늘</button>
+       		<button type="button" class="butn" onclick="setInputDate('week', 1);">1주일</button>
+       		<button type="button" class="butn" onclick="setInputDate('month', 1);">1개월</button>
+       		<button type="button" class="butn" onclick="setInputDate('month', 3);">3개월</button>
+       		<button type="button" class="butn" onclick="setInputDate('month', 6);">6개월</button>
+       		<button type="button" class="butn" onclick="setInputDate('year', 1);">1년</button>
+       		
+       		<input type="text" name="sDay" id="startDate" class="searchBox" readonly="readonly">
+       		~
+       		<input type="text" name="eDay" id="endDate" class="searchBox" readonly="readonly">
 		</div>
 		</div>
    	</form>

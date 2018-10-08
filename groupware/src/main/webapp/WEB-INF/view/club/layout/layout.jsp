@@ -30,7 +30,6 @@ function deleteClubChk(){
 	}
 }
 </script>
-
 </head>
 <body>
 

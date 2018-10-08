@@ -330,6 +330,65 @@ public class ClubController {
 		redirectAttributes.addAttribute("clubNum", dto.getClubNum());
 		return "redirect:/club/alterCategory";
 	}
+	
+	@RequestMapping(value="/club/joinClub")
+	public String joinClub(
+			@RequestParam int clubNum
+			,HttpSession session
+			,Model model) {
+		try {
+			Club clubInfo=service.readClubInfo(clubNum);
+			int memberCount=service.clubMemberCount(clubNum);
+			if(clubInfo.getMaxPeople()<=memberCount) {
+				model.addAttribute("message", "최대 가입인원수 제한입니다.");
+				return "error/error";
+			}
+			
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
+			Map<String, Object> map = new HashMap<>();
+			
+			map.put("clubNum", clubNum);
+			map.put("memberNum", info.getUserId());
+			
+			int result=service.insertClubMember(map);
+			if(result==0) {
+				model.addAttribute("message", "가입도중 오류가 발생하였습니다.");
+				return "error/error";
+			}
+		} catch (Exception e) {
+			return "error/error";
+		}
+		return "redirect:/club/main?clubNum="+clubNum;
+	}
+	
+	@RequestMapping(value="/club/leaveClub")
+	public String leaveClub(
+			@RequestParam int clubNum
+			,HttpSession session
+			,Model model) {
+		try {
+			//동호회 개설자는 탈퇴할수 없음.
+			
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
+			Club clubInfo=service.readClubInfo(clubNum);
+			if(clubInfo.getMemberNum().equals(info.getUserId())) {
+				model.addAttribute("message", "개설자는 동호회를 탈퇴할 수 없습니다.");
+				return "error/error";
+			}
+			Map<String, Object> map = new HashMap<>();
+			map.put("clubNum", clubNum);
+			map.put("memberNum", info.getUserId());
+			
+			int result=service.deleteClubMember(map);
+			if(result==0) {
+				model.addAttribute("message", "탈퇴도중 오류가 발생하였습니다.");
+				return "error/error";
+			}
+		} catch (Exception e) {
+			return "error/error";
+		}
+		return "redirect:/club/main?clubNum="+clubNum;
+	}
 
 	
 /*	

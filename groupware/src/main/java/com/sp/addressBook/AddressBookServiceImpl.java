@@ -32,6 +32,24 @@ public class AddressBookServiceImpl implements AddressBookService{
 	}
 
 	@Override
+	public void deleteGroup(int groupNum) {
+		try {
+			dao.deleteData("address.deleteGroup", groupNum);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+	}
+
+	@Override
+	public void updateGroup(Map<String, Object> map) {
+		try {
+			dao.updateData("address.updateGroup", map);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+	}
+
+	@Override
 	public List<AddressBook> groupList(String memberNum) {
 		List<AddressBook> list=null;
 		try {
@@ -43,10 +61,10 @@ public class AddressBookServiceImpl implements AddressBookService{
 	}
 
 	@Override
-	public List<AddressBook> addressList(String memberNum) {
+	public List<AddressBook> addressList(Map<String, Object> map) {
 		List<AddressBook> list=null;
 		try {
-			list=dao.selectList("address.addressList", memberNum);
+			list=dao.selectList("address.addressList", map);
 		} catch (Exception e) {
 			System.out.println(e.toString());
 		}
@@ -68,6 +86,15 @@ public class AddressBookServiceImpl implements AddressBookService{
 	public void deleteAddress(int addressBookNum) {
 		try {
 			dao.deleteData("address.deleteAddress", addressBookNum);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+	}
+
+	@Override
+	public void updateAddress(AddressBook dto) {
+		try {
+			dao.updateData("address.updateAddress", dto);
 		} catch (Exception e) {
 			System.out.println(e.toString());
 		}
