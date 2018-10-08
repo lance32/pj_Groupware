@@ -48,7 +48,7 @@
 	
 	<!-- 글읽기 -->
 	<select id="readWorkLog" resultType="com.sp.workLog.WorkLog" parameterType="Integer">
-		SELECT workLogNum, to_char(makeDate,'YYYY-MM-DD')makeDate, departmentName, name, content ,num 
+		SELECT workLogNum, to_char(makeDate,'YYYY-MM-DD')makeDate, departmentName, name, content ,num, grants
 		FROM workLog w JOIN member m ON w.memberNum =m.memberNum
 		JOIN department d on m.departmentNum = d.departmentNum
 		WHERE workLogNum = #{WorkLogNum}

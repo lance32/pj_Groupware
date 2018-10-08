@@ -7,6 +7,10 @@
    String cp=request.getContextPath();
 %>
 
+
+<a href = "<%=cp%>/authority/authoritylist"></a>
+
+
 <table class="sidetable" border ="1" style="margin-top: 35px;">
 		<tr>
 			<td rowspan = "5" style="width:90px; height: 99%;">

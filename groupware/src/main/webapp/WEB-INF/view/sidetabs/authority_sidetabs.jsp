@@ -10,13 +10,9 @@
 </style>
 
 <table class="tabs">
-	<tr>
-    	<th>관리자</th>
-    </tr>
-    <tr>
-    	<td></td>
-    </tr>
-    <tr>
-    	<td></td>
-    </tr>
+<tr>
+<td>
+<a href = "<%=cp%>/authority/authoritylist">권한설정</a>
+</td>
+</tr>
 </table>

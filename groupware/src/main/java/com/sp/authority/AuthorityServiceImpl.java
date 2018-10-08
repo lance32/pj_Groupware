@@ -66,4 +66,16 @@ public class AuthorityServiceImpl implements AuthorityService {
 		return list;
 	}
 
+	@Override
+	public int updateAuthority(Map<String, Object> map) {
+		int result = 0;
+		try {
+		result = dao.updateData("authority.updateAuthority", map);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
+	}
+
+
 }

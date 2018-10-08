@@ -15,16 +15,18 @@
 
 <script>
 function getData(memberNum) {
-	var query = "${articleUrl}&memberNum="+memberNum; 
+	var query = "${articleUrl}&memberNum="+memberNum;
+		console.log(query);
 	$.ajax({
 		type:"get",
 		url: query,
 		dataType:"json",
 		success:function(data) {
 			var chk = 0;
+			var modify ="";
 			var tot ="<form name='authorityForm' id='authorityForm' method='post' enctype='multipart/form-data'>";
-			$.each(data, function (idx, val) {		
-				data.list.grants = data.authority.grants;			
+			$.each(data, function (idx, val) {	
+				data.list.grants=data.authority.grants
 				var aut = ""; //authority
 				if (idx == 'authority') {
 					aut = "<table style = 'width:100%; border: 1px;'>";
@@ -34,6 +36,7 @@ function getData(memberNum) {
 							aut+= "'<%=cp%>/upload/member/" +val.saveFileName+ "'";
 							aut+= "style='width:130px; height:150px;'>";
 							aut+= "</td><td>사원번호</td><td>"+val.memberNum+"</td>";
+							aut+="<input type='hidden' name='memberNum' value='"+val.memberNum+"'>";
 							aut+= "<td>이름</td><td>"+val.name+"</td></tr>";
 							aut+= "<tr><td>부서</td><td>"+val.departmentName+"</td>";
 							aut+= "<td>직급</td><td>"+val.positionName+"</td></tr></table>";
@@ -42,30 +45,22 @@ function getData(memberNum) {
 				
 				
 				if (idx == 'list') {
+					var grants = data.list.grants;
 					var inf = ""; //list
 					inf ="<table style='width: 70%;'>";
 					inf+= "<td style='border-bottom:1px;'>권한</td>";
 				
 					for(var i=0; i<val.length; i++){
 						inf+= "<tr><td>"+val[i].comments+"</td>";
-						inf+= "<td><input type='checkbox' id='auth1"+i+"' value='1'>읽기</td>";
-						inf+= "<td><input type='checkbox' id='auth2"+i+"' value='2'>쓰기</td></tr>";
+						inf+= "<td><input type='checkbox' id='auth1"+i+"' name='auth1"+i+"' class='check'>읽기</td>";
+						inf+= "<td><input type='checkbox' id='auth2"+i+"' name='auth1"+i+"' class='check'>쓰기</td></tr>";
 					}
+						inf+="<input type='hidden' name='page' value='${page}''>";						
+						inf+="<input type='hidden' id = 'grants' name='grants'>";						
 					
 					inf+= "</table><button type='button' id = 'btnsend' onclick='s();'>수정</button></form>";
 					tot+=inf;
-					
-					$(function () {
-						var listGrants = data.list.grants;
-						
-						if(chk == 0) {	
-							console.log($("#auth10"));
-							$("#auth10").attr("checked", true);
-							chk = 1;
-							console.log("["+chk+"]");
-							
-						}
-					});
+					chk = grants;
 				};
 			});
 			
@@ -74,11 +69,27 @@ function getData(memberNum) {
 				height: 700,
 				width: 800,
 				modal: true,
-				open:function() {
-					$("#auth10").attr("checked", true);
+				open:function() {	
+					chk= String(chk);
+					for(var i=0; i<chk.length; i++){						
+						$("#auth1"+i).val(chk.substr(i,1));
+						$("#auth2"+i).val(chk.substr(i + 1 ,1));
+							if($("#auth1"+i).val() =="1"){
+								$("#auth1"+i).attr("checked", true);
+							}else{
+								$("#auth1"+i).val() =='0';
+							}
+							if($("#auth2"+i).val() =='1'){
+								$("#auth2"+i).attr("checked", true);	
+							}else{
+								$("#auth1"+i).val() =='0';
+							}
+					}
+					  
+				
 				}
+			 
 			});
-			
 		},
 		error:function(jqXHR) {
 			console.log(jqXHR.resonseText);
@@ -90,18 +101,27 @@ function getData(memberNum) {
 
 function s() {
 	var f = document.authorityForm;
-	console.log(f);
+	var grantsValue = "";
+		$(".check").each(function() {
+			if (this.checked) {
+				grantsValue += "1";
+			} 
+			else{
+				grantsValue +="0";
+			}
+		});
+		$("#grants").val(grantsValue);
 	f.action = "<%=cp%>/authority/update";
 	f.submit();
 }
-// list 출력시  tablelist 옮기기 metadata 날자 확인
+
 	
 </script>
 
 
 <div style="clear: both; margin: 10px 0px 15px 10px;">
 		<span class="glyphicon glyphicon-book" style="font-size: 28px; margin-left: 10px;"></span>
-		<span style="font-size: 30px;">&nbsp;업무 일지</span><br>
+		<span style="font-size: 30px;">&nbsp;권한 설정</span><br>
 		<div style="clear: both; width: 300px; height: 1px; border-bottom: 3px solid black;"></div>
 	</div>
 
@@ -152,3 +172,12 @@ function s() {
 </div>
 <div id="authority-dialog">
 </div>
+
+<div>
+<table>
+<c:forEach var = "table" items ="${tableList}">
+<tr><td>${table.comments}</td></tr>
+</c:forEach>
+</table>
+</div>
+
