@@ -93,8 +93,14 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public void firstLoginMember(Member dto) throws Exception {
-
+	public int firstLoginMember(Member dto) throws Exception {
+		int result = 0;
+		try {
+			dao.updateData("member.updateFirstLogin", dto);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
 	}
 
 	@Override

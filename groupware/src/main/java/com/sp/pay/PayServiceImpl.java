@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.sp.common.dao.CommonDAO;
 
-@Service(value="pay.payService")
+@Service("pay.payService")
 public class PayServiceImpl implements PayService{
 
 	@Autowired
@@ -16,16 +16,28 @@ public class PayServiceImpl implements PayService{
 	
 	@Override
 	public int dataCount(Map<String, Object> map) {
-		
+			int result=0;
 		try {
-			dao.selectOne("pay.dataCount",map);
+			result=dao.selectOne("pay.dataCount",map);
 			
 		} catch (Exception e) {
 			System.out.println(e.toString());
 		}
-		return 1;
+		return result;
 	}
 
+	@Override
+	public int memberdataCount(String memberNum) {
+		int result=0;
+		try {
+			result=dao.selectOne("pay.memberdataCount",memberNum);
+		} catch (Exception e) {
+
+		}
+		
+		return result;
+	}
+	
 	@Override
 	public List<Pay> ListPayMember(Map<String, Object> map) {
 		List<Pay> payList=null;
@@ -51,5 +63,6 @@ public class PayServiceImpl implements PayService{
 		
 	return adminpayList;
 	}
+
 
 }

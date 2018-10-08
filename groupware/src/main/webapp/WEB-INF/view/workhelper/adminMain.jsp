@@ -69,8 +69,6 @@ function searchPayMember(){
 				<td>${list.basicpay}</td>
 			</tr>
 		</c:forEach>
-		
-
 	</table>
 	<br>
 	<div id=''>	<%-- MyUtil.java 안에 있음. ${paging}으로 써야됨. --%>
@@ -84,9 +82,12 @@ function searchPayMember(){
 			<td>
 			<button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/pay/adminMain';" >새로고침</button>
 			</td>
-				<td style="text-align: right;">
-					<button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/pay/insertpay';">급여 입력</button>
-				</td>
+			<td style="text-align: right;">
+				<button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/pay/insertpay';">급여 입력</button>
+			</td>
+			<td>
+				<button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/pay/insertTax';">세율 수정</button>
+			</td>
 		</tr>
 	</table>
 </div>

@@ -43,17 +43,35 @@ public class MemberController {
 		if(login_error!=null) {
 			model.addAttribute("message","아이디 또는 패스워드가 일치하지 않습니다.");
 		}
-	
 		return "/member/login";
 	}
 	
 
 	//최초 로그인 체크
-	@RequestMapping(value="/member/firstLogin", method=RequestMethod.POST)
-	public String firstLoginCheck(Member dto) {
+	@RequestMapping(value="/member/firstLogin")
+	public String firstLoginCheck(HttpSession session) {
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		Member dto = service.readMember(info.getUserId());
+
+		if(dto.getModified()==null) {
+			// 독립된 화면으로 구성해야할 것 같음. 수정필요.
+			return ".member.pwd";		
+		}
+		return ".mainLayout";
+	}
+	
+	@RequestMapping(value="/member/firstLoginSubmit", method=RequestMethod.POST)
+	public String updateFirstLogin(
+			Member dto,
+			HttpSession session) throws Exception {
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		
+		String encPwd=bcryptEncoder.encode(dto.getPwd());
+		dto.setPwd(encPwd);
+		dto.setMemberNum(info.getUserId());
 		
-		return ".member.pwd";
+		service.firstLoginMember(dto);
+		return ".mainLayout";
 	}
 	
 	// 변경할 끝 부분 ----------------------------------------------------------------------

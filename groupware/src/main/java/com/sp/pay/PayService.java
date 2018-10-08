@@ -11,6 +11,8 @@ public interface PayService {
 //	public void firstLoginMember(Member dto) throws Exception;
 	
 	public int dataCount(Map<String, Object> map);
+	public int memberdataCount(String memberNum);
+	
 	public List<Pay> ListPayMember(Map<String, Object> map);
 	public List<Pay> ListPayMemberAdmin(Map<String, Object> map);
 	

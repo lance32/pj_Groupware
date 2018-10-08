@@ -31,9 +31,9 @@
 			</td>
 			<td></td>
 			<td align="right">
-			<select class="selectBox">				<%-- 선택박스  --%>
-				<option>2018년도</option>
-				<option>2017년도</option>
+			<select class="selectBox" name="searchKey">				<%-- 선택박스  --%>
+				<option value="">2018년도</option>
+				<option value="">2017년도</option>
 				</select>
 			</td>
 		</tr>

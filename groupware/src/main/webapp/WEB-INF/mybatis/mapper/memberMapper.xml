@@ -84,9 +84,9 @@
 	
 	<!-- 총 사원 카운트 -->
 	<select id="dataCount" parameterType="map" resultType="Integer">
-		SELECT NVL(COUNT(*),0) FROM member m JOIN department d 
-			ON m.departmentNum=d.departmentNum JOIN position p 
-			ON m.positionNum=p.positionNum 
+		SELECT NVL(COUNT(*),0) FROM member m 
+			JOIN department d ON m.departmentNum=d.departmentNum 
+			JOIN position p ON m.positionNum=p.positionNum 
 			LEFT OUTER JOIN memberDetailinfo i ON m.memberNum=i.memberNum
 		<where>
 			<if test="searchValue != null and searchValue != ''">
@@ -118,16 +118,14 @@
 			     SELECT m.memberNum,name,email,tel,phone,TO_CHAR(created,'YYYY-MM-DD')created,departmentName,positionName 
 			     	FROM member m
 					LEFT OUTER JOIN memberdetailInfo i ON m.memberNum=i.memberNum
-					LEFT OUTER JOIN department d ON m.departmentNum = d.departmentNum 
-					LEFT OUTER JOIN position p ON p.positionNum = m.positionNum
+					JOIN department d ON m.departmentNum = d.departmentNum 
+					JOIN position p ON p.positionNum = m.positionNum
                     <where>
                          <if test="searchValue != null and searchValue != ''">
 			                  <include refid="where-list"/>
 		                 </if>
-		                 AND i.memberNum IS NOT NULL 
-		           
 	                </where>
-					ORDER BY m.memberNum DESC
+					ORDER BY m.created DESC
 	        ) tb WHERE ROWNUM &lt;= #{end}
 	    ) WHERE rnum &gt;= #{start}
 	</select>
