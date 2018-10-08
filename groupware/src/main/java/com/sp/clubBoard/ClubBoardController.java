@@ -116,7 +116,7 @@ public class ClubBoardController {
 			}
 			int end = current_page * rows;
 			if(state.equals("pre")) {
-				end=end+1;
+				end=end+0;
 			}
 			map.put("start", start);
 			map.put("end", end);

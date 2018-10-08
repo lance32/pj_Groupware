@@ -114,7 +114,7 @@ public class AddressBookController {
 		AddressBook dto=null;
 		try {			
 			groupList = service.groupList(memberNum);
-			dto=service.readAddressInfo(addressBookNum);
+			dto=service.readAddressForUpdate(addressBookNum);
 			
 		} catch (Exception e) {
 			return "error/error";

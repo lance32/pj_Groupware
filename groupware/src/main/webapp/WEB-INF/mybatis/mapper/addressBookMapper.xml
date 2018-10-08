@@ -50,6 +50,12 @@
 	    JOIN addressBookGroup g ON a.groupNum=g.groupNum 
 	    WHERE addressBookNum=#{addressBookNum}
 	</select>
+	<select id="readAddressForUpdate" parameterType="Integer" resultType="com.sp.addressBook.AddressBook">
+		SELECT addressBookNum, a.memberNum, name, tel, fax, email, belongto, zip, addr1, addr2, a.groupNum, groupName 
+		FROM addressBook a 
+	    JOIN addressBookGroup g ON a.groupNum=g.groupNum 
+	    WHERE addressBookNum=#{addressBookNum}
+	</select>
 	
 	<delete id="deleteAddress" parameterType="Integer">
 		DELETE FROM addressBook WHERE addressBookNum=#{addressBookNum}

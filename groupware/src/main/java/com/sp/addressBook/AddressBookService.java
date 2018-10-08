@@ -11,6 +11,7 @@ public interface AddressBookService {
 	public List<AddressBook> groupList(String memberNum);
 	public List<AddressBook> addressList(Map<String, Object> map);
 	public AddressBook readAddressInfo(int addressBookNum);
+	public AddressBook readAddressForUpdate(int addressBookNum);
 	public void deleteAddress(int addressBookNum);
 	public void updateAddress(AddressBook dto);
 	
