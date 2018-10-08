@@ -1,3 +1,5 @@
+<%@ page import="java.util.List" %>
+<%@ page import="com.sp.department.Department" %>
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -31,13 +33,16 @@ ul {
 
 	<div id="organization" style="border: 1px solid gray;">
 		<ul>
-		<c:forEach var="dto" items="${list}" >
-			<li>
-			<ul>
-			<li>${dto.departmentName}</li>
-			</ul>
-			</li>
-		</c:forEach>
+		<%
+		List<Department> list = (List<Department>)request.getAttribute("list");
+		
+		for (Department department : list) {
+			
+			out.print("<li>");
+			out.print(department.getDepartmentName());
+			out.println("</li>");
+		}
+		%>
 		</ul>
 	</div>
 
