@@ -20,9 +20,9 @@ function searchMember(){
 	f.submit();
 }
 
-$(document).ready(function(){
+$("#chkstatus").onchange(function(){
 	var checkedValue = $("input[name=chk_status]:checked").val();
-	//alert(checkedValue);
+	alert(checkedValue);
 });
 </script>
 
@@ -45,12 +45,13 @@ $(document).ready(function(){
 	</div>
 	<div style="width:100%; text-align:right;">
 		
-	
+		<form id="chkstatus" name="chkstatus" action="">
 			<input type="radio" name="chk_status" value="all" checked="checked">전체
 			<input type="radio" name="chk_status" value="1">재직
 			<input type="radio" name="chk_status" value="2">휴직
 			<input type="radio" name="chk_status" value="3">정직
 			<input type="radio" name="chk_status" value="0">퇴사
+		</form>
 	
 	<form name="memberSearchForm" action="<%=cp%>/member/main" method="post">
 	
@@ -91,6 +92,7 @@ $(document).ready(function(){
 		</tr>
 		
 		<c:forEach var="list" items="${list}">
+		<c:if test="${list.memberNum!='admin'}">
 		<tr class="tr">
 			<td>${list.listmemberNum}</td>
 			<td style="text-align: center;">${list.departmentName}</td>
@@ -103,6 +105,7 @@ $(document).ready(function(){
 			<td>${list.phone}</td>
 			<td>${list.tel}</td>
 		</tr>
+		</c:if>
 		</c:forEach>
 
 	</table>

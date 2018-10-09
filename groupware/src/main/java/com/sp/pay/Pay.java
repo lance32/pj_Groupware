@@ -7,6 +7,7 @@ public class Pay {
 	private String name;
 	
 	//지급 연월일
+	private String payday;
 	private int year;
 	private int month;
 	private int day;
@@ -26,6 +27,12 @@ public class Pay {
 	private String departmentName;
 	private String positionName;
 	
+	public String getPayday() {
+		return payday;
+	}
+	public void setPayday(String payday) {
+		this.payday = payday;
+	}
 	public int getListNum() {
 		return listNum;
 	}

@@ -14,6 +14,17 @@
 #paginate .numBox {border:1px solid #ccc;height:28px;text-decoration:none;padding:4px 7px 4px 7px;margin-left:3px;line-height:normal;vertical-align:middle;}
 </style>
 
+<script type="text/javascript">
+function changeYear(year){
+	var searchKey=year;
+	var query = "searchKey="+searchKey+"&page="+${page};
+	var url = "<%=cp%>/pay/main?"+query;
+	location.href=url;
+	alert(year);
+}
+
+</script>
+
 	<div id="test" style="width:100%; height:600px; ">
 	<%-- 상단 대표글씨 --%>
 	<div style="clear: both; margin: 10px 0px 15px 10px;">
@@ -24,16 +35,18 @@
 
 
 	<%-- 목록 --%>
-	<table id="tb" style="width: 1000px;"><%-- 테이블 길이 수정 가능 --%>
+	<table id="tb" style="width: 100%;"><%-- 테이블 길이 수정 가능 --%>
 		<tr>
 			<td id="count" colspan="2">
-				3개(1/1 페이지)
+				${dataCount}개(${page}/${total_page} 페이지)
 			</td>
 			<td></td>
 			<td align="right">
-			<select class="selectBox" name="searchKey">				<%-- 선택박스  --%>
-				<option value="">2018년도</option>
-				<option value="">2017년도</option>
+			<select class="selectBox" name="searchKey" onchange="changeYear(this.value);">				<%-- 선택박스  --%>
+				<option value="all" selected="selected">전체</option>
+				<c:forEach var="yearList" items="${payYearList}">
+				<option value="${yearList.YEAR}">${yearList.YEAR}년도</option>
+				</c:forEach>
 				</select>
 			</td>
 		</tr>
@@ -45,22 +58,30 @@
 			<td width="100">날짜</td>
 			<td width="900">제목</td>
 		</tr>
+		<c:forEach var="list" items="${paymemberlist}">
 		<tr class="tr">
-			<td>1</td>
-			<td width="100" style="text-align: center;">이름</td>
-			<td width="100">2018-10-02</td>
-			<td width="750"><a>2018년 10월 ooo님의 급여 입니다.</a></td>
+			<td>${list.listNum }</td>
+			<td width="100" style="text-align: center;">${list.name}</td>
+			<td width="100">${list.year}-&nbsp;${list.month}-&nbsp;${list.day}</td>
+			<td width="750">
+				<a href="${articleUrl}&memberNum=${list.memberNum}">
+				${list.year}년 ${list.month}월 ${list.name}님의 급여 입니다.
+				</a>
+			</td>
 		</tr>
+		</c:forEach>
 	</table>
 	<br>
 	<div id='paginate'>	<%-- MyUtil.java 안에 있음. ${paging}으로 써야됨. --%>
-		<a href="#">처음</a>
-		<span class="curBox">1</span>
-		<a href="#" class="numBox">2</a>
-		<a href="#" class="numBox">3</a>
-		<a href="#">다음</a>
+		${paging}
 	</div>
-	
+	<table id="tb" style="width: 100%;">
+		<tr>
+			<td align="left">
+				<button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/pay/main';" >새로고침</button>
+			</td>
+		</tr>
+	</table>
 	
 </div>
 

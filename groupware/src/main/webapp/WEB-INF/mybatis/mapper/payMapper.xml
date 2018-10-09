@@ -21,21 +21,29 @@
 	        ) tb WHERE ROWNUM &lt;= #{end}
 	    ) WHERE rnum &gt;= #{start}
 	</select>
-	<!-- 사원 리스트 -->
+	
+	<!-- 사원 개인 리스트 -->
 	<select id="listPayMember" parameterType="map" resultType="com.sp.pay.Pay">
 		SELECT * FROM (
 		    SELECT ROWNUM rnum, tb.* FROM (
-			     SELECT m.memberNum,departmentName,positionName,name,basicpay
-					FROM member m 
-					LEFT OUTER JOIN department d ON m.departmentNum = d.departmentNum
-					LEFT OUTER JOIN position p ON m.positionNum = p.positionNum
-					LEFT OUTER JOIN basicpay b ON m.memberNum = b.memberNum
-                    WHERE m.memberNum=#{memberNum}
-					ORDER BY m.created DESC
+			     SELECT s.memberNum,year,month,day,name,NVL(basicpay,0)basicpay
+					FROM salary s
+                    JOIN member m ON s.memberNum=m.memberNum
+                    <where>
+                		<if test="searchKey != null and searchKey != 'all'">
+		                	<include refid="where-paylist"/>
+	                    	AND s.memberNum=#{memberNum}
+                		</if>
+                    </where>
+					ORDER BY year DESC,month DESC
 	        ) tb WHERE ROWNUM &lt;= #{end}
 	    ) WHERE rnum &gt;= #{start}
 	</select>	
 	
+	<!-- year 리스트 -->
+	<select id="payYearList" resultType="map" parameterType="String">
+		SELECT memberNum,year FROM salary where memberNum=#{memberNum} group by memberNum,year ORDER BY year DESC
+	</select>
 	
 <!-- 총 사원 카운트 -->
 	<select id="dataCount" parameterType="map" resultType="Integer">
@@ -51,7 +59,13 @@
 
 	<!-- 사원 급여내역 카운트 -->
 	<select id="memberdataCount" parameterType="map" resultType="Integer">
-		SELECT NVL(COUNT(*),0) FROM salary WHERE memberNum=#{memberNum}
+		SELECT NVL(COUNT(*),0) FROM salary
+		 <where>
+      		<if test="searchKey != null and searchKey != 'all'">
+               	<include refid="where-paylist"/>
+               	AND memberNum=#{memberNum}
+       		</if>
+         </where>
 	</select>
 	
 <!-- insert -->
@@ -73,4 +87,13 @@
 	  </if>
 	</sql>
 
+<!-- 사원 개인 검색 조건 -->
+	<sql id="where-paylist">
+	  <if test="searchKey=='all'">
+	      INSTR(year,1)&gt;=0
+	  </if>
+	  <if test="searchKey==searchKey">
+	  	INSTR(year,#{searchKey})&gt;=1
+	  </if>
+	</sql>
 </mapper>

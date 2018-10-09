@@ -11,12 +11,12 @@ public interface PayService {
 //	public void firstLoginMember(Member dto) throws Exception;
 	
 	public int dataCount(Map<String, Object> map);
-	public int memberdataCount(String memberNum);
+	public int memberdataCount(Map<String, Object> map);
 	
 	public List<Pay> ListPayMember(Map<String, Object> map);
 	public List<Pay> ListPayMemberAdmin(Map<String, Object> map);
 	
-//	public List<Map<String, Object>> qualifyList(String memberNum);
+	public List<Map<String, Object>> payYearList(String memberNum);
 //	public List<Map<String, Object>> departmentList();
 //	public List<Map<String, Object>> positionList();
 	

@@ -27,10 +27,10 @@ public class PayServiceImpl implements PayService{
 	}
 
 	@Override
-	public int memberdataCount(String memberNum) {
+	public int memberdataCount(Map<String, Object> map) {
 		int result=0;
 		try {
-			result=dao.selectOne("pay.memberdataCount",memberNum);
+			result=dao.selectOne("pay.memberdataCount",map);
 		} catch (Exception e) {
 
 		}
@@ -41,9 +41,9 @@ public class PayServiceImpl implements PayService{
 	@Override
 	public List<Pay> ListPayMember(Map<String, Object> map) {
 		List<Pay> payList=null;
-		
+			System.out.println(map);
 			try {
-				dao.selectList("pay.listPayMember",map);
+				payList=dao.selectList("pay.listPayMember",map);
 			} catch (Exception e) {
 				System.out.println(e.toString());
 			}
@@ -62,6 +62,17 @@ public class PayServiceImpl implements PayService{
 		}
 		
 	return adminpayList;
+	}
+
+	@Override
+	public List<Map<String, Object>> payYearList(String memberNum) {
+		List<Map<String, Object>> payYearList=null;
+		try {
+			payYearList=dao.selectList("pay.payYearList",memberNum);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return payYearList;
 	}
 
 

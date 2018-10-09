@@ -76,50 +76,6 @@ function submitMemberAdmin(){
 }
 </script>
 
-<!-- <script type="text/javascript">
-	$(function(){
-		$("addrows").click("change", "input[name=addrows]",function(){
-			if(!$(this).val()){
-				return;
-			}
-			
-			var b=false;
-			
-			$("input[name=addrows]").each(function(){
-				if(!$(this).val()){
-					b=true;
-					return;
-				}
-			});
-			if(b) return;
-			
-			var $tr, $td, $input;
-			
-			$tr=$("<tr style='border-bottom: 1px solid #cccccc; height:20px;' >");
-			$td=$("<td>");
-			$tr.append($td);
-			$input=$("<input>",{type:"text",name:"qualifyCode"});
-			$td.append($input);
-			$td=$("<td>");
-			$tr.append($td);
-			$input=$("<input>",{type:"text",name:"qualifyName"});
-			$td.append($input);
-			$td=$("<td>");
-			$tr.append($td);
-			$input=$("<input>",{type:"text",name:"serialNum"});
-			$td.append($input);
-			$td=$("<td>");
-			$tr.append($td);
-			$input=$("<input>",{id:"addrows" name:"addrows" value="+"});
-			$td.append($input);
-			$tr.append($td);
-			
-			$("#tb").append($tr);
-
-		});
-	});
-</script> -->
-
 <div class="body-title">
 	<h3><span style="font-family: Webdings">2</span>
 		<c:if test="${mode!='updateAdmin'}">
@@ -131,7 +87,6 @@ function submitMemberAdmin(){
 	</h3>
 </div>
 <div>
-	<form name="adminForm" method="post">
 		<table style="width: 100%; margin: 20px auto 0px; border-spacing: 0px; border-collapse: collapse;" class="info-table">
 		<tr style="border-top: 2px solid #cccccc; border-bottom: 1px solid #cccccc;">
 			<td rowspan="5" style="width:270px; height:250px;">
@@ -344,7 +299,7 @@ function submitMemberAdmin(){
 			</td>
 			
 			<td align="right">
-				<button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/member/main?${query}';">리스트</button>
+				<button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/pay/main?${query}';">리스트</button>
 			</td>
 		</tr>
 	</table>

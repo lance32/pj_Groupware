@@ -32,8 +32,7 @@ public class PayController {
 	//급여 조회 리스트(유저)
 	@RequestMapping(value="/pay/main")
 	public String ListPayMember(@RequestParam(value="page", defaultValue="1") int current_page,
-			@RequestParam(value="searchKey", defaultValue="name") String searchKey,
-			@RequestParam(value="searchValue", defaultValue="") String searchValue,
+			@RequestParam(value="searchKey", defaultValue="all") String searchKey,
 			HttpServletRequest req,
 			HttpSession session,
 			Model model) throws Exception{
@@ -44,6 +43,9 @@ public class PayController {
 			return "member/login";
 		}
 		
+		String memberNum=info.getUserId();
+		System.out.println("======================================="+searchKey);
+		
 		String cp=req.getContextPath();
 		int rows = 10; // 한 화면에 보여주는 게시물 수
 		int total_page = 0;
@@ -52,10 +54,9 @@ public class PayController {
         // 전체 페이지 수
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("searchKey", searchKey);
-        map.put("searchValue", searchValue);
-
-        dataCount = service.dataCount(map);
-        
+        map.put("memberNum", memberNum);
+        dataCount = service.memberdataCount(map);
+        System.out.println("=========================="+map);
         if(dataCount != 0)
             total_page = util.pageCount(rows, dataCount);
 
@@ -69,12 +70,15 @@ public class PayController {
         map.put("start", start);
         map.put("end", end);
         
+        //년도별 리스트
+        List<Map<String, Object>> payYearList = service.payYearList(memberNum);
+        
         // 급여 리스트
-        List<Pay> paylist = service.ListPayMemberAdmin(map);
+        List<Pay> paymemberlist = service.ListPayMember(map);
         
         // 리스트의 번호
         int listNum, n = 0;
-        Iterator<Pay> it=paylist.iterator();
+        Iterator<Pay> it=paymemberlist.iterator();
         while(it.hasNext()) {
             Pay data = it.next();
             listNum = dataCount - ((start + n) - 1);
@@ -84,21 +88,22 @@ public class PayController {
         }
         
         String query = "";
-        String listUrl = cp+"/pay/adminMain";
+        String listUrl = cp+"/pay/main";
         String articleUrl = cp+"/pay/paymemberinfo?page=" + current_page;
-        if(searchValue.length()!=0) {
-        	query = "searchKey=" +searchKey + 
-        	         "&searchValue=" + URLEncoder.encode(searchValue, "utf-8");	
+        if(searchKey.length()!=0) {
+        	query = "searchKey=" +searchKey;
+        	         	
         }
         
         if(query.length()!=0) {
-        	listUrl = cp+"/pay/adminMain?" + query;
+        	listUrl = cp+"/pay/main?" + query;
         	articleUrl = cp+"/pay/paymemberinfo?page=" + current_page + "&"+ query;
         }
         
         String paging = util.paging(current_page, total_page, listUrl);
-
-        model.addAttribute("paylist", paylist);
+       
+        model.addAttribute("payYearList",payYearList);
+        model.addAttribute("paymemberlist", paymemberlist);
         model.addAttribute("articleUrl", articleUrl);
         model.addAttribute("page", current_page);
         model.addAttribute("dataCount", dataCount);
@@ -194,6 +199,12 @@ public class PayController {
 	
 	}
 	
+	@RequestMapping(value="/pay/paymemberinfo")
+	public String article() {
+		
+		return ".workhelper.paymemberinfo";
+	}
+	
 	@RequestMapping(value="/pay/insertpay",method=RequestMethod.GET)
 	public String insertPayForm(HttpSession session) {
 		
@@ -209,6 +220,12 @@ public class PayController {
 		return ".workhelper.main";
 		
 		
+	}
+	
+	@RequestMapping(value="pay/insertTax",method=RequestMethod.GET)
+	public String insertTax() {
+		
+		return ".workhelper.insertTax";
 	}
 	
 	public String updatePay() {
