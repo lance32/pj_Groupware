@@ -206,7 +206,7 @@ $(function(){
 });
 </script>
 <div style="clear: both; margin: 10px 0px 15px 10px;">
-	<span class="glyphicon glyphicon-calendar"
+	<span class="glyphicon glyphicon-wrench"
 		style="font-size: 28px; margin-left: 10px;"></span> <span
 		style="font-size: 30px;">&nbsp;자 원 관 리</span><br>
 	<div

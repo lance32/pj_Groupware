@@ -50,9 +50,15 @@
  	text-align:center;
  	 float: left; 
 }
-
 .groupItems:hover{
 	background: #F2DFCA;
+}
+
+.ui-widget-header{
+    	background: none;
+}
+.ui-dialog-titlebar{
+	background: #CCA97B;
 }
 </style>
 <link rel="stylesheet" href="<%=cp%>/resource/jquery/css/smoothness/jquery-ui.min.css" type="text/css">
@@ -198,6 +204,9 @@ jQuery(function(){
 	
 	//dialog 삭제 버튼 클릭시
 	jQuery("#deleteGroupButn").click(function(){
+		if(! confirm("그룹을 삭제하면 그룹에 포함된 모든 연락처가 지워집니다.\n그룹을 삭제하시겠습니까 ?")){
+			return;
+		}
 		var groupNum=jQuery("#choosingGroupNum").val();
 		location.href="<%=cp%>/addressBook/deleteGroup?groupNum="+groupNum;
 		return;

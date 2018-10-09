@@ -56,6 +56,11 @@
 		select table_name, comments from USER_TAB_COMMENTS where comments is not null
 	</select>
 	
+	<!-- 권한 수정 -->
+	<update id="updateAuthority" parameterType="com.sp.authority.Authority">
+		UPDATE member SET grants = #{grants,jdbcType=BIGINT} WHERE memberNum = #{memberNum}
+	</update>
+	
 	
 	
 </mapper>

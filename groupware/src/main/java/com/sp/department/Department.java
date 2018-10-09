@@ -7,6 +7,7 @@ public class Department {
 	private int departmentType;
 	private int deptOrder;
 	private int deptGroup;
+	
 	public int getDepartmentNum() {
 		return departmentNum;
 	}

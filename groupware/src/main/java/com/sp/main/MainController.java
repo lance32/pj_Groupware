@@ -5,12 +5,14 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.sp.member.SessionInfo;
 import com.sp.message.Message;
 import com.sp.message.MessageService;
 import com.sp.notice.Notice;
@@ -31,27 +33,30 @@ public class MainController {
 	@RequestMapping(value="/main")
 	public String method(
 			HttpServletRequest req
+			,HttpSession session
 			,Model model) {
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		Map<String, Object> map = new HashMap<>();
+		String memberNum=info.getUserId();
 		
-		//공지사항 리스트
 		int start = 1;
-		int end = 10;
+		int end = 5;
 		map.put("start", start);
 		map.put("end", end);
+		map.put("memberNum", memberNum);
+		
+		//공지사항 리스트
 		List<Notice> noticeList = noticeService.listNotice(map);
 		for(Notice dto: noticeList) {
 			dto.setCreated(dto.getCreated().substring(0, 10));
 		}
 		
-		
-		end=5;
-		map.put("end", end);
 		//미확인 결재 문서함
 		
 		//받은 쪽지
 		List<Message> messageList=null;
 		try {
+			map.put("type", "receive");
 			messageList= messageService.listMessage(map);
 			for(Message dto: messageList) {
 				dto.setSendTime(dto.getSendTime().substring(0, 10));

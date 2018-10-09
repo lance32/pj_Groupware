@@ -100,5 +100,16 @@ public class AddressBookServiceImpl implements AddressBookService{
 		}
 	}
 
+	@Override
+	public AddressBook readAddressForUpdate(int addressBookNum) {
+		AddressBook dto=null;
+		try {
+			dto=dao.selectOne("address.readAddressForUpdate", addressBookNum);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return dto;
+	}
+
 
 }

@@ -5,6 +5,22 @@
 <%
    String cp = request.getContextPath();
 %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>GroupWare</title>
+<link href="https://fonts.googleapis.com/css?family=Noto+Sans+KR" rel="stylesheet">
+
+<link rel="stylesheet" href="<%=cp%>/resource/jquery/css/smoothness/jquery-ui.min.css" type="text/css">
+
+<link rel="stylesheet" href="<%=cp%>/resource/bootstrap/css/bootstrap-theme.css" type="text/css">
+<link rel="stylesheet" href="<%=cp%>/resource/bootstrap/css/bootstrap.css" type="text/css">
+
+<link rel="stylesheet" href="<%=cp%>/resource/css/style.css?ver=12443" type="text/css">
+<link rel="stylesheet" href="<%=cp%>/resource/css/layout.css?ver=3" type="text/css">
+
+<script type="text/javascript" src="<%=cp%>/resource/jquery/js/jquery-1.12.4.min.js"></script>
 
 <style>
 .btn{
@@ -23,9 +39,12 @@ input{
 	border-radius: 5px;
 }
 
+.body-container {
+	position: absolute;
+	top: 30%;
+	left: 33%;
+}
 </style>
-
-
 
 <script type="text/javascript">
 function pwdOk() {
@@ -57,9 +76,10 @@ function pwdOk() {
 
     f.submit();
 }
-
-
 </script>
+
+</head>
+<body>
 <div class="body-container" style="width: 700px;">
     <div class="body-title">
         <h3><span style="font-family: Webdings">2</span> 비밀번호 변경 </h3>
@@ -114,3 +134,8 @@ function pwdOk() {
 			</form>
         </div>
 </div>
+<script type="text/javascript" src="<%=cp%>/resource/jquery/js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="<%=cp%>/resource/jquery/js/jquery.ui.datepicker-ko.js"></script>
+
+</body>
+</html>

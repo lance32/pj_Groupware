@@ -45,10 +45,14 @@
 </select>
 
 <select id="listResourceList3" resultType="com.sp.resource.Resource">
-	SELECT resourceNum, rl.groupNum, groupName, resourceName, occupancy
-		FROM resourceList rl
-		LEFT OUTER JOIN resourceGroup rg ON rl.groupNum = rg.groupNum
-		ORDER BY resourceNum DESC
+	SELECT * FROM(
+	    SELECT ROWNUM rnum, tb.* FROM(
+	        SELECT resourceNum, rl.groupNum, groupName, resourceName, occupancy
+			FROM resourceList rl
+			LEFT OUTER JOIN resourceGroup rg ON rl.groupNum = rg.groupNum
+			ORDER BY rl.groupNum DESC
+	    )tb WHERE ROWNUM &lt;= #{end}
+	) WHERE rnum &gt;= #{start}
 </select>
 
 <select id="readResourceList" parameterType="Integer" resultType="com.sp.resource.Resource">

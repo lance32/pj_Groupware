@@ -12,6 +12,8 @@ public interface AuthorityService {
 	
 	public int dataCount(Map<String, Object> map);
 	
-	public Authority readAuthority(String memberNum); 
+	public Authority readAuthority(String memberNum);
+
+	public int updateAuthority(Map<String, Object>map); 
 
 }

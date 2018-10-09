@@ -57,24 +57,45 @@
 jQuery(function(){
 	//추가(수정) 버튼 클릭시 insertAddressButn
 	jQuery("#addAddressButn").click(function(){
+		var state="true";
 		var f=document.addAddressForm;
 		
 		var str=f.name.value;
 		if(!str){
 			alert("이름은 필수 입력사항 입니다.");
 			f.name.focus();
-			return;
+			state="false";
+			return state;
 		}
 		
 		var str=f.tel.value;
 		if(!str){
 			alert("전화번호는 필수 입력사항 입니다.");
 			f.tel.focus();
-			return;
+			state="false";
+			return state;
+		}
+		if(!/^[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}$/.test(str)){
+			alert("전화번호 형식이 틀렸습니다.");
+			f.tel.focus();
+			state="false";
+			return state;
 		}
 		
-		f.action="<%=cp%>/addressBook/${mode}";
-		f.submit();
+		var str=f.email.value;
+		if(str){
+			if(!/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i.test(str)){
+				alert("이메일 형식이 틀렸습니다.");
+				f.email.focus();
+				state="false";
+				return state;
+			}
+		}
+		
+		if(state=="true"){
+			f.action="<%=cp%>/addressBook/${mode}";
+			f.submit();
+		}
 	});
 	
 	//취소버튼 클릭시
@@ -102,11 +123,11 @@ jQuery(function(){
 					<tr height="1px;"><td width="90px;"></td><td width="120px;"></td><td width="50px;"></td><td width="130px;"></td></tr>
 					<tr height="50px;">
 						<td class="addressItem"> 이름 </td>
-						<td colspan="3"><input type="text" name="name" class="addressInput"  autocomplete="off" value="${addressInfo.name}" maxlength="25"></td>
+						<td colspan="3"><input type="text" name="name" class="addressInput"  autocomplete="off" value="${addressInfo.name}" maxlength="25" placeholder="ex) 김한조"></td>
 					</tr>
 					<tr height="50px;">
 						<td class="addressItem">전화번호</td>
-						<td colspan="3"><input type="text" name="tel" class="addressInput"  autocomplete="off" value="${addressInfo.tel}" maxlength="20"></td>
+						<td colspan="3"><input type="text" name="tel" class="addressInput"  autocomplete="off" value="${addressInfo.tel}" maxlength="20" placeholder="ex) 010-1234-5678"></td>
 					</tr>
 					<tr height="50px;">
 						<td class="addressItem"> 그룹 </td>
@@ -122,7 +143,7 @@ jQuery(function(){
 					</tr>
 					<tr height="50px;">
 						<td class="addressItem"> 이메일 </td>
-						<td colspan="3"><input type="text" name="email" class="addressInput"  autocomplete="off" value="${addressInfo.email}" maxlength="30"></td>
+						<td colspan="3"><input type="text" name="email" class="addressInput"  autocomplete="off" value="${addressInfo.email}" maxlength="30" placeholder="ex) email123@mail.com"></td>
 					</tr>
 					<tr height="50px;">
 						<td class="addressItem"> FAX 번호 </td>
@@ -146,12 +167,12 @@ jQuery(function(){
 				</c:if>
 				<input type="hidden" name="memberNum" value="${sessionScope.member.userId}">
 			</div>
-			<div style="clear:both; width: 100%; height: 50px;">
-				<button class="butn" type="reset" style="float: left; margin: 20px 0px 0px 30px;">초기화</button>
-				<button id="addCancelButn" class="butn" style="float: right; margin: 20px 20px 0px 10px;">취소</button>
-				<button id="addAddressButn" class="butn" type="button" style="float: right; margin-top: 20px;"><c:if test="${mode=='update'}">수정</c:if><c:if test="${mode=='created'}">추가</c:if></button>
-			</div>
 		</form>
+		<div style="clear:both; width: 100%; height: 50px;">
+			<button class="butn" type="reset" style="float: left; margin: 20px 0px 0px 30px;">초기화</button>
+			<button id="addCancelButn" class="butn" style="float: right; margin: 20px 20px 0px 10px;">취소</button>
+			<button id="addAddressButn" class="butn" type="button" style="float: right; margin-top: 20px;"><c:if test="${mode=='update'}">수정</c:if><c:if test="${mode=='created'}">추가</c:if></button>
+		</div>
 	</div>
 	<div style="width: 320px; height: 500px; float: left;  border-right: 2px solid #BDBDBD; border-bottom: 2px solid #BDBDBD; opacity:0.5; pointer-events: none;"><%--opacity:0.5; pointer-events: none; --%>
 		<div style="width: 100%; height: 40px; float: left;">

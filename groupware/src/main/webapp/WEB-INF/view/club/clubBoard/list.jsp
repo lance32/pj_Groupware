@@ -232,9 +232,6 @@ jQuery(function(){
 	
 	//댓글달기 버튼 클릭시
 	jQuery(document).on("click", ".createReplyButn", function(){
-		if(! confirm("댓글을 생성 하시겠습니까?")){
-			return;
-		}
 		var replyContentInput=jQuery(this).parent("div").parent("div").children(".replyContentInput");
 		var replyContent=replyContentInput.val();
 	    if(!replyContent) {
@@ -249,9 +246,6 @@ jQuery(function(){
 	
 	//댓글의 답글달기 버튼 클릭시
 	jQuery(document).on("click",".createReplyAnswerButn",function(){
-		if(! confirm("답글을 생성 하시겠습니까?")){
-			return;
-		}
 		var replyContentInput=jQuery(this).parent("div").parent("div").children(".replyAnswerContent");
 		var replyContent=replyContentInput.val();
 	    if(!replyContent) {

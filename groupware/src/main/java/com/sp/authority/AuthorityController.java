@@ -9,11 +9,13 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -86,6 +88,7 @@ public class AuthorityController {
 			listUrl=listUrl+"?"+query;
 			articleUrl=articleUrl+"&"+query;
 		}
+	
 		
 		String paging=util.paging(current_page, total_page, listUrl);
 		
@@ -125,12 +128,30 @@ public class AuthorityController {
 		map.put("searchValue", searchValue);
 		map.put("authority", authority);
 		map.put("list", list);
+		model.addAttribute("memberNum",memberNum);
+		model.addAttribute("searchKey", searchKey);
+		model.addAttribute("searchValue", searchValue);
 		model.addAttribute("query",query);
-//		model.addAttribute("dto",dto);
-//		model.addAttribute("page",page);
-//		model.addAttribute("list",list);
-		
+		model.addAttribute("authority",authority);
+		model.addAttribute("list",list);
 		return map;
 	}
 	
+	@RequestMapping(value="/authority/update", method=RequestMethod.POST)
+	public String updateSubmit(
+			@RequestParam(value="page") String page,
+			@RequestParam(value="memberNum") String memberNum,
+			@RequestParam(value="grants") String grantsValue,
+			Authority authority,
+			HttpSession session ) {
+	
+		long grants = Long.parseLong(grantsValue);
+		Map<String, Object>map = new HashMap<>();
+	
+		map.put("memberNum", memberNum);
+		map.put("grants", grants);
+		service.updateAuthority(map);			
+	
+		return "redirect:/authority/authoritylist?page="+page;
+	}
 }

@@ -94,7 +94,8 @@ function getData(workLogNum) {
 	<c:forEach var = "dto" items = "${list}">
 		<tr class="tr">
 			<td>${dto.listNum}</td>
-			<td>${dto.departmentName}</td>
+			<td>${dto.departmentName}</td>		
+			<td>${dto.grants}</td>	
 			<td  style="text-align: center;"><span onclick="getData('${dto.workLogNum}');" style="color: blue;" data-num="${dto.workLogNum}">${dto.makeDate}${sessionScope.member.userName}</span></td>
 			<td>
 				<c:if test="${dto.num =='1'}">일일업무</c:if>

@@ -16,8 +16,23 @@ import javax.crypto.spec.SecretKeySpec;
 import org.apache.commons.codec.binary.Base64;
 
 public class AES256Util {
+	private final String aes256 = "!projectgroupware!";
 	private String iv;
 	private Key keySpec;
+	
+	public AES256Util() throws UnsupportedEncodingException {
+		this.iv = aes256.substring(0, 16);
+		byte[] keyBytes = new byte[16];
+		byte[] b = aes256.getBytes("UTF-8");
+		int len = b.length;
+		if (len > keyBytes.length)
+			len = keyBytes.length;
+		
+		System.arraycopy(b, 0, keyBytes, 0, len);
+		SecretKeySpec keySpec = new SecretKeySpec(keyBytes, "AES");
+		
+		this.keySpec = keySpec; 
+	}
 	
 	// 문자열을 입력받고 utf-8로 16개를 keySpec에 복사
 	public AES256Util(String key) throws UnsupportedEncodingException {
@@ -38,7 +53,7 @@ public class AES256Util {
 	public String aesEncode(String str) 
 			throws UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchPaddingException, 
 					InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
-		Cipher c = Cipher.getInstance("AES/CBS/PKCS5Padding");
+		Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
 		c.init(Cipher.ENCRYPT_MODE, keySpec, new IvParameterSpec(iv.getBytes()));
 		
 		byte[] encrypted = c.doFinal(str.getBytes("UTF-8"));

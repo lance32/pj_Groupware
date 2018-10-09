@@ -35,7 +35,6 @@ public class MemberController {
 	@Autowired
 	private MyUtil util;
 	
-	// 변경할 시작 부분 ----------------------------------------------------------------------
 	@RequestMapping(value="/login", method=RequestMethod.GET)
 	public String login(String login_error, HttpSession session, Model model) {
 		// 로그인
@@ -46,7 +45,6 @@ public class MemberController {
 		return "/member/login";
 	}
 	
-
 	//최초 로그인 체크
 	@RequestMapping(value="/member/firstLogin")
 	public String firstLoginCheck(HttpSession session) {
@@ -54,10 +52,9 @@ public class MemberController {
 		Member dto = service.readMember(info.getUserId());
 
 		if(dto.getModified()==null) {
-			// 독립된 화면으로 구성해야할 것 같음. 수정필요.
-			return ".member.pwd";		
+			return "/member/pwd";		
 		}
-		return ".mainLayout";
+		return "redirect:/main";
 	}
 	
 	@RequestMapping(value="/member/firstLoginSubmit", method=RequestMethod.POST)
@@ -71,10 +68,8 @@ public class MemberController {
 		dto.setMemberNum(info.getUserId());
 		
 		service.firstLoginMember(dto);
-		return ".mainLayout";
+		return "redirect:/main";
 	}
-	
-	// 변경할 끝 부분 ----------------------------------------------------------------------
 	
 	//멤버 리스트
 	@RequestMapping(value="/member/main")

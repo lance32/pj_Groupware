@@ -173,6 +173,7 @@ public class ResourceController {
 			@RequestParam(value="page", defaultValue="1") int current_page
 			) {
 		int rows = 10;
+		
 		int dataCount;
 		int total_page;
 		

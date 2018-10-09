@@ -7,9 +7,11 @@
    String cp=request.getContextPath();
 %>
 
-<h4 style="text-align: center;">2018-09-10</h4>
-<table class="sidetable" border ="1">
-	
+
+<a href = "<%=cp%>/authority/authoritylist"></a>
+
+
+<table class="sidetable" border ="1" style="margin-top: 35px;">
 		<tr>
 			<td rowspan = "5" style="width:90px; height: 99%;">
 				<c:if test="${not empty sessionScope.member.saveFilename}">
@@ -55,7 +57,6 @@
 </tr>
 
 </table>
-
 
 <script type="text/javascript">
 

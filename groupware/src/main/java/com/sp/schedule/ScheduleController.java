@@ -162,7 +162,7 @@ public class ScheduleController {
 			@RequestParam(value="sDay", defaultValue="") String sDay,
 			@RequestParam(value="eDay", defaultValue="") String eDay
 			) throws Exception {
-		int rows = 5;
+		int rows = 10;
 		int total_page;
 		int dataCount;
 		

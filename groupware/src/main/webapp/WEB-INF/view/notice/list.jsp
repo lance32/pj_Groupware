@@ -54,6 +54,7 @@ function searchList() {
 <div style="text-align: center;">
 	<form name="searchForm" action="<%=cp%>/notice/list" method="post">
 		${paging }
+		<br>
 		<button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/notice/list';">새 로 고 침</button>
    		<select name="searchKey" class="selectBox" style="margin-bottom: 5px;">
           	<option value="subject">제 목</option>

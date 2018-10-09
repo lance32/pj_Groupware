@@ -22,8 +22,12 @@
 			 	color = #{group}
 			 	AND m.departmentNum = #{departmentNum}
 			 </if>
- 
-			<if test="(group !='all') and (group !='red')">
+			 
+ 			<if test="group == 'green'">
+ 				color = #{group}
+ 			</if>
+ 			
+			<if test="(group !='all') and (group !='red') and (group !='green')">
 				s.memberNum = #{memberNum}
 				AND color = #{group}
 			</if>
@@ -103,6 +107,7 @@
 			SELECT ROWNUM rnum, tb.* FROM(
 				SELECT scheduleNum, title, color, startDay, place
 				FROM schedule
+				WHERE memberNum=#{memberNum} AND SYSDATE &lt; startDay
 				ORDER BY created 
 			) tb WHERE ROWNUM &lt;= #{end}
 		) WHERE rnum &gt;= #{start}
