@@ -6,7 +6,6 @@
 %>
  <style type="text/css">
  .body{
- 	background: #FAFAFB;
  	border-left: 2px solid #BDBDBD;
  	border-right: 2px solid #BDBDBD;
  }
@@ -42,7 +41,6 @@
  .topName:hover a{
  	color: #0F7FBB;
  }
- 
  </style>
  
  <script type="text/javascript">
@@ -86,10 +84,10 @@ jQuery(function(){
 });
 </script>
  
-<div style="clear: both; width: 93%; height: 200px; margin: 20px 50px; border: 1px solid black; background: #FFFFFF; overflow:hidden;">
-	<div id="myCarousel" class="carousel slide" data-ride="carousel">
-	  
-		<ol class="carousel-indicators">
+<div style="clear: both; width: 100%; height: 240px; padding: 20px 50px;background: #F2F2F2; overflow:hidden; border-bottom: 1px solid #E6E6E6; border-top:2px solid #E6E6E6;">
+	<div id="myCarousel" class="carousel slide" data-ride="carousel" >
+	
+		<ol class="carousel-indicators" style="height: 0px;">
 			<li data-target="#myCarousel" data-slide-to="0" class="active"></li>
 			<li data-target="#myCarousel" data-slide-to="1"></li>
 			<li data-target="#myCarousel" data-slide-to="2"></li>
@@ -97,13 +95,13 @@ jQuery(function(){
 	    
 		<div class="carousel-inner">
 			<div class="item active">
-				<img src="<%=cp%>/resource/images/4M14XD6.jpeg"  style="width:100%;">
+				<img src="<%=cp%>/resource/images/company.jpg" style="height: 200px;">
 			</div>
 			<div class="item">
-				<img src="<%=cp%>/resource/images/drawGit.png" style="width:100%;">
+				<img src="<%=cp%>/resource/images/office.jpg" style="height: 200px;">
 			</div>
 			<div class="item">
-				<img src="#" style="width:100%;">
+				<img src="<%=cp%>/resource/images/building.jpg" style="height: 200px;">
 			</div>
 		</div>
 		
@@ -118,7 +116,7 @@ jQuery(function(){
 	</div>
 </div>
  
-<div style="clear: both; width: 95%; height: 570px; margin: 20px 50px;">
+<div style="clear: both; width: 100%; height: 600px;padding: 30px 0px 0px 50px; background: #FAFAFB;">
 	<div style="float:left;  width: 50%; height:100%;">
 		<%-- 공지사항 --%>
 		<div style="width: 99%; height:50%;">
@@ -261,7 +259,7 @@ jQuery(function(){
 					<c:forEach var="scheduleList" items="${scheduleList_main}">
 						<tr class="mainTableTr">
 							<td>${scheduleList.color == 'blue'?'개인일정': (scheduleList.color=='black'?'가족일정':(scheduleList.color=='red'? '부서일정':'회사일정'))}</td>
-							<td style="text-align: left; padding-left: 10px; color: #6E6E6E;">${scheduleList.title}</td>
+							<td style="color: #6E6E6E;">${scheduleList.title}</td>
 							<td>${scheduleList.place}</td>
 							<td>${scheduleList.startDay}</td>
 						</tr>

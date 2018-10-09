@@ -22,6 +22,7 @@
 <link rel="stylesheet" href="<%=cp%>/resource/css/layout.css?ver=3" type="text/css">
 
 <script type="text/javascript" src="<%=cp%>/resource/jquery/js/jquery-1.12.4.min.js"></script>
+<script src="<%=cp%>/resource/bootstrap/js/bootstrap.min.js"></script>
 
 </head>
 <body>
