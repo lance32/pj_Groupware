@@ -26,8 +26,10 @@
 	</sql>
 
 	<select id="deptList" resultType="com.sp.department.Department">
-		SELECT departmentNum, parentDepartment, departmentName, departmentType, deptOrder, deptGroup
-		FROM department
+		SELECT d1.departmentNum, d1.parentDepartment, d2.departmentName parentDeptName, d1.departmentName, d1.deptGroup, d1.deptOrder
+		FROM department d1 
+		LEFT OUTER JOIN department d2 ON d2.departmentNum = d1.parentDepartment 
+		ORDER BY d1.deptGroup, d1.idx, d1.deptOrder
 	</select>
 	
 	<select id="msgRead" resultType="com.sp.message.Message" parameterType="Integer">
