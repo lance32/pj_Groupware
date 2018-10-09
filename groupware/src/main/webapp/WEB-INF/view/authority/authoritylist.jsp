@@ -22,8 +22,7 @@ function getData(memberNum) {
 		url: query,
 		dataType:"json",
 		success:function(data) {
-			var chk = 0;
-			var modify ="";
+			var chk ="";
 			var tot ="<form name='authorityForm' id='authorityForm' method='post' enctype='multipart/form-data'>";
 			$.each(data, function (idx, val) {	
 				data.list.grants=data.authority.grants
@@ -46,6 +45,7 @@ function getData(memberNum) {
 				
 				if (idx == 'list') {
 					var grants = data.list.grants;
+					grants = grants.toString(2);
 					var inf = ""; //list
 					inf ="<table style='width: 70%;'>";
 					inf+= "<td style='border-bottom:1px;'>권한</td>";
@@ -60,7 +60,18 @@ function getData(memberNum) {
 					
 					inf+= "</table><button type='button' id = 'btnsend' onclick='s();'>수정</button></form>";
 					tot+=inf;
+					console.log(grants);
 					chk = grants;
+					if(grants.length != (val.length*2)){
+						var zero="";
+						for(var i=0; i<val.length-chk.length; i++){
+							zero +=0;
+							console.log(zero);
+							}
+						chk = zero+chk;
+						}
+					console.log(chk);
+						
 				};
 			});
 			
@@ -70,24 +81,22 @@ function getData(memberNum) {
 				width: 800,
 				modal: true,
 				open:function() {	
-					chk= String(chk);
-					for(var i=0; i<chk.length; i++){						
-						$("#auth1"+i).val(chk.substr(i,1));
-						$("#auth2"+i).val(chk.substr(i + 1 ,1));
-							if($("#auth1"+i).val() =="1"){
-								$("#auth1"+i).attr("checked", true);
-							}else{
-								$("#auth1"+i).val() =='0';
-							}
-							if($("#auth2"+i).val() =='1'){
+					var k=0;
+					for(var i=0; i<(chk.length)/2; i++){		
+						if(k<chk.length/2){
+						$("#auth1"+i).val(chk.substr(k+k,1));
+						$("#auth2"+i).val(chk.substr(k+k+1 ,1));
+							if($("#auth1"+i).val() =="1")
+								$("#auth1"+i).attr("checked", true);							
+							if($("#auth2"+i).val() =='1')
 								$("#auth2"+i).attr("checked", true);	
-							}else{
-								$("#auth1"+i).val() =='0';
-							}
+						console.log("#auth1"+i+":"+$("#auth1"+i).val());
+						console.log("#auth2"+i+":"+$("#auth2"+i).val());
 					}
-					  
-				
+						console.log(k);
+						k++;
 				}
+			}
 			 
 			});
 		},
@@ -110,6 +119,7 @@ function s() {
 				grantsValue +="0";
 			}
 		});
+		alert(grantsValue);
 		$("#grants").val(grantsValue);
 	f.action = "<%=cp%>/authority/update";
 	f.submit();
