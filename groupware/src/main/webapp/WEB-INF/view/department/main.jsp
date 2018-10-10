@@ -42,18 +42,12 @@ function deptManage(id) {
 		type: "get",
 		dataType: "json",
 		success: function(data) {
-			console.log(data);
-			var tb = "<table id='tb' style='margin-left: 10px;'><tr class='cf'><td width='50'>&nbsp;</td><td width='200'>부서</td><td width='200'>직위</td><td width='200'>이름</td></tr>";
-			var i = 0;
-			$.each(data, function(idx, val) {
-				tb += "<tr class='tr'><td><input type='checkbox'></td><td style='text-align: left;'>" 
-				   + val[i].departmentName + "</td><td>" + val[i].positionName + "</td><td>" + val[i].name + "</td></tr>";
-				//console.log(val[i++].departmentName);
-				//console.log(tb);
-				i++;
-				console.log(i);
+			var tb = "<table id='tb' style='margin-left: 10px;'><tr class='cf'><td width='50'>&nbsp;</td><td width='200'><h4>부서</h4></td><td width='200'><h4>직위</h4></td><td width='200'><h4>이름</h4></td></tr>";
+			$.each(data.deptInfo, function(idx, val) {
+				tb += "<tr class='tr'><td><input type='checkbox'></td><td style='text-align: left;'><h4>" 
+				   + val.departmentName + "</h4></td><td><h4>" + val.positionName + "</h></td><td><h4>" + val.name + "</h4></td></tr>";
 			});
-			tb += "</table>";
+			tb += "</table><input type='hidden' id='deptId' value='" + id + "'>";
 			$("#deptInfoLayer").html(tb);
 		},
 		error: function(jqHXR) {
@@ -73,54 +67,79 @@ function getNextId() {
 	return lastId + 1;
 }
 
-function add(id) {
-	$("#createDept").dialog({
-		title:"부서 관리",
+function add() {
+	var id = $("#deptId").val();
+	$("#createDeptLayer").dialog({
+		title:"부서 추가",
+		height: 200,
+		width: 400,
+		modal: true,
+		open:function() {
+			$("#departmentName").val("새 부서");
+		}, 
+		buttons:{
+			"추가":function() {
+				var nextId = getNextId();
+				var li = "<ul><h4><li id='" + nextId + "' onclick='deptManage(" + nextId + ");'>" + $("#departmentName").val() + "</li></h4></ul>";
+				$(li).insertAfter("#" + id);
+				
+				$(this).dialog("close");
+			},
+			"취소":function() {
+				$(this).dialog("close");
+			}
+		}
+	});
+}
+
+function rename() {
+	var id = $("#deptId").val();
+	$("#createDeptLayer").dialog({
+		title:"부서명 변경",
 		height: 200,
 		width: 400,
 		modal: true,
 		open:function() {
 			$("#departmentName").val($("#" + id).text());
-			$("#departmentNum").val(id);
-			alert(id + ":" + $("#departmentName").val());
 		}, 
 		buttons:{
-			"확인":function() {
-				id = $("#departmentNum").val();
-				alert(id + ":" + $("#departmentName").val());
-				
+			"변경":function() {
 				$("#" + id).text($("#departmentName").val());
 				$(this).dialog("close");
 			},
 			"취소":function() {
 				$(this).dialog("close");
-			},
-			"삭제":function() {
-				//alert("부서 삭제(팀원들은 상위로 부서로 이동)");
-				$("#" + id).remove();
+			}
+		}
+	});
+}
+
+function move() {
+	var id = $("#deptId").val();
+	$("#moveDeptLayer").dialog({
+		title:"부서 이동",
+		height: 400,
+		width: 400,
+		modal: true,
+		open:function() {
+			$("#dept_organization li").each(function() {
+				console.log($(this).text());
+				var num = $(this).attr("id");
+				var name= $(this).text();
+				if (name != "(회사)" && num != id) {
+					var option = "<option value='"+ num +"'>" + name + "</option>";
+					//console.log(option);
+					$("#deptNum").append(option);
+				}
+			});
+		}, 
+		buttons:{
+			"이동":function() {
+				$("#" + id).text($("#departmentName").val());
 				$(this).dialog("close");
 			},
-			"부서추가":function() {
-				var nextId = getNextId();
-				var li = "<ul><h4><li id='" + nextId + "' onclick='deptManage(" + nextId + ");'>새부서</li></h4></ul>";
-				$(li).insertAfter("#" + id);
-				
+			"취소":function() {
 				$(this).dialog("close");
-/*			},
- 			"위로":function() {
-				//alert("부서 위로 이동");
-				var $parents = $("#" + id).parent().parent();
-				alert($parents.attr("id"));
-				$("#" + id).remove();
-				var li = "<li id='" + id + "' onclick='add(" + id + ");'>" + $("#departmentName").val() + "</li>";
-				$parents.append(li); 
-			},
-			"아래로":function() {
-				// alert("부서 아래로 이동");
-				var $parents = $("#" + id).children();
-				$("#" + id).remove();
-				var li = "<ul><li id='" + id + "' onclick='add(" + idd + ");'>" + $("#departmentName").val() + "</li></ul>";
-				$parents.append(li); */
 			}
 		}
 	});
@@ -175,17 +194,17 @@ function add(id) {
 				<tr class="cf">
 					<%-- 구분 폭 수정 가능 --%>
 					<td width="50">&nbsp;</td>
-					<td width="200">부서</td>
-					<td width="200">직위</td>
-					<td width="200">이름</td>
+					<td width="200"><h4>부서</h4></td>
+					<td width="200"><h4>직위</h4></td>
+					<td width="200"><h4>이름</h4></td>
 				</tr>
 				<c:forEach var="dto" items="${deptMemberList}" end="11">
 					<c:if test="${dto.name != null}">
 					<tr class="tr">
 						<td><input type="checkbox"></td>
-						<td style="text-align: left;">${dto.departmentName}</td>
-						<td>${dto.positionName}</td>
-						<td>${dto.name}</td>
+						<td style="text-align: left;"><h4>${dto.departmentName}</h4></td>
+						<td><h4>${dto.positionName}</h4></td>
+						<td><h4>${dto.name}</h4></td>
 					</tr>
 					</c:if>
 				</c:forEach>
@@ -211,12 +230,18 @@ function add(id) {
 			</div>
 			<br>
 			<div style="padding-left: 10px;">
-				<button onclick="add();">&nbsp;부서 추가&nbsp;</button>&nbsp;&nbsp;<button>&nbsp;부서 이동&nbsp;</button>
+				<button onclick="add();">&nbsp;부서 추가&nbsp;</button>&nbsp;&nbsp;
+				<button onclick="rename();">&nbsp;부서명 변경&nbsp;</button>&nbsp;&nbsp;
+				<button onclick="move();">&nbsp;부서 이동&nbsp;</button>
 			</div>
 		</div>
 	</div>
 </div>
-<div id="createDept" style="display:none;">
+<div id="createDeptLayer" style="display:none;">
 	<input type="hidden" id="departmentNum" name="departmentNum"><br>
-	<label>부서명</label><input type="text" id="departmentName" name="departmentName">
+	<label>부서명</label>&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" id="departmentName" name="departmentName">
+</div>
+<div id="moveDeptLayer" style="display:none;">
+	<input type="hidden" id="toDepartmentNum" name="toDepartmentNum"><br>
+	<label>부서명</label>&nbsp;&nbsp;&nbsp;&nbsp;<select id="deptNum"></select>
 </div>
