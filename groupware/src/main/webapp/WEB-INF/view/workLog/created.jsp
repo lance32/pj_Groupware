@@ -5,29 +5,99 @@
 <%
 	String cp=request.getContextPath();
 %>
-<script type="text/javascript">
-
-function getData() {
-	var query = "<%=cp%>/workLog/created"; 
-	console.log(query)
-	$.ajax({
-		type:"get",
-		url: query,
-		dataType:"json",
-		success:function(data) {
-			console.log(data);		
-		},
-		error:function() {
-			console.log("eroer");
-		}
-	});
-}
-</script>
-
-
 <script type="text/javascript" src="<%=cp%>/resource/se/js/HuskyEZCreator.js" charset="utf-8"></script>
 
+<style type="text/css">
+#day, #week, #month {
+	cursor: pointer;
+}
+</style>
+<script type="text/javascript">
 
+$(function() {
+	$("#day").click(function() {
+		if(confirm("내용이 저장되지 않습니다 변경 하시 겠습니까 ? ")) {
+		location.href = "<%=cp%>/workLog/created?num=1";
+	}
+		<%-- var query = "<%=cp%>/workLog/form?num=1"; 
+		$.ajax({
+			type:"get",
+			url: query,
+			dataType:"json",
+			success:function(data) {
+				console.log($("#content").val());
+				console.log("1");
+				$("#content").val(data.dto.formValue);
+				console.log($("#content").val());			
+			},
+			error:function(jqXHR) {
+			}
+		}); --%>
+		
+	});
+});
+
+$(function() {
+	$("#week").click(function() {
+		if(confirm("내용이 저장되지 않습니다 변경 하시 겠습니까 ? ")) {
+			location.href = "<%=cp%>/workLog/created?num=2";
+		}
+<%-- 		
+		var query = "<%=cp%>/workLog/created?num=2"; 
+ 		$.ajax({
+			type:"get",
+			url: query,
+			dataType:"json",
+			success:function(data) {
+				
+				console.log($("#content").val());
+				console.log("2");
+				$("#content").val(data.dto.formValue);
+				console.log($("#content").val());
+			},
+			error:function(jqXHR) {
+				console.log(jqXHR.responseText);
+			}
+		});  --%>
+		
+	});
+});
+
+$(function() {
+	$("#month").click(function() {
+		if(confirm("내용이 저장되지 않습니다 변경 하시 겠습니까 ? ")) {
+			location.href = "<%=cp%>/workLog/created?num=3";
+		}
+	<%-- var query = "<%=cp%>/workLog/form?num=3";  
+		$.ajax({
+			type:"get",
+			url: query,
+			dataType:"json",
+			success:function(data) {
+				console.log($("#content").val());
+				console.log("3");
+				$("#content").val(data.dto.formValue);
+				console.log($("#content").val());
+				
+			},
+			error:function(jqXHR) {
+				console.log(jqXHR.responseText);
+			}
+		}); --%>		
+	});
+});
+
+
+function ss() {
+	var f = document.workLogForm;
+	alert("11111");
+	alert($("#content").val());
+	f.action = "<%=cp%>/workLog/created";
+	return true;
+}
+
+</script>
+<div>
 	<div style="clear: both; margin: 10px 0px 15px 10px;">
 		<span class="glyphicon glyphicon-book" style="font-size: 28px; margin-left: 10px;"></span>
 		<span style="font-size: 30px;">&nbsp;업무 일지</span><br>
@@ -35,21 +105,22 @@ function getData() {
 	</div>
 
 <div>
-<form name="workLogForm" method="post" enctype="multipart/form-data" onsubmit="return submitContent(this);">
+<form name="workLogForm" id= "workLogForm" method="post" enctype="multipart/form-data" onsubmit="return submitContent(this);">
 <table style="width: 100%; margin: 20px auto 0px; border-spacing: 0px; border-collapse: collapse;">
-
 <tr align="left" height="40" style="border-top: 1px solid #cccccc; border-bottom: 1px solid #cccccc;"> 
 <td width="100" bgcolor="#eeeeee" style="text-align: center;">기안자</td>
 <td style="padding-left:10px;"> 
-${sessionScope.member.userName}
+${sessionScope.member.userId}
 </td>
 </tr>
 
 <tr align="left" height="40" style="border-bottom: 1px solid #cccccc;"> 
 <td width="100" bgcolor="#eeeeee" style="text-align: center;">업무일지</td>
-<td><span class="glyphicon glyphicon-book" style="font-size: 15px;" onclick="getData()">일일</span></td>
-<td><span class="glyphicon glyphicon-book" style="font-size: 15px;" onclick="getData()">주간</span></td>
-<td><span class="glyphicon glyphicon-book" style="font-size: 15px;" onclick="getData()">월간</span></td>
+<td>
+<span class="glyphicon glyphicon-book" style="font-size: 15px; padding-left: 20px;" id ="day">일일</span>
+<span class="glyphicon glyphicon-book" style="font-size: 15px; padding-left: 20px;" id ="week">주간</span>
+<span class="glyphicon glyphicon-book" style="font-size: 15px; padding-left: 20px;" id = "month">월간</span>
+</td>
 </tr>
 
 <tr align="left" style="border-bottom: 1px solid #cccccc;"> 
@@ -69,9 +140,10 @@ ${sessionScope.member.userName}
 <button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/workLog/list';">${mode=='update'?'수정취소':'등록취소'}</button>
 <c:if test="${mode=='update'}">
 <input type="hidden" name="workLogNum" value="${dto.workLogNum}">
-<input type="hidden" name="num" value="${dto.num}">
 <input type="hidden" name="page" value="${page}">
 </c:if>
+<input type="hidden" id = "num" name="num" value="${dto.num}">
+<input type="hidden" name="content" value ="$('content').val()">
 </td>
 </tr>
 </table>
@@ -81,45 +153,39 @@ ${sessionScope.member.userName}
 <script type="text/javascript">
 var oEditors = [];
 nhn.husky.EZCreator.createInIFrame({
-oAppRef: oEditors,
-elPlaceHolder: "content",
-sSkinURI: "<%=cp%>/resource/se/SmartEditor2Skin.html",	
-htParams : {bUseToolbar : true,
-fOnBeforeUnload : function(){
-}
-
-},
-fOnAppLoad : function(){
-//oEditors.getByIdcontent.exec("PASTE_HTML", "로딩이 완료된 후에 본문에 삽입되는 text);
-},
-
-fCreator: "createSEditor2"
+	oAppRef: oEditors,
+	elPlaceHolder: "content",
+	sSkinURI: "<%=cp%>/resource/se/SmartEditor2Skin.html",	
+	htParams : {bUseToolbar : true,
+		fOnBeforeUnload : function(){	
+		}
+	}, 
+	fOnAppLoad : function(){
+		
+	},
+	fCreator: "createSEditor2"
 });
 
 function pasteHTML() {
-var sHTML = "<span style='color:#FF0000;'>이미지도 같은 방식으로 삽입<\/span>";
-oEditors.getByIdcontent.exec("PASTE_HTML", sHTML);
+	var sHTML = "<span style='color:#FF0000;'>이미지도 같은 방식으로 삽입합니다.<\/span>";
+	oEditors.getById["content"].exec("PASTE_HTML", [sHTML]);
 }
 
 function showHTML() {
-var sHTML = oEditors.getByIdcontent.getIR();
-alert(sHTML);
+	var sHTML = oEditors.getById["content"].getIR();
+	alert(sHTML);
 }
-
+	
 function submitContents(elClickedObj) {
-oEditors.getByIdcontent.exec("UPDATE_CONTENTS_FIELD", []);	// 에디터의 내용이 textarea에 적용
-// 에디터의 내용에 대한 값 검증은 이곳에서 document.getElementById("content").value를 이용해서 처리.
-try {
-// elClickedObj.form.submit();
+	oEditors.getById["content"].exec("UPDATE_CONTENTS_FIELD", []);	
 
-} catch(e) {}
+	return ss();	
 }
 
 function setDefaultFont() {
-var sDefaultFont = '돋움';
-var nFontSize = 24;
-oEditors.getByIdcontent.setDefaultFont(sDefaultFont, nFontSize);
+	var sDefaultFont = '돋움';
+	var nFontSize = 24;
+	oEditors.getById["content"].setDefaultFont(sDefaultFont, nFontSize);
 }
-</script> 
-
-
+</script>  
+</div>

@@ -122,7 +122,6 @@ public class AuthorityController {
 		Authority authority=service.readAuthority(memberNum);
 		List<Authority> list=service.listTalbe(map);
 		
-		
 		map.put("memberNum", memberNum);
 		map.put("searchKey", searchKey);
 		map.put("searchValue", searchValue);
@@ -141,12 +140,12 @@ public class AuthorityController {
 	public String updateSubmit(
 			@RequestParam(value="page") String page,
 			@RequestParam(value="memberNum") String memberNum,
-			@RequestParam(value="grants") String grantsValue,
+			@RequestParam(value="grants") int grantsValue,
 			Authority authority,
 			HttpSession session ) {
 	
-		long grants = Long.parseLong(grantsValue);
 		Map<String, Object>map = new HashMap<>();
+		int grants = grantsValue;
 	
 		map.put("memberNum", memberNum);
 		map.put("grants", grants);

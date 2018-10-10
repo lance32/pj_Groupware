@@ -12,13 +12,12 @@ public class Authority {
 	private String comments;
 	private MultipartFile upload;
 	private String saveFilename;
-	private long grants;
+	private int grants;
 	
-
-	public long getGrants() {
+	public int getGrants() {
 		return grants;
 	}
-	public void setGrants(long grants) {
+	public void setGrants(int grants) {
 		this.grants = grants;
 	}
 	public MultipartFile getUpload() {

@@ -16,7 +16,6 @@
 <script>
 function getData(memberNum) {
 	var query = "${articleUrl}&memberNum="+memberNum;
-		console.log(query);
 	$.ajax({
 		type:"get",
 		url: query,
@@ -25,7 +24,7 @@ function getData(memberNum) {
 			var chk ="";
 			var tot ="<form name='authorityForm' id='authorityForm' method='post' enctype='multipart/form-data'>";
 			$.each(data, function (idx, val) {	
-				data.list.grants=data.authority.grants
+				data.list.grants=data.authority.grants;
 				var aut = ""; //authority
 				if (idx == 'authority') {
 					aut = "<table style = 'width:100%; border: 1px;'>";
@@ -45,7 +44,8 @@ function getData(memberNum) {
 				
 				if (idx == 'list') {
 					var grants = data.list.grants;
-					grants = grants.toString(2);
+					console.log(grants);
+					grants = grants.toString(2);		//10진수를 2진수로 변환			
 					var inf = ""; //list
 					inf ="<table style='width: 70%;'>";
 					inf+= "<td style='border-bottom:1px;'>권한</td>";
@@ -60,18 +60,15 @@ function getData(memberNum) {
 					
 					inf+= "</table><button type='button' id = 'btnsend' onclick='s();'>수정</button></form>";
 					tot+=inf;
-					console.log(grants);
 					chk = grants;
-					if(grants.length != (val.length*2)){
+					if(grants.length != (val.length*2)){//2진수로 변환시 자리수 맞추기
 						var zero="";
-						for(var i=0; i<val.length-chk.length; i++){
-							zero +=0;
+						for(var i=0; i<(val.length*2)-chk.length; i++){
+							zero +="0";
 							console.log(zero);
 							}
 						chk = zero+chk;
-						}
-					console.log(chk);
-						
+						}						
 				};
 			});
 			
@@ -90,10 +87,7 @@ function getData(memberNum) {
 								$("#auth1"+i).attr("checked", true);							
 							if($("#auth2"+i).val() =='1')
 								$("#auth2"+i).attr("checked", true);	
-						console.log("#auth1"+i+":"+$("#auth1"+i).val());
-						console.log("#auth2"+i+":"+$("#auth2"+i).val());
-					}
-						console.log(k);
+					}					
 						k++;
 				}
 			}
@@ -112,14 +106,14 @@ function s() {
 	var f = document.authorityForm;
 	var grantsValue = "";
 		$(".check").each(function() {
-			if (this.checked) {
+			if (this.checked) { // 수정시 체크박스값 확인하기 
 				grantsValue += "1";
 			} 
 			else{
 				grantsValue +="0";
 			}
-		});
-		alert(grantsValue);
+		});		
+		grantsValue = parseInt(grantsValue,2);		//10진수로 다시 변환
 		$("#grants").val(grantsValue);
 	f.action = "<%=cp%>/authority/update";
 	f.submit();

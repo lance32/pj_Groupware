@@ -129,7 +129,7 @@
 					});
 				},
 				error:function(jqXHR) {
-					console.log(jqXHR.resonseText);
+					console.log(jqXHR.responseText);
 				}
 			});
 		});
