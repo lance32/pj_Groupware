@@ -5,12 +5,7 @@
 <%
 	String cp=request.getContextPath();
 %>
-<link rel="stylesheet" href="<%=cp%>/resource/fullcalendar/fullcalendar.css" type="text/css">
-<link rel="stylesheet" href="<%=cp%>/resource/fullcalendar/fullcalendar.print.css" media='print' type="text/css">
 
-<script type="text/javascript" src="<%=cp%>/resource/fullcalendar/lib/moment.min.js"></script>
-<script type="text/javascript" src="<%=cp%>/resource/fullcalendar/fullcalendar.js"></script>
-<script type="text/javascript" src="<%=cp%>/resource/fullcalendar/locale-all.js"></script>
 <style type="text/css">
 .timeNumberBox{
 	width: 22px;
@@ -131,6 +126,16 @@
 	right: 35px;
 }
 
+#authorityButn{
+	width: 95%; 
+	height: 45px; 
+	background: #BDBDBD; 
+	padding-left: 25px; 
+	border-left: 15px solid #FFBF00; 
+	margin-top: 40px;
+	cursor: pointer;
+}
+
 </style>
 
 <script type="text/javascript">
@@ -175,9 +180,9 @@ function checkHour(i){
 }
 window.onload=startTime;
 
-$(function() {
-	calendar = $('#calendar').fullCalendar({
-		locale: 'ko'
+jQuery(function(){
+	jQuery("#authorityButn").click(function(){
+		location.href="<%=cp%>/authority/authorityList";
 	});
 });
 
@@ -275,3 +280,12 @@ $(function() {
 		</div>
 		<div style="clear: both; float: right; font-size: 11px; color:#848484; margin-right: 5px;">2018</div>
 	</div>
+	
+	<c:if test="${sessionScope.member.userId == 'admin'}">
+	<div id="authorityButn">
+		<span style="height: 100%; line-height: 46px; vertical-align: middle; font-size: 21px; color: #FAFAFA;">
+			권한 설정
+		</span>
+		<span style="float:right; margin-right:20px;  font-size: 21px; color: #E6E6E6; line-height: 46px; vertical-align: middle;">&gt;</span>
+	</div>
+	</c:if>

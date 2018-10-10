@@ -85,4 +85,9 @@ public class MainController {
 	public String calendar() {
 		return "main/calendar";
 	}
+	
+	@RequestMapping(value="/error")
+	public String error() {
+		return ".error.error";
+	}
 }

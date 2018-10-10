@@ -5,5 +5,5 @@
 <%
 	String cp=request.getContextPath();
 %>
-<div style="width: 100%; height: 100px; border-radius: 5px; border: 1.2px solid #A4A4A4; margin-bottom: 30px; margin-top: 15px;">
+<div style="width: 100%; height: 200px; border-radius: 5px; border: 1.2px solid #A4A4A4; margin-bottom: 30px; margin-top: 15px;">
 </div>
