@@ -8,6 +8,7 @@
  .body{
  	border-left: 2px solid #BDBDBD;
  	border-right: 2px solid #BDBDBD;
+ 	min-height: 855px;
  }
  .mainTableTr{
  	text-align: center; 

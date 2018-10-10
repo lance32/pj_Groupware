@@ -11,6 +11,7 @@
 }
 .side{
 	max-width: none;
+	padding-top: 15px;
 }
 
 .representimg{
