@@ -639,7 +639,7 @@ function classifyChange(classify) {
 <br>
 <div id="calendarHeader" style="height: 35px; line-height: 35px;">
 	<div style="text-align: left;">
-		<div class="container">
+		<div class="container" style="height: 1050px;">
 			<ul class="nav nav-tabs">
 				<li class="schTab"><a href="javascript:classification('all', 0)">전 체 일 정</a></li>
 				<li><a href="javascript:classification('blue', 1)">개 인 일 정</a></li>

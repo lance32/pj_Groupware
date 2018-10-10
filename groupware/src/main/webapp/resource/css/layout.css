@@ -214,9 +214,7 @@ body{
     background: #4e4e4e;
     height: 54px;
     font-size: 17px;
-    padding-top: 5px;
-/*     
-	position: absolute;
-    	bottom: 0px; 
-*/
+    position: fixed;
+    bottom: 0px; 
+    z-index: 900;
 }

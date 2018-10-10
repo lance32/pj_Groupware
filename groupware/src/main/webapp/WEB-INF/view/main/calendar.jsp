@@ -5,32 +5,16 @@
 <%
 	String cp=request.getContextPath();
 %>
-<link rel="stylesheet" href="<%=cp%>/resource/fullcalendar/fullcalendar.css" type="text/css">
-<link rel="stylesheet" href="<%=cp%>/resource/fullcalendar/fullcalendar.print.css" media='print' type="text/css">
-
-<script type="text/javascript" src="<%=cp%>/resource/fullcalendar/lib/moment.min.js"></script>
-<script type="text/javascript" src="<%=cp%>/resource/fullcalendar/fullcalendar.js"></script>
-<script type="text/javascript" src="<%=cp%>/resource/fullcalendar/locale-all.js"></script>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
 <style type="text/css">
-.timeNumberBox{
-	width: 22px;
-	height: 30px;
-	background: #424242;
-	border-radius: 4px;
-	float: left;
-	
-	font-size:16px;
-	font-weight: 600;
-	color: #F2F2F2;
-	text-align: center;
-	line-height:28px;
-	vertical-align: middle;
-}
 /* ---------- CALENDAR ---------- */
 
 .calendarBody {
-	background: #FCFCFC;
-	border: 1px solid #BDBDBD;
+	background: #f9f9f9;
 	color: #0e171c;
 	font: 500 100%/1.5em 'Lato', sans-serif;
 }
@@ -40,21 +24,21 @@
 }
 
 .calendarBody h2 {
-	font-size: 16px;
-	line-height: 30px;
-	margin: 0px 0px;
+	font-size: 15px;
+	line-height: 20px;
+	margin: 4px 0px;
 }
 
 .calendarBody table {
-	width: 99%;
 	border-collapse: collapse;
 	border-spacing: 0;
 	font-size: 11px;
+	margin-left: 6px;
 }
 
 .calendarBody {
-	height: 250px;
-	width: 99%;
+	height: 220px;
+	width: 196px;
 	padding-top: 10px;
 	
 }
@@ -63,7 +47,6 @@
 
 .calendar {
 	text-align: center;
-	margin-bottom: 5px;
 }
 
 .calendar header {
@@ -87,10 +70,10 @@
 	border: 2px solid transparent;
 	border-radius: 50%;
 	display: inline-block;
-	height: 25px;
-	line-height: 22px;
+	height: 20px;
+	line-height: 20px;
 	text-align: center;
-	width: 12.4%;
+	width: 20px;
 }
 
 .calendar .prev-month,
@@ -105,15 +88,15 @@
 
 .btn-prev,
 .btn-next {
-	border: 2px solid #BDBDBD;
+	border: 2px solid #cbd1d2;
 	border-radius: 50%;
-	color: #BDBDBD;
+	color: #cbd1d2;
 	height: 17px;
 	font-size: 13px;
-	line-height: 14px;
+	line-height: 17px;
 	margin: -1em;
 	position: absolute;
-	top: 65%;
+	top: 50%;
 	width: 17px;
 }
 
@@ -124,80 +107,60 @@
 }
 
 .btn-prev {
-	left: 35px;
+	left: 30px;
 }
 
 .btn-next {
-	right: 35px;
+	right: 30px;
 }
 
 </style>
-
+<script type="text/javascript" src="<%=cp%>/resource/jquery/js/jquery-1.12.4.min.js"></script>
 <script type="text/javascript">
-function startTime() {
-	var today = new Date();
-	var h = today.getHours();
-	var m = today.getMinutes();
-	h = checkHour(h);
-	h = ''+checkTime(h);
-	m = ''+checkTime(m);
-	var h1 = h.substring(0,1);
-	var h2 = h.substring(1,2);
-	var m1 = m.substring(0,1);
-	var m2 = m.substring(1,2);
-	jQuery("#hour1").html(h1);
-	jQuery("#hour2").html(h2);
-	jQuery("#minute1").html(m1);
-	jQuery("#minute2").html(m2);
-	var t = setTimeout(startTime, 1000);
-}
-function checkTime(i) {
-	if (i < 10) {
-		i = "0" + i
-	}
-	return i;
-}
-function checkHour(i){
-	if(i==0){
-		i=12;
-		jQuery("#time").html("오전");
-		return i;
-	}
-	if(i>=12){
-		if(i>=13){
-			i = i-12;
-		}
-		jQuery("#time").html("오후");
-	}else{
-		jQuery("#time").html("오전");
-	}
-	return i;
-}
-window.onload=startTime;
+var calendar = new Date();
 
-$(function() {
-	calendar = $('#calendar').fullCalendar({
-		locale: 'ko'
-	});
-});
+var year = calendar.getFullYear();		// yyyy 년도
+var month = calendar.getMonth();		// 0~11 (1~12월)
+var monthDay = calendar.getDate();	// 1~31 (1~31일)
+var weekday = calendar.getDay();		// 0 ~ 6 (월~ 일)
 
+var dayOfWeek=["Su","Mo","Tu","We","Th","Fr","Sa"];
+var monthOfYear=["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+calendar.setDate(1);
+
+var days_of_week = 7;
+var days_of_month = 31;
+
+jQuery("#monthName").html(monthOfYear[month]);
+
+var str="";
+
+str+="<tr>"
+for(var i=0; i<calendar.getDay(); ++i){
+	str +="<td class='prev-month'>&nbsp;</td>"
+	if(i==6){
+		str += "</tr>"
+	}
+}
+
+for(var i=0; i<days_of_month; ++i){
+	if(calendar.getDate()>i){
+		
+	}
+}
+//미완
 </script>
 
-<div style="width: 99%; height: 60px; margin-top:50px; padding: 8px 0px; background: #F2F2F2; border-top: 2px solid #848484; border-bottom: 10px solid #BDBDBD; text-align: center;">
-	<div style="display: inline-block;">
-		<div id="time" class="timeNumberBox" style="width: 50px; margin-right: 15px;"></div>
-		<div id="hour1" class="timeNumberBox"></div>
-		<div id="hour2" class="timeNumberBox" style="margin-left: 3px;"></div>
-		<div style="font-size: 20px; font-weight: 600; float: left;">&nbsp;:&nbsp;</div>
-		<div id="minute1" class="timeNumberBox"></div>
-		<div id="minute2" class="timeNumberBox" style="margin-left: 3px;"></div>
-	</div>
-</div>
-
+</head>
+<body>
 	<div class="calendarBody">
+		<div style="clear: both;">
+			2018
+		</div>
 		<div class="calendar">
 			<header>				
-				<h2> October </h2>
+				<h2 id="monthName"> October </h2>
 				<a class="btn-prev fontawesome-angle-left" href="#">&lt;</a>
 				<a class="btn-next fontawesome-angle-right" href="#">&gt;</a>
 			</header>
@@ -228,8 +191,8 @@ $(function() {
 					<tr>
 						<td>7</td>
 						<td>8</td>
-						<td>9</td>
-						<td class="current-day event">10</td>
+						<td class="current-day event">9</td>
+						<td>10</td>
 						<td>11</td>
 						<td>12</td>
 						<td>13</td>
@@ -272,6 +235,7 @@ $(function() {
 					</tr>
 				</tbody>
 			</table>
-		</div>
-		<div style="clear: both; float: right; font-size: 11px; color:#848484; margin-right: 5px;">2018</div>
-	</div>
+		</div> <!-- end calendar -->
+	</div> <!-- end calendarBody -->
+</body>
+</html>

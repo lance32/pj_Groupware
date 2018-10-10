@@ -13,7 +13,7 @@
 	margin: 0px 20px 40px 0px;
 	border: 1px solid #A4A4A4;
 	background: #ffffff;
-	border-radius: 3px;
+	border-radius: 6px;
 }
 	.listItem:hover {
 		cursor: pointer;
@@ -34,7 +34,6 @@
 }
 .listItem_intro{
 	width: 100%;
-	text-align: center;
 }
 </style>
 
@@ -57,7 +56,7 @@ jQuery(function(){
 	<div style="clear: both; width: 300px; height: 1px; border-bottom: 3px solid black;"></div>
 </div>
 
-<div style="clear: both; width: 1390px; margin-left: 50px; height: 670px; overflow-y: scroll; background: #FAFAFA; padding: 10px;">
+<div style="clear: both; width: 1390px; margin-left: 50px; height: 670px; overflow-y: scroll; background: #F2F2F2; padding: 10px; border-left: 5px solid #BDBDBD;">
 
 	<c:forEach var="dto" items="${list}">
 		<div class="listItem">
@@ -65,8 +64,8 @@ jQuery(function(){
 				<img class="clubImg" src="<%=cp%>/uploads/club/${dto.memberNum}/${dto.clubImg}">
 			</div>
 			<div class="listItem_intro">
-				<p style="font-weight: 700;">${dto.clubName}</p>
-				<span>${dto.clubIntro}</span>
+				<p style="font-weight: 700; background: #848484; color: #F2F2F2; margin: 0px 0px 5px; height: 25px; font-size: 16px; text-align: center;">${dto.clubName}</p>
+				<span style="padding: 0px 10px;">${dto.clubIntro}</span>
 			</div>
 			<input type="hidden" class="clubNum" value="${dto.clubNum}">
 		</div>

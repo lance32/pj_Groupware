@@ -79,4 +79,10 @@ public class MainController {
 		model.addAttribute("scheduleList_main", scheduleList);
 		return ".mainLayout";
 	}
+	
+	
+	@RequestMapping(value="/calendar")
+	public String calendar() {
+		return "main/calendar";
+	}
 }
