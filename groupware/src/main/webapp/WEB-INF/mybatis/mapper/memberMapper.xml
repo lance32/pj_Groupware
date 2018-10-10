@@ -5,7 +5,7 @@
 
 <!-- 회원 정보 가져오기 -->
     <select id="readMember" resultType="com.sp.member.Member" parameterType="String">
-        SELECT m.memberNum,name,birth,tel,phone,zip,addr1,addr2,m.status,TO_CHAR(created,'YYYY-MM-DD')created,email,
+        SELECT m.memberNum,name,grants,birth,tel,phone,zip,addr1,addr2,m.status,TO_CHAR(created,'YYYY-MM-DD')created,email,
         	   saveFilename,originalFilename,m.departmentNum,departmentName,m.positionNum,positionName,b.basicpay,
         	   TO_CHAR(modified,'YYYY-MM-DD') modified
 			FROM member m

@@ -13,6 +13,15 @@ public class SessionInfo {
 	private String saveFilename;
 	private String originalFilename;
 	
+	//권한설정정보
+	private int grants;
+
+	public int getGrants() {
+		return grants;
+	}
+	public void setGrants(int grants) {
+		this.grants = grants;
+	}
 	public int getDepartmentNum() {
 		return departmentNum;
 	}

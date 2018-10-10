@@ -34,6 +34,7 @@ public class MyAuthenticationSuccessHandler extends SavedRequestAwareAuthenticat
 		Member dto=service.readMember(memberNum);
 		SessionInfo info = new SessionInfo();
 		info.setUserId(memberNum);
+		info.setGrants(dto.getGrants());
 		info.setUserName(dto.getName());
 		info.setDepartmentName(dto.getDepartmentName());
 		info.setDepartmentNum(dto.getDepartmentNum());
