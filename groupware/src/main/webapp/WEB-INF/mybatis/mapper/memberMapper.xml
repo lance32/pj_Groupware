@@ -181,6 +181,6 @@
 		LEFT OUTER JOIN department d2 ON d2.departmentNum = d1.parentDepartment 
 		LEFT OUTER JOIN member m ON d1.departmentNum = m.departmentNum
 		LEFT OUTER JOIN position p ON m.positionNum = p.positionNum
-		ORDER BY d1.deptGroup, d1.departmentNum, d1.deptOrder, p.positionStep
+		ORDER BY d1.deptGroup, d1.idx, d1.deptOrder, p.positionStep
 	</select>
 </mapper>
