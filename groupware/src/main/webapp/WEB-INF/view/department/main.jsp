@@ -21,9 +21,47 @@ ul {
 li {
 	cursor: pointer;
 }
+
+#dept_content {
+	width: 1000px;
+    display: -webkit-flex; /* Safari */
+    display: flex;
+}
+
+#dept_content div {
+    -webkit-flex: 1;  /* Safari 6.1+ */
+    -ms-flex: 1;  /* IE 10 */    
+    flex: 1;
+}
 </style>
 
 <script type="text/javascript">
+function deptManage(id) {
+	$.ajax({
+		url:"<%=cp%>/department/deptInfo?id=" + id,
+		type: "get",
+		dataType: "json",
+		success: function(data) {
+			console.log(data);
+			var tb = "<table id='tb' style='margin-left: 10px;'><tr class='cf'><td width='50'>&nbsp;</td><td width='200'>부서</td><td width='200'>직위</td><td width='200'>이름</td></tr>";
+			var i = 0;
+			$.each(data, function(idx, val) {
+				tb += "<tr class='tr'><td><input type='checkbox'></td><td style='text-align: left;'>" 
+				   + val[i].departmentName + "</td><td>" + val[i].positionName + "</td><td>" + val[i].name + "</td></tr>";
+				//console.log(val[i++].departmentName);
+				//console.log(tb);
+				i++;
+				console.log(i);
+			});
+			tb += "</table>";
+			$("#deptInfoLayer").html(tb);
+		},
+		error: function(jqHXR) {
+			console.log(jqHXR.responseText);
+		}
+	});
+}
+
 function getNextId() {
 	var lastId = 0;
 	$("li").each(function() {
@@ -38,11 +76,10 @@ function getNextId() {
 function add(id) {
 	$("#createDept").dialog({
 		title:"부서 관리",
-		height: 400,
-		width: 500,
+		height: 200,
+		width: 400,
 		modal: true,
 		open:function() {
-			
 			$("#departmentName").val($("#" + id).text());
 			$("#departmentNum").val(id);
 			alert(id + ":" + $("#departmentName").val());
@@ -65,8 +102,8 @@ function add(id) {
 			},
 			"부서추가":function() {
 				var nextId = getNextId();
-				var li = "<ul><li id='" + nextId + "' onclick='add(" + nextId + ");'>새부서</li></ul>";
-				$("#" + id).append(li);
+				var li = "<ul><h4><li id='" + nextId + "' onclick='deptManage(" + nextId + ");'>새부서</li></h4></ul>";
+				$(li).insertAfter("#" + id);
 				
 				$(this).dialog("close");
 /*			},
@@ -98,40 +135,88 @@ function add(id) {
 		<div style="clear: both; width: 300px; height: 1px; border-bottom: 3px solid black;"></div>
 	</div>
 
-	<div id="organization" style="border: 1px solid gray; width:200px;">
-		<ul>
-		<li>(root)</li>  
+	<div id="dept_content">
+		<div id="dept_organization" style="border: 1px solid gray; width:200px;">
 			<ul>
-			<%
-			List<Department> list = (List<Department>)request.getAttribute("list");
-			
-			int preOrder = 1;
-			for (Department department : list) {
-				int order = department.getDeptOrder();
-				if (preOrder > order) {
-					for (int i = 0; i < preOrder - order; i++) {
-						out.println("</ul>");
+			<li>(회사)</li>  
+				<ul>
+				<%
+				List<Department> list = (List<Department>)request.getAttribute("deptList");
+				
+				int preOrder = 1;
+				for (Department department : list) {
+					int order = department.getDeptOrder();
+					if (preOrder > order) {
+						for (int i = 0; i < preOrder - order; i++) {
+							out.println("</ul>");
+						}
+					} else if (preOrder < order) {
+						out.println("<ul>"); 
 					}
-				} else if (preOrder < order) {
-					out.println("<ul>"); 
+					
+					out.println("<h4><li id='" + department.getDepartmentNum() 
+								+ "' onclick='deptManage(" + department.getDepartmentNum() + ")'>" 
+								+ department.getDepartmentName() + "</li><h4>");
+					
+					preOrder = order;
 				}
 				
-				out.println("<li id='" + department.getDepartmentNum() 
-							+ "' onclick='add(" + department.getDepartmentNum() + ")'>" 
-							+ department.getDepartmentName() + "</li>");
-				
-				preOrder = order;
-			}
-			
-			for (int i = 0; i < preOrder - 1; i++) {
-				out.println("</ul>");	
-			}
-			%>
+				for (int i = 0; i < preOrder - 1; i++) {
+					out.println("</ul>");	
+				}
+				%>
+				</ul>
 			</ul>
-		</ul>
+		</div>
+	
+		<div id="dept_Info" style="width:80%;">
+			<div id="deptInfoLayer">
+			<table id="tb" style="margin-left: 10px;"><%-- 테이블 길이 수정 가능 --%>
+				<tr class="cf">
+					<%-- 구분 폭 수정 가능 --%>
+					<td width="50">&nbsp;</td>
+					<td width="200">부서</td>
+					<td width="200">직위</td>
+					<td width="200">이름</td>
+				</tr>
+				<c:forEach var="dto" items="${deptMemberList}" end="11">
+					<c:if test="${dto.name != null}">
+					<tr class="tr">
+						<td><input type="checkbox"></td>
+						<td style="text-align: left;">${dto.departmentName}</td>
+						<td>${dto.positionName}</td>
+						<td>${dto.name}</td>
+					</tr>
+					</c:if>
+				</c:forEach>
+			</table>
+			</div>
+			<br>
+			<div id='paginate'>	<%-- MyUtil.java 안에 있음. ${paging}으로 써야됨. --%>
+				<a href="#">처음</a>
+				<span class="curBox">1</span>
+				<a href="#" class="numBox">2</a>
+				<a href="#" class="numBox">3</a>
+				<a href="#">다음</a>
+			</div>
+			<br>
+			<div style="text-align:center;">
+				<select class="selectBox">				<%-- 선택박스  --%>
+					<option>부서</option>
+					<option>이름</option>
+				</select>
+				<input type="text" class="searchBox">		<%-- 입력창 --%>
+				<button type="button" class="btn">검색</button>		<%-- 버튼 --%>
+				<br>
+			</div>
+			<br>
+			<div style="padding-left: 10px;">
+				<button onclick="add();">&nbsp;부서 추가&nbsp;</button>&nbsp;&nbsp;<button>&nbsp;부서 이동&nbsp;</button>
+			</div>
+		</div>
 	</div>
 </div>
 <div id="createDept" style="display:none;">
-	<label>id</label> <input type="text" id="departmentNum" name="departmentNum"><br>
-	<label>부서명</label> <input type="text" id="departmentName" name="departmentName">
+	<input type="hidden" id="departmentNum" name="departmentNum"><br>
+	<label>부서명</label><input type="text" id="departmentName" name="departmentName">
 </div>

@@ -32,31 +32,13 @@
 		ORDER BY d1.deptGroup, d1.idx, d1.deptOrder
 	</select>
 	
-	<select id="msgRead" resultType="com.sp.message.Message" parameterType="Integer">
-		SELECT msgNum, subject, content, sendTime, readTime, msgKeep, sendMember, toMember, s.name sendMemberName, t.name toMemberName
-		FROM message m INNER JOIN member s ON m.sendMember = s.memberNum INNER JOIN member t ON m.toMember = t.memberNum
-		WHERE msgNum = #{msgNum}
+	<select id="deptInfoById" resultType="com.sp.member.OrganizationChart" parameterType="Integer">
+		SELECT d1.departmentNum, d1.departmentName, d1.deptGroup, d1.deptOrder, m.memberNum, m.name, p.positionName
+		FROM department d1 
+		LEFT OUTER JOIN department d2 ON d2.departmentNum = d1.parentDepartment 
+		LEFT OUTER JOIN member m ON d1.departmentNum = m.departmentNum
+		LEFT OUTER JOIN position p ON m.positionNum = p.positionNum
+		WHERE d1.departmentNum = #{deptNum}
+		ORDER BY d1.deptGroup, d1.idx, d1.deptOrder, p.positionStep
 	</select>
-	
-	<insert id="msgInsert" parameterType="com.sp.message.Message">
-		INSERT INTO message(msgNum, subject, content, sendMember, toMember)
-		VALUES(msg_seq.nextval, #{subject}, #{content}, #{sendMember}, #{toMember, jdbcType=VARCHAR})
-	</insert>
-	
-	<insert id="msgInsert2" parameterType="com.sp.message.Message">
-		INSERT INTO message(msgNum, subject, content, sendMember, toMember, sendTime)
-		VALUES(msg_seq.nextval, #{subject}, #{content}, #{sendMember}, #{toMember, jdbcType=VARCHAR}, TO_DATE(#{sendTime}, 'YYYY-MM-DD HH24:MI'))
-	</insert>
-	
-	<update id="msgUpdateReadTime" parameterType="Integer">
-		UPDATE message SET readTime = SYSDATE WHERE msgNum = #{msgNum} AND readTime IS NULL
-	</update>
-	
-	<update id="msgSetMsgKeep" parameterType="map">
-		UPDATE message SET msgKeep = #{msgKeep} WHERE msgNum = #{msgNum}
-	</update>
-	
-	<delete id="msgDelete" parameterType="Integer">
-		DELETE FROM message WHERE msgNum = #{msgNum}
-	</delete>
 </mapper>
