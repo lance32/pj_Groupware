@@ -15,4 +15,15 @@ public interface ApprovalService {
 
 	public int approvalCount(Map<String, Object> map);
 
+	public List<ApprovalSummary> readApprovalSummary(String type, String userId);
+	
+	public List<ApprovalSummary> readApproval(String type, String userId);
+	
+	public List<ApprovalProcess> getApprovalProcess(int docuNum);
+	
+	public int approvalSend(Map<String, Object> map);
+	
+	public int approvalSign(Map<String, Object> map);
+	
+
 }

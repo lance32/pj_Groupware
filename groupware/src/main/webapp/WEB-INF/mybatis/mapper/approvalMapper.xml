@@ -7,18 +7,325 @@
         select nvl(count(*),0) from approvalDocument 
           <where>
                memberNum=#{memberNum}
-              <if test="type=='complete' "> 
+              <if test="type=='complete1' "> 
                    and documentState = 0
              </if>
-              <if test="type=='progress' "> 
+              <if test="type=='progress1' "> 
                    and documentState = 1
              </if>
-              <if test="type=='reject' "> 
+              <if test="type=='reject1' "> 
                    and documentState = 2
              </if>
              
           </where>
     </select>
+    
+    
+    
+    <insert id="approvalSend" statementType="CALLABLE" parameterType="map" useGeneratedKeys="false">
+    <![CDATA[
+		{CALL SETAPPROVALDATA(approval_seq.nextval, approvalDocument_seq.nextval, approvalTemplate_seq.NEXTVAL, #{title}, #{contents}, #{comments}, #{author}, #{appLine})}
+	
+    ]]>
+    </insert>
+    
+    <insert id="approvalSign" statementType="CALLABLE" parameterType="map" useGeneratedKeys="false">
+    <![CDATA[
+		{CALL SETAPPROVALSIGN(#{docuNum}, #{comments}, #{memberNum}, #{state})}
+	
+    ]]>
+    </insert>
+    
+   <select id="approval" parameterType="int" resultType="com.sp.approval.Approval">
+   <![CDATA[
+		SELECT SUBJECT, CONTENT, DOCUMENTSTATE, CREATED, MODIFIED, MEMBERNUM
+		  FROM APPROVALDOCUMENT
+		  WHERE DOCUNUM = #{docuNum}
+		 ]]> 
+	</select>
+	
+	   <select id="approvalProcess" parameterType="int" resultType="com.sp.approval.ApprovalProcess">
+   <![CDATA[
+SELECT APPROVALNUM, APPROVALSEQ, MEMBERNUM, APPROVALDATE, COMMENTS, 
+        CASE WHEN APPROVALSTATE = 0 THEN 'REJECT' 
+             WHEN APPROVALSTATE = 1 THEN 'COMPLETE'
+             WHEN APPROVALSTATE = 2 THEN 'PROCESSING'
+        END APPSTATE
+  FROM APPROVALPROCESS
+ WHERE APPROVALNUM = (SELECT APPROVALNUM 
+                        FROM APPROVAL 
+                       WHERE DOCUNUM = #{docuNum})
+		 ]]> 
+	</select>
+   
+   <select id="tomeApprovalListSummary" parameterType="String" resultType="com.sp.approval.ApprovalSummary">
+   <![CDATA[
+WITH BASE AS (
+SELECT A.APPROVALNUM
+     , A.DOCUNUM
+     , A.APPROVALSEQ CURRENTSEQ
+     , A.RESULT
+     , B.SUBJECT
+     , B.CREATED
+     , B.DOCUMENTSTATE
+     , C.APPROVALSEQ
+     , C.MEMBERNUM
+     , C.APPROVALDATE
+     , C.COMMENTS
+     , C.APPROVALSTATE
+  FROM APPROVAL A
+        LEFT OUTER JOIN 
+       APPROVALDOCUMENT B
+    ON A.DOCUNUM = B.DOCUNUM
+        LEFT OUTER JOIN
+       APPROVALPROCESS C
+    ON A.APPROVALNUM = C.APPROVALNUM
+ ORDER BY APPROVALNUM, DOCUNUM, A.APPROVALSEQ, C.APPROVALSEQ
+)
+SELECT DOCUNUM, SUBJECT, DOCUMENTSTATE, CREATED
+  FROM (SELECT DOCUNUM, SUBJECT, DOCUMENTSTATE, CREATED, RANK() OVER (ORDER BY A.DOCUNUM DESC) DOCSEQ
+          FROM BASE A
+         WHERE CURRENTSEQ = APPROVALSEQ
+           AND APPROVALSTATE = 2
+           AND MEMBERNUM = #{memberNum} )
+ WHERE DOCSEQ <= 5
+ ORDER BY DOCUNUM DESC
+		]]> 
+	</select>
+
+   <select id="myApprovalProgressSummary" parameterType="String" resultType="com.sp.approval.ApprovalSummary">
+      <![CDATA[
+WITH BASE AS (
+SELECT A.APPROVALNUM
+     , A.DOCUNUM
+     , A.APPROVALSEQ CURRENTSEQ
+     , A.RESULT
+     , B.SUBJECT
+     , B.CREATED
+     , B.DOCUMENTSTATE
+     , C.APPROVALSEQ
+     , C.MEMBERNUM
+     , C.APPROVALDATE
+     , C.COMMENTS
+     , C.APPROVALSTATE
+  FROM APPROVAL A
+        LEFT OUTER JOIN 
+       APPROVALDOCUMENT B
+    ON A.DOCUNUM = B.DOCUNUM
+        LEFT OUTER JOIN
+       APPROVALPROCESS C
+    ON A.APPROVALNUM = C.APPROVALNUM
+ ORDER BY APPROVALNUM, DOCUNUM, A.APPROVALSEQ, C.APPROVALSEQ
+)
+SELECT DOCUNUM, SUBJECT, DOCUMENTSTATE, CREATED
+  FROM (SELECT A.*, RANK() OVER (ORDER BY A.DOCUNUM DESC) DOCSEQ
+          FROM BASE A
+         WHERE APPROVALSEQ = 0
+           AND MEMBERNUM = #{memberNum}
+           AND RESULT = 2 )
+ WHERE DOCSEQ <= 5
+					   	]]>
+	</select>
+	
+	   <select id="myApprovalCompletedSummary" parameterType="String" resultType="com.sp.approval.ApprovalSummary">
+	      <![CDATA[
+WITH BASE AS (
+SELECT A.APPROVALNUM
+     , A.DOCUNUM
+     , A.APPROVALSEQ CURRENTSEQ
+     , A.RESULT
+     , B.SUBJECT
+     , B.CREATED
+     , B.DOCUMENTSTATE
+     , C.APPROVALSEQ
+     , C.MEMBERNUM
+     , C.APPROVALDATE
+     , C.COMMENTS
+     , C.APPROVALSTATE
+  FROM APPROVAL A
+        LEFT OUTER JOIN 
+       APPROVALDOCUMENT B
+    ON A.DOCUNUM = B.DOCUNUM
+        LEFT OUTER JOIN
+       APPROVALPROCESS C
+    ON A.APPROVALNUM = C.APPROVALNUM
+ ORDER BY APPROVALNUM, DOCUNUM, A.APPROVALSEQ, C.APPROVALSEQ
+)
+SELECT DOCUNUM, SUBJECT, DOCUMENTSTATE, CREATED
+  FROM (SELECT A.*, RANK() OVER (ORDER BY A.DOCUNUM DESC) DOCSEQ
+          FROM BASE A
+         WHERE APPROVALSEQ = 0
+           AND MEMBERNUM = #{memberNum}
+           AND RESULT = 1 )
+ WHERE DOCSEQ <= 5
+					   	]]>
+	</select>
+	
+	<select id="myApprovalRejectSummary" parameterType="String" resultType="com.sp.approval.ApprovalSummary">
+	   <![CDATA[
+WITH BASE AS (
+SELECT A.APPROVALNUM
+     , A.DOCUNUM
+     , A.APPROVALSEQ CURRENTSEQ
+     , A.RESULT
+     , B.SUBJECT
+     , B.CREATED
+     , B.DOCUMENTSTATE
+     , C.APPROVALSEQ
+     , C.MEMBERNUM
+     , C.APPROVALDATE
+     , C.COMMENTS
+     , C.APPROVALSTATE
+  FROM APPROVAL A
+        LEFT OUTER JOIN 
+       APPROVALDOCUMENT B
+    ON A.DOCUNUM = B.DOCUNUM
+        LEFT OUTER JOIN
+       APPROVALPROCESS C
+    ON A.APPROVALNUM = C.APPROVALNUM
+ ORDER BY APPROVALNUM, DOCUNUM, A.APPROVALSEQ, C.APPROVALSEQ
+)
+SELECT DOCUNUM, SUBJECT, DOCUMENTSTATE, CREATED
+  FROM (SELECT A.*, RANK() OVER (ORDER BY A.DOCUNUM DESC) DOCSEQ
+          FROM BASE A
+         WHERE APPROVALSEQ = 0
+           AND MEMBERNUM = #{memberNum}
+           AND RESULT = 0 )
+ WHERE DOCSEQ <= 5
+					   	]]>
+	</select>
+	
+   <select id="tomeApprovalList" parameterType="String" resultType="com.sp.approval.ApprovalSummary">
+      <![CDATA[
+WITH BASE AS (
+SELECT A.APPROVALNUM
+     , A.DOCUNUM
+     , A.APPROVALSEQ CURRENTSEQ
+     , A.RESULT
+     , B.SUBJECT
+     , B.CREATED
+     , B.DOCUMENTSTATE
+     , C.APPROVALSEQ
+     , C.MEMBERNUM
+     , C.APPROVALDATE
+     , C.COMMENTS
+     , C.APPROVALSTATE
+  FROM APPROVAL A
+        LEFT OUTER JOIN 
+       APPROVALDOCUMENT B
+    ON A.DOCUNUM = B.DOCUNUM
+        LEFT OUTER JOIN
+       APPROVALPROCESS C
+    ON A.APPROVALNUM = C.APPROVALNUM
+ ORDER BY APPROVALNUM, DOCUNUM, A.APPROVALSEQ, C.APPROVALSEQ
+)
+SELECT DOCUNUM, SUBJECT, DOCUMENTSTATE, CREATED
+  FROM BASE
+ WHERE CURRENTSEQ = APPROVALSEQ
+   AND APPROVALSTATE = 2
+   AND MEMBERNUM = #{memberNum}
+ ORDER BY DOCUNUM DESC
+	]]>
+	</select>
+
+   <select id="myApprovalProgress" parameterType="String" resultType="com.sp.approval.ApprovalSummary">
+      <![CDATA[
+WITH BASE AS (
+SELECT A.APPROVALNUM
+     , A.DOCUNUM
+     , A.APPROVALSEQ CURRENTSEQ
+     , A.RESULT
+     , B.SUBJECT
+     , B.CREATED
+     , B.DOCUMENTSTATE
+     , C.APPROVALSEQ
+     , C.MEMBERNUM
+     , C.APPROVALDATE
+     , C.COMMENTS
+     , C.APPROVALSTATE
+  FROM APPROVAL A
+        LEFT OUTER JOIN 
+       APPROVALDOCUMENT B
+    ON A.DOCUNUM = B.DOCUNUM
+        LEFT OUTER JOIN
+       APPROVALPROCESS C
+    ON A.APPROVALNUM = C.APPROVALNUM
+ ORDER BY APPROVALNUM, DOCUNUM, A.APPROVALSEQ, C.APPROVALSEQ
+)
+SELECT DOCUNUM, SUBJECT, DOCUMENTSTATE, CREATED
+  FROM BASE A
+ WHERE APPROVALSEQ = 0
+   AND MEMBERNUM = #{memberNum}
+   AND RESULT = 2
+ ORDER BY DOCUNUM DESC
+	]]>
+	</select>
+	
+	   <select id="myApprovalCompleted" parameterType="String" resultType="com.sp.approval.ApprovalSummary">
+	      <![CDATA[
+WITH BASE AS (
+SELECT A.APPROVALNUM
+     , A.DOCUNUM
+     , A.APPROVALSEQ CURRENTSEQ
+     , A.RESULT
+     , B.SUBJECT
+     , B.CREATED
+     , B.DOCUMENTSTATE
+     , C.APPROVALSEQ
+     , C.MEMBERNUM
+     , C.APPROVALDATE
+     , C.COMMENTS
+     , C.APPROVALSTATE
+  FROM APPROVAL A
+        LEFT OUTER JOIN 
+       APPROVALDOCUMENT B
+    ON A.DOCUNUM = B.DOCUNUM
+        LEFT OUTER JOIN
+       APPROVALPROCESS C
+    ON A.APPROVALNUM = C.APPROVALNUM
+ ORDER BY APPROVALNUM, DOCUNUM, A.APPROVALSEQ, C.APPROVALSEQ
+)
+SELECT DOCUNUM, SUBJECT, DOCUMENTSTATE, CREATED
+  FROM BASE A
+ WHERE APPROVALSEQ = 0
+   AND MEMBERNUM = #{memberNum}
+   AND RESULT = 1
+ ORDER BY DOCUNUM DESC
+	]]>
+	</select>
+	
+	<select id="myApprovalReject" parameterType="String" resultType="com.sp.approval.ApprovalSummary">
+	   <![CDATA[
+WITH BASE AS (
+SELECT A.APPROVALNUM
+     , A.DOCUNUM
+     , A.APPROVALSEQ CURRENTSEQ
+     , A.RESULT
+     , B.SUBJECT
+     , B.CREATED
+     , B.DOCUMENTSTATE
+     , C.APPROVALSEQ
+     , C.MEMBERNUM
+     , C.APPROVALDATE
+     , C.COMMENTS
+     , C.APPROVALSTATE
+  FROM APPROVAL A
+        LEFT OUTER JOIN 
+       APPROVALDOCUMENT B
+    ON A.DOCUNUM = B.DOCUNUM
+        LEFT OUTER JOIN
+       APPROVALPROCESS C
+    ON A.APPROVALNUM = C.APPROVALNUM
+ ORDER BY APPROVALNUM, DOCUNUM, A.APPROVALSEQ, C.APPROVALSEQ
+)
+SELECT DOCUNUM, SUBJECT, DOCUMENTSTATE, CREATED
+  FROM BASE A
+ WHERE APPROVALSEQ = 0
+   AND MEMBERNUM = #{memberNum}
+   AND RESULT = 0
+ ORDER BY DOCUNUM DESC
+	]]>
+	</select>
    
 
 </mapper>

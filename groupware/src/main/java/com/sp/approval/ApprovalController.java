@@ -1,10 +1,7 @@
 package com.sp.approval;
 
 import java.net.URLDecoder;
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -41,13 +38,13 @@ public class ApprovalController {
 	}
 	
 	@RequestMapping(value="/approval/approval_list")
-	public String ApprovalProgressList(@RequestParam(value="page", defaultValue="1") int current_page,
+	public String ApprovalList(@RequestParam(value="page", defaultValue="1") int current_page,
 	                                    @RequestParam(defaultValue="subject") String searchKey,
 	                                    @RequestParam(defaultValue="") String searchValue,
 	                                    HttpServletRequest req,
 	                                    Model model) throws Exception{
 		
-		int rows=10;
+		int rows=2;
 		int dataCount=0;
 		int total_page=0;
 		
@@ -59,14 +56,10 @@ public class ApprovalController {
 			}
 		}
 		
-		Map<String, Object> map=new HashMap<String, Object>();		
+		Map<String, Object> map=new HashMap<>();
+		
 		map.put("searchKey", searchKey);
 		map.put("searchValue", searchValue);
-		
-		HttpSession session=req.getSession();
-		SessionInfo info=(SessionInfo)session.getAttribute("member");
-		map.put("memberNum", info.getUserId());
-		map.put("type", "progress");
 		
 		dataCount=service.dataCount(map);
 		
@@ -116,9 +109,79 @@ public class ApprovalController {
 		
 	}
 	
+	@RequestMapping(value="/approval/getSummaryList")
+	@ResponseBody
+	public List<ApprovalSummary> getApprovalList(HttpSession session ,String type ) {
+		List<ApprovalSummary> dto = null;
+		try {
+			SessionInfo info = (SessionInfo)session.getAttribute("member");
+			dto=service.readApprovalSummary(type, info.getUserId());
+
+		} catch (Exception e) {
+			System.out.println(e.toString());
+			return null;
+		}
+		return dto;
+	}
+	
+	@RequestMapping(value="/approval/getList")
+	@ResponseBody
+	public List<ApprovalSummary> getApprovalDatailList(HttpSession session ,String type ) {
+		List<ApprovalSummary> dto = null;
+		try {
+			SessionInfo info = (SessionInfo)session.getAttribute("member");
+			dto=service.readApproval(type, info.getUserId());
+
+		} catch (Exception e) {
+			System.out.println(e.toString());
+			return null;
+		}
+		return dto;
+	}
+	
+	@RequestMapping(value="/approval/getApprovalProcess")
+	@ResponseBody
+	public List<ApprovalProcess> getApprovalProcess(int docuNum ) {
+		List<ApprovalProcess> dto = null;
+		try {
+			dto=service.getApprovalProcess(docuNum);
+
+		} catch (Exception e) {
+			System.out.println(e.toString());
+			return null;
+		}
+		return dto;
+	}
+	
+	@RequestMapping(value="/approval/getApproval")
+	@ResponseBody
+	public Approval getApproval(int docuNum ) {
+		Approval dto = null;
+		try {
+			dto=service.readApproval(docuNum);
+
+		} catch (Exception e) {
+			System.out.println(e.toString());
+			return null;
+		}
+		return dto;
+	}
+	
 	@RequestMapping(value="/approval/approval_create")
 	public String ApprovalCreate() {
 		return ".approval.approval_create";
+		
+	}
+	
+	@RequestMapping(value="/approval/approval_detail_list")
+	public String ApprovalDetailList() {
+		return ".approval.approval_detail_list";
+		
+	}
+	
+	@RequestMapping(value="/approval/approval_viewer")
+	public String ApprovalViewer() {
+		return ".approval.approval_viewer";
 		
 	}
 	
@@ -128,60 +191,74 @@ public class ApprovalController {
 		
 	}
 	
+	@RequestMapping(value="/approval/approval_createform2")
+	public String approvalForm1() {
+		return ".approval.approval_createForm1";
+		
+	}
+	
 	@RequestMapping(value="/approval/submit")
 	@ResponseBody
 	public int SetApproval(String title, String contents, String comments, String author, String appLine) {
+		int retVal = -1;
 		try {
-			String driverName = "net.sf.log4jdbc.DriverSpy";
-			String dburl = "jdbc:log4jdbc:oracle:thin:@211.238.142.190:1521:xe";
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("title", title);
+			map.put("contents", contents);
+			map.put("comments", comments);
+			map.put("author", author);
+			map.put("appLine", appLine.substring(0, appLine.length()-1));
 			
-			System.out.println("test");
-			
-			Class.forName(driverName);
-			Connection connection = DriverManager.getConnection(dburl, "groupware", "java$!");
-			//Statement stmt = connection.createStatement();
-			CallableStatement cs = connection.prepareCall("{CALL SETAPPROVALDATA(approval_seq.nextval, approvalDocument_seq.nextval, approvalTemplate_seq.NEXTVAL, ?, ?, ?, ?, ?)}"); 
-		    cs.setString(1, title);
-		    cs.setString(2, contents);
-		    cs.setString(3, comments);
-		    cs.setString(4, author);
-		    cs.setString(5, appLine);
-
-		    cs.execute(); 
-		    
-		    cs.close();
-		    connection.close();
-		}catch(SQLException ex) {
-			ex.printStackTrace();
-			System.out.println(ex.getMessage());
+			retVal = service.approvalSend(map);
 		}catch(Exception ex) {
 			
 		}finally {
 			
 		}
 
-		return 1;
+		return retVal;
 	}
-	@RequestMapping(value="/approval/approvalCount", method=RequestMethod.GET)
+	
+	@RequestMapping(value="/approval/approvalSign")
+	@ResponseBody
+	public int SetApprovalSign(String docuNum, String comments, String memberNum, String state) {
+		int retVal = -1;
+		try {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("docuNum", docuNum);
+			map.put("comments", comments);
+			map.put("memberNum", memberNum);
+			map.put("state", state);
+			
+			retVal = service.approvalSign(map);
+		}catch(Exception ex) {
+			
+		}finally {
+			
+		}
+
+		return retVal;
+	}
+	
+	@RequestMapping(value="approval/getApprovalCount", method=RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> approvalCount(HttpSession session) throws Exception{
 		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		Map<String, Object>map=new HashMap<String, Object>();
 		map.put("memberNum", info.getUserId());
-		map.put("type", "progress");
-		int progress=service.approvalCount(map);
+		map.put("type", "progress1");
+		int progress1=service.approvalCount(map);
 		
-		map.put("type", "complete");
-		int complete=service.approvalCount(map);
+		map.put("type", "complete1");
+		int complete1=service.approvalCount(map);
 		
-		map.put("type", "reject");
-		int reject=service.approvalCount(map);
+		map.put("type", "reject1");
+		int reject1=service.approvalCount(map);
 		
-		System.out.println("progress(" + progress + "), complete(" + complete + "), reject(" + reject + ")");
 		Map<String, Object>model= new HashMap<String, Object>();
-		model.put("progress", progress);
-		model.put("complete", complete);
-		model.put("reject", reject);
+		model.put("progress1", progress1);
+		model.put("complete1", complete1);
+		model.put("reject1", reject1);
 		
 		return model;
 		
