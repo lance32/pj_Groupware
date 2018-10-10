@@ -33,16 +33,16 @@
     	<td><a href="<%=cp%>/approval/approval_create">새문서 작성</a></td>
     </tr>
     <tr>
-    	<td><a href="#" >결재 문서함</a></td><!--본인이 중간 결재자일때 앞:결재해야할 문서 개수, 뒤:결재하고 진행중인 문서 -->
+    	<td><a href="<%=cp%>/approval/approval_detail_list?param=1" >결재 문서함</a></td><!--본인이 중간 결재자일때 앞:결재해야할 문서 개수, 뒤:결재하고 진행중인 문서 -->
     </tr>
     <tr>
-    	<td><a href="#" id="progress1">진행 문서함</a></td><!--본인이 상신한 문서만  -->
+    	<td><a href="<%=cp%>/approval/approval_detail_list?param=2"" id="progress1">진행 문서함</a></td><!--본인이 상신한 문서만  -->
     </tr>
     <tr>
-    	<td><a href="#" id="complete1">완료 문서함</a></td><!--본인이 상신한 문서 완료함  -->
+    	<td><a href="<%=cp%>/approval/approval_detail_list?param=3" id="complete1">완료 문서함</a></td><!--본인이 상신한 문서 완료함  -->
     </tr>
     <tr>
-    	<td><a href="#" id="reject1">반려 문서함</a></td><!-- 본인이 상신한 문서 반려함  -->
+    	<td><a href="<%=cp%>/approval/approval_detail_list?param=4" id="reject1">반려 문서함</a></td><!-- 본인이 상신한 문서 반려함  -->
     </tr>
 	
 </table>

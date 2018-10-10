@@ -47,7 +47,6 @@ $(function() {
 			},
 			
 			success:function(data) {
-				alert("상신했어 병신아 꺼져");
 				location.href="approval";
 			},
 			error:function(jqXHR) {
@@ -261,31 +260,31 @@ $(function() {
 						<div id="app_name1"></div>
 					</td>
 					<td rowspan="2" class="esign" scope="row">
-						<span><input type="label" id="lbtoMember1" name="lbtoMember" style="background: #fff; color: #333; width: 80%; border: 1px solid #d7d7d7;" readOnly="readOnly"></span>
+						<span><input type="label" id="lbtoMember1" name="lbtoMember" style="background-color:transparent; color: #333; width: 80%; border:none #d7d7d7; text-align:center;" readOnly="readOnly"></span>
 						<div id="app_name2"></div>
 					</td>
 					<td rowspan="2" class="esign" scope="row">
-						<span><input type="label" id="lbtoMember2" name="lbtoMember" style="background: #fff; color: #333; width: 80%; border: 1px solid #d7d7d7;" readOnly="readOnly"></span>
+						<span><input type="label" id="lbtoMember2" name="lbtoMember" style="background-color:transparent; color: #333; width: 80%; border:none #d7d7d7; text-align:center;" readOnly="readOnly"></span>
 						<div id="app_name3"></div>
 					</td>
 					<td rowspan="2" class="esign" scope="row">
-						<span><input type="label" id="lbtoMember3" name="lbtoMember" style="background: #fff; color: #333; width: 80%; border: 1px solid #d7d7d7;" readOnly="readOnly"></span>
+						<span><input type="label" id="lbtoMember3" name="lbtoMember" style="background-color:transparent; color: #333; width: 80%; border:none #d7d7d7; text-align:center;" readOnly="readOnly"></span>
 						<div id="app_name4"></div>
 					</td>
 					<td rowspan="2" class="esign" scope="row">
-						<span><input type="label" id="lbtoMember4" name="lbtoMember" style="background: #fff; color: #333; width: 80%; border: 1px solid #d7d7d7;" readOnly="readOnly"></span>
+						<span><input type="label" id="lbtoMember4" name="lbtoMember" style="background-color:transparent; color: #333; width: 80%; border:none #d7d7d7; text-align:center;" readOnly="readOnly"></span>
 						<div id="app_name5"></div>
 					</td>
 					<td rowspan="2" class="esign" scope="row">
-						<span><input type="label" id="lbtoMember5" name="lbtoMember" style="background: #fff; color: #333; width: 80%; border: 1px solid #d7d7d7;" readOnly="readOnly"></span>
+						<span><input type="label" id="lbtoMember5" name="lbtoMember" style="background-color:transparent; color: #333; width: 80%; border:none #d7d7d7; text-align:center;" readOnly="readOnly"></span>
 						<div id="app_name6"></div>
 					</td>
 					<td rowspan="2" class="esign" scope="row">
-						<span><input type="label" id="lbtoMember6" name="lbtoMember" style="background: #fff; color: #333; width: 80%; border: 1px solid #d7d7d7;" readOnly="readOnly"></span>
+						<span><input type="label" id="lbtoMember6" name="lbtoMember" style="background-color:transparent; color: #333; width: 80%; border:none #d7d7d7; text-align:center;" readOnly="readOnly"></span>
 						<div id="app_name7"></div>
 					</td>
 					<td rowspan="2" class="esign" scope="row">
-						<span><input type="label" id="lbtoMember7" name="lbtoMember" style="background: #fff; color: #333; width: 80%; border: 1px solid #d7d7d7;" readOnly="readOnly"></span>
+						<span><input type="label" id="lbtoMember7" name="lbtoMember" style="background-color:transparent; color: #333; width: 80%; border:none #d7d7d7; text-align:center;" readOnly="readOnly"></span>
 						<div id="app_name8"></div>
 					</td>
 				</tr>
