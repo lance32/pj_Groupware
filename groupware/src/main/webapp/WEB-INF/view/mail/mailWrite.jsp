@@ -160,13 +160,13 @@
 		<input type="hidden" name="sendMail" id="sendMail">
 		<input type="hidden" name="memberNum" value="${sessionScope.member.userId}">
 		<input type="hidden" name="state" id="state" value="0">
-		<span><input type="button" value="&nbsp;메일 보내기&nbsp;" onclick="send();"></span>
+		<span><input type="button" value="&nbsp;메일 보내기&nbsp;" onclick="send();" class="butn"></span>
 		<c:if test="${mailType != 'tempBox'}">
-			<span><input type="button" value="&nbsp;임시 보관&nbsp;" onclick="toTemp();"></span>
+			<span><input type="button" value="&nbsp;임시 보관&nbsp;" onclick="toTemp();" class="butn"></span>
 			<input type="hidden" name="index" value="-1">
 		</c:if>
 		<c:if test="${mailType == 'tempBox'}">
-			<span><input type="button" value="&nbsp;취소&nbsp;" onclick="javascript:location.href='<%=cp%>/mail/mailTempBox'"></span>
+			<span><input type="button" value="&nbsp;취소&nbsp;" class="butn" onclick="javascript:location.href='<%=cp%>/mail/mailTempBox'"></span>
 			<input type="hidden" name="index" value="${mail.index}">
 		</c:if>
 	</form>

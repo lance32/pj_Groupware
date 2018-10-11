@@ -64,6 +64,6 @@
 			</tr>
 		</table>
 		<input type="hidden" name="type" value="${MailServerInfo.type}">
-		<span><input type="button" value="&nbsp;저 장&nbsp;" onclick="save();"></span>
+		<span><input type="button" class="butn" value="&nbsp;저 장&nbsp;" onclick="save();"></span>
 	</form>
 </div>

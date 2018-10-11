@@ -110,14 +110,14 @@
 		</tr>
 	</table>
 	<div style="padding-top: 5px;">
-		<button type="button" id="listBtn">&nbsp;리스트&nbsp;</button>&nbsp;
+		<button type="button" id="listBtn" class="butn">&nbsp;리스트&nbsp;</button>&nbsp;
 		<c:if test="${mailType == 'send'}">
-			<button type="button" id="trashboxBtn">&nbsp;휴&nbsp;지&nbsp;통&nbsp;</button>&nbsp;
+			<button type="button" id="trashboxBtn" class="butn">&nbsp;휴&nbsp;지&nbsp;통&nbsp;</button>&nbsp;
 		</c:if>
 		<c:if test="${mailType == 'trashbox'}">
-			<button type="button" id="toSendMailBtn">&nbsp;메일 복원&nbsp;</button>&nbsp;
+			<button type="button" id="toSendMailBtn" class="butn">&nbsp;메일 복원&nbsp;</button>&nbsp;
 		</c:if>
-			<button type="button" id="deleteBtn">&nbsp;바로 삭제&nbsp;</button>		
+			<button type="button" id="deleteBtn" class="butn">&nbsp;바로 삭제&nbsp;</button>		
 	</div>
 
 </div>

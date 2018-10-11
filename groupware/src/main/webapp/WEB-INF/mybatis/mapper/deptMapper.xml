@@ -41,4 +41,8 @@
 		WHERE d1.departmentNum = #{deptNum}
 		ORDER BY d1.deptGroup, d1.idx, d1.deptOrder, p.positionStep
 	</select>
+	
+	<update id="deptInfo" parameterType="Map">
+		UPDATE member SET departmentNum = #{deptNum} WHERE memberNum = #{memNum}
+	</update> 
 </mapper>
