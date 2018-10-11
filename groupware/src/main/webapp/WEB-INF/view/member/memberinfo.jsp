@@ -78,6 +78,7 @@ function submitMemberAdmin(){
 function qualifyDelete() {
 	<c:if test="${sessionScope.member.userId=='admin'}">
 	var serialNum = "${dto.serialNum}";
+	alert(serialNum);
 	var page = "${page}";
 	var query = "page="+page+"&serialNum="+serialNum;
 	var url = "<%=cp%>/member/deleteQualify?" + query;
@@ -148,7 +149,7 @@ function qualifyDelete() {
 	<form name="adminForm" method="post">
 		<table style="width: 100%; margin: 20px auto 0px; border-spacing: 0px; border-collapse: collapse;" class="info-table">
 		<tr style="border-top: 2px solid #cccccc; border-bottom: 1px solid #cccccc;">
-			<td rowspan="5" style="width:270px; height:250px;">
+			<td rowspan="5" width="270" height="250">
 			<img src="<%=cp%>/upload/member/${dto.saveFilename}"
 			style="width:260px; height:240px;">
 			</td>
@@ -206,21 +207,6 @@ function qualifyDelete() {
 				${dto.departmentName}
 				</c:if>
 			</td>
-			<c:if test="${sessionScope.member.userId=='admin' || sessionScope.member.userId==dto.memberNum}">
-			<td class="info-subject">
-				기본급 
-			</td>
-			
-
-			<td class="info-value">
-					<c:if test="${mode!='updateAdmin'}">
-					<span>${basicpay} 원</span>
-					</c:if>
-					<c:if test="${mode=='updateAdmin'}">
-					<input type="text" name="basicpay" value="${dto.basicpay}"><span>&nbsp;원</span>
-					</c:if>
-			</td>
-			</c:if>
 		</tr>
 		<tr style="border-bottom: 1px solid #cccccc;">
 			<td class="info-subject">
@@ -337,6 +323,8 @@ function qualifyDelete() {
 						</td>
 					</tr>
 				</c:forEach>
+			</c:if>
+			<c:if test="${mode=='updateAdmin'}">
 			<tr style="border-bottom: 1px solid #cccccc; height:20px;" >
 				<td>
 					<input type="text" name="qualifyName" >

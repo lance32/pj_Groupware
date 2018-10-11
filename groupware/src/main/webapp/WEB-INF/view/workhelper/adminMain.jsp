@@ -55,6 +55,7 @@ function searchPayMember(){
 		<tr class="cf">
 			<%-- 구분 폭 수정 가능 --%>
 			<td width="50">번호</td>
+			<td width="100">사원번호</td>
 			<td width="100">부서</td>
 			<td width="150">직위</td>
 			<td width="150">이름</td>
@@ -64,10 +65,11 @@ function searchPayMember(){
 			<c:if test="${list.name!='admin'}">
 			<tr class="tr">
 				<td>${list.listNum}</td>
+				<td>${list.memberNum}</td>
 				<td>${list.departmentName}</td>
 				<td>${list.positionName}</td>
 				<td>${list.name}</td>
-				<td>${list.basicpay}</td>
+				<td><fmt:formatNumber value="${list.basicpay}" pattern="#,###"/>원</td>
 			</tr>
 			</c:if>
 		</c:forEach>

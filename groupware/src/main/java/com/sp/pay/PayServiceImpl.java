@@ -75,5 +75,29 @@ public class PayServiceImpl implements PayService{
 		return payYearList;
 	}
 
+	@Override
+	public Pay readMember(Map<String, Object> map) {
+		Pay dto=null;
+		try {
+			dto=dao.selectOne("pay.readMember",map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return dto;
+	}
+
+	@Override
+	public List<Tax> taxList() {
+		List<Tax> taxlist=null;
+		try {
+			taxlist=dao.selectList("pay.readTax");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return taxlist;
+	}
+
+
+
 
 }

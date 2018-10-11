@@ -273,12 +273,7 @@ public class MemberController {
 		String root=session.getServletContext().getRealPath("/");
 		String pathname=root+"upload"+File.separator+"member";
 		
-		//기본급이 없거나  0보다 작으면 0으로 초기화
-		if(dto.getBasicpay()<=0) {
-			dto.setBasicpay(0);
-		}
 		service.updateMember(dto, pathname);
-		
 		
 		StringBuffer sb=new StringBuffer();
 		sb.append(dto.getName()+ "님의 회원정보가 정상적으로 변경되었습니다.<br>");
@@ -323,10 +318,7 @@ public class MemberController {
 		System.out.println("====================="+dto.getSerialNum());
 		
 		//기본급 출력시 값에 , 추가
-		DecimalFormat df= new DecimalFormat("###,###");
-		String basicpay=df.format(dto.getBasicpay());
 		
-		model.addAttribute("basicpay",basicpay);
 		model.addAttribute("mode","info");
 		model.addAttribute("memberNum",memberNum);
 		model.addAttribute("dto", dto);

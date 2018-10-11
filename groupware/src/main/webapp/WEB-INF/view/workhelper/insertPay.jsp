@@ -7,216 +7,90 @@
 %>
 
 <style>
-.btn{
-	width:80px;
+#customers {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
 }
 
-select{
-	height:28px;
-	border:1px solid e4e4e4;
-	border-radius: 5px;
+#customers td, #customers th {
+    border: 1px solid #ddd;
+    padding: 8px;
 }
 
 input{
-	height:30px;
-	border:1px solid e4e4e4;
-	border-radius: 5px;
+	width:90%;
+}
+#customers tr:nth-child(even){background-color: #f2f2f2;}
+
+#customers tr:hover {}
+
+#customers th {
+width:20%;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
 }
 
+.realTax input{
+	width:85%;
+}
+.ymd input{
+	width:85%;
+}
 </style>
-
-
 
 <script type="text/javascript">
 function payOk() {
-	var f = document.memberForm;
+	var f = document.payForm;
 	var str;
 	
-	str = f.upload.value;
-	str = str.trim();
-    if(!str) {
-        alert("파일을 등록해 주세요. ");
-        f.upload.focus();
-        return;
-    }
-
 <c:if test="${mode=='created'}">
 	str = f.memberNum.value;
 	str = str.trim();
 	if(!str) {
-		alert("아이디를 입력하세요. ");
+		alert("사원번호를 입력하세요. ");
 		f.memberNum.focus();
 		return;
 	}
-	if(!/^[0-9]{4,8}$/i.test(str)) { 
-		alert("아이디는 5~10자이며 첫글자는 영문자이어야 합니다.");
-		f.memberNum.focus();
-		return;
-	}
-	f.memberNum.value = str;
 </c:if>
-<c:if test="${mode=='update'}">
-	str = f.pwd.value;
-	str = str.trim();
-	if(!str) {
-		alert("비밀번호를 입력하세요. ");
-		f.pwd.focus();
-		return;
-	}
-	
-	if(!/^(?=.*[a-z])(?=.*[!@#$%^*+=-]|.*[0-9]).{5,10}$/i.test(str)) { 
-		alert("비밀번호는 5~10자이며 하나 이상의 숫자나 특수문자가 포함되어야 합니다.");
-		f.pwd.focus();
-		return;
-	}
-	
-	f.pwd.value = str;
-	
-	if(str!= f.pwdCheck.value) {
-	    alert("비밀번호가 일치하지 않습니다. ");
-	    f.pwdCheck.focus();
-	    return;
-	}
-</c:if>
-	
-    str = f.name.value;
-	str = str.trim();
-    if(!str) {
-        alert("이름을 입력하세요. ");
-        f.name.focus();
-        return;
-    }
-    f.name.value = str;
-
-    str = f.birth.value;
-	str = str.trim();
-    if(!str) {
-        alert("생년월일를 입력하세요[YYYY-MM-DD]. ");
-        f.birth.focus();
-        return;
-    }
-    
-    str = f.tel1.value;
-	str = str.trim();
-    if(!str) {
-        alert("전화번호를 입력하세요.");
-        f.tel1.focus();
-        return;
-    }
-
-    str = f.tel2.value;
-	str = str.trim();
-    if(!str) {
-        alert("전화번호를 입력하세요.");
-        f.tel2.focus();
-        return;
-    }
-    
-    if(!/^(\d+)$/.test(str)) {
-        alert("숫자만 가능합니다.");
-        f.tel2.focus();
-        return;
-    }
-
-    str = f.tel3.value;
-	str = str.trim();
-    if(!str) {
-        alert("전화번호를 입력하세요.");
-        f.tel3.focus();
-        return;
-    }
-    
-    if(!/^(\d+)$/.test(str)) {
-        alert("숫자만 가능합니다.");
-        f.tel3.focus();
-        return;
-    }
-    
-<c:if test="${sessionScope.member.userId=='admin'}">
-    str = f.departmentNum.value;
-	str = str.trim();
-    if(!str) {
-        alert("부서를 선택해주세요");
-        f.departmentNum.focus();
-        return;
-    }
-    
-    str = f.positionNum.value;
-	str = str.trim();
-    if(!str) {
-        alert("직급을 선택해주세요");
-        f.positionNum.focus();
-        return;
-    }
-</c:if> 
-
-    str = f.phone1.value;
-	str = str.trim();
-    if(!str) {
-        alert("휴대전화번호를 입력하세요.");
-        f.phone1.focus();
-        return;
-    }
-
-    str = f.phone2.value;
-	str = str.trim();
-    if(!str) {
-        alert("휴대전화번호를 입력하세요. ");
-        f.phone2.focus();
-        return;
-    }
-    if(!/^(\d+)$/.test(str)) {
-        alert("숫자만 가능합니다. ");
-        f.phone2.focus();
-        return;
-    }
-
-    str = f.phone3.value;
-	str = str.trim();
-    if(!str) {
-        alert("전화번호를 입력하세요. ");
-        f.phone3.focus();
-        return;
-    }
-    
-    if(!/^(\d+)$/.test(str)) {
-        alert("숫자만 가능합니다. ");
-        f.phone3.focus();
-        return;
-    }
-    
-    str = f.email1.value;
-	str = str.trim();
-    if(!str) {
-        alert("이메일을 입력하세요. ");
-        f.email1.focus();
-        return;
-    }
-
-    var mode="${mode}";
-    
-    if(mode=="created")
-   		f.action = "<%=cp%>/member/member";
-	else
-   		f.action = "<%=cp%>/member/update";
 
     f.submit();
 }
-
-function changeEmail() {
-    var f = document.memberForm;
-	    
-    var str = f.selectEmail.value;
-    if(str!="direct") {
-        f.email2.value=str; 
-        f.email2.readOnly = true;
-        f.email1.focus(); 
-    }
-    else {
-        f.email2.value="";
-        f.email2.readOnly = false;
-        f.email1.focus();
-    }
+function mathPay(){
+	var basicpay=$("#basicpay").val();
+	basicpay = basicpay.trim();
+	if(!basicpay){
+		alert("기본급을 입력해주세요");
+		$("#basicpay").focus();
+		return;
+	}
+	
+	var url="<%=cp%>/pay/mathPay";
+	var q="basicpay="+basicpay;
+	$.ajax({
+		type:"get"
+		,url:url
+		,data:q
+		,dataType:"json"
+		,success:function(data){
+			var p=data.passed;
+			var healthTax=$("#healthTax").val(basicpay*$("#건강보험").val());
+			var employTax=$("#employTax").val(basicpay*$("#고용보험").val());
+			var accidentTax=$("#accidentTax").val(basicpay*$("#산재보험").val());
+			var pensionTax=$("#pensionTax").val(basicpay*$("#국민연금").val());
+			var incomeTax=$("#incomeTax").val(basicpay*$("#소득세").val());
+			alert();
+			var totalTax=$("#totalTax").val();
+			var realPay=$("#realPay").val(basicpay-totalTax);
+		}
+	
+	
+		,error:function(e) {
+	    	console.log(e.responseText);
+	    }
+	});
+	
 }
 
 //사원의 존재여부 체크
@@ -238,12 +112,12 @@ function memberNumCheck() {
 		,dataType:"json"
 		,success:function(data) {
 			var p=data.passed;
-			if(p=="true") {
-				var s="<span style='color:blue;font-weight:bold;'>"+str+"사원번호는 사용 가능합니다.</span><br>";
+			if(p=="false") {
+				var s="<span style='color:blue;font-weight:bold;'>"+str+"재직중인 사원 입니다.</span><br>";
 				
 				$("#memberNum").parent().next(".help-block").html(s);
 			} else {
-				var s="<span style='color:red;font-weight:bold;'>"+str+"</span> 사원번호는 사용할 수 없습니다.";
+				var s="<span style='color:red;font-weight:bold;'>"+str+"</span> 재직중인 사원정보가 없습니다.";
 				$("#memberNum").parent().next(".help-block").html(s);
 				$("#memberNum").val("");
 				$("#memberNum").focus();
@@ -260,72 +134,102 @@ function memberNumCheck() {
 <div class="body-container" style="width: 700px;">
         <div>
 			<form name="payForm" method="post">
-
-			  <table style="width: 100%; margin: 20px auto 0px; border-spacing: 0px;">
-			  <tr>
-			      <td width="100" valign="top" style="text-align: right; padding-top: 5px;">
-			            <label style="font-weight: 900;">사원 번호</label>
-			      </td>
-			      <td style="padding: 0 0 15px 15px;">
-			        <p style="margin-top: 1px; margin-bottom: 5px;">
-			            <input type="text" name="memberNum" id="memberNum" value=""
-                         onchange="memberNumCheck();" style="width: 95%;" placeholder="재직중인 사원의 사원 번호"
-                         maxlength="15" class="boxTF" placeholder="사원 번호">
-			        </p>
-			        
-			      </td>
-			  </tr>
-
-			  <tr>
-			      <td width="100" valign="top" style="text-align: right; padding-top: 5px;">
-			            <label style="font-weight: 900;">기본급</label>
-			      </td>
-			      <td style="padding: 0 0 15px 15px;">
-			        <p style="margin-top: 1px; margin-bottom: 5px;">
-			            <input type="text" name="basicpay" value="" size="13" maxlength="30"  class="boxTF">
-			            	원
-			        </p>
-			      </td>
-			  </tr>
+				<table id="customers">
+				  <tr>
+				    <th>사원 번호</th>
+				    <td colspan="4">
+				    <p>
+				    <input type="text" name="memberNum" id="memberNum" value=""
+                         onchange="memberNumCheck();" placeholder="재직중인 사원의 사원 번호">
+				    </p>
+                         	<p class="help-block"></p>
+                         </td>
+				  </tr>
+				  <tr>
+				    <th>기본급</th>
+				    <td colspan="4"><input type="text" name="basicpay" id="basicpay" onchange="mathPay();"
+				    	placeholder="기본급">
+				    </td>
+				  </tr>
+				  <tr class="ymd">
+				  	<th>지급일</th>
+				  	<td>
+				  		<input type="text" name="year" id="year" readonly="readonly">년
+				  	</td>
+				  	<td>
+				  		<input type="text" name="year" id="year" readonly="readonly">월
+				  	</td>
+				  	<td>
+				  		<input type="text" name="year" id="year" readonly="readonly">일
+				  	</td>
+				  	<td>
+				  	</td>
+				  </tr>
+				  <tr>
+				    <th colspan="5">세율</th>
+				  </tr>
+				  <tr>
+				    <c:forEach var="taxList" items="${taxList}" >
+				    <td>${taxList.deductName}</td>
+				  </c:forEach>
+				  </tr>
+				  
+				  
+				  <tr>
+				  <c:forEach var="taxList" items="${taxList}" >
+				    <td><input type="text" name="${taxList.deductName}" id="${taxList.deductName}" readonly="readonly" value="${taxList.rate}">
+				    	(<fmt:formatNumber value="${taxList.rate*100}" type="%" pattern="0.00" />)</td>
+				  </c:forEach>
+				  </tr>
+				  
+				   <tr>
+				    <th colspan="5">공제금액</th>
+				  </tr>
+				  <tr>
+				   	<tr>
+				  	 <c:forEach var="taxList" items="${taxList}" >
+				   	 <td>${taxList.deductName}</td>
+				  	 </c:forEach>
+				  </tr>
+				  
+				   <tr class="realTax">
+			   	 	<td>
+			   	 		<input type="text" name="healthTax" id="healthTax" readonly="readonly">원
+			   	 	</td>
+				    <td>
+				    	<input type="text" name="employTax" id="employTax" readonly="readonly">원
+				    </td>
+				    <td>
+				    	<input type="text" name="accidentTax" id="accidentTax" readonly="readonly">원
+				    </td>
+				    <td>
+				    	<input type="text" name="pensionTax" id="pensionTax" readonly="readonly">원
+				    </td>
+				    <td>
+						<input type="text" name="incomeTax" id="incomeTax" readonly="readonly">원
+				    </td>
+				  </tr>
+				  <tr class="realTax">
+				  	<th>총 공제액</th>
+				  	<td>
+				  		<input type="text" name="totalTax" id="totalTax" readonly="readonly">원
+				  	</td>
+				  	<th>지급액</th>
+				  	<td colspan="2">
+				  		<fmt:formatNumber value="${realPay}" pattern="#,###"/>
+				  		<input type="text" name="realPay" id="realPay" readonly="readonly">원
+				  	</td>
+				  </tr>
+				</table>
+				
 			  
-			  <tr>
-			      <td width="100" valign="top" style="text-align: right; padding-top: 5px;" rowspan="6">
-			            <label style="font-weight: 900;">지급일</label>
-			      </td>
-			      <td style="padding: 0 0 0 15px;" rowspan="6" width="80">
-		            <input type="text" name="year" value="" class="boxTF" maxlength="4">
-		          </td>
-		          <td rowspan="6">
-		          	년
-		          </td>
-		          <td style="padding: 0 0 0 15px;" rowspan="6">
-		            <input type="text" name="month" value="" class="boxTF" maxlength="2">
-		           </td>
-		           <td rowspan="6">
-		          	월
-		          </td>
-		           <td style="padding: 0 0 0 15px;" rowspan="6">
-		            <input type="text" name="day" value="" class="boxTF" maxlength="2">
-			      </td>
-			      <td rowspan="6">
-		          	일
-		          </td>
-			  </tr>
-			  
-			  
-		
-			  </table>
-
 			  <table style="width: 100%; margin: 0px auto; border-spacing: 0px; margin-top:10px;">
 			     <tr height="45"> 
 			      <td align="center" >
-			        <button type="button" name="sendButton" class="btn" onclick="payOk();">급여 수정</button>
+			        <button type="button" name="sendButton" class="btn" onclick="payOk();">급여 입력</button>
 			        <button type="reset" class="btn">다시입력</button>
 			        <button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/pay/adminMain';">수정취소</button>
 			      </td>
-			    </tr>
-			    <tr height="30">
-			        <td align="center" style="color: blue;">${message}</td>
 			    </tr>
 			  </table>
 			</form>

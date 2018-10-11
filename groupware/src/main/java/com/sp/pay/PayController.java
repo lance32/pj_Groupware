@@ -2,6 +2,7 @@ package com.sp.pay;
 
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -16,8 +17,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sp.common.MyUtil;
+import com.sp.member.Member;
 import com.sp.member.SessionInfo;
 
 @Controller("pay.payController")
@@ -44,7 +47,6 @@ public class PayController {
 		}
 		
 		String memberNum=info.getUserId();
-		System.out.println("======================================="+searchKey);
 		
 		String cp=req.getContextPath();
 		int rows = 10; // 한 화면에 보여주는 게시물 수
@@ -56,7 +58,7 @@ public class PayController {
         map.put("searchKey", searchKey);
         map.put("memberNum", memberNum);
         dataCount = service.memberdataCount(map);
-        System.out.println("=========================="+map);
+       
         if(dataCount != 0)
             total_page = util.pageCount(rows, dataCount);
 
@@ -110,6 +112,10 @@ public class PayController {
         model.addAttribute("total_page", total_page);
         model.addAttribute("paging", paging);
 		
+        if(info.getUserId().equalsIgnoreCase("admin")) {
+        	return "redirect:/pay/adminMain";
+        }
+        
 		
 		return ".workhelper.paymain";
 	}
@@ -200,37 +206,91 @@ public class PayController {
 	}
 	
 	@RequestMapping(value="/pay/paymemberinfo")
-	public String article() {
+	public String article(@RequestParam String memberNum,
+			@RequestParam(value="page") String page,
+			@RequestParam(value="searchKey", defaultValue="all") String searchKey,
+			@RequestParam int year,
+			@RequestParam int month,
+			HttpSession session,
+			Model model) throws Exception {
+		
+		System.out.println("============="+year+"=============="+month);
+		String query="page="+page+"&searchKey="+searchKey;
+		
+		Map<String, Object> map=new HashMap<>();
+		
+		map.put("memberNum", memberNum);
+		map.put("year", year);
+		map.put("month", month);
+		
+		// 해당 레코드 가져 오기
+		Pay dto = service.readMember(map);
+		if(dto==null)
+			return "redirect:/pay/main?"+query;
+		
+		//기본급 출력시 값에 , 추가
+		DecimalFormat df= new DecimalFormat("###,###");
+		String basicpay=df.format((dto.getBasicpay()));
+		int allTax=dto.getHealthTax()+dto.getEmployTax()+dto.getAccidentTax()+dto.getPensionTax()+dto.getIncomeTax();
+		int allPay=dto.getBasicpay()+dto.getExtrapay();
+		dto.setRealPay(allPay-allTax);
+		
+		model.addAttribute("allTax",allTax);
+		model.addAttribute("allPay",allPay);
+		model.addAttribute("basicpay",basicpay);
+		model.addAttribute("dto", dto);
+		model.addAttribute("page", page);
+		model.addAttribute("query", query);
 		
 		return ".workhelper.paymemberinfo";
 	}
 	
 	@RequestMapping(value="/pay/insertpay",method=RequestMethod.GET)
-	public String insertPayForm(HttpSession session) {
+	public String insertPayForm(HttpSession session,
+			Model model) throws Exception {
 		
-		
-		
+		List<Tax> taxList=service.taxList();
+		model.addAttribute("taxList",taxList);
 		
 		return ".workhelper.insertPay";
 		
 	}
 	
 	@RequestMapping(value="/pay/insertPay",method=RequestMethod.POST)
-	public String insertPaySubmit() {
+	public String insertPaySubmit(Pay dto,Model model) {
+		
+		
 		return ".workhelper.main";
 		
 		
 	}
 	
-	@RequestMapping(value="pay/insertTax",method=RequestMethod.GET)
+	@RequestMapping(value="/pay/insertTax",method=RequestMethod.GET)
 	public String insertTax() {
 		
 		return ".workhelper.insertTax";
 	}
 	
-	public String updatePay() {
+	
+	
+	public String updatePay()throws Exception{
 		return null;
 	}
 	
-	
+	@RequestMapping(value="/pay/mathPay",method=RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> mathPay(
+			@RequestParam int basicpay
+			)throws Exception{
+		
+		String passed = "true";
+		if(basicpay == 0)
+			passed = "false";
+		
+		Map<String, Object> map=new HashMap<>();
+		map.put("passed", passed);
+		map.put("basicpay", basicpay);
+		System.out.println(basicpay);
+		return map;
+	}
 }

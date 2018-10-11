@@ -38,57 +38,7 @@
 }
 
 </style>
-<script type="text/javascript" src="<%=cp%>/resource/jquery/js/jquery-1.12.4.min.js"></script>
-<script type="text/javascript">
-<%-- function deletemember() {
-<c:if test="${sessionScope.member.userId=='admin'}">
-	var memberNum = "${dto.memberNum}";
-	var page = "${page}";
-	var query = "memberNum="+memberNum+"&page="+page;
-	var url = "<%=cp%>/member/delete?" + query;
 
-	if(confirm("위 자료를 삭제 하시 겠습니까 ? ")) {
-			location.href=url;
-	}
-</c:if>    
-<c:if test="${sessionScope.member.userId!='admin' && sessionScope.member.userId!=dto.memberNum}">
-	alert("게시물을 삭제할 수  없습니다.");
-</c:if>
-} --%>
-
-function updateMemberAdmin() {
-	<c:if test="${sessionScope.member.userId=='admin'}">
-	var  memberNum = "${dto.memberNum}";
-	var page = "${page}";
-	var query = "memberNum="+memberNum+"&page="+page;
-	var url = "<%=cp%>/member/updateAdmin?" + query;
-
-	location.href=url;
-</c:if> 
-	
-};
-
-function submitMemberAdmin(){
-	var f=document.adminForm;
-	f.action="<%=cp%>/member/updateAdmin";
-	
-	f.submit();	
-};
-
-function qualifyDelete() {
-	<c:if test="${sessionScope.member.userId=='admin'}">
-	var serialNum = "${dto.serialNum}";
-	var page = "${page}";
-	var query = "page="+page+"&serialNum="+serialNum;
-	var url = "<%=cp%>/member/deleteQualify?" + query;
-
-	if(confirm("정보를 삭제 하시 겠습니까 ? ")) {
-			location.href=url;
-	};
-	</c:if>
-};
-
-</script>
 
 <div class="body-title">
 	<h3><span style="font-family: Webdings">2</span>

@@ -64,7 +64,7 @@ function changeYear(year){
 			<td width="100" style="text-align: center;">${list.name}</td>
 			<td width="100">${list.year}-&nbsp;${list.month}-&nbsp;${list.day}</td>
 			<td width="750">
-				<a href="${articleUrl}&memberNum=${list.memberNum}">
+				<a href="${articleUrl}&memberNum=${list.memberNum}&year=${list.year}&month=${list.month}">
 				${list.year}년 ${list.month}월 ${list.name}님의 급여 입니다.
 				</a>
 			</td>

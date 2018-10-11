@@ -3,6 +3,22 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="pay">
 <!-- select -->
+	<!-- 사원정보 -->
+	<select id="readMember" resultType="com.sp.pay.Pay" parameterType="map">
+        SELECT s.memberNum,departmentName,positionName,name,year,month,day,basicpay,
+		    healthTax,employTax,accidentTax,pensionTax,incomeTax,extraPay 
+		    FROM salary s 
+		    JOIN member m ON s.memberNum=m.memberNum
+		    JOIN position p ON m.positionNum = p.positionNum
+		    JOIN department d ON m.departmentNum=d.departmentNum
+		where s.memberNum=#{memberNum} and year=#{year} and month=#{month}
+    </select>
+	<!-- 세율정보 -->
+	<select id="readTax" resultType="com.sp.pay.Tax">
+		SELECT deductNum,deductName,rate FROM salary_deduction
+	</select>
+	
+	
 	<!-- 관리자 리스트 -->
 	<select id="listPayMemberAdmin" parameterType="map" resultType="com.sp.pay.Pay">
 		SELECT * FROM (
@@ -32,9 +48,9 @@
                     <where>
                 		<if test="searchKey != null and searchKey != 'all'">
 		                	<include refid="where-paylist"/>
-	                    	AND s.memberNum=#{memberNum}
                 		</if>
                     </where>
+	                AND s.memberNum=#{memberNum}
 					ORDER BY year DESC,month DESC
 	        ) tb WHERE ROWNUM &lt;= #{end}
 	    ) WHERE rnum &gt;= #{start}
@@ -44,6 +60,8 @@
 	<select id="payYearList" resultType="map" parameterType="String">
 		SELECT memberNum,year FROM salary where memberNum=#{memberNum} group by memberNum,year ORDER BY year DESC
 	</select>
+	<!-- 보혐료 세율 리스트 -->
+	
 	
 <!-- 총 사원 카운트 -->
 	<select id="dataCount" parameterType="map" resultType="Integer">
@@ -70,7 +88,7 @@
 	
 <!-- insert -->
 
-
+	<!-- 기본급 및 지급일 입력 -->
 
 
 

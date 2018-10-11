@@ -16,13 +16,14 @@ public class Pay {
 	private int basicpay;
 	private int extrapay;
 	
-	//세금 
+	//세금 차감액
 	private int healthTax; //건강
 	private int employTax; //고용
 	private int accidentTax; //산재
 	private int pensionTax; //국민
 	private int incomeTax; //소득
 	private int realPay; //실수령액
+	
 	//부서 직급 정보
 	private String departmentName;
 	private String positionName;

@@ -44,11 +44,7 @@ public class Member {
 	private String qualifyName;
 	private String serialNum;
 	private String getDate;
-	
-	//기본급
-	private int basicpay;
-	
-	
+
 	public String getQualifyCode() {
 		return qualifyCode;
 	}
@@ -264,12 +260,6 @@ public class Member {
 	}
 	public void setPositionNum(int positionNum) {
 		this.positionNum = positionNum;
-	}
-	public int getBasicpay() {
-		return basicpay;
-	}
-	public void setBasicpay(int basicpay) {
-		this.basicpay = basicpay;
 	}
 	
 }

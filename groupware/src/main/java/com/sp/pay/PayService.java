@@ -4,7 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 public interface PayService {
-//	public Member readMember(String memberNum);
+	public Pay readMember(Map<String, Object> map);
+	public List<Tax> taxList();
 //	public Member readDetailinfo(String memberNum);
 //	public int insertMember(Member dto,String pathname) throws Exception ;
 
