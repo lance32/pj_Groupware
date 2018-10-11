@@ -84,27 +84,22 @@
 									<col style="width: 70%">
 								</colgroup>
 							<tbody>
-									<!-- 2차 결재를 위한 rel_doc_no 추가함 edited by wonjeh(2015-02-27) -->
+
 									<tr>
 										<td scope="row" class="td_left"><img
 											src="<%=cp%>/resource/images/paper_icon.gif" alt="문서양식 아이콘">
-											<span class="txtgray"> <a
-												href="<%=cp%>/approval/approval_createform1"
-												title="구매요청서">구매요청서</a>
+											<span class="txtgray"> <a href="<%=cp%>/approval/approval_createform" title="근태신청서">근태신청서</a>
+										</span></td>
+										<td scope="row" class="td_left"><a href="edit_format.php?format_no=18&amp;rel_doc_no="></a></td>
+									</tr>
+									<tr>
+										<td scope="row" class="td_left"><img src="<%=cp%>/resource/images/paper_icon.gif" alt="문서양식 아이콘">
+											<span class="txtgray"> <a href="<%=cp%>/approval/approval_createform1" title="구매요청서">구매요청서</a>
 										</span></td>
 										<td scope="row" class="td_left"><a
 											href="edit_format.php?format_no=15&amp;rel_doc_no="></a></td>
 									</tr>
-									<tr>
-										<td scope="row" class="td_left"><img
-											src="<%=cp%>/resource/images/paper_icon.gif" alt="문서양식 아이콘">
-											<span class="txtgray"> <a
-												href="<%=cp%>/approval/approval_createform"
-												title="근태신청서">근태신청서</a>
-										</span></td>
-										<td scope="row" class="td_left"><a
-											href="edit_format.php?format_no=18&amp;rel_doc_no="></a></td>
-									</tr>
+									
 									<tr>
 										<td scope="row" class="td_left"><img
 											src="<%=cp%>/resource/images/paper_icon.gif"> <span

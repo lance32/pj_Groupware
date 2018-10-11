@@ -17,7 +17,7 @@ jQuery(function(){
 </script>
 
 
-<ul class="nav nav-tabs">
+<ul class="nav nav-tabs" style="margin-top: 30px;">
   <li role="presentation" class="active"><a>동호회 정보</a></li>
   <li role="presentation"><a href="<%=cp%>/club/alterCategory?clubNum=${clubInfo.clubNum}">게시판 카테고리 설정</a></li>
   <li role="presentation" style="float: right;"><a href="#" onclick="deleteClubChk()" style="color: #B40404;">동호회 삭제</a></li>

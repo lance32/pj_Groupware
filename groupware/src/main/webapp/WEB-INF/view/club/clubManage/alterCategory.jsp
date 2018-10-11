@@ -143,7 +143,7 @@ jQuery(function(){
 
 </script>
 
-<ul class="nav nav-tabs">
+<ul class="nav nav-tabs" style="margin-top: 30px;">
   <li role="presentation"><a href="<%=cp%>/club/alterClubInfo?clubNum=${clubInfo.clubNum}">동호회 정보</a></li>
   <li role="presentation" class="active"><a>게시판 카테고리 설정</a></li>
   <li role="presentation" style="float: right;"><a href="<%=cp%>/club/deleteClub?clubNum=${clubInfo.clubNum}" style="color: #B40404;">동호회 삭제</a></li>

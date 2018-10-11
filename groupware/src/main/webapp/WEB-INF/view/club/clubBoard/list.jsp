@@ -561,7 +561,7 @@ function cancleBoardLike(boardNum) {
 }
 </script>
 
-<div style="width: 85%; height: auto; float: left; padding-top: 20px;">
+<div style="width: 85%; height: auto; float: left; padding-top: 20px; margin-bottom: 10px;">
 	<div id="preListDiv" class="moreListDiv" style="margin-bottom: 50px;">이전글 보기</div>
 	
 	<div id="boardMainDiv" style="width: 1000px; clear: both; margin: 0px auto; padding-bottom: 50px; ">

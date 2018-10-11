@@ -504,7 +504,7 @@ function writeToScreen(message) {
 			<button type="button" id="addChatRoomBtn" class="butn" style="font-size: 16px;">채팅방 개설</button>
 		</div>
 		
-		<div style="clear:both; width: 490px; height: 500px; padding: 5px 0px 5px 10px; border: 1px solid #F2F2F2; overflow-y: scroll;">
+		<div style="clear:both; width: 490px; height: 500px; padding: 5px 0px 5px 10px; border: 1px solid #D8D8D8; overflow-y: scroll;">
 			<table  id="chatRoom_List" style="width: 100%;"></table>
 		</div>
 	</div>

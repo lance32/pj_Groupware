@@ -8,6 +8,7 @@
  .body{
  	border-left: 2px solid #BDBDBD;
  	border-right: 2px solid #BDBDBD;
+ 	min-height: 855px;
  }
  .mainTableTr{
  	text-align: center; 
@@ -95,13 +96,13 @@ jQuery(function(){
 	    
 		<div class="carousel-inner">
 			<div class="item active">
-				<img src="<%=cp%>/resource/images/company.jpg" style="height: 200px;">
-			</div>
-			<div class="item">
 				<img src="<%=cp%>/resource/images/office.jpg" style="height: 200px;">
 			</div>
 			<div class="item">
 				<img src="<%=cp%>/resource/images/building.jpg" style="height: 200px;">
+			</div>
+			<div class="item">
+				<img src="<%=cp%>/resource/images/office2.jpg" style="height: 200px;">
 			</div>
 		</div>
 		

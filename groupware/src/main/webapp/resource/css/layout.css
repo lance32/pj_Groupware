@@ -16,6 +16,8 @@ body{
 	height:60px;
 	margin:0px 0px 10px 0px;
 	padding:0px;
+	position: fixed;
+	z-index: 900;
 }
 	.logo {
 		width: 8%;
@@ -146,14 +148,14 @@ body{
     clear:both;
 	width:100%;
     min-width: 1445px;
-    min-height: 830px;
+    min-height: 915px;
+    padding-top: 60px;
 }
 	.body{
 		width:80%;
 		height: 97%;
 		float:left;
 		margin-left:50px;
-		margin-bottom: 5px;
 	}
 	
 	.side {
@@ -214,9 +216,7 @@ body{
     background: #4e4e4e;
     height: 54px;
     font-size: 17px;
-    padding-top: 5px;
-/*     
-	position: absolute;
-    	bottom: 0px; 
-*/
+    position: absolute ;
+    bottom: auto; 
+    z-index: 900;
 }

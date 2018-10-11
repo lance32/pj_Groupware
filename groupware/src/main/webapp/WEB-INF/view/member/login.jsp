@@ -22,6 +22,7 @@
 
 .loginmain{
 	width: 100%;
+	min-width: 1260px;
 	min-height: 300px;
 	height: 300px;
 	margin-top: 15%;

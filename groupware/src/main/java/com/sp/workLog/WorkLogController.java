@@ -39,7 +39,7 @@ public class WorkLogController {
 			HttpServletRequest req,
 			Model model) throws Exception {
 		
-		int rows=5; 
+		int rows=10; 
 		int dataCount=0; 
 		int total_page=0; 
 		
@@ -149,8 +149,21 @@ public class WorkLogController {
 		return ".workLog.created";
 	}
 	
+	@RequestMapping(value="/workLog/form", method=RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> workLogForm(@RequestParam(value="num", defaultValue="1")int num
+			) throws Exception {
+		Map<String, Object> model = new HashMap<String, Object>();
+		WorkLog dto=service.readWorkForm(num);
+		model.put("dto", dto);
+		model.put("num", num);
+		
+		return model;
+	}
+	
 	@RequestMapping(value="/workLog/created", method=RequestMethod.POST)
-	public String createdSubmit(WorkLog dto, 
+	public String createdSubmit(WorkLog dto,
+			@RequestParam(value="num") int num,		
 			HttpSession session){
 		
 		SessionInfo info=(SessionInfo) session.getAttribute("member");
@@ -160,6 +173,8 @@ public class WorkLogController {
 		}
 		
 		dto.setMemberNum(info.getUserId());
+		dto.setNum(num);
+		System.out.println(dto.getNum());
 		service.insertWorkLog(dto);
 		
 		return "redirect:/workLog/list";

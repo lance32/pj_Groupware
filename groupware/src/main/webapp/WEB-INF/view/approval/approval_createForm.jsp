@@ -5,9 +5,6 @@
 <%
 	String cp = request.getContextPath();
 %>
-
-
-
 <!-- 근태 신청서 페이지  -->
 
 <script type="text/javascript" src="<%=cp%>/resource/se/js/HuskyEZCreator.js" charset="utf-8"></script>
@@ -18,11 +15,18 @@
 
 </script>
 <script type="text/javascript">
+
+function onChange() {
+    var text = document.getElementById("urlid").value;
+    document.getElementById("urlid_confirm").innerHTML=text;
+   }
+
 $(function() {
 	$("#save").click(function() {
+		submitContents();
 		var vTitle = $("#title").val(); // title
 		var vContents = $("#content").val(); // contents
-		var vComments = "vComments"; // comments
+		var vComments = $("#comments").val(); // comments
 		var vWriter = $("#session").val(); // writer
 		var vAppLine = $("#session").val() + "|"; // approval line
 		for(var i = 0; i <  8; i++){
@@ -30,7 +34,6 @@ $(function() {
 				vAppLine += $("#toMember"+i).val() + "|";
 			}
 		}
-
 		$.ajax({
 			url:"<%=cp%>/approval/submit",
 			type:"get",
@@ -43,8 +46,8 @@ $(function() {
 				appLine : vAppLine				
 			},
 			
-			success:function(data) { 
-				alert("sss");
+			success:function(data) {
+				location.href="approval";
 			},
 			error:function(jqXHR) {
 				console.log(jqXHR.resonseText);
@@ -52,6 +55,9 @@ $(function() {
 		});
 	
 	});
+	$("#cancel").click(function(){
+		location.href="approval";
+	})
 	$("#organizationChart").click(function() {
 		var dialog;
 		$.ajax({
@@ -59,7 +65,6 @@ $(function() {
 			type:"get",
 			dataType:"json",
 			success:function(data) {
-				debugger;
 				var h = "<table>";
 				var preDeptName = "";
 				var deptClass = "";
@@ -76,7 +81,7 @@ $(function() {
 					for (var i = 1; i < val.deptOrder; i++) {
 						ws += "&nbsp;&nbsp;&nbsp;&nbsp;";
 					}
-					
+
 					if (preDeptName != val.deptName) {
 						h += "<tr><td>";
 						h += ws;
@@ -90,7 +95,7 @@ $(function() {
 						h += "<tr><td>";
 						ws += "&nbsp;&nbsp;&nbsp;&nbsp;"
 						h += ws;
-						h += "<input type='checkbox' id='" + val.memberNum + "' class='memberChk " + deptClass + "' data-member-num='" + val.memberNum + "'>";
+						h += "<input type='checkbox' id='" + val.memberNum + "' class='memberChk " + deptClass + "' data-member-num='" + val.memberNum + "'data-member-name='" + val.memberName + "'>";
 						h += val.memberName; 
 						h += "&nbsp;";
 						h += val.positionName;
@@ -120,21 +125,25 @@ $(function() {
 						"확인" : function() {
 							// 조직도에서 선택된 값을 받을 input object에 넣도록 처리
 							// 여기서는 <input type="text" id="toMember" name="toMember"..>
-							debugger;
 							var memberList = "";
+							var memberNameList = "";
 							$(".memberChk").each(function() {
+								
 								if (this.checked) {
 									memberList += $(this).data("memberNum") + ";";
+									memberNameList += $(this).data("memberName") + ";";
 								} 
 							});
 							var memberSibal = memberList.split(';');
-							
+							var memberSibalName = memberNameList.split(';');
+
 							if(memberSibal.length > 8){
 								alert("too much member");
 							}
 							else {							
 							for(var i = 0; i <  memberSibal.length; i++){
 								$("#toMember"+i).val(memberSibal[i]);
+								$("#lbtoMember"+i).val(memberSibalName[i]);
 							}
 							}
 							
@@ -158,27 +167,23 @@ $(function() {
 	action="/segio/works/approval/edit_format.php"
 	enctype="multipart/form-data">
 	<input type="hidden" id="session" name="session" value=${sessionScope.member.userId }>
-	<input type="submit" title="" value="" style="display: none"> <input
-		type="hidden" name="mode" value="text_insert"> <input
-		type="hidden" name="no" value=""> <input type="hidden"
-		name="report"> <input type="hidden" name="page" value="">
-	<input type="hidden" name="format_no" value="18"> <input
-		type="hidden" name="urgent" value=""> <input type="hidden"
-		name="addtype" value=""> <input type="hidden" name="addfile"
-		id="addfile" value="">
+	<input type="submit" title="" value="" style="display: none"> 
+	<input type="hidden" name="mode" value="text_insert"> 
+	<input type="hidden" name="no" value=""> 
+	<input type="hidden" name="report"> 
+	<input type="hidden" name="page" value="">
+	<input type="hidden" name="format_no" value="18"> 
+	<input type="hidden" name="urgent" value=""> 
+	<input type="hidden" name="addtype" value=""> 
+	<input type="hidden" name="addfile" id="addfile" value="">
 	
-	<input type="hidden" name="mobile_chk" value="0"> <input
-		type="hidden" name="navigator"
-		value="Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36">
+	<input type="hidden" name="mobile_chk" value="0"> 
+	<input type="hidden" name="navigator" value="Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36">
 	<input type="hidden" name="auto_chk" value="off">
 
-	
 	<input type="hidden" name="doc_link_list" value="">
 	<input type="hidden" name="auto_pass_receiver_list" value="">
 	<input type="hidden" name="reference" value="">
-	<!-- 참조 -->
-	<input type="hidden" id="rel_doc_no" value=""> <input
-		type="hidden" id="orig_doc_no" name="original_doc_no" value="">
 
 	<div class="works_title">
 		<span class="glyphicon glyphicon-folder-open"
@@ -194,306 +199,95 @@ $(function() {
 	<input type="hidden" id="app_uid1" name="app_uid1" value="test6">
 	<input type="hidden" id="app_order1" name="app_order1" value="1">
 
-	<!-- 협조자 정보 -->
-	<input type="hidden" id="ref_uid1" name="ref_uid1" value=""> <input
-		type="hidden" id="ref_order1" name="ref_order1" value="">
-
-	<!-- 합의자 정보 -->
-	<input type="hidden" id="agr_uid1" name="agr_uid1" value=""> <input
-		type="hidden" id="agr_order1" name="agr_order1" value=""> <input
-		type="hidden" id="app_uid2" name="app_uid2" value=""> <input
-		type="hidden" id="app_order2" name="app_order2" value="">
-
-	<!-- 협조자 정보 -->
-	<input type="hidden" id="ref_uid2" name="ref_uid2" value=""> <input
-		type="hidden" id="ref_order2" name="ref_order2" value="">
-
-	<!-- 합의자 정보 -->
-	<input type="hidden" id="agr_uid2" name="agr_uid2" value=""> <input
-		type="hidden" id="agr_order2" name="agr_order2" value=""> <input
-		type="hidden" id="app_uid3" name="app_uid3" value=""> <input
-		type="hidden" id="app_order3" name="app_order3" value="">
-
-	<!-- 협조자 정보 -->
-	<input type="hidden" id="ref_uid3" name="ref_uid3" value=""> <input
-		type="hidden" id="ref_order3" name="ref_order3" value="">
-
-	<!-- 합의자 정보 -->
-	<input type="hidden" id="agr_uid3" name="agr_uid3" value=""> <input
-		type="hidden" id="agr_order3" name="agr_order3" value=""> <input
-		type="hidden" id="app_uid4" name="app_uid4" value=""> <input
-		type="hidden" id="app_order4" name="app_order4" value="">
-
-	<!-- 협조자 정보 -->
-	<input type="hidden" id="ref_uid4" name="ref_uid4" value=""> <input
-		type="hidden" id="ref_order4" name="ref_order4" value="">
-
-	<!-- 합의자 정보 -->
-	<input type="hidden" id="agr_uid4" name="agr_uid4" value=""> <input
-		type="hidden" id="agr_order4" name="agr_order4" value=""> <input
-		type="hidden" id="app_uid5" name="app_uid5" value=""> <input
-		type="hidden" id="app_order5" name="app_order5" value="">
-
-	<!-- 협조자 정보 -->
-	<input type="hidden" id="ref_uid5" name="ref_uid5" value=""> <input
-		type="hidden" id="ref_order5" name="ref_order5" value="">
-
-	<!-- 합의자 정보 -->
-	<input type="hidden" id="agr_uid5" name="agr_uid5" value=""> <input
-		type="hidden" id="agr_order5" name="agr_order5" value=""> <input
-		type="hidden" id="app_uid6" name="app_uid6" value=""> <input
-		type="hidden" id="app_order6" name="app_order6" value="">
-
-	<!-- 협조자 정보 -->
-	<input type="hidden" id="ref_uid6" name="ref_uid6" value=""> <input
-		type="hidden" id="ref_order6" name="ref_order6" value="">
-
-	<!-- 합의자 정보 -->
-	<input type="hidden" id="agr_uid6" name="agr_uid6" value=""> <input
-		type="hidden" id="agr_order6" name="agr_order6" value=""> <input
-		type="hidden" id="app_uid7" name="app_uid7" value=""> <input
-		type="hidden" id="app_order7" name="app_order7" value="">
-
-	<!-- 협조자 정보 -->
-	<input type="hidden" id="ref_uid7" name="ref_uid7" value=""> <input
-		type="hidden" id="ref_order7" name="ref_order7" value="">
-
-	<!-- 합의자 정보 -->
-	<input type="hidden" id="agr_uid7" name="agr_uid7" value=""> <input
-		type="hidden" id="agr_order7" name="agr_order7" value=""> <input
-		type="hidden" id="app_uid8" name="app_uid8" value=""> <input
-		type="hidden" id="app_order8" name="app_order8" value="">
-
-	<!-- 협조자 정보 -->
-	<input type="hidden" id="ref_uid8" name="ref_uid8" value=""> <input
-		type="hidden" id="ref_order8" name="ref_order8" value="">
-
-	<!-- 합의자 정보 -->
-	<input type="hidden" id="agr_uid8" name="agr_uid8" value=""> <input
-		type="hidden" id="agr_order8" name="agr_order8" value="">
-
 	<div class="app_table">
 		<table class="aview" summary="결재선 등록" style="width: 100%;">
-			<caption>"결재선 등록"</caption>
 			<colgroup>
-				<col style="width: 25%">
-				<col style="width: 3%">
-				<col style="width: 9%">
-				<col style="width: 9%">
-				<col style="width: 9%">
-				<col style="width: 9%">
-				<col style="width: 9%">
-				<col style="width: 9%">
-				<col style="width: 9%">
-				<col style="width: 9%">
+				<col style="width: 6%">
+				<col style="width: 6%">
+				<col style="width: 6%">
+				<col style="width: 6%">
+				<col style="width: 6%">
+				<col style="width: 6%">
+				<col style="width: 6%">
+				<col style="width: 6%">
+				<col style="width: 6%">
 			</colgroup>
 			<tbody>
 				<tr>
-					<th scope="col" class="ebtn1"><span class="gw_btn_pack blue">
-							<!-- <button type="button" id="once_regist">결재선 선택</button> -->
-							<input type="button" id="organizationChart" value="&nbsp;조직도&nbsp;">
-							
-					</span> <span class="gw_btn_pack black"> <!-- Edited By: anuradha Pasare  On:2014-02-24  Purpose:to set the selected category no in popup window  -->
-							<button type="button" id="btn_approval_line_setting">내 결재선 관리</button>
-					</span></th>
-					<th rowspan="3" scope="col" style="background-color: #FFF6F9;"
-						class="ebtn1">결재</th>
-					<th scope="col" class="ebtn1">
-						<span><input type="text" id="toMember0" name="toMember" style="background: #fff; color: #333; width: 80%; border: 1px solid #d7d7d7;" readOnly="readOnly"></span>
+
+					<th rowspan="2" scope="col" style="background-color: #FFF6F9;" class="ebtn1">
+						<center>결재<br>
+							<input type="button" id="organizationChart" value="&nbsp;결재선 추가&nbsp;">
+						</br></center>
+					</th>
+					<th scope="col" class="ebtn1" style="padding-left: 5px;">
+						<span><input type="text" id="toMember0" name="toMember" style="background-color:transparent; width: 80%; border:none #d7d7d7; text-align:center;" readOnly="readOnly"></span>
 						<div id="app_class1"></div>
 					</th>
 					<th scope="col" class="ebtn1">
-						<span><input type="text" id="toMember1" name="toMember" style="background: #fff; color: #333; width: 80%; border: 1px solid #d7d7d7;" readOnly="readOnly"></span>
+						<span><input type="text" id="toMember1" name="toMember" style="background-color:transparent; width: 80%; border:none #d7d7d7; text-align:center;" readOnly="readOnly"></span>
 						<div id="app_class2"></div>
 					</th>
 					<th scope="col" class="ebtn1">
-						<span><input type="text" id="toMember2" name="toMember" style="background: #fff; color: #333; width: 80%; border: 1px solid #d7d7d7;" readOnly="readOnly"></span>
+						<span><input type="text" id="toMember2" name="toMember" style="background-color:transparent; width: 80%; border:none #d7d7d7; text-align:center;" readOnly="readOnly"></span>
 						<div id="app_class3"></div>
 					</th>
 					<th scope="col" class="ebtn1">
-						<span><input type="text" id="toMember3" name="toMember" style="background: #fff; color: #333; width: 80%; border: 1px solid #d7d7d7;" readOnly="readOnly"></span>
+						<span><input type="text" id="toMember3" name="toMember" style="background-color:transparent; width: 80%; border:none #d7d7d7; text-align:center;" readOnly="readOnly"></span>
 						<div id="app_class4"></div>
 					</th>
 					<th scope="col" class="ebtn1">
-						<span><input type="text" id="toMember4" name="toMember" style="background: #fff; color: #333; width: 80%; border: 1px solid #d7d7d7;" readOnly="readOnly"></span>
+						<span><input type="text" id="toMember4" name="toMember" style="background-color:transparent; width: 80%; border:none #d7d7d7; text-align:center;" readOnly="readOnly"></span>
 						<div id="app_class5"></div>
 					</th>
 					<th scope="col" class="ebtn1">
-						<span><input type="text" id="toMember5" name="toMember" style="background: #fff; color: #333; width: 80%; border: 1px solid #d7d7d7;" readOnly="readOnly"></span>
+						<span><input type="text" id="toMember5" name="toMember" style="background-color:transparent; width: 80%; border:none #d7d7d7; text-align:center;" readOnly="readOnly"></span>
 						<div id="app_class6"></div>
 					</th>
 					<th scope="col" class="ebtn1">
-						<span><input type="text" id="toMember6" name="toMember" style="background: #fff; color: #333; width: 80%; border: 1px solid #d7d7d7;" readOnly="readOnly"></span>
+						<span><input type="text" id="toMember6" name="toMember" style="background-color:transparent; width: 80%; border:none #d7d7d7; text-align:center;" readOnly="readOnly"></span>
 						<div id="app_class7"></div>
 					</th>
 					<th scope="col" class="ebtn1">
-						<span><input type="text" id="toMember7" name="toMember" style="background: #fff; color: #333; width: 80%; border: 1px solid #d7d7d7;" readOnly="readOnly"></span>
+						<span><input type="text" id="toMember7" name="toMember" style="background-color:transparent; width: 80%; border:none #d7d7d7; text-align:center;" readOnly="readOnly"></span>
 						<div id="app_class8"></div>
 					</th>
 				</tr>
 
 				<tr>
-					<td scope="row" class="abtn2"></td>
-
 					<td rowspan="2" class="esign" scope="row">
+						<span><input type="label" id="lbtoMember0" name="lbtoMember" style="background-color:transparent; color: #333; width: 80%; border:none #d7d7d7; text-align:center;" readOnly="readOnly"></span>
 						<div id="app_name1"></div>
 					</td>
 					<td rowspan="2" class="esign" scope="row">
+						<span><input type="label" id="lbtoMember1" name="lbtoMember" style="background-color:transparent; color: #333; width: 80%; border:none #d7d7d7; text-align:center;" readOnly="readOnly"></span>
 						<div id="app_name2"></div>
 					</td>
 					<td rowspan="2" class="esign" scope="row">
+						<span><input type="label" id="lbtoMember2" name="lbtoMember" style="background-color:transparent; color: #333; width: 80%; border:none #d7d7d7; text-align:center;" readOnly="readOnly"></span>
 						<div id="app_name3"></div>
 					</td>
 					<td rowspan="2" class="esign" scope="row">
+						<span><input type="label" id="lbtoMember3" name="lbtoMember" style="background-color:transparent; color: #333; width: 80%; border:none #d7d7d7; text-align:center;" readOnly="readOnly"></span>
 						<div id="app_name4"></div>
 					</td>
 					<td rowspan="2" class="esign" scope="row">
+						<span><input type="label" id="lbtoMember4" name="lbtoMember" style="background-color:transparent; color: #333; width: 80%; border:none #d7d7d7; text-align:center;" readOnly="readOnly"></span>
 						<div id="app_name5"></div>
 					</td>
 					<td rowspan="2" class="esign" scope="row">
+						<span><input type="label" id="lbtoMember5" name="lbtoMember" style="background-color:transparent; color: #333; width: 80%; border:none #d7d7d7; text-align:center;" readOnly="readOnly"></span>
 						<div id="app_name6"></div>
 					</td>
 					<td rowspan="2" class="esign" scope="row">
+						<span><input type="label" id="lbtoMember6" name="lbtoMember" style="background-color:transparent; color: #333; width: 80%; border:none #d7d7d7; text-align:center;" readOnly="readOnly"></span>
 						<div id="app_name7"></div>
 					</td>
 					<td rowspan="2" class="esign" scope="row">
+						<span><input type="label" id="lbtoMember7" name="lbtoMember" style="background-color:transparent; color: #333; width: 80%; border:none #d7d7d7; text-align:center;" readOnly="readOnly"></span>
 						<div id="app_name8"></div>
 					</td>
 				</tr>
-				<tr>
-					<td style="background-color: #EFEFEF;" scope="row" class="ebtn1">
-						<strong>- 내 결재선 목록 -</strong>
-					</td>
-				</tr>
-				<tr>
-					<td rowspan="6" class="elist" scope="row"><select
-						style="width: 100%; height: 120px;" id="select_menuline"
-						multiple="multiple">
-							<option value="19"></option>
-							<option value="20"></option>
-							<option value="21"></option>
-							<option value="22"></option>
-							<option value="23"></option>
-					</select></td>
-				</tr>
-
-				<!-- 협조 칸 -->
-				<tr>
-					<th rowspan="2" scope="col" style="background-color: #F2F7FF;"
-						class="">협조</th>
-					<th scope="col" class="ebtn1">
-						<div id="ref_class1">&nbsp;</div>
-					</th>
-					<th scope="col" class="ebtn1">
-						<div id="ref_class2">&nbsp;</div>
-					</th>
-					<th scope="col" class="ebtn1">
-						<div id="ref_class3">&nbsp;</div>
-					</th>
-					<th scope="col" class="ebtn1">
-						<div id="ref_class4">&nbsp;</div>
-					</th>
-					<th scope="col" class="ebtn1">
-						<div id="ref_class5">&nbsp;</div>
-					</th>
-					<th scope="col" class="ebtn1">
-						<div id="ref_class6">&nbsp;</div>
-					</th>
-					<th scope="col" class="ebtn1">
-						<div id="ref_class7">&nbsp;</div>
-					</th>
-					<th scope="col" class="ebtn1">
-						<div id="ref_class8">&nbsp;</div>
-					</th>
-				</tr>
-
-				<tr>
-					<td scope="row" class="esign">
-						<div id="ref_name1"></div>
-					</td>
-					<td scope="row" class="esign">
-						<div id="ref_name2"></div>
-					</td>
-					<td scope="row" class="esign">
-						<div id="ref_name3"></div>
-					</td>
-					<td scope="row" class="esign">
-						<div id="ref_name4"></div>
-					</td>
-					<td scope="row" class="esign">
-						<div id="ref_name5"></div>
-					</td>
-					<td scope="row" class="esign">
-						<div id="ref_name6"></div>
-					</td>
-					<td scope="row" class="esign">
-						<div id="ref_name7"></div>
-					</td>
-					<td scope="row" class="esign">
-						<div id="ref_name8"></div>
-					</td>
-				</tr>
-				<tr>
-				</tr>
-
-				<!-- 합의 칸 -->
-				<tr>
-					<th rowspan="2" scope="col" style="background-color: #F2F7FF;"
-						class="">합의</th>
-					<th scope="col" class="ebtn1">
-						<div id="agr_class1">&nbsp;</div>
-					</th>
-					<th scope="col" class="ebtn1">
-						<div id="agr_class2">&nbsp;</div>
-					</th>
-					<th scope="col" class="ebtn1">
-						<div id="agr_class3">&nbsp;</div>
-					</th>
-					<th scope="col" class="ebtn1">
-						<div id="agr_class4">&nbsp;</div>
-					</th>
-					<th scope="col" class="ebtn1">
-						<div id="agr_class5">&nbsp;</div>
-					</th>
-					<th scope="col" class="ebtn1">
-						<div id="agr_class6">&nbsp;</div>
-					</th>
-					<th scope="col" class="ebtn1">
-						<div id="agr_class7">&nbsp;</div>
-					</th>
-					<th scope="col" class="ebtn1">
-						<div id="agr_class8">&nbsp;</div>
-					</th>
-				</tr>
-				<tr>
-					<td scope="row" class="esign">
-						<div id="agr_name1"></div>
-					</td>
-					<td scope="row" class="esign">
-						<div id="agr_name2"></div>
-					</td>
-					<td scope="row" class="esign">
-						<div id="agr_name3"></div>
-					</td>
-					<td scope="row" class="esign">
-						<div id="agr_name4"></div>
-					</td>
-					<td scope="row" class="esign">
-						<div id="agr_name5"></div>
-					</td>
-					<td scope="row" class="esign">
-						<div id="agr_name6"></div>
-					</td>
-					<td scope="row" class="esign">
-						<div id="agr_name7"></div>
-					</td>
-					<td scope="row" class="esign">
-						<div id="agr_name8"></div>
-					</td>
-				</tr>
-				<tr>
-				</tr>
-
 			</tbody>
 		</table>
 	</div>
@@ -516,85 +310,12 @@ $(function() {
 						<td scope="row" class="eleft" colspan="5"><input type="text" id="title"
 							name="title" value="" class="input_title" title="제목"></td>
 					</tr>
-
-
-					<!-- 수신부서 및 연계문서 -->
-					<tr>
-						<th scope="row" class="etitle"><span
-							class="gw_btn_pack black"> <input type="button"
-								id="set_auto_pass" title="수신부서" value="수신부서">
-						</span></th>
-						<td colspan="5"><div id="auto_pass_list"></div>
-							<div style="color: #9f9f9f; text-align: right;">(* 결재 완료시
-								지정된 담당자에게 결재문서를 전송합니다.)</div></td>
-					</tr>
-					<tr>
-						<th scope="row" class="etitle"><span
-							class="gw_btn_pack black"> <input type="button"
-								id="document_link" title="연계문서" value="연계문서">
-						</span></th>
-						<td colspan="5" class="do_link">
-							<div id="doc_link_list"></div>
-							<div style="color: #9f9f9f; text-align: right;">(* 결재 완료된
-								문서를 링크하여 보여줄수 있습니다.)</div>
-						</td>
-					</tr>
-					<!-- 참조 -->
-					<tr>
-						<th scope="row" class="etitle"><span
-							class="gw_btn_pack black"> <input type="button"
-								id="set_reference" title="참　　조" value="참　　조">
-						</span></th>
-						<td colspan="5"><div id="refer_list">&nbsp;</div> <label
-							style="color: #9f9f9f; float: right;">(* 결재문서 내용을 참조할
-								사용자를 지정합니다.[최종 결재 완료시 알림])</label> <!--Below code is add by anuradha(2015-03-23) Purpose: favorite reference list(즐겨찾기) for only AT Customer :  remove (display:none;) -->
-							<div
-								style="padding-top: 3px; padding-bottom: 3px; display: none;">
-								<span class="gw_btn_pack blue">
-									<button id="btn_get_referencelist" title="" type="button">즐겨찾기</button>
-								</span> <span class="gw_btn_pack red"> <input type="button"
-									value="초기화" onclick="return setClear();">
-								</span>
-							</div></td>
-					</tr>
-
-					<!-- 보안등급 및 보존기간 -->
-					<tr>
-						<th scope="row" class="etitle"></th>
-						<th scope="row" class="etitle"><span>보존기간</span></th>
-						<td><select id="retention" name="retention" class="w_100">
-								<option value="1,m">1개월</option>
-								<option value="2,m">2개월</option>
-								<option value="3,m">3개월</option>
-								<option value="4,m">4개월</option>
-								<option value="5,m">5개월</option>
-								<option value="6,m">6개월</option>
-								<option value="1,y">1년</option>
-								<option value="2,y">2년</option>
-								<option value="3,y">3년</option>
-								<option value="4,y">4년</option>
-								<option value="5,y">5년</option>
-								<option value="6,y">6년</option>
-								<option value="7,y">7년</option>
-								<option value="8,y">8년</option>
-								<option value="9,y">9년</option>
-								<option value="10,y">10년</option>
-								<option value="11,y">11년</option>
-								<option value="12,y">12년</option>
-								<option value="13,y">13년</option>
-								<option value="14,y">14년</option>
-								<option value="15,y">15년</option>
-								<option value="perpetual" selected="">영구보존</option>
-						</select></td>
-						<th scope="row" class="etitle"><span class="txtred">긴급문서</span></th>
-						<td><input type="checkbox" name="urgent"
-							style="vertical-align: -2px;" value="1"> <span
-							style="font-size: 8pt;">(최종결재자 우선 전달)</span></td>
-					</tr>
 					<tr id="context_view">
-						<td scope="row" colspan="6" class="econtents"><textarea
+						<td scope="row" colspan="6" class="econtents">
+						<textarea
 								name="content" id="content" title="내용"
-								style="width: 98%; height: 600px; padding: 0px; margin: 0px; visibility: hidden; display: none;">&lt;style type="text/css"&gt;
+								style="width: 98%; height: 300px; padding: 0px; margin: 0px; visibility: hidden; display: none;">
+								&lt;style type="text/css"&gt;
 table.tableStyle1 {width:100%; text-align:center; border-collapse:collapse}
 table.tableStyle1 caption {text-align:right;}
 table.tableStyle1 td {padding:7px 7px; border:1px solid #909090; background:#fff;}
@@ -679,8 +400,8 @@ table.tableStyle1 p.p5 {padding:5px;}&lt;/style&gt;
 											role="presentation">
 											<tbody>
 												<tr role="presentation">
-													<td id="cke_top_context" class="cke_top"
-														role="presentation"><div class="cke_toolbox"
+													<td id="cke_top_context" class="cke_top" role="presentation">
+													<div class="cke_toolbox"
 															role="group" aria-labelledby="cke_6"
 															onmousedown="return false;">
 															<span id="cke_6" class="cke_voice_label">Editor
@@ -1034,7 +755,7 @@ table.tableStyle1 p.p5 {padding:5px;}&lt;/style&gt;
 														class="cke_toolbox_collapser"
 														onclick="CKEDITOR.tools.callFunction(94)"><span>▲</span></a></td>
 												</tr>
-												<tr role="presentation">
+												<!-- <tr role="presentation">
 													<td id="cke_contents_context" class="cke_contents"
 														style="height: 602px" role="presentation"><span
 														id="cke_51" class="cke_voice_label">Press ALT 0 for
@@ -1056,7 +777,7 @@ table.tableStyle1 p.p5 {padding:5px;}&lt;/style&gt;
 															aria-labelledby="cke_path_context_label">
 															<span class="cke_empty">&nbsp;</span>
 														</div></td>
-												</tr>
+												</tr>-->
 											</tbody>
 										</table>
 										<style>
@@ -1065,56 +786,10 @@ table.tableStyle1 p.p5 {padding:5px;}&lt;/style&gt;
 }
 </style></span></span></span></td>
 					</tr>
-					<tr id="attach_view">
-						<td colspan="6"><div id="attach_area" class="addfile2">
-								<table class="aview2" border="0">
-									<tbody>
-										<tr>
-											<td rowspan="10" class="efile" width="15%">첨부파일</td>
-											<td style="float: left; text-align: left;"><input
-												type="file" name="attach[]" size="60" class="appr_input">
-											</td>
-										</tr>
-										<tr>
-											<td style="text-align: left;"><input type="file"
-												name="attach[]" size="60" class="appr_input"></td>
-										</tr>
-										<tr>
-											<td style="text-align: left;"><input type="file"
-												name="attach[]" size="60" class="appr_input"></td>
-										</tr>
-										<tr>
-											<td style="text-align: left;"><input type="file"
-												name="attach[]" size="60" class="appr_input"></td>
-										</tr>
-										<tr>
-											<td style="text-align: left;"><input type="file"
-												name="attach[]" size="60" class="appr_input"></td>
-										</tr>
-										<tr>
-											<td style="text-align: left;"><input type="file"
-												name="attach[]" size="60" class="appr_input"></td>
-										</tr>
-										<tr>
-											<td style="text-align: left;"><input type="file"
-												name="attach[]" size="60" class="appr_input"></td>
-										</tr>
-										<tr>
-											<td style="text-align: left;"><input type="file"
-												name="attach[]" size="60" class="appr_input"></td>
-										</tr>
-										<tr>
-											<td style="text-align: left;"><input type="file"
-												name="attach[]" size="60" class="appr_input"></td>
-										</tr>
-										<tr>
-											<td style="text-align: left;"><input type="file"
-												name="attach[]" size="60" class="appr_input"></td>
-										</tr>
-									</tbody>
-								</table>
-							</div></td>
-
+					<tr>
+						<th scope="row" class="etitle"><span>메모</span></th>
+						<td scope="row" class="eleft" colspan="5">
+							<input type="text" id="comments" name="comment" value="" class="input_title" title="메모"></td>
 					</tr>
 				</tbody>
 			</table>
@@ -1127,11 +802,10 @@ table.tableStyle1 p.p5 {padding:5px;}&lt;/style&gt;
 	<!-- 하단 버튼 -->
 	<div class="h30 float_r">
 		<span class="gw_btn_pack blue">
-			<button type="button" id="save" title="저장">저장</button>
-		</span> <span class="gw_btn_pack blue">
-			<button type="button" id="tmpsave" title="임시저장">임시저장</button>
-		</span> <span class="gw_btn_pack red"> <input type="button"
-			id="tolist" title="취소" value="취소">
+			<button type="button" id="save" title="저장">상신</button>
+		</span> 
+		<span class="gw_btn_pack red"> 
+			<input type="button" id="cancel" title="취소" value="취소">
 		</span>
 	</div>
 </form>
@@ -1144,12 +818,11 @@ nhn.husky.EZCreator.createInIFrame({
 	sSkinURI: "<%=cp%>/resource/se/SmartEditor2Skin.html",	
 	htParams : {bUseToolbar : true,
 		fOnBeforeUnload : function(){
-			//alert("아싸!");
 		}
-	}, //boolean
+	},
 	fOnAppLoad : function(){
-		//예제 코드
-		//oEditors.getById["content"].exec("PASTE_HTML", ["로딩이 완료된 후에 본문에 삽입되는 text입니다."]);
+	
+		//oEditors.getById["content"].exec("PASTE_HTML", ["로딩이 완료된 후에 본문에 삽입되는 text."]);
 	},
 	fCreator: "createSEditor2"
 });
@@ -1164,7 +837,7 @@ function showHTML() {
 	alert(sHTML);
 }
 	
-function submitContents(elClickedObj) {
+function submitContents() {
 	oEditors.getById["content"].exec("UPDATE_CONTENTS_FIELD", []);	// 에디터의 내용이 textarea에 적용됩니다.
 	
 	// 에디터의 내용에 대한 값 검증은 이곳에서 document.getElementById("content").value를 이용해서 처리하면 됩니다.

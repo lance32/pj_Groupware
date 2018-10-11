@@ -10,6 +10,11 @@
 <link rel="stylesheet" href="<%=cp%>/resource/fullcalendar/fullcalendar.print.css" media='print' type="text/css">
 
 <style type="text/css">
+.footer {
+	position: fixed ;
+	bottom: 0px;
+}
+
 #calendar {
 	margin: 20px auto 10px;
 }
@@ -639,7 +644,7 @@ function classifyChange(classify) {
 <br>
 <div id="calendarHeader" style="height: 35px; line-height: 35px;">
 	<div style="text-align: left;">
-		<div class="container">
+		<div class="container1" style="height: 1000px;">
 			<ul class="nav nav-tabs">
 				<li class="schTab"><a href="javascript:classification('all', 0)">전 체 일 정</a></li>
 				<li><a href="javascript:classification('blue', 1)">개 인 일 정</a></li>

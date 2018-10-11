@@ -31,7 +31,7 @@
 	<select id="listAuthority" parameterType="map" resultType="com.sp.authority.Authority">
 		SELECT * FROM( 
 		    SELECT ROWNUM rn, ss.* FROM(
-		        SELECT memberNum, name, departmentName, positionName, grants
+		        SELECT memberNum, name, departmentName, positionName
 		        FROM member m JOIN department d on m.departmentNum = d.departmentNum
 		        JOIN position p ON m.positionNum = p.positionNum
 		        <where>
@@ -58,7 +58,7 @@
 	
 	<!-- 권한 수정 -->
 	<update id="updateAuthority" parameterType="com.sp.authority.Authority">
-		UPDATE member SET grants = #{grants,jdbcType=BIGINT} WHERE memberNum = #{memberNum}
+		UPDATE member SET grants = #{grants} WHERE memberNum = #{memberNum}
 	</update>
 	
 	

@@ -15,16 +15,7 @@ public class WorkLog {
 	private String formName;
 	private String formValue;
 	private String content;
-	private long grants;
 	
-	
-
-	public long getGrants() {
-		return grants;
-	}
-	public void setGrants(long grants) {
-		this.grants = grants;
-	}
 	public String getContent() {
 		return content;
 	}
