@@ -65,7 +65,7 @@
 jQuery(function(){
 	//카테고리
 	<c:forEach var="dto" items="${clubCategoryItem}">
-		jQuery("#category${dto.categoryParent}").append("<li class='li-items'><a style='text-decoration: none; display: block; color: #424242;' href='<%=cp%>/clubBoard/list?clubNum=${clubInfo.clubNum}&categoryNum=${dto.categoryNum}'>${dto.categoryName}</a></li>");
+		jQuery("#category${dto.categoryParent}").append("<li class='li-items' id='li${dto.categoryNum}'><a style='text-decoration: none; display: block; color: #424242;' href='<%=cp%>/clubBoard/list?clubNum=${clubInfo.clubNum}&categoryNum=${dto.categoryNum}'>${dto.categoryName}</a></li>");
 	</c:forEach>
 	
 	jQuery("#manageClubButn").click(function(){

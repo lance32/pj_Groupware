@@ -12,12 +12,20 @@
 		INSERT INTO clubMember(memberNum, clubNum) VALUES(#{memberNum}, clubInfo_seq1.CURRVAL) 
 	</insert>
 	<insert id="insertBasicCategory">
-		INSERT INTO clubBoardCategory(parent,categoryNum, categoryName, clubNum) 
-    	VALUES(NULL, clubBoardCategory_seq.NEXTVAL, '게시판', clubInfo_seq1.CURRVAL)
+		INSERT INTO clubBoardCategory(parent,categoryNum, categoryName, clubNum, basicCategory) 
+    	VALUES(NULL, clubBoardCategory_seq.NEXTVAL, 'BOARD', clubInfo_seq1.CURRVAL, 1)
 	</insert>
 	<insert id="insertBasicCategory_notice">
-		INSERT INTO clubBoardCategory(parent, categoryNum, categoryName, clubNum) 
-		VALUES(clubBoardCategory_seq.CURRVAL-1, clubBoardCategory_seq.NEXTVAL, '게시판', clubInfo_seq1.CURRVAL)
+		INSERT INTO clubBoardCategory(parent, categoryNum, categoryName, clubNum, authority, basicCategory) 
+		VALUES(clubBoardCategory_seq.CURRVAL-1, clubBoardCategory_seq.NEXTVAL, '공지', clubInfo_seq1.CURRVAL, 1, 2)
+	</insert>
+	<insert id="insertBasicCategory2">
+		INSERT INTO clubBoardCategory(parent,categoryNum, categoryName, clubNum, basicCategory) 
+    	VALUES(NULL, clubBoardCategory_seq.NEXTVAL, 'PHOTO', clubInfo_seq1.CURRVAL, 1)
+	</insert>
+	<insert id="insertBasicCategory2_photo">
+		INSERT INTO clubBoardCategory(parent, categoryNum, categoryName, clubNum, basicCategory) 
+		VALUES(clubBoardCategory_seq.CURRVAL-1, clubBoardCategory_seq.NEXTVAL, '포토 갤러리', clubInfo_seq1.CURRVAL, 2)
 	</insert>
 	
 	<!-- 동호회 목록 -->
@@ -37,6 +45,12 @@
 	<select id="listClubCategoryItems" parameterType="Integer" resultType="com.sp.club.Category">
 		SELECT categoryNum, categoryName, parent categoryParent FROM clubBoardCategory 
 		WHERE clubNum=#{clubNum} AND  NVL(parent,0)!=0
+	</select>
+	
+	<!-- 게시판 카테고리 정보 -->
+	<select id="readClubCategory" parameterType="Integer" resultType="Integer">
+		SELECT authority FROM clubBoardCategory 
+		WHERE categoryNum=#{categoryNum}
 	</select>
 	
 	<!-- 동호회 가입한 사람인지.. -->
@@ -70,18 +84,18 @@
 		VALUES(clubBoardCategory_seq.NEXTVAL, #{categoryName}, #{clubNum})
 	</insert>
 	<insert id="insertClubCategoryPhase2" parameterType="com.sp.club.Category">
-		INSERT INTO clubBoardCategory(categoryNum, categoryName, clubNum, parent) 
-		VALUES(clubBoardCategory_seq.NEXTVAL, #{categoryName}, #{clubNum}, #{categoryParent})
+		INSERT INTO clubBoardCategory(categoryNum, categoryName, clubNum, parent, authority) 
+		VALUES(clubBoardCategory_seq.NEXTVAL, #{categoryName}, #{clubNum}, #{categoryParent}, #{authority})
 	</insert>
 	
 	<!-- 카테고리 삭제 -->
 	<delete id="deleteClubCategory" parameterType="Integer">
-		DELETE FROM clubBoardCategory WHERE categoryNum=#{categoryNum}
+		DELETE FROM clubBoardCategory WHERE categoryNum=#{categoryNum} AND basicCategory=0
 	</delete>
 	
 	<!-- 카테고리 수정 -->
 	<update id="updateClubCategory" parameterType="com.sp.club.Category">
-		UPDATE clubBoardCategory SET categoryName=#{categoryName} WHERE categoryNum=#{categoryNum}
+		UPDATE clubBoardCategory SET categoryName=#{categoryName} WHERE categoryNum=#{categoryNum} AND basicCategory=0
 	</update>
 	
 	
@@ -100,5 +114,16 @@
 		SELECT COUNT(*) FROM clubMember WHERE clubNum=#{clubNum}
 	</select>
 	
+	
+	<!-- 메인화면에 출력할 공지 게시판 -->
+	<select id="listClubNotice_main" parameterType="Integer" resultType="com.sp.clubBoard.Board">
+		SELECT * FROM (
+			SELECT ROWNUM rnum, tb.* FROM (
+				SELECT boardNum, subject, TO_CHAR(created,'yyyy-mm-dd') created, originalFileName
+				FROM clubBoard b JOIN clubBoardCategory c ON b.categoryNum=c.categoryNum
+		        WHERE b.clubNum=#{clubNum} AND basicCategory=2 AND authority=1
+		    ) tb WHERE ROWNUM &lt;= 10
+		) WHERE rnum &gt;= 1
+	</select>
 	
 </mapper>

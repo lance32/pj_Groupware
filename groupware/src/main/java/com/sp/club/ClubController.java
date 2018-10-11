@@ -71,6 +71,7 @@ public class ClubController {
 		List<Category> clubCategoryItem=null;
 		Club dto=null;
 		String isMember=null;
+		List<com.sp.clubBoard.Board> noticeList=null;
 		try {
 			clubCategory=service.listClubCategory(clubNum);
 			clubCategoryItem=service.listClubCategoryItems(clubNum);
@@ -81,6 +82,8 @@ public class ClubController {
 			map.put("memberNum", info.getUserId());
 			isMember=service.isClubMember(map);
 			
+			noticeList=service.listClubNotice_main(clubNum);
+			
 		} catch (Exception e) {
 			return "error/error";
 		}
@@ -88,6 +91,7 @@ public class ClubController {
 		model.addAttribute("clubInfo", dto);
 		model.addAttribute("clubCategory", clubCategory);
 		model.addAttribute("clubCategoryItem", clubCategoryItem);
+		model.addAttribute("noticeList", noticeList);
 		return ".club.main";
 	}
 	
