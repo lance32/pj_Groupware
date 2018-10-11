@@ -77,7 +77,12 @@ public class ResourceController {
 	}
 	
 	@RequestMapping(value="/scheduler/inputResourceForm")
-	public String inputResourceForm(Model model) throws Exception {
+	public String inputResourceForm(Model model, HttpSession session) throws Exception {
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		if((info.getGrants() & 3) != 3) {
+			return ".error.error";
+		}
+		
 		List<Resource> groupList = service.listResourceGroup();
 		
 		model.addAttribute("groupList", groupList);
@@ -120,7 +125,11 @@ public class ResourceController {
 	}
 	
 	@RequestMapping(value="/scheduler/inputGroupForm")
-	public String inputGroupForm(Model model) throws Exception {
+	public String inputGroupForm(Model model, HttpSession session) throws Exception {
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		if((info.getGrants() & 3) != 3) {
+			return ".error.error";
+		}
 		return "schResource/inputGroupForm";
 	}
 	
@@ -169,9 +178,15 @@ public class ResourceController {
 	public String listResourceList2(
 			Map<String, Object> paramMap,
 			HttpServletRequest req,
+			HttpSession session,
 			Model model,
 			@RequestParam(value="page", defaultValue="1") int current_page
 			) {
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		if((info.getGrants() & 3) != 3) {
+			return ".error.error";
+		}
+		
 		int rows = 10;
 		
 		int dataCount;
