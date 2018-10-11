@@ -32,7 +32,7 @@
 	<select id="listWorkLog" parameterType="map" resultType="com.sp.workLog.WorkLog">
 		SELECT * FROM( 
 		    SELECT ROWNUM rn, ss.* FROM(
-		        SELECT workLogNum, content, name, departmentName, TO_CHAR(makeDate,'YYYY-MM-DD')makeDate, grants 
+		        SELECT workLogNum, content, name, departmentName, TO_CHAR(makeDate,'YYYY-MM-DD')makeDate, grants, num
 		        FROM workLog w JOIN member m ON w.memberNum = m.memberNum
 		        JOIN department d on m.departmentNum = d.departmentNum
 		        <where>

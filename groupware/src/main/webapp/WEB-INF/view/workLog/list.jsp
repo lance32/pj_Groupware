@@ -15,34 +15,6 @@
 
 <script type="text/javascript">
 
-/*
-$(function() {
-	$("#article").click(function() {
-		var workLogNum = $(this).data("num");
-		var query = "${articleUrl}&workLogNum="+workLogNum; 
-		$.ajax({
-			type:"get",
-			url: query,
-			dataType:"json",
-			success:function(data) {
-				console.log(data.dto.content);
-				$("#article-dialog").html(data.dto.content);
-				 $("#article-dialog").dialog({
-					height: 700,
-					width: 800,
-					modal: true
-					
-				});
-			},
-			error:function(jqXHR) {
-				console.log(jqXHR.resonseText);
-			}
-		});
-	});
-});
-*/
-
-
 function getData(workLogNum) {
 	
 	var query = "${articleUrl}&workLogNum="+workLogNum; 
