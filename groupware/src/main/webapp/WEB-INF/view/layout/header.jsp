@@ -48,4 +48,9 @@ jQuery(".menu ul li").mouseenter(function(){
 }).mouseleave(function(){
 	jQuery(this).find(".sub_menu").slideUp(75);
 });
+
+//-- position fixed로 인한 가로스크롤 고장 해결
+jQuery(window).scroll(function(){
+	jQuery(".header").css("left",0-jQuery(this).scrollLeft());
+});
 </script>
