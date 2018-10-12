@@ -20,15 +20,13 @@
     border-radius:5px;
     width:100px;
     height:20px;
-    background: #efefef;
+   
 }
 
 .info-value{
 	padding-left:10px;
 	width:250px;
 }
-
-
 
 .side-info td{
 	height:40px;

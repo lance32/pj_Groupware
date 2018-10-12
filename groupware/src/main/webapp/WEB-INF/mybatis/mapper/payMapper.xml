@@ -18,7 +18,6 @@
 		SELECT deductNum,deductName,rate FROM salary_deduction
 	</select>
 	
-	
 	<!-- 관리자 리스트 -->
 	<select id="listPayMemberAdmin" parameterType="map" resultType="com.sp.pay.Pay">
 		SELECT * FROM (
@@ -79,7 +78,7 @@
 	<select id="memberdataCount" parameterType="map" resultType="Integer">
 		SELECT NVL(COUNT(*),0) FROM salary
 		 <where>
-      		<if test="searchKey != null and searchKey != 'all'">
+      		<if test="searchKey != null">
                	<include refid="where-paylist"/>
                	AND memberNum=#{memberNum}
        		</if>
@@ -89,7 +88,10 @@
 <!-- insert -->
 
 	<!-- 기본급 및 지급일 입력 -->
-
+	<insert id="insertPay" parameterType="com.sp.pay.Pay">
+		INSERT INTO salary(salaryNum,memberNum,year,month,day,basicpay,healthTax,employTax,accidentTax,pensionTax,incomeTax,extraPay)
+            VALUES(salary_seq.NEXTVAL,#{memberNum},#{year},#{month},#{day},#{basicpay},#{healthTax},#{employTax},#{accidentTax},#{pensionTax},#{incomeTax},#{extraPay})
+	</insert>
 
 
 <!-- 사원조회 검색 조건 -->
@@ -114,4 +116,5 @@
 	  	INSTR(year,#{searchKey})&gt;=1
 	  </if>
 	</sql>
+	
 </mapper>

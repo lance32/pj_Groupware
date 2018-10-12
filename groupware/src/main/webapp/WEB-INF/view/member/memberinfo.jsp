@@ -207,6 +207,14 @@ function qualifyDelete() {
 				${dto.departmentName}
 				</c:if>
 			</td>
+			<c:if test="${mode=='updateAdmin'}">
+			<td class="info-subject">
+			기본급
+			</td>
+			<td class="info-value">
+			<input type="text" id="baiscpay" name="baiscpay" value="${dto.basicpay}">원
+			</td>
+			</c:if>
 		</tr>
 		<tr style="border-bottom: 1px solid #cccccc;">
 			<td class="info-subject">
@@ -347,7 +355,7 @@ function qualifyDelete() {
 		</table>
 	</div>
 	
-	<table style="width: 100%; margin: 0px auto 20px; border-spacing: 0px;">
+	<table style="width: 80%; margin: 0px auto 20px; border-spacing: 0px;">
 		<tr height="45">
 			<td width="300" align="left">
 				<input type="hidden" name="page" value="${page}">

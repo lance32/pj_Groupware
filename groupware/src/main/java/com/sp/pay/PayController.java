@@ -290,7 +290,6 @@ public class PayController {
 		Map<String, Object> map=new HashMap<>();
 		map.put("passed", passed);
 		map.put("basicpay", basicpay);
-		System.out.println(basicpay);
 		return map;
 	}
 }

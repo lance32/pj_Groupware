@@ -83,6 +83,7 @@ public class MemberServiceImpl implements MemberService {
 			dao.insertData("member.insertMember", dto);
 			dao.insertData("member.insertMemberDetailinfo",dto);
 			dao.insertData("member.insertMemberAuthority",dto);
+			dao.insertData("member.insertBasicpay",dto);
 			dao.insertData("address.insertGeneralGroup", dto.getMemberNum());
 			result=1;
 		} catch (Exception e) {
@@ -229,6 +230,7 @@ public class MemberServiceImpl implements MemberService {
 		try {
 			
 			dao.updateData("member.updateAdmin",dto);
+			dao.updateData("member.updateBasicpay",dto);
 			if(dto.getQualifyName()!=null) {
 				dao.updateData("member.insertQualify",dto);
 			}

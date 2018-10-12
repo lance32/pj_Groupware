@@ -97,6 +97,26 @@ public class PayServiceImpl implements PayService{
 		return taxlist;
 	}
 
+	@Override
+	public int insertPay(Pay dto) throws Exception {
+		try {
+			dao.insertData("pay.insertPay",dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return 1;
+	}
+
+	@Override
+	public int updateMember(Pay dto) throws Exception {
+		try {
+			dao.updateData("pay.updatePay",dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return 1;
+	}
+
 
 
 

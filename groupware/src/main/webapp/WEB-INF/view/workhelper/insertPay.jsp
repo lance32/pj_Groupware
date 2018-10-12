@@ -58,7 +58,7 @@ function payOk() {
     f.submit();
 }
 function mathPay(){
-	var basicpay=$("#basicpay").val();
+	var basicpay=($("#basicpay").val());
 	basicpay = basicpay.trim();
 	if(!basicpay){
 		alert("기본급을 입력해주세요");
@@ -74,17 +74,21 @@ function mathPay(){
 		,data:q
 		,dataType:"json"
 		,success:function(data){
-			var p=data.passed;
-			var healthTax=$("#healthTax").val(basicpay*$("#건강보험").val());
-			var employTax=$("#employTax").val(basicpay*$("#고용보험").val());
-			var accidentTax=$("#accidentTax").val(basicpay*$("#산재보험").val());
-			var pensionTax=$("#pensionTax").val(basicpay*$("#국민연금").val());
-			var incomeTax=$("#incomeTax").val(basicpay*$("#소득세").val());
-			alert();
-			var totalTax=$("#totalTax").val();
-			var realPay=$("#realPay").val(basicpay-totalTax);
+			var healthTax=basicpay*$("#건강보험").val();
+			var employTax=basicpay*$("#고용보험").val();
+			var accidentTax=basicpay*$("#산재보험").val();
+			var pensionTax=basicpay*$("#국민연금").val();
+			var incomeTax=basicpay*$("#소득세").val();
+			var totalTax=healthTax+employTax+accidentTax+pensionTax+incomeTax;
+			var realPay=basicpay-totalTax;
+			$("#healthTax").val(healthTax);
+			$("#employTax").val(employTax);
+			$("#accidentTax").val(accidentTax);
+			$("#pensionTax").val(pensionTax);
+			$("#incomeTax").val(incomeTax);
+			$("#totalTax").val(totalTax);
+			$("#realPay").val(realPay);
 		}
-	
 	
 		,error:function(e) {
 	    	console.log(e.responseText);
@@ -154,13 +158,13 @@ function memberNumCheck() {
 				  <tr class="ymd">
 				  	<th>지급일</th>
 				  	<td>
-				  		<input type="text" name="year" id="year" readonly="readonly">년
+				  		<input type="text" name="year" id="year" placeholder="0000년">년
 				  	</td>
 				  	<td>
-				  		<input type="text" name="year" id="year" readonly="readonly">월
+				  		<input type="text" name="year" id="year" placeholder="00월">월
 				  	</td>
 				  	<td>
-				  		<input type="text" name="year" id="year" readonly="readonly">일
+				  		<input type="text" name="year" id="year" placeholder="00일">일
 				  	</td>
 				  	<td>
 				  	</td>
@@ -216,13 +220,11 @@ function memberNumCheck() {
 				  	</td>
 				  	<th>지급액</th>
 				  	<td colspan="2">
-				  		<fmt:formatNumber value="${realPay}" pattern="#,###"/>
 				  		<input type="text" name="realPay" id="realPay" readonly="readonly">원
 				  	</td>
 				  </tr>
 				</table>
 				
-			  
 			  <table style="width: 100%; margin: 0px auto; border-spacing: 0px; margin-top:10px;">
 			     <tr height="45"> 
 			      <td align="center" >

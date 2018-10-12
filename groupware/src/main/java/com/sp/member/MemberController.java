@@ -202,13 +202,6 @@ public class MemberController {
 			return ".member.member";
 		}
 		
-		StringBuffer sb=new StringBuffer();
-		sb.append(dto.getName()+ "님의 회원 가입이 정상적으로 처리되었습니다.<br>");
-		sb.append("로그인화면에서  로그인 하시기 바랍니다.<br>");
-		
-		model.addAttribute("title", "회원 가입");
-		model.addAttribute("message", sb.toString());
-		
 		return "redirect:/member/main";
 	}
 	

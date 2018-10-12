@@ -7,8 +7,9 @@
     <select id="readMember" resultType="com.sp.member.Member" parameterType="String">
         SELECT m.memberNum,name,grants,birth,tel,phone,zip,addr1,addr2,m.status,TO_CHAR(created,'YYYY-MM-DD')created,email,
         	   saveFilename,originalFilename,m.departmentNum,departmentName,m.positionNum,positionName,
-        	   TO_CHAR(modified,'YYYY-MM-DD') modified
+        	   TO_CHAR(modified,'YYYY-MM-DD') modified,basicpay
 			FROM member m
+			LEFT OUTER JOIN basicpay b ON m.memberNum=b.memberNum
 			LEFT OUTER JOIN memberdetailinfo i ON m.memberNum=i.memberNum
 			LEFT OUTER JOIN department d ON m.departmentNum=d.departmentNum
 			LEFT OUTER JOIN position p ON m.positionNum=p.positionNum
@@ -41,6 +42,9 @@
 			VALUES(qualify_seq.NEXTVAL,#{memberNum},#{qualifyCode},#{qualifyName},#{serialNum},#{getDate})
 	</insert>
 	
+	<insert id="insertBasicpay" parameterType="com.sp.member.Member">
+		INSERT INTO basicpay(memberNum,basicpay,changedate) VALUES(#{memberNum},#{basicpay},SYSDATE)
+	</insert>
 <!-- 사원조회 검색 조건 -->
 	<sql id="where-list">
 	  <if test="searchKey=='name'">

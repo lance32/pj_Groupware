@@ -44,7 +44,16 @@ public class Member {
 	private String qualifyName;
 	private String serialNum;
 	private String getDate;
-
+	
+	//급여 입력
+	private int basicpay;
+	
+	public int getBasicpay() {
+		return basicpay;
+	}
+	public void setBasicpay(int basicpay) {
+		this.basicpay = basicpay;
+	}
 	public String getQualifyCode() {
 		return qualifyCode;
 	}
