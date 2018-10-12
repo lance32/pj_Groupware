@@ -213,7 +213,7 @@ $(function(){
 		style="clear: both; width: 300px; height: 1px; border-bottom: 3px solid black;"></div>
 </div>
 <br>
-<table id="tb" style="width: 85%;">
+<table id="tb" style="width: 95%; margin-left: 10px; margin-right: 0px;">
 	<tr style="height: 35px;">
 		<td id="count" colspan="2">${dataCount }개(${page }/${total_page } 페이지)</td>
 		<td></td>
