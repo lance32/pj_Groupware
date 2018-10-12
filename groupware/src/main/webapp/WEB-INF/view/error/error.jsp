@@ -28,7 +28,7 @@
 	<div style="position:absolute ; left: 35%; width: 600px; height: 250px; border: 3px solid #A4A4A4; border-radius: 10px; background: #FFFFFF;">
 		<div style="clear: both; height: 160px; font-size: 19px; text-align: center; padding-top: 20px;">
 			에러가 발생했습니다. <br>에러가 지속될시 관리자에게 문의하세요.<br><br>
-			${message}
+			에러 메시지 : ${message}
 		</div>
 		<div style="clear: both; width: 99%; text-align: center;">
 			<button class="butn" style="width: 80%; height: 60px; font-size: 27px;" onclick="history.back();">이전 페이지로 돌아가기</button> 

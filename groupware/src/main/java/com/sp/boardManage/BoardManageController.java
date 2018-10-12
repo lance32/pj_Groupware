@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.sp.member.SessionInfo;
+
 @Controller("boardManage.boardManageController")
 public class BoardManageController {
 	
@@ -19,8 +21,15 @@ public class BoardManageController {
 	BoardManageService service;
 
 	@RequestMapping(value="/boardManage/list")
-	public String list(Model model) {
+	public String list(Model model, HttpSession session) {
 		try {
+			SessionInfo info = (SessionInfo)session.getAttribute("member");
+			if((info.getGrants() & 768) != 768) {
+				String message = "접근 권한 없음";
+				model.addAttribute("message", message);
+				return ".error.error";
+			}
+			
 			int dataCount = service.dataCount();
 			List<BoardManage> list = service.listBoardManage();
 			
@@ -34,8 +43,15 @@ public class BoardManageController {
 	}
 	
 	@RequestMapping(value="/boardManage/created", method=RequestMethod.GET)
-	public String createdForm(Model model) {
+	public String createdForm(Model model, HttpSession session) {
 		try {
+			SessionInfo info = (SessionInfo)session.getAttribute("member");
+			if((info.getGrants() & 768) != 768) {
+				String message = "접근 권한 없음";
+				model.addAttribute("message", message);
+				return ".error.error";
+			}
+			
 			List<BoardManage> list = service.listBoardManage();
 			
 			model.addAttribute("list", list);
@@ -50,8 +66,16 @@ public class BoardManageController {
 	@RequestMapping(value="/boardManage/created", method=RequestMethod.POST)
 	public String createdSubmit(
 			BoardManage dto,
-			Model model) {
+			Model model,
+			HttpSession session) {
 		try {
+			SessionInfo info = (SessionInfo)session.getAttribute("member");
+			if((info.getGrants() & 768) != 768) {
+				String message = "접근 권한 없음";
+				model.addAttribute("message", message);
+				return ".error.error";
+			}
+			
 			dto.setTableName("cb_"+dto.getTableName());
 			int result = service.createBoardManage(dto);
 			
@@ -71,8 +95,16 @@ public class BoardManageController {
 	@RequestMapping(value="/boardManage/update", method=RequestMethod.GET)
 	public String updateForm(
 			Model model,
+			HttpSession session,
 			@RequestParam int boardNum) {
 		try {
+			SessionInfo info = (SessionInfo)session.getAttribute("member");
+			if((info.getGrants() & 768) != 768) {
+				String message = "접근 권한 없음";
+				model.addAttribute("message", message);
+				return ".error.error";
+			}
+			
 			BoardManage dto=service.readBoardManage(boardNum);
 			if(dto==null) {
 				return "redirect:/boardManage/list";
@@ -103,6 +135,13 @@ public class BoardManageController {
 			Model model,
 			BoardManage dto) {
 		try {
+			SessionInfo info = (SessionInfo)session.getAttribute("member");
+			if((info.getGrants() & 768) != 768) {
+				String message = "접근 권한 없음";
+				model.addAttribute("message", message);
+				return ".error.error";
+			}
+			
 			String root=session.getServletContext().getRealPath("/");
 			String pathname=root+File.separator+"uploads"+File.separator+"cboard";
 			
@@ -118,8 +157,16 @@ public class BoardManageController {
 	@RequestMapping(value="/boardManage/delete")
 	public String delete(
 			HttpSession session,
+			Model model,
 			@RequestParam int boardNum) {
 		try {
+			SessionInfo info = (SessionInfo)session.getAttribute("member");
+			if((info.getGrants() & 768) != 768) {
+				String message = "접근 권한 없음";
+				model.addAttribute("message", message);
+				return ".error.error";
+			}
+			
 			String root=session.getServletContext().getRealPath("/");
 			String pathname=root+File.separator+"uploads"+File.separator+"cboard";
 			service.deleteBoardManage(boardNum, pathname);
