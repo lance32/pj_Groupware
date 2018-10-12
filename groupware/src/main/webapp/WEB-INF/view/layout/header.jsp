@@ -31,12 +31,7 @@
 				<li><a href="<%=cp%>/certificate/main">증명서 발급</a></li>
 			</ul></li>
 		<li><a href="<%=cp%>/notice/list">게시판</a></li>
-		<li><a href="<%=cp%>/member/main">전사 정보</a>
-			<ul class="sub_menu">
-				<li><a href="<%=cp%>/member/main">사원조회</a></li>
-				<li><a href="<%=cp%>/member/main">부서조회</a></li>
-			</ul>
-		</li>
+		<li><a href="<%=cp%>/member/main">전사 정보</a>	</li>
 	</ul>
 </div>
 <div id="blank"></div>
