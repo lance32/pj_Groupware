@@ -1,6 +1,7 @@
 package com.sp.department;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -51,6 +52,18 @@ public class DepartmentServiceImpl implements DepartmentService{
 			e.printStackTrace();
 		}
 		return list;
+	}
+
+	@Override
+	public void update(Map<String, Object> map) throws Exception {
+		try {
+			for (String key : map.keySet()) {
+				System.out.println("key=" + key + ", value=" + map.get(key));
+			}
+			dao.updateData("department.deptInfo", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 }

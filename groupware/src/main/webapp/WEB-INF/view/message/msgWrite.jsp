@@ -154,14 +154,14 @@
 				<td style="border-bottom: 1px dotted #dfdfdf; padding:5px; background: #f7f7f7; color: #595959; text-align:center; width: 15%;">받는이</td>
 				<td style="background: #fff; width: 85%;">
 					<span><input type="text" id="toMember" name="toMember" style="background: #fff; color: #333; width: 80%; border: 1px solid #d7d7d7;" readOnly="readOnly"></span>
-					<span><input type="button" id="organizationChart" value="&nbsp;조직도&nbsp;"></span>
+					<span><input type="button" id="organizationChart" value="&nbsp;조직도&nbsp;" class="butn"></span>
 				</td>
 			</tr>
 			<tr>
 				<td colspan="2"><div style="padding-top: 5px;"><textarea id="content" name="content" rows="15" cols="45" style="width: 90%;"></textarea></div></td>
 			</tr>
 		</table>
-		<span><input type="button" value="&nbsp;전송&nbsp;" onclick="send();"></span>
+		<span><input type="button" value="&nbsp;전송&nbsp;" onclick="send();" class="butn"></span>
 	</form>
 </div>
 <div id="organizationLayout" title="조직도"></div>

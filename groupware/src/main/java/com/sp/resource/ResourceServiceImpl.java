@@ -181,12 +181,6 @@ public class ResourceServiceImpl implements ResourceService{
 	}
 
 	@Override
-	public Resource readReserve(int reserveNum) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public List<ResourceJSON> listReserve(Map<String, Object> map) {
 		List<ResourceJSON> list=null;
 		try {

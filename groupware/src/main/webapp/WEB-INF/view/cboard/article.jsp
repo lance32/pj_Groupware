@@ -413,15 +413,18 @@ $(function(){
 			<table style="width: 100%; margin: 0px auto 20px; border-spacing: 0px;">
 				<tr height="45">
 				    <td width="300" align="left">
+						
 						<c:if test="${cb.canAnswer=='1' && not empty sessionScope.member && sessionScope.member.userId==dto.memberNum}">				    
 				       		<button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/${cb.tableName}/answer?num=${dto.num}&page=${page}';">답변</button>
 				       	</c:if>
-				  		<c:if test="${sessionScope.member.userId==dto.memberNum}">				    
+				  		
+				  		<c:if test="${cb.writePermit == '1' || (cb.writePermit == '0' && msg=='admin')}">				    
 				      		<button type="button" class="btn" id="btnUpdate">수정</button>
 				       	</c:if>
-				       <c:if test="${sessionScope.member.userId==dto.memberNum || sessionScope.member.userId=='admin'}">		    
+				       	
+				       	<c:if test="${cb.writePermit == '1' || (cb.writePermit == '0' && msg=='admin')}">		    
 				          <button type="button" class="btn" id="btnDelete">삭제</button>
-				       </c:if>
+				       	</c:if>
 				    </td>
 				    <td align="right">
 				        <button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/${cb.tableName}/list?${query}';">리스트</button>

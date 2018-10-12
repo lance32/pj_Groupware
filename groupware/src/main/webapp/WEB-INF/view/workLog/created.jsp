@@ -5,7 +5,7 @@
 <%
 	String cp=request.getContextPath();
 %>
-<script type="text/javascript" src="<%=cp%>/resource/se/js/HuskyEZCreator.js" charset="utf-8"></script>
+
 
 <style type="text/css">
 #day, #week, #month {
@@ -88,13 +88,7 @@ $(function() {
 });
 
 
-function ss() {
-	var f = document.workLogForm;
-	alert("11111");
-	alert($("#content").val());
-	f.action = "<%=cp%>/workLog/created";
-	return true;
-}
+
 
 </script>
 <div>
@@ -105,7 +99,7 @@ function ss() {
 	</div>
 
 <div>
-<form name="workLogForm" id= "workLogForm" method="post" enctype="multipart/form-data" onsubmit="return submitContent(this);">
+<form name="workLogForm" id= "workLogForm" method="post" action ="<%=cp%>/workLog/created" enctype="multipart/form-data">
 <table style="width: 100%; margin: 20px auto 0px; border-spacing: 0px; border-collapse: collapse;">
 <tr align="left" height="40" style="border-top: 1px solid #cccccc; border-bottom: 1px solid #cccccc;"> 
 <td width="100" bgcolor="#eeeeee" style="text-align: center;">기안자</td>
@@ -134,7 +128,7 @@ ${sessionScope.member.userId}
 <table style="width: 100%; margin: 0px auto; border-spacing: 0px;">
 <tr height="45"> 
 <td align="center" >
-<button type="submit" class="btn">${mode=='update'?'수정완료':'등록하기'}</button>
+<button type="button" class="btn" onclick="ss();">${mode=='update'?'수정완료':'등록하기'}</button>
 <input type ="hidden" name = "memberNum" value = "${sessionScope.member.userId}">
 <button type="reset" class="btn">다시입력</button>
 <button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/workLog/list';">${mode=='update'?'수정취소':'등록취소'}</button>
@@ -143,13 +137,12 @@ ${sessionScope.member.userId}
 <input type="hidden" name="page" value="${page}">
 </c:if>
 <input type="hidden" id = "num" name="num" value="${dto.num}">
-<input type="hidden" name="content" value ="$('content').val()">
 </td>
 </tr>
 </table>
 </form>
 </div>
-
+<script type="text/javascript" src="<%=cp%>/resource/se/js/HuskyEZCreator.js" charset="utf-8"></script>
 <script type="text/javascript">
 var oEditors = [];
 nhn.husky.EZCreator.createInIFrame({
@@ -161,10 +154,15 @@ nhn.husky.EZCreator.createInIFrame({
 		}
 	}, 
 	fOnAppLoad : function(){
-		
+	//	oEditors.getById["content"].exec("PASTE_HTML", [formValue]);
 	},
 	fCreator: "createSEditor2"
 });
+
+function ss() {
+	oEditors.getById["content"].exec("UPDATE_CONTENTS_FIELD", []);
+    $("#workLogForm").submit();
+}	
 
 function pasteHTML() {
 	var sHTML = "<span style='color:#FF0000;'>이미지도 같은 방식으로 삽입합니다.<\/span>";
@@ -177,9 +175,10 @@ function showHTML() {
 }
 	
 function submitContents(elClickedObj) {
-	oEditors.getById["content"].exec("UPDATE_CONTENTS_FIELD", []);	
-
-	return ss();	
+	/* oEditors.getById["content"].exec("UPDATE_CONTENTS_FIELD", []);	
+	alert("11111");
+	alert($("#content").val());
+	return ss(); */	
 }
 
 function setDefaultFont() {

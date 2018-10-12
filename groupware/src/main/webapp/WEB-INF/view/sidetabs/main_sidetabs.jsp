@@ -182,7 +182,7 @@ window.onload=startTime;
 
 jQuery(function(){
 	jQuery("#authorityButn").click(function(){
-		location.href="<%=cp%>/authority/authorityList";
+		location.href="<%=cp%>/authority/authoritylist";
 	});
 });
 

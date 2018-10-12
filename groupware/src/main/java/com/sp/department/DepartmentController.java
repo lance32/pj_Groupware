@@ -49,4 +49,25 @@ public class DepartmentController {
 		
 		return model;
 	}
+	
+	@RequestMapping(value="/department/updateDeptInfo", method=RequestMethod.GET)
+	@ResponseBody
+	public void updateDeptInfo(
+			@RequestParam(value="type") String type,
+			@RequestParam(value="key") String key,
+			@RequestParam(value="data") String data
+			) throws Exception {
+		
+		if (type.equals("move")) {
+			String[] memNums = data.split(",");
+			for (String memNum : memNums) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("deptNum", key);
+				map.put("memNum", memNum);
+				
+				service.update(map);
+			}
+		}
+	}
+	
 }

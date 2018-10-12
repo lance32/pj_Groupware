@@ -39,7 +39,7 @@ public class WorkLogController {
 			HttpServletRequest req,
 			Model model) throws Exception {
 		
-		int rows=10; 
+		int rows=5; 
 		int dataCount=0; 
 		int total_page=0; 
 		
@@ -80,6 +80,7 @@ public class WorkLogController {
 			data.setListNum(listNum);
 			n++;
 		}
+		
 			
 		
 		String cp=req.getContextPath();
@@ -171,7 +172,7 @@ public class WorkLogController {
 		if(info==null) {
 			return "error.error";
 		}
-		
+		System.out.println(dto.getContent());
 		dto.setMemberNum(info.getUserId());
 		dto.setNum(num);
 		System.out.println(dto.getNum());

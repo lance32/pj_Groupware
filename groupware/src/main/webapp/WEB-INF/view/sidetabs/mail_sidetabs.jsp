@@ -43,7 +43,7 @@ $(function() {
     <tr>
     	<td><a href="<%=cp%>/mail/mailTrashbox" id="trashbox">휴지통</a></td>
     </tr> 
- <!-- <tr>
+	<tr>
     	<td><a href="<%=cp%>/mail/mailServerConfig" id="trashbox">메일서버 설정</a></td>
-    </tr>   -->
+    </tr>
 </table>

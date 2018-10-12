@@ -46,11 +46,13 @@ public class BoardController {
 			@RequestParam(value="searchKey", defaultValue="subject") String searchKey,
 			@RequestParam(value="searchValue", defaultValue="") String searchValue,
 			HttpServletRequest req,
+			HttpSession session,
 			Model model,
 			Map<String, Object> paramMap
 			) throws Exception {
 		try {
 			String cp = req.getContextPath();
+			SessionInfo info = (SessionInfo)session.getAttribute("member");
 			
 			BoardManage cb = mservice.readBoardManage("cb_"+board);
 			if(cb == null)
@@ -95,6 +97,14 @@ public class BoardController {
 			}
 			String paging = util.paging(current_page, total_page, listUrl);
 			
+			if((info.getGrants() & 768) == 768) {
+				String msg = "admin";
+				model.addAttribute("msg", msg);
+			} else {
+				String msg = "user";
+				model.addAttribute("msg", msg);
+			}
+			
 			model.addAttribute("cb", cb);
 			model.addAttribute("boardList", boardList);
 			model.addAttribute("list", list);
@@ -118,19 +128,19 @@ public class BoardController {
 	          Model model
 			) {
 		try {
+			SessionInfo info = (SessionInfo)session.getAttribute("member");
 			BoardManage cb = mservice.readBoardManage("cb_"+board);
 			if(cb==null) {
 				return "error.error";
 			}
 			
-			// 글쓰기 권한 처리 필요(session 활용)
-			/*
-		 SessionInfo info=(SessionInfo)session.getAttribute("member");
-			if(cb.getMemberLevel()>info.getMemberLevel()) {
-			return ".member.noAuthorized";
+			if(cb.getWritePermit() == 0) {
+				if((info.getGrants() & 768) != 768) {
+					String message = "접근 권한 없음";
+					model.addAttribute("message", message);
+					return ".error.error";
+				}
 			}
-			형태로 구현
-			 * */
 			
 			// 게시판 목록(사이드 메뉴 출력용)
 			List<BoardManage> boardList = mservice.listBoardManage();
@@ -161,6 +171,14 @@ public class BoardController {
 				return "error.error";
 			}
 			
+			if(cb.getWritePermit() == 0) {
+				if((info.getGrants() & 768) != 768) {
+					String message = "접근 권한 없음";
+					model.addAttribute("message", message);
+					return ".error.error";
+				}
+			}
+			
 			String root = session.getServletContext().getRealPath("/");
 			String pathname = root + "uploads" + File.separator + "cboard";
 			
@@ -189,6 +207,7 @@ public class BoardController {
 			) throws Exception {
 		
 		try {
+			SessionInfo info = (SessionInfo)session.getAttribute("member");
 			BoardManage cb=mservice.readBoardManage("cb_"+board);
 			if(cb==null) {
 				return "error.error";
@@ -228,6 +247,14 @@ public class BoardController {
 			
 			// 게시판 목록(사이드 메뉴 출력용)
 			List<BoardManage> boardList = mservice.listBoardManage();
+			
+			if((info.getGrants() & 768) == 768) {
+				String msg = "admin";
+				model.addAttribute("msg", msg);
+			} else {
+				String msg = "user";
+				model.addAttribute("msg", msg);
+			}
 			
 			model.addAttribute("dto", dto);
 			model.addAttribute("preReadDto", preReadDto);
@@ -345,6 +372,13 @@ public class BoardController {
 	   	    }
 	   	    SessionInfo info=(SessionInfo)session.getAttribute("member");
 	   	    // 권한 처리 필요
+			if(cb.getWritePermit() == 0) {
+				if((info.getGrants() & 768) != 768) {
+					String message = "접근 권한 없음";
+					model.addAttribute("message", message);
+					return ".error.error";
+				}
+			}
 	   	    
 	   	    paramMap.put("tableName", cb.getTableName());
 	   	    paramMap.put("num", num);
@@ -380,6 +414,7 @@ public class BoardController {
 			@PathVariable String board,
 			@RequestParam(value="page") String page,
 			Board dto,
+			Model model,
 			HttpSession session
 			) {
 		try {
@@ -390,6 +425,13 @@ public class BoardController {
 	   	    
 	   	    SessionInfo info=(SessionInfo)session.getAttribute("member");
 	   	    // 권한 처리 필요
+			if(cb.getWritePermit() == 0) {
+				if((info.getGrants() & 768) != 768) {
+					String message = "접근 권한 없음";
+					model.addAttribute("message", message);
+					return ".error.error";
+				}
+			}
 	   	    
 	   	    String root = session.getServletContext().getRealPath("/");
 			String pathname = root + "uploads" + File.separator + "cboard";
@@ -411,7 +453,8 @@ public class BoardController {
 			@PathVariable String board,
 			@RequestParam(value="num") int num,
 			@RequestParam(value="page") String page,
-			HttpSession session) throws Exception {
+			HttpSession session,
+			Model model) throws Exception {
 		try {
 			BoardManage cb=mservice.readBoardManage("cb_"+board);
 	   	    if(cb==null) {
@@ -423,6 +466,13 @@ public class BoardController {
 			
 			SessionInfo info=(SessionInfo)session.getAttribute("member");
 			// 권한 처리 필요
+			if(cb.getWritePermit() == 0) {
+				if((info.getGrants() & 768) != 768) {
+					String message = "접근 권한 없음";
+					model.addAttribute("message", message);
+					return ".error.error";
+				}
+			}
 			
 			Map<String, Object> map=new HashMap<String, Object>();
 			map.put("tableName", cb.getTableName());
@@ -437,9 +487,6 @@ public class BoardController {
 			if(! info.getUserId().equals(dto.getMemberNum())) {
 				return "redirect:/cb_"+board+"/list?page="+page;
 			}
-			
-			if(! info.getUserId().equals("admin"))
-				return "redirect:/cb_"+board+"/list?page="+page;
 			
 			// 내용 지우기
 			service.deleteBoard(map);
@@ -466,8 +513,15 @@ public class BoardController {
    	    	return ".error.error";
    	    }
 		
-		//SessionInfo info = (SessionInfo)session.getAttribute("member");
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		// 권한 처리 필요(페이지 이동)
+		if(cb.getWritePermit() == 0) {
+			if((info.getGrants() & 768) != 768) {
+				String message = "접근 권한 없음";
+				model.addAttribute("message", message);
+				return ".error.error";
+			}
+		}
 		
 		Map<String, Object> map=new HashMap<String, Object>();
 		map.put("tableName", cb.getTableName());
@@ -495,6 +549,7 @@ public class BoardController {
 			@PathVariable String board,
 			Board dto,
 			@RequestParam(value="page") String page,
+			Model model,
 			HttpSession session) throws Exception {
 		
 		BoardManage cb = mservice.readBoardManage("cb_"+board);
@@ -504,6 +559,13 @@ public class BoardController {
 		
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
 		// 권한 처리 필요
+		if(cb.getWritePermit() == 0) {
+			if((info.getGrants() & 768) != 768) {
+				String message = "접근 권한 없음";
+				model.addAttribute("message", message);
+				return ".error.error";
+			}
+		}
 		
 		String root = session.getServletContext().getRealPath("/");
 		String pathname = root + "uploads" + File.separator + "cboard";		

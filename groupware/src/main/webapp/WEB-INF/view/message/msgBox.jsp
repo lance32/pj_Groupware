@@ -123,8 +123,8 @@
 		</c:forEach>
 	</table>
 	<div style="padding:5px 5px 5px 5px;">
-		<button type="button" id="keepBtn">&nbsp;보관&nbsp;</button>&nbsp;
-		<button type="button" id="deleteBtn">&nbsp;삭제&nbsp;</button>
+		<button type="button" id="keepBtn"  class="butn">&nbsp;보관&nbsp;</button>&nbsp;
+		<button type="button" id="deleteBtn" class="butn">&nbsp;삭제&nbsp;</button>
 	</div>
 	<br>
 	<div id='paginate'>

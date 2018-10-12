@@ -85,7 +85,7 @@ function check() {
 	<div style="clear: both; width: 300px; height: 1px; border-bottom: 3px solid black;"></div>
 </div>
 
-<div style="width: 1200px; margin: 0px 0px 0px 80px;">
+<div style="width: 80%; margin: 0px 0px 0px 80px;">
 	<form name="boardForm" method="post" onsubmit="return submitContents(this);" enctype="multipart/form-data">
 		<div style="clear:both; width: 100%; height: 40px; border-top: 2px solid #BDBDBD; line-height: 37px; vertical-align: middle;">
 			<div style="float: left; width: 200px; height: 100%; background: #F2F2F2; font-weight: 600;padding-left: 20px; margin-right: 30px;">카테고리 선택</div>

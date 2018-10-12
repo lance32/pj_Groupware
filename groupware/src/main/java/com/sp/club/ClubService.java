@@ -9,6 +9,7 @@ public interface ClubService {
 	public Club readClubInfo(int clubNum);
 	public List<Category> listClubCategory(int clubNum);
 	public List<Category> listClubCategoryItems(int clubNum);
+	public int readClubCategory(int categoryNum);
 	public String isClubMember(Map<String, Object> map);
 	public List<Club> listClubMember(int clubNum);
 	public int updateClubInfo(Club dto, String pathname);
@@ -21,4 +22,7 @@ public interface ClubService {
 	public int insertClubMember(Map<String, Object> map);
 	public int deleteClubMember(Map<String, Object> map);
 	public int clubMemberCount(int clubNum);
+	
+	public List<com.sp.clubBoard.Board> listClubNotice_main(int clubNum);
+	public List<com.sp.clubBoard.Board> listClubPhoto_main(int clubNum);
 }

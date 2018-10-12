@@ -117,7 +117,7 @@
 </style>
 <script type="text/javascript" src="<%=cp%>/resource/jquery/js/jquery-1.12.4.min.js"></script>
 <script type="text/javascript">
-var calendar = new Date();
+/* var calendar = new Date();
 
 var year = calendar.getFullYear();		// yyyy 년도
 var month = calendar.getMonth();		// 0~11 (1~12월)
@@ -149,20 +149,55 @@ for(var i=0; i<days_of_month; ++i){
 		
 	}
 }
-//미완
+//미완 */
+var monthOfYear=["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+var today = new Date();
+var date = new Date();
+function prevCalendar() {
+	today = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate());
+	buildCalendar();
+}
+function nextCalendar() {
+	today = new Date(today.getFullYear(), today.getMonth() + 1, today.getDate());
+	buildCalendar();
+}
+function buildCalendar(){
+	var doMonth = new Date(today.getFullYear(),today.getMonth(),1); //이번 달의 첫째 날
+	var lastDate = new Date(today.getFullYear(),today.getMonth()+1,0); //이번 달의 마지막 날
+	var tbCalendar = document.getElementById("tbCalendar");
+	jQuery("#calendar_year").html(today.getFullYear());
+	jQuery("#calendar_month").html(monthOfYear[today.getMonth()]);
+	
+	var row = null;
+	var cnt = 0;
+	jQuery("#tbCalendar").html("");
+	row = tbCalendar.insertRow();
+	for (i=0; i<doMonth.getDay(); i++) {
+		cell = row.insertCell();
+		cnt = cnt + 1;
+	}
+	for (i=1; i<=lastDate.getDate(); i++) { 
+		cell = row.insertCell();
+		cell.innerHTML = i;
+		cnt = cnt + 1;
+	}
+	if (today.getFullYear() == date.getFullYear() && today.getMonth() == date.getMonth()) {
+		jQuery("#tbCalendar td:Contains("+today.getDate()+")").addClass("current-day event");
+	}
+}
+	
+
 </script>
 
 </head>
 <body>
 	<div class="calendarBody">
-		<div style="clear: both;">
-			2018
-		</div>
 		<div class="calendar">
 			<header>				
-				<h2 id="monthName"> October </h2>
-				<a class="btn-prev fontawesome-angle-left" href="#">&lt;</a>
-				<a class="btn-next fontawesome-angle-right" href="#">&gt;</a>
+				<h2 id="calendar_month"> October </h2>
+				<a class="btn-prev fontawesome-angle-left" onclick="prevCalendar()">&lt;</a>
+				<a class="btn-next fontawesome-angle-right" onclick="nextCalendar()">&gt;</a>
 			</header>
 			<table>
 				<thead>
@@ -177,7 +212,7 @@ for(var i=0; i<days_of_month; ++i){
 					</tr>
 				</thead>
 
-				<tbody>
+				<tbody id="tbCalendar">
 					
 					<tr>
 						<td class="prev-month">30</td>
@@ -236,6 +271,7 @@ for(var i=0; i<days_of_month; ++i){
 				</tbody>
 			</table>
 		</div> <!-- end calendar -->
+		<div id="calendar_year" style="clear: both; float: right; font-size: 11px; color:#848484; margin-right: 5px;">2018</div>
 	</div> <!-- end calendarBody -->
 </body>
 </html>

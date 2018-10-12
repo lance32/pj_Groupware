@@ -21,9 +21,9 @@
     <tr>
     	<td><a href="<%=cp%>/scheduler/list">예 약 목 록</a></td>
     </tr>
-    <c:if test="${sessionScope.member.userId == 'admin'}">
-	    <tr>
-	    	<td><a href="<%=cp%>/scheduler/resList">자 원 관 리</a></td>
-	    </tr>
-    </c:if>
+
+	<tr>
+	    <td><a href="<%=cp%>/scheduler/resList">자 원 관 리</a></td>
+	</tr>
+
 </table>

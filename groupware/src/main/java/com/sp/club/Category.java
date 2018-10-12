@@ -5,6 +5,7 @@ public class Category {
 	private int categoryNum;
 	private String categoryName;
 	private Integer categoryParent;
+	private int authority;
 	private int separate;
 	
 	public int getClubNum() {
@@ -30,6 +31,12 @@ public class Category {
 	}
 	public void setCategoryParent(Integer categoryParent) {
 		this.categoryParent = categoryParent;
+	}
+	public int getAuthority() {
+		return authority;
+	}
+	public void setAuthority(int authority) {
+		this.authority = authority;
 	}
 	public int getSeparate() {
 		return separate;
