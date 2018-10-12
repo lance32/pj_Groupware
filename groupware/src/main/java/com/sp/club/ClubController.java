@@ -72,6 +72,7 @@ public class ClubController {
 		Club dto=null;
 		String isMember=null;
 		List<com.sp.clubBoard.Board> noticeList=null;
+		List<com.sp.clubBoard.Board> photoList=null;
 		try {
 			clubCategory=service.listClubCategory(clubNum);
 			clubCategoryItem=service.listClubCategoryItems(clubNum);
@@ -83,6 +84,7 @@ public class ClubController {
 			isMember=service.isClubMember(map);
 			
 			noticeList=service.listClubNotice_main(clubNum);
+			photoList=service.listClubPhoto_main(clubNum);
 			
 		} catch (Exception e) {
 			return "error/error";
@@ -92,6 +94,7 @@ public class ClubController {
 		model.addAttribute("clubCategory", clubCategory);
 		model.addAttribute("clubCategoryItem", clubCategoryItem);
 		model.addAttribute("noticeList", noticeList);
+		model.addAttribute("photoList", photoList);
 		return ".club.main";
 	}
 	

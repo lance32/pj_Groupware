@@ -24,4 +24,5 @@ public interface ClubService {
 	public int clubMemberCount(int clubNum);
 	
 	public List<com.sp.clubBoard.Board> listClubNotice_main(int clubNum);
+	public List<com.sp.clubBoard.Board> listClubPhoto_main(int clubNum);
 }

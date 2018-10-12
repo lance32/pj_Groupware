@@ -122,7 +122,20 @@
 				SELECT boardNum, subject, TO_CHAR(created,'yyyy-mm-dd') created, originalFileName
 				FROM clubBoard b JOIN clubBoardCategory c ON b.categoryNum=c.categoryNum
 		        WHERE b.clubNum=#{clubNum} AND basicCategory=2 AND authority=1
-		    ) tb WHERE ROWNUM &lt;= 10
+		    ) tb WHERE ROWNUM &lt;= 11
+		) WHERE rnum &gt;= 1
+	</select>
+	
+	<!-- 메인화면에 출력할 공지 게시판 -->
+	<select id="listClubPhoto_main" parameterType="Integer" resultType="com.sp.clubBoard.Board">
+		SELECT * FROM (
+		    SELECT ROWNUM rnum, tb.* FROM (
+		        SELECT boardNum, subject, SUBSTR(content,1,INSTR(content,'&gt;', 1, 1)) content FROM(
+		            SELECT boardNum, subject, substr(content,INSTR(content,'&lt;img', 1, 1)) content 
+		            FROM clubBoard b JOIN clubBoardCategory c ON b.categoryNum=c.categoryNum
+		            WHERE b.clubNum=#{clubNum} AND basicCategory=2 AND authority=0
+		        )
+		    ) tb WHERE ROWNUM &lt;= 6
 		) WHERE rnum &gt;= 1
 	</select>
 	

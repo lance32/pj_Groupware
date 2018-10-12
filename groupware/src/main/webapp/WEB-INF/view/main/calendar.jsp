@@ -183,7 +183,7 @@ function buildCalendar(){
 		cnt = cnt + 1;
 	}
 	if (today.getFullYear() == date.getFullYear() && today.getMonth() == date.getMonth()) {
-		jQuery("#tbCalendar td").text(today.getDate()).addClass("current-day event");
+		jQuery("#tbCalendar td:Contains("+today.getDate()+")").addClass("current-day event");
 	}
 }
 	

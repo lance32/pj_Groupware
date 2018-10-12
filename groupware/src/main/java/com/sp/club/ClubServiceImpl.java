@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.sp.clubBoard.Board;
 import com.sp.common.FileManager;
 import com.sp.common.dao.CommonDAO;
 
@@ -226,6 +227,17 @@ public class ClubServiceImpl implements ClubService{
 		List<com.sp.clubBoard.Board> list=null;
 		try {
 			list=dao.selectList("club.listClubNotice_main", clubNum);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return list;
+	}
+
+	@Override
+	public List<Board> listClubPhoto_main(int clubNum) {
+		List<com.sp.clubBoard.Board> list=null;
+		try {
+			list=dao.selectList("club.listClubPhoto_main", clubNum);
 		} catch (Exception e) {
 			System.out.println(e.toString());
 		}
