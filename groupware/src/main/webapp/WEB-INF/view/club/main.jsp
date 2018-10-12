@@ -30,7 +30,7 @@
 	<span style="font-size: 12px; color: #045FB4; cursor: pointer; margin: 0px 10px; display: none;">메인 사진 변경</span>
 	<span style="font-size: 12px; color: #045FB4; display: none; display: none;">※ 사진 크기는 1100px*300px 를 권장합니다.</span>
 	<div style="width: 100%; height: 304px; border-bottom: 2px solid #848484; border-top: 2px solid #848484; margin-bottom: 10px; line-height: 290px; text-align: center; overflow: hidden; margin-top: 8px;">
-		<img src="<%=cp%>/resource/images/clubMain.jpg" style="	height: auto; max-width: 100%; max-height:300px; margin: auto;">
+		<img src="<%=cp%>/resource/images/clubMain.jpg" style="height: auto; max-width: 100%; max-height:300px; margin: auto;">
 	</div>
 	
 	<div style="width: 100%;">
