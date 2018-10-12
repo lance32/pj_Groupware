@@ -31,7 +31,7 @@ function getData(memberNum) {
 							aut+= "<tr>";
 							aut+= "<td rowspan='2' style='width:130px; height:150px;'>";
 							aut+= "<img src=";
-							aut+= "'<%=cp%>/upload/member/" +val.saveFileName+ "'";
+							aut+= "'<%=cp%>/upload/member/" +val.saveFilename+ "'";
 							aut+= "style='width:130px; height:150px;'>";
 							aut+= "</td><td>사원번호</td><td>"+val.memberNum+"</td>";
 							aut+="<input type='hidden' name='memberNum' value='"+val.memberNum+"'>";
@@ -121,6 +121,35 @@ function s() {
 
 	
 </script>
+<table style='width: 70%;'>		
+<tr>
+<td>1</td>
+<td><input type='checkbox' id='auth1"+i+"' name='auth1"+i+"' class='check'>읽기</td>
+<td><input type='checkbox' id='auth2"+i+"' name='auth1"+i+"' class='check'>쓰기</td></tr>
+<tr><td>2</td>
+<td><input type='checkbox' id='auth1"+i+"' name='auth1"+i+"' class='check'>읽기</td>
+<td><input type='checkbox' id='auth2"+i+"' name='auth1"+i+"' class='check'>쓰기</td></tr>
+<tr><td>3</td>
+<td><input type='checkbox' id='auth1"+i+"' name='auth1"+i+"' class='check'>읽기</td>
+<td><input type='checkbox' id='auth2"+i+"' name='auth1"+i+"' class='check'>쓰기</td></tr>
+<tr><td>4</td>
+<td><input type='checkbox' id='auth1"+i+"' name='auth1"+i+"' class='check'>읽기</td>
+<td><input type='checkbox' id='auth2"+i+"' name='auth1"+i+"' class='check'>쓰기</td></tr>
+<tr><td>5</td>
+<td><input type='checkbox' id='auth1"+i+"' name='auth1"+i+"' class='check'>읽기</td>
+<td><input type='checkbox' id='auth2"+i+"' name='auth1"+i+"' class='check'>쓰기</td></tr>
+<tr><td>6</td>
+<td><input type='checkbox' id='auth1"+i+"' name='auth1"+i+"' class='check'>읽기</td>
+<td><input type='checkbox' id='auth2"+i+"' name='auth1"+i+"' class='check'>쓰기</td></tr>
+<tr><td>7</td>
+<td><input type='checkbox' id='auth1"+i+"' name='auth1"+i+"' class='check'>읽기</td>
+<td><input type='checkbox' id='auth2"+i+"' name='auth1"+i+"' class='check'>쓰기</td></tr>
+<tr><td>8</td>
+<td><input type='checkbox' id='auth1"+i+"' name='auth1"+i+"' class='check'>읽기</td>
+<td><input type='checkbox' id='auth2"+i+"' name='auth1"+i+"' class='check'>쓰기</td></tr>
+</table>
+
+<button style="float: left;" type='button' id = 'btnsend' onclick='s();'>수정</button>	
 
 
 <div style="clear: both; margin: 10px 0px 15px 10px;">

@@ -34,7 +34,7 @@
 		    SELECT ROWNUM rn, ss.* FROM(
 		        SELECT workLogNum, content, name, departmentName, TO_CHAR(makeDate,'YYYY-MM-DD')makeDate, grants, num
 		        FROM workLog w JOIN member m ON w.memberNum = m.memberNum
-		        JOIN department d on m.departmentNum = d.departmentNum
+		        left outer JOIN department d on m.departmentNum = d.departmentNum
 		        <where>
 			        <if test="searchValue != null and searchValue != '' ">
 			  	    	<include refid="where-list"/>
@@ -50,7 +50,7 @@
 	<select id="readWorkLog" resultType="com.sp.workLog.WorkLog" parameterType="Integer">
 		SELECT workLogNum, to_char(makeDate,'YYYY-MM-DD')makeDate, departmentName, name, content ,num, grants
 		FROM workLog w JOIN member m ON w.memberNum =m.memberNum
-		JOIN department d on m.departmentNum = d.departmentNum
+		left outer JOIN department d on m.departmentNum = d.departmentNum
 		WHERE workLogNum = #{WorkLogNum}
 	</select>
 	

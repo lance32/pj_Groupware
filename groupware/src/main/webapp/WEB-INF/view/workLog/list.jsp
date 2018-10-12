@@ -11,6 +11,7 @@
 #paginate a:hover, a:active {border:1px solid #147FCC;color:#0174DF;vertical-align:middle;line-height:normal;}
 #paginate .curBox{border:1px solid #424242; background: #4e4e4e; color:#ffffff; font-weight:bold;height:28px;padding:4px 8px 4px 8px;margin-left:3px;line-height:normal;vertical-align:middle;}
 #paginate .numBox {border:1px solid #ccc;height:28px;text-decoration:none;padding:4px 7px 4px 7px;margin-left:3px;line-height:normal;vertical-align:middle;}
+
 </style>
 
 <script type="text/javascript">
@@ -25,7 +26,7 @@ function getData(workLogNum) {
 		success:function(data) {
 			$("#article-dialog").html(data.dto.content);
 			 $("#article-dialog").dialog({
-				height: 850,
+				height: 800,
 				width: 800,
 				modal: true
 				
