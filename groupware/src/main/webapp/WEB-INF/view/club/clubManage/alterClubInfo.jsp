@@ -66,6 +66,14 @@ jQuery(function(){
 					</div>
 				</td>
 			</tr>
+			<tr height="70">
+				<td style="text-align: left; font-weight: 600;">메인 이미지</td>
+				<td>
+					<div style="width: 100%; padding-left:5px; border-bottom: 1.5px solid #BDBDBD;">
+						${clubInfo.clubMainImg==null?"없음":clubInfo.clubMainImg}
+					</div>
+				</td>
+			</tr>
 			<tr height="20"><td colspan="2">&nbsp;</td></tr>
 			<tr height="80">
 				<td style="text-align: left;  font-weight: 600;" valign="top">동호회 가입자 목록</td>

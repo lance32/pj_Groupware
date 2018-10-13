@@ -12,7 +12,9 @@ public class Club {
 	private String memberNum;	//개설자 id
 	private String memberName;	//개설자 이름
 	private String clubImg;			//대표이미지
+	private String clubMainImg;	//동호회 메인이미지
 	private MultipartFile upload;
+	private MultipartFile upload2;
 	private String joinMemberNum;	
 	private String joinMemberName;	
 	
@@ -70,11 +72,23 @@ public class Club {
 	public void setClubImg(String clubImg) {
 		this.clubImg = clubImg;
 	}
+	public String getClubMainImg() {
+		return clubMainImg;
+	}
+	public void setClubMainImg(String clubMainImg) {
+		this.clubMainImg = clubMainImg;
+	}
 	public MultipartFile getUpload() {
 		return upload;
 	}
 	public void setUpload(MultipartFile upload) {
 		this.upload = upload;
+	}
+	public MultipartFile getUpload2() {
+		return upload2;
+	}
+	public void setUpload2(MultipartFile upload2) {
+		this.upload2 = upload2;
 	}
 	public String getJoinMemberNum() {
 		return joinMemberNum;
@@ -88,6 +102,5 @@ public class Club {
 	public void setJoinMemberName(String joinMemberName) {
 		this.joinMemberName = joinMemberName;
 	}
-	
 }
 

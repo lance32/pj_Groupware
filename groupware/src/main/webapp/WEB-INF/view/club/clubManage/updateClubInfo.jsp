@@ -114,8 +114,17 @@ jQuery(function(){
 				<td ><input name="clubSubject" type="text" class="textInput" style="width: 60%" value="${clubInfo.clubSubject}"></td>
 			</tr>
 			<tr height="60">
+				<td style="text-align: left;">메인화면 이미지</td>
+				<td>
+					<div style="height: 30px;">
+						<input name="upload2" type="file">
+						<span style="font-size: 13px; color: #045FB4; margin-left: 10px;">※ 사진 크기는 1100px*300px 를 권장합니다.</span>
+					</div>
+				</td>
+			</tr>
+			<tr height="60">
 				<td style="text-align: left;">대표 이미지</td>
-				<td ><input name="upload" type="file" value="${clubInfo.clubImg}"></td>
+				<td ><input name="upload" type="file"></td>
 			</tr>
 		</table>
 

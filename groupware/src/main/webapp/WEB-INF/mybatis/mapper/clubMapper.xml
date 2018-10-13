@@ -35,7 +35,7 @@
 
 	<!-- 입장한 동호회의 정보 -->
 	<select id="readClubInfo" parameterType="Integer" resultType="com.sp.club.Club">
-		SELECT clubNum, clubName, clubSubject, clubIntro, maxPeople, c.memberNum, m.name memberName, clubImg 
+		SELECT clubNum, clubName, clubSubject, clubIntro, maxPeople, c.memberNum, m.name memberName, clubImg, clubMainImg
 		FROM clubInfo c JOIN member m ON c.memberNum=m.memberNum
 		WHERE clubNum = #{clubNum}
 	</select>
@@ -67,7 +67,7 @@
 	
 	<!-- 동호회 수정 -->
 	<update id="updateClubInfo" parameterType="com.sp.club.Club">
-		UPDATE clubInfo SET clubName=#{clubName}, clubSubject=#{clubSubject}, clubIntro=#{clubIntro}, maxPeople=#{maxPeople}, clubImg=#{clubImg} 
+		UPDATE clubInfo SET clubName=#{clubName}, clubSubject=#{clubSubject}, clubIntro=#{clubIntro}, maxPeople=#{maxPeople}, clubImg=#{clubImg}, clubMainImg=#{clubMainImg} 
 		WHERE clubNum=#{clubNum}
 	</update>
 	
