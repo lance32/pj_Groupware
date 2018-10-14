@@ -34,6 +34,7 @@
 }
 .listItem_intro{
 	width: 100%;
+	height: 75px;
 }
 </style>
 
@@ -56,7 +57,7 @@ jQuery(function(){
 	<div style="clear: both; width: 300px; height: 1px; border-bottom: 3px solid black;"></div>
 </div>
 
-<div style="clear: both; width: 1390px; margin-left: 50px; height: 670px; overflow-y: scroll; background: #F2F2F2; padding: 10px; border-left: 5px solid #BDBDBD;">
+<div style="clear: both; min-width: 1150px; max-width: 1400px; height: 670px; overflow-y: scroll; background: #F2F2F2; padding: 10px; border-left: 5px solid #BDBDBD; margin: 0px auto;">
 
 	<c:forEach var="dto" items="${list}">
 		<div class="listItem">
@@ -65,7 +66,9 @@ jQuery(function(){
 			</div>
 			<div class="listItem_intro">
 				<p style="font-weight: 700; background: #848484; color: #F2F2F2; margin: 0px 0px 5px; height: 25px; font-size: 16px; text-align: center;">${dto.clubName}</p>
-				<span style="padding: 0px 10px;">${dto.clubIntro}</span>
+				<div style="width: 100%; height:50px; padding: 0px 10px;  text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
+					<span>${dto.clubIntro}</span>
+				</div>
 			</div>
 			<input type="hidden" class="clubNum" value="${dto.clubNum}">
 		</div>

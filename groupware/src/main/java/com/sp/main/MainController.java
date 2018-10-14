@@ -12,6 +12,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.sp.approval.ApprovalService;
+import com.sp.approval.ApprovalSummary;
 import com.sp.member.SessionInfo;
 import com.sp.message.Message;
 import com.sp.message.MessageService;
@@ -24,7 +26,8 @@ import com.sp.schedule.ScheduleService;
 public class MainController {
 	@Autowired
 	private NoticeService noticeService;
-	
+	@Autowired
+	private ApprovalService approvalService;
 	@Autowired
 	private MessageService messageService;
 	@Autowired
@@ -52,6 +55,10 @@ public class MainController {
 		}
 		
 		//미확인 결재 문서함
+		List<ApprovalSummary> approvalList=approvalService.readApproval("1", memberNum);
+		for(ApprovalSummary dto: approvalList) {
+			dto.setCreated(dto.getCreated().substring(0, 10));
+		}
 		
 		//받은 쪽지
 		List<Message> messageList=null;
@@ -77,17 +84,7 @@ public class MainController {
 		model.addAttribute("noticeList_main", noticeList);
 		model.addAttribute("messageList_main", messageList);
 		model.addAttribute("scheduleList_main", scheduleList);
+		model.addAttribute("approvalList_main", approvalList);
 		return ".mainLayout";
-	}
-	
-	
-	@RequestMapping(value="/calendar")
-	public String calendar() {
-		return "main/calendar";
-	}
-	
-	@RequestMapping(value="/error")
-	public String error() {
-		return ".error.error";
 	}
 }

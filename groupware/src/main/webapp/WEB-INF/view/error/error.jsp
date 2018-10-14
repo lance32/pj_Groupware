@@ -23,6 +23,12 @@
 	cursor: pointer;
 }
 </style>
+<script type="text/javascript">
+function goToMain(){
+	location.href="<%=cp%>/main";
+	return;
+}
+</script>
 
 <div style="width: 100%; padding-top: 150px;">
 	<div style="position:absolute ; left: 35%; width: 600px; height: 250px; border: 3px solid #A4A4A4; border-radius: 10px; background: #FFFFFF;">
@@ -31,7 +37,7 @@
 			에러 메시지 : ${message}
 		</div>
 		<div style="clear: both; width: 99%; text-align: center;">
-			<button class="butn" style="width: 80%; height: 60px; font-size: 27px;" onclick="history.back();">이전 페이지로 돌아가기</button> 
+			<button class="butn" style="width: 80%; height: 60px; font-size: 27px;" onclick="goToMain();">메인화면으로 돌아가기</button> 
 		</div>
 	</div>
 </div>

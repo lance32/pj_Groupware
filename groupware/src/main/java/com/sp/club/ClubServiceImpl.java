@@ -119,6 +119,15 @@ public class ClubServiceImpl implements ClubService{
 				String filename=filemanager.doFileUpload(dto.getUpload(), pathname);
 				dto.setClubImg(filename);
 			}
+			if(dto.getUpload2()!=null && !dto.getUpload2().isEmpty()) {
+				if(dto.getClubMainImg()!=null && dto.getClubMainImg().length()!=0) {
+					filemanager.doFileDelete(dto.getClubMainImg(), pathname);
+				}
+				String filename=filemanager.doFileUpload(dto.getUpload2(), pathname);
+				dto.setClubMainImg(filename);
+			}
+			System.out.println(dto.getClubMainImg());
+			
 			dao.updateData("club.updateClubInfo", dto);
 			result=1;
 		} catch (Exception e) {

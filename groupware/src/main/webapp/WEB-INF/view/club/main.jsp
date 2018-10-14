@@ -27,10 +27,13 @@
 </style>
 
 <div style="width: 1102px; height: 800px; border-radius: 5px; border: 1.2px solid #A4A4A4; margin: 15px auto; padding-bottom: 70px;">
-	<span style="font-size: 12px; color: #045FB4; cursor: pointer; margin: 0px 10px; display: none;">메인 사진 변경</span>
-	<span style="font-size: 12px; color: #045FB4; display: none; display: none;">※ 사진 크기는 1100px*300px 를 권장합니다.</span>
 	<div style="width: 100%; height: 304px; border-bottom: 2px solid #848484; border-top: 2px solid #848484; margin-bottom: 10px; line-height: 290px; text-align: center; overflow: hidden; margin-top: 8px;">
-		<img src="<%=cp%>/resource/images/clubMain.jpg" style="	height: auto; max-width: 100%; max-height:300px; margin: auto;">
+		<c:if test="${empty clubInfo.clubMainImg}">
+		<img src="<%=cp%>/resource/images/clubMain.jpg" style="height: auto; max-width: 100%; max-height:300px; margin: auto;">
+		</c:if>
+		<c:if test="${not empty clubInfo.clubMainImg}">
+		<img src="<%=cp%>/uploads/club/${clubInfo.memberNum}/${clubInfo.clubMainImg}" style="height: auto; max-width: 100%; max-height:300px; margin: auto;">
+		</c:if>
 	</div>
 	
 	<div style="width: 100%;">
@@ -79,7 +82,7 @@
 				<div style="height: 403px; width: 99%; padding-top: 10px; border-bottom: 2px solid #6E6E6E;">
 					<c:forEach var="dto" items="${photoList}">
 					<div style="width: 150px; height: 170px; margin: 10px 5px; float: left;">
-						<div class="photoBox" style="width: 100%; height: 150px; border: 1px solid #A4A4A4; line-height: 139px; text-align: center; background: #FAFAFA; border-radius: 2px;">
+						<div class="photoBox" style="width: 100%; height: 150px; border: 1px solid #A4A4A4; line-height: 139px; text-align: center; background: #FAFAFA; border-radius: 2px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; color: #6E6E6E;">
 							${dto.content}
 						</div>
 						<div style="width: 100%; height: 20px; clear: both; text-align:center; padding:0px 5px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; color: #6E6E6E;">

@@ -102,9 +102,9 @@ jQuery(function(){
 	<div id="sideClubImg" style="width: 230px; height: 180px; margin: 10px auto; line-height: 170px; text-align: center; border: 1.5px solid #D8D8D8; background: #FAFAFA; cursor: pointer;">
 		<img class="representimg" src="<%=cp%>/uploads/club/${clubInfo.memberNum}/${clubInfo.clubImg}">
 	</div>
-	<div style="width: 100%; height: 75px; padding:0px 15px;">
-		<div style="width:100%; height:25px; padding-left:5px; margin-bottom: 5px; font-size: 17px; font-weight: 600; overflow: hidden; background:#F2F2F2; border-left: 5px solid #BDBDBD;">${clubInfo.clubName}</div>
-		<span style="text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">${clubInfo.clubIntro}</span>
+	<div style="width: 100%; height: 80px; padding:0px 15px;">
+		<div style="width:100%; height:25px; padding-left:5px; margin-bottom: 5px; font-size: 17px; font-weight: 600; overflow: hidden; background:#F2F2F2; border-left: 5px solid #BDBDBD; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">${clubInfo.clubName}</div>
+		<span>${clubInfo.clubIntro}</span>
 	</div>
 	
 </div>
