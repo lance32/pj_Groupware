@@ -58,10 +58,10 @@ jQuery(function(){
 	//머릿글 결재 문서함 클릭시
 	//결재 문서함 more버튼 클릭시
 	jQuery("#approvalTop").click(function(){
-		location.href="#";
+		location.href="<%=cp%>/approval/approval_detail_list?param=1";
 	});
 	jQuery("#approvalTopMoreButn").click(function(){
-		location.href="#";
+		location.href="<%=cp%>/approval/approval_detail_list?param=1";
 	});
 	
 	//머릿글 받은 쪽지 클릭시
