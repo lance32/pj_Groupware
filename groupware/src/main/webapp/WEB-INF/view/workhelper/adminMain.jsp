@@ -88,7 +88,6 @@ function searchPayMember(){
 		
 			<td align="right">
 				<button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/pay/insertpay';">급여 입력</button>
-				<button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/pay/insertTax';">세율 수정</button>
 			</td>
 		</tr>
 	</table>

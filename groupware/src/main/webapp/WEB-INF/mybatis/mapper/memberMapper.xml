@@ -19,7 +19,11 @@
 	<select id="readDetailinfo" resultType="com.sp.member.Member" parameterType="String">
 		SELECT birth,email,tel,phone,zip,addr1,addr2 FROM memberDetailinfo WHERE memberNum=#{memberNum}
 	</select>
-
+	
+	<select id="readBaiscpay" resultType="Integer" parameterType="String">
+		SELECT basicpay FROM basicpay WHERE memberNum=#{memberNum}
+	</select>
+	
 <!-- insert -->
 	<insert id="insertMember" parameterType="com.sp.member.Member">
 		INSERT INTO member(memberNum,name,pwd,positionNum,departmentNum,saveFilename,originalFilename)

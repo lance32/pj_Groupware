@@ -66,7 +66,7 @@
 		</tr>
 		<tr>
 			<td>수당</td>
-			<td align="right"><fmt:formatNumber value="${dto.extrapay}" pattern="#,###"/> 원</td>
+			<td align="right"><fmt:formatNumber value="${dto.extraPay}" pattern="#,###"/> 원</td>
 			<td>고용보험</td>
 			<td align="right"><fmt:formatNumber value="${dto.employTax}" pattern="#,###"/>원</td>
 		</tr>

@@ -206,6 +206,15 @@ function memberOk() {
         f.email1.focus();
         return;
     }
+    
+    str = f.zip.value;
+	str = str.trim();
+    if(!str) {
+        alert("주소를 입력하세요. ");
+        f.addr2.focus();
+        return;
+    }
+    
 
     var mode="${mode}";
     

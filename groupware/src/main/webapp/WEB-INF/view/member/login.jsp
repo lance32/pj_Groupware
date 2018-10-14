@@ -84,11 +84,6 @@ function sendOk(){
 		return;
 	}
 	
-	<%-- if(str=='1111'){
-		f.action="<%=cp%>/member/firstLogin";
-		f.submit();
-	}else{ 	}--%>
-	
 		f.action="<%=cp%>/member/login_check";
 		f.submit();
 	
@@ -115,8 +110,6 @@ function sendOk(){
 					<input type="hidden" id="last_login" name="last_login" value="">
 				</td>
 			</tr>
-			
-			
 			
          </table>
 	</form>

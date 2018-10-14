@@ -99,6 +99,7 @@ public class PayServiceImpl implements PayService{
 
 	@Override
 	public int insertPay(Pay dto) throws Exception {
+		
 		try {
 			dao.insertData("pay.insertPay",dto);
 		} catch (Exception e) {
@@ -117,7 +118,15 @@ public class PayServiceImpl implements PayService{
 		return 1;
 	}
 
-
-
+	@Override
+	public Pay readSalary(Map<String, Object> map) {
+		Pay pay=null;
+		try {
+			pay=dao.selectOne("pay.readSalary",map);
+		} catch (Exception e) {
+			
+		}
+		return pay;
+	}
 
 }

@@ -1,5 +1,7 @@
 package com.sp.workhelper;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -7,7 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class workhelperController {
 	
 	@RequestMapping(value="/workhelper/main")
-	public String main() {
+	public String main(HttpSession session) {
+		
 		return ".workhelper.main";
 	}
 

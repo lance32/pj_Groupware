@@ -6,16 +6,17 @@ import java.util.Map;
 public interface MemberService {
 	public Member readMember(String memberNum);
 	public Member readDetailinfo(String memberNum);
+	public int readBasicpay(String memberNum)throws Exception;
 	public int insertMember(Member dto,String pathname) throws Exception ;
 
 	public int firstLoginMember(Member dto) throws Exception;
 	
-	public int dataCount(Map<String, Object> map);
-	public List<Member> ListMember(Map<String, Object> map);
+	public int dataCount(Map<String, Object> map) throws Exception;
+	public List<Member> ListMember(Map<String, Object> map) throws Exception;
 	
-	public List<Map<String, Object>> qualifyList(String memberNum);
-	public List<Map<String, Object>> departmentList();
-	public List<Map<String, Object>> positionList();
+	public List<Map<String, Object>> qualifyList(String memberNum) throws Exception;
+	public List<Map<String, Object>> departmentList() throws Exception;
+	public List<Map<String, Object>> positionList() throws Exception;
 	
 	public int updateMember(Member dto,String pathname) throws Exception;
 	public int updateAdmin(Member dto) throws Exception;

@@ -45,17 +45,45 @@ function payOk() {
 	var f = document.payForm;
 	var str;
 	
-<c:if test="${mode=='created'}">
+
 	str = f.memberNum.value;
 	str = str.trim();
+	
 	if(!str) {
 		alert("사원번호를 입력하세요. ");
 		f.memberNum.focus();
 		return;
 	}
-</c:if>
-
-    f.submit();
+	
+	str = f.year.value;
+	str = str.trim();
+	
+	if(!str) {
+		alert("지급받는 년도를 입력하세요. ");
+		f.year.focus();
+		return;
+	}
+	
+	str = f.month.value;
+	str = str.trim();
+	
+	if(!str) {
+		alert("지급받는 월를 입력하세요. ");
+		f.month.focus();
+		return;
+	}
+	
+	str = f.day.value;
+	str = str.trim();
+	
+	if(!str) {
+		alert("지급받는 월를 입력하세요. ");
+		f.day.focus();
+		return;
+	}
+	
+	f.action = "<%=cp%>/pay/insertPay";
+	f.submit();
 }
 function mathPay(){
 	var basicpay=($("#basicpay").val());
@@ -79,8 +107,10 @@ function mathPay(){
 			var accidentTax=basicpay*$("#산재보험").val();
 			var pensionTax=basicpay*$("#국민연금").val();
 			var incomeTax=basicpay*$("#소득세").val();
+			var extraPay=($("#extraPay").val());
+			var totalPay=parseInt(basicpay)+parseInt(extraPay);
 			var totalTax=healthTax+employTax+accidentTax+pensionTax+incomeTax;
-			var realPay=basicpay-totalTax;
+			var realPay=totalPay-totalTax;
 			$("#healthTax").val(healthTax);
 			$("#employTax").val(employTax);
 			$("#accidentTax").val(accidentTax);
@@ -116,10 +146,14 @@ function memberNumCheck() {
 		,dataType:"json"
 		,success:function(data) {
 			var p=data.passed;
+			var basicpay = data.basicpay;
+			var name = data.name;
+			alert(basicpay);
 			if(p=="false") {
 				var s="<span style='color:blue;font-weight:bold;'>"+str+"재직중인 사원 입니다.</span><br>";
-				
 				$("#memberNum").parent().next(".help-block").html(s);
+				var s2="<span style='color:blue;font-weight:bold;'>"+name+"님의 기본급은 "+basicpay+"원 입니다.</span><br>";
+				$("#basicpay").parent().next(".help-block").html(s2);
 			} else {
 				var s="<span style='color:red;font-weight:bold;'>"+str+"</span> 재직중인 사원정보가 없습니다.";
 				$("#memberNum").parent().next(".help-block").html(s);
@@ -134,7 +168,17 @@ function memberNumCheck() {
 	
 }
 
+
+
+
 </script>
+
+<div style="clear: both; margin: 10px 0px 15px 10px;">
+		<span class="glyphicon glyphicon-th-list" style="font-size: 25px; margin-left: 10px;"></span>
+		<span style="font-size: 25px;">&nbsp;급여관리</span><br>
+		<div style="clear: both; width: 300px; height: 1px; border-bottom: 3px solid black;"></div>
+	</div>
+
 <div class="body-container" style="width: 700px;">
         <div>
 			<form name="payForm" method="post">
@@ -150,9 +194,19 @@ function memberNumCheck() {
                          </td>
 				  </tr>
 				  <tr>
+				  	<th>수당</th>
+				  	<td colspan="4">
+				  		<input type="text" name="extraPay" id="extraPay" placeholder="수당">원
+				  	</td>
+				  </tr>
+				  <tr>
 				    <th>기본급</th>
-				    <td colspan="4"><input type="text" name="basicpay" id="basicpay" onchange="mathPay();"
-				    	placeholder="기본급">
+				    <td colspan="4">
+				    <p>
+				    <input type="text" name="basicpay" id="basicpay" onchange="mathPay();"
+				    	placeholder="기본급" value="">원
+				    </p>
+				    		<p class="help-block"></p>
 				    </td>
 				  </tr>
 				  <tr class="ymd">
@@ -161,10 +215,10 @@ function memberNumCheck() {
 				  		<input type="text" name="year" id="year" placeholder="0000년">년
 				  	</td>
 				  	<td>
-				  		<input type="text" name="year" id="year" placeholder="00월">월
+				  		<input type="text" name="month" id="month" placeholder="00월">월
 				  	</td>
 				  	<td>
-				  		<input type="text" name="year" id="year" placeholder="00일">일
+				  		<input type="text" name="day" id="day" placeholder="00일">일
 				  	</td>
 				  	<td>
 				  	</td>

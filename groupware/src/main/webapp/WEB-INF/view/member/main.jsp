@@ -18,12 +18,13 @@
 function searchMember(){
 	var f=document.memberSearchForm;
 	f.submit();
-}
+};
 
-$("#chkstatus").onchange(function(){
-	var checkedValue = $("input[name=chk_status]:checked").val();
-	alert(checkedValue);
-});
+function chkvalue(){
+	var checkedValue = $("#chk_status").val();
+};
+
+
 </script>
 
 
@@ -45,12 +46,12 @@ $("#chkstatus").onchange(function(){
 	</div>
 	<div style="width:100%; text-align:right;">
 		
-		<form id="chkstatus" name="chkstatus" action="">
-			<input type="radio" name="chk_status" value="all" checked="checked">전체
-			<input type="radio" name="chk_status" value="1">재직
-			<input type="radio" name="chk_status" value="2">휴직
-			<input type="radio" name="chk_status" value="3">정직
-			<input type="radio" name="chk_status" value="0">퇴사
+		<form id="chkstatus" name="chkstatus" onchange="chkvalue()" method="post">
+			<input type="radio" id="chk_status" name="chk_status" value="all">전체
+			<input type="radio" id="chk_status" name="chk_status" value="1">재직
+			<input type="radio" id="chk_status" name="chk_status" value="2">휴직
+			<input type="radio" id="chk_status" name="chk_status" value="3">정직
+			<input type="radio" id="chk_status" name="chk_status" value="0">퇴사
 		</form>
 	
 	<form name="memberSearchForm" action="<%=cp%>/member/main" method="post">
