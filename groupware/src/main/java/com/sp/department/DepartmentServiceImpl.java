@@ -33,8 +33,11 @@ public class DepartmentServiceImpl implements DepartmentService{
 
 	@Override
 	public void update(Department dept) throws Exception {
-		// TODO Auto-generated method stub
-		
+		try {
+			dao.updateData("department.deptInfo", dept);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -65,5 +68,32 @@ public class DepartmentServiceImpl implements DepartmentService{
 			e.printStackTrace();
 		}
 	}
-	
+
+	@Override
+	public void updateIdx(Map<String, Object> map) throws Exception {
+		try {
+			dao.updateData("department.idxUpdate", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void insert(Map<String, Object> map) throws Exception {
+		try {
+			dao.insertData("department.insertData", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void updateRename(Department dept) throws Exception {
+		try {
+			dao.updateData("department.deptRename", dept);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
 }

@@ -76,7 +76,7 @@ function getNextId() {
 	});
 	
 	console.log("lastId = " + lastId);
-	return "dept" + (lastId + 1);
+	return (lastId + 1);
 }
 
 function add() {
@@ -97,12 +97,14 @@ function add() {
 		}, 
 		buttons:{
 			"추가":function() {
+				var parentExtraData = $("#dept" + id).data('extra').split(":");
 				var nextId = getNextId();
 				console.log(nextId);
-				var li = "<ul><h4><li id='" + nextId + "' onclick='deptManage(\"" + nextId + "\");' data-extra=''>" 
-				+ $("#departmentName").val() + "</li></h4></ul>";
+				var extraData = id + ":" + (parentExtraData[1] * 1 + 1) + ":" + parentExtraData[2] + ":" + (parentExtraData[3] * 1 + 1) + ":" + nextId;
+				var li = "<ul><li style='font-size: 20px; font-weight: bold;' id='dept" + nextId + "' onclick='deptManage(\"dept" + nextId + "\");' data-extra='"
+				+ extraData + "'>" + $("#departmentName").val() + "</li></ul>";
 				$(li).insertAfter("#dept" + id);
-				
+				updateAddDept(extraData, $("#departmentName").val());
 				$(this).dialog("close");
 			},
 			"취소":function() {
@@ -112,18 +114,15 @@ function add() {
 	});
 }
 
-function updateAddDept() {
-	if (deptNum == undefined || memNums == undefined) {
-		alert('선택된 사용자가 없습니다.');
-		return false;
-	}
+function updateAddDept(extraData, deptName) {
+	var key = encodeURI(encodeURIComponent(deptName));
 	
 	$.ajax({
-		url:"<%=cp%>/department/updateDeptInfo?type=add&data=" + deptNum.replace("dept", ""),
+		url:"<%=cp%>/department/updateDeptInfo?type=add&key=" + key + "&data=" + extraData,
 		type:"get",
 		success:function() {
-			alert('부서 이동이 완료 되었습니다.');
-			deptManage(deptNum);
+			alert(deptName + '가 생성 되었습니다.');
+			//deptManage(deptNum);
 		}, 
 		error:function(jqHXR) {
 			console.log(jqHXR.responseText);
@@ -139,17 +138,34 @@ function rename() {
 		width: 400,
 		modal: true,
 		open:function() {
-			
 			$("#departmentName").val($("#dept" + id).text());
 		}, 
 		buttons:{
 			"변경":function() {
-				$("#dept" + id).text($("#departmentName").val());
+				var deptName = $("#departmentName").val();
+				$("#dept" + id).text(deptName);
+				updateRenameDept(id, deptName);
+				//deptManage("dept" + deptNum);
 				$(this).dialog("close");
 			},
 			"취소":function() {
 				$(this).dialog("close");
 			}
+		}
+	});
+}
+
+function updateRenameDept(deptNum, deptName) {
+	var data = encodeURI(encodeURIComponent(deptName));
+	
+	$.ajax({
+		url:"<%=cp%>/department/updateDeptInfo?type=rename&key=" + deptNum + "&data=" + data,
+		type:"get",
+		success:function() {
+			alert(deptName + '로 변경되었습니다.');
+		}, 
+		error:function(jqHXR) {
+			console.log(jqHXR.responseText);
 		}
 	});
 }
@@ -286,13 +302,14 @@ function remove() {
 						out.println("<ul>"); 
 					}
 					
-					out.println("<h4><li id='dept" + department.getDepartmentNum() 
+					out.println("<li style='font-size: 20px; font-weight: bold;' id='dept" + department.getDepartmentNum() 
 								+ "' onclick='deptManage(\"dept" + department.getDepartmentNum() 
 							 	+ "\");' data-extra='" + department.getParentDepartment() + ":" 
 								+ department.getDeptOrder() + ":" 
 							 	+ department.getDeptGroup() + ":" 
-								+ department.getIdx() +"'>" 
-								+ department.getDepartmentName() + "</li></h4>");
+								+ department.getIdx() +":" 
+							 	+ department.getDepartmentNum() + "'>" 
+								+ department.getDepartmentName() + "</li>");
 					
 					preOrder = order;
 				}

@@ -12,4 +12,7 @@ public interface DepartmentService {
 	public void delete(int deptNum) throws Exception;
 	public List<OrganizationChart> deptInfoById(int deptNum) throws Exception;
 	public void update(Map<String, Object> map) throws Exception;
+	public void updateIdx(Map<String, Object> map) throws Exception;
+	public void insert(Map<String, Object> map) throws Exception;
+	public void updateRename(Department dept) throws Exception;
 }

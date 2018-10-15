@@ -42,7 +42,21 @@
 		ORDER BY d1.deptGroup, d1.idx, d1.deptOrder, p.positionStep
 	</select>
 	
+	<!-- 부서 이동 -->
 	<update id="deptInfo" parameterType="Map">
 		UPDATE member SET departmentNum = #{deptNum} WHERE memberNum = #{memNum}
 	</update> 
+	
+	<update id="idxUpdate" parameterType="Map">
+		UPDATE department SET idx = idx + 1 WHERE deptGroup = #{deptGroup} AND idx >= #{idx}
+	</update>
+	
+	<insert id="insertData" parameterType="Map">
+		INSERT INTO department(departmentnum, parentdepartment, departmentname, departmenttype, deptorder, deptgroup, idx)
+		VALUES(#{departmentNum}, #{parentDepartment}, #{departmentName}, 1, #{deptOrder}, #{deptGroup}, #{idx})
+	</insert>
+	
+	<update id="deptRename" parameterType="com.sp.department.Department">
+		UPDATE department SET departmentName = #{departmentName} WHERE departmentNum = #{departmentNum}
+	</update>
 </mapper>
