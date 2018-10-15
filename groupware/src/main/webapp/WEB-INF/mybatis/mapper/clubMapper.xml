@@ -67,7 +67,7 @@
 	
 	<!-- 동호회 수정 -->
 	<update id="updateClubInfo" parameterType="com.sp.club.Club">
-		UPDATE clubInfo SET clubName=#{clubName}, clubSubject=#{clubSubject}, clubIntro=#{clubIntro}, maxPeople=#{maxPeople}, clubImg=#{clubImg}, clubMainImg=#{clubMainImg} 
+		UPDATE clubInfo SET clubName=#{clubName}, clubSubject=#{clubSubject}, clubIntro=#{clubIntro}, maxPeople=#{maxPeople}, clubImg=#{clubImg}, clubMainImg=#{clubMainImg, jdbcType=VARCHAR} 
 		WHERE clubNum=#{clubNum}
 	</update>
 	
