@@ -80,6 +80,8 @@ public class ResourceController {
 	public String inputResourceForm(Model model, HttpSession session) throws Exception {
 		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		if((info.getGrants() & 3) != 3) {
+			String message = "접근 권한 없음";
+			model.addAttribute("message", message);
 			return ".error.error";
 		}
 		
@@ -128,6 +130,8 @@ public class ResourceController {
 	public String inputGroupForm(Model model, HttpSession session) throws Exception {
 		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		if((info.getGrants() & 3) != 3) {
+			String message = "접근 권한 없음";
+			model.addAttribute("message", message);
 			return ".error.error";
 		}
 		return "schResource/inputGroupForm";
@@ -184,6 +188,8 @@ public class ResourceController {
 			) {
 		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		if((info.getGrants() & 3) != 3) {
+			String message = "접근 권한 없음";
+			model.addAttribute("message", message);
 			return ".error.error";
 		}
 		

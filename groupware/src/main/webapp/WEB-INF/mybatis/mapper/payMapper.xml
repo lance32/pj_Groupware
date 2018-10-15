@@ -3,6 +3,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="pay">
 <!-- select -->
+
 	<!-- 사원정보 -->
 	<select id="readMember" resultType="com.sp.pay.Pay" parameterType="map">
         SELECT s.memberNum,departmentName,positionName,name,year,month,day,basicpay,
@@ -13,11 +14,15 @@
 		    JOIN department d ON m.departmentNum=d.departmentNum
 		where s.memberNum=#{memberNum} and year=#{year} and month=#{month}
     </select>
+    
+    <select id="readSalary" resultType="com.sp.pay.Pay" parameterType="map">
+    	SELECT memberNum,year,month,day,basicpay FROM salary WHERE memberNum=#{memberNum} AND year=#{year} AND month=#{month} AND day=#{day}
+    </select>
+    
 	<!-- 세율정보 -->
 	<select id="readTax" resultType="com.sp.pay.Tax">
 		SELECT deductNum,deductName,rate FROM salary_deduction
 	</select>
-	
 	
 	<!-- 관리자 리스트 -->
 	<select id="listPayMemberAdmin" parameterType="map" resultType="com.sp.pay.Pay">
@@ -38,7 +43,7 @@
 	    ) WHERE rnum &gt;= #{start}
 	</select>
 	
-	<!-- 사원 개인 리스트 -->
+	<!-- 사원 개인 급여 리스트 -->
 	<select id="listPayMember" parameterType="map" resultType="com.sp.pay.Pay">
 		SELECT * FROM (
 		    SELECT ROWNUM rnum, tb.* FROM (
@@ -60,8 +65,6 @@
 	<select id="payYearList" resultType="map" parameterType="String">
 		SELECT memberNum,year FROM salary where memberNum=#{memberNum} group by memberNum,year ORDER BY year DESC
 	</select>
-	<!-- 보혐료 세율 리스트 -->
-	
 	
 <!-- 총 사원 카운트 -->
 	<select id="dataCount" parameterType="map" resultType="Integer">
@@ -79,7 +82,7 @@
 	<select id="memberdataCount" parameterType="map" resultType="Integer">
 		SELECT NVL(COUNT(*),0) FROM salary
 		 <where>
-      		<if test="searchKey != null and searchKey != 'all'">
+      		<if test="searchKey != null">
                	<include refid="where-paylist"/>
                	AND memberNum=#{memberNum}
        		</if>
@@ -89,6 +92,17 @@
 <!-- insert -->
 
 	<!-- 기본급 및 지급일 입력 -->
+	<insert id="insertPay" parameterType="com.sp.pay.Pay">
+		INSERT INTO salary(salaryNum,memberNum,year,month,day,basicpay,healthTax,employTax,accidentTax,pensionTax,incomeTax,extraPay)
+            		VALUES(salary_seq.NEXTVAL,#{memberNum},#{year},#{month},#{day},#{basicpay},#{healthTax},#{employTax},#{accidentTax},#{pensionTax},#{incomeTax},#{extraPay})
+	</insert>
+
+
+<!-- update -->
+	<update id="updatePay" parameterType="com.sp.pay.Pay">
+		UPDATE salary SET extraPay=#{extraPay},healthTax=#{healthTax},employTax=#{employTax},accidentTax=#{accidentTax},pensionTax=#{pensionTax},incomeTax=#{incomeTax},extraPay=#{extraPay}
+			WHERE memberNum=#{memberNum} AND year=#{year} AND month=#{month} AND day=#{day}
+	</update>
 
 
 
@@ -110,8 +124,9 @@
 	  <if test="searchKey=='all'">
 	      INSTR(year,1)&gt;=0
 	  </if>
-	  <if test="searchKey==searchKey">
+	  <if test="searchKey!='all'">
 	  	INSTR(year,#{searchKey})&gt;=1
 	  </if>
 	</sql>
+	
 </mapper>

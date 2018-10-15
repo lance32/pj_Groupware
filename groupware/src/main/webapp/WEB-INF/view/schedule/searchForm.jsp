@@ -163,7 +163,7 @@ function searchList() {
 		style="clear: both; width: 300px; height: 1px; border-bottom: 3px solid black;"></div>
 </div>
 <br>
-<table id="tb" style="width: 85%;">
+<table id="tb" style="width: 95%; margin-left: 10px; margin-right: 0px;">
 	<tr>
 		<td id="count" colspan="2">${dataCount }개(${page }/${total_page } 페이지)</td>
 		<td></td>
@@ -175,7 +175,7 @@ function searchList() {
 		<td width="350" style="text-align: center;">제목</td>
 		<td width="250">시작일</td>
 		<td width="250">종료일</td>
-		<td width="190">장소</td>
+		<td width="250">장소</td>
 		<td width="190">작성자</td>
 		<td width="300">작성일</td>
 	</tr>

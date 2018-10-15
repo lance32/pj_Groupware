@@ -37,6 +37,7 @@ li {
 
 <script type="text/javascript">
 function deptManage(id) {
+	id = id.replace("dept", "");
 	$.ajax({
 		url:"<%=cp%>/department/deptInfo?id=" + id,
 		type: "get",
@@ -44,7 +45,6 @@ function deptManage(id) {
 		success: function(data) {
 			var tb = "<table id='tb' style='margin-left: 10px;'><tr class='cf'><td width='50'>&nbsp;</td><td width='200'><h4>부서</h4></td><td width='200'><h4>직위</h4></td><td width='200'><h4>이름</h4></td></tr>";
 			$.each(data.deptInfo, function(idx, val) {
-				
 				tb += "<tr class='tr'><td><input type='checkbox' class='chkMemNum' data-member-num ='"+val.memberNum+"'></td><td style='text-align: left;'><h4>" 
 				   + val.departmentName + "</h4></td><td><h4>" + val.positionName + "</h></td><td><h4>" + val.name + "</h4></td></tr>";
 			});
@@ -59,17 +59,24 @@ function deptManage(id) {
 
 function getNextId() {
 	var lastId = 0;
-	$("li").each(function() {
-		currId = $(this).attr("id") * 1;
-		if (lastId < currId) {
-			lastId = currId;
+	$("#dept_organization li").each(function() {
+		var currId = $(this).attr("id");
+		if (currId != undefined) {
+			currId = currId.replace("dept", "") * 1;	// 숫자로 변경
+	
+			if (lastId < currId) {
+				lastId = currId;
+			} 
 		}
 	});
-	return lastId + 1;
+	
+	console.log("lastId = " + lastId);
+	return "dept" + (lastId + 1);
 }
 
 function add() {
 	var id = $("#deptId").val();
+	console.log("id = " + id);
 	if (id == undefined) {
 		alert('추가할 부서의 위치를 선택하세요');
 		return false;
@@ -86,14 +93,35 @@ function add() {
 		buttons:{
 			"추가":function() {
 				var nextId = getNextId();
-				var li = "<ul><h4><li id='" + nextId + "' onclick='deptManage(" + nextId + ");'>" + $("#departmentName").val() + "</li></h4></ul>";
-				$(li).insertAfter("#" + id);
+				console.log(nextId);
+				var li = "<ul><h4><li id='" + nextId + "' onclick='deptManage(\"" + nextId + "\");' data-extra=''>" 
+				+ $("#departmentName").val() + "</li></h4></ul>";
+				$(li).insertAfter("#dept" + id);
 				
 				$(this).dialog("close");
 			},
 			"취소":function() {
 				$(this).dialog("close");
 			}
+		}
+	});
+}
+
+function updateAddDept() {
+	if (deptNum == undefined || memNums == undefined) {
+		alert('선택된 사용자가 없습니다.');
+		return false;
+	}
+	
+	$.ajax({
+		url:"<%=cp%>/department/updateDeptInfo?type=add&data=" + deptNum.replace("dept", ""),
+		type:"get",
+		success:function() {
+			alert('부서 이동이 완료 되었습니다.');
+			deptManage(deptNum);
+		}, 
+		error:function(jqHXR) {
+			console.log(jqHXR.responseText);
 		}
 	});
 }
@@ -106,11 +134,12 @@ function rename() {
 		width: 400,
 		modal: true,
 		open:function() {
-			$("#departmentName").val($("#" + id).text());
+			
+			$("#departmentName").val($("#dept" + id).text());
 		}, 
 		buttons:{
 			"변경":function() {
-				$("#" + id).text($("#departmentName").val());
+				$("#dept" + id).text($("#departmentName").val());
 				$(this).dialog("close");
 			},
 			"취소":function() {
@@ -151,7 +180,7 @@ function move() {
 					}
 				});
 				var deptNum = $("#deptNum").val();
-				updateDept(deptNum, memNums);
+				updateMoveDept(deptNum, memNums);
 			},
 			"취소":function() {
 				$(this).dialog("close");
@@ -160,7 +189,7 @@ function move() {
 	});
 }
 
-function updateDept(deptNum, memNums) {
+function updateMoveDept(deptNum, memNums) {
 	console.log("deptNum:" + deptNum + ", memNum:" + memNums);
 	if (deptNum == undefined || memNums == undefined) {
 		alert('선택된 사용자가 없습니다.');
@@ -168,15 +197,60 @@ function updateDept(deptNum, memNums) {
 	}
 	
 	$.ajax({
-		url:"<%=cp%>/department/updateDeptInfo?type=move&key=" + deptNum + "&data=" + memNums,
+		url:"<%=cp%>/department/updateDeptInfo?type=move&key=" + deptNum.replace("dept", "") + "&data=" + memNums,
 		type:"get",
 		success:function() {
 			alert('부서 이동이 완료 되었습니다.');
+			deptManage(deptNum);
 		}, 
 		error:function(jqHXR) {
 			console.log(jqHXR.responseText);
 		}
 	});
+}
+
+function remove() {
+	var id = $("#deptId").val();
+	$("#dept" + id).remove();
+	
+/*	
+	$("#moveDeptLayer").dialog({
+		title:"부서 삭제",
+		height: 230,
+		width: 400,
+		modal: true,
+		open:function() {
+			$("#dept_organization li").each(function() {
+				var num = $(this).attr("id");
+				var name= $(this).text();
+				if (name != "(회사)" && num != id) {
+					var option = "<option value='"+ num +"'>" + name + "</option>";
+					$("#deptNum").append(option);
+				}
+			});
+		}, 
+		buttons:{
+			"이동":function() {
+				$("#" + id).text($("#departmentName").val());
+				$(this).dialog("close");
+				var memNums = "";
+				$(".chkMemNum").each(function() {
+					if (this.checked) {
+						//console.log($(this).data('memberNum'));
+						if (memNums != "") 
+							memNums += ",";
+						memNums += $(this).data("memberNum");
+					}
+				});
+				var deptNum = $("#deptNum").val();
+				updateMoveDept(deptNum, memNums);
+			},
+			"취소":function() {
+				$(this).dialog("close");
+			}
+		}
+	});
+	*/
 }
 </script>
 
@@ -207,9 +281,13 @@ function updateDept(deptNum, memNums) {
 						out.println("<ul>"); 
 					}
 					
-					out.println("<h4><li id='" + department.getDepartmentNum() 
-								+ "' onclick='deptManage(" + department.getDepartmentNum() + ")'>" 
-								+ department.getDepartmentName() + "</li><h4>");
+					out.println("<h4><li id='dept" + department.getDepartmentNum() 
+								+ "' onclick='deptManage(\"dept" + department.getDepartmentNum() 
+							 	+ "\");' data-extra='" + department.getParentDepartment() + ":" 
+								+ department.getDeptOrder() + ":" 
+							 	+ department.getDeptGroup() + ":" 
+								+ department.getIdx() +"'>" 
+								+ department.getDepartmentName() + "</li></h4>");
 					
 					preOrder = order;
 				}
@@ -253,8 +331,9 @@ function updateDept(deptNum, memNums) {
 			<br>
 			<div style="width: 100%;">
 				<button style="float:left; margin-left:10px;" class="butn" onclick="add();">&nbsp;부서 추가&nbsp;</button>&nbsp;&nbsp;
+				<button style="float:left; margin-left:10px;" class="butn" onclick="remove();">&nbsp;부서 삭제&nbsp;</button>&nbsp;&nbsp;
 				<button style="float:right;" class="butn" onclick="rename();">&nbsp;부서명 변경&nbsp;</button>
-				<button style="float:right; margin-right:10px;" class="butn" onclick="move();">&nbsp;부서 이동&nbsp;</button>&nbsp;&nbsp;
+				<button style="float:right; margin-right:10px;" class="butn" onclick="move();">&nbsp;부서원 이동&nbsp;</button>&nbsp;&nbsp;
 			</div>
 		</div>
 	</div>

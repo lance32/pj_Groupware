@@ -83,6 +83,7 @@ public class MemberServiceImpl implements MemberService {
 			dao.insertData("member.insertMember", dto);
 			dao.insertData("member.insertMemberDetailinfo",dto);
 			dao.insertData("member.insertMemberAuthority",dto);
+			dao.insertData("member.insertBasicpay",dto);
 			dao.insertData("address.insertGeneralGroup", dto.getMemberNum());
 			result=1;
 		} catch (Exception e) {
@@ -103,7 +104,7 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public int dataCount(Map<String, Object> map) {
+	public int dataCount(Map<String, Object> map)throws Exception {
 		int result = 0;
 
 		try {
@@ -117,7 +118,7 @@ public class MemberServiceImpl implements MemberService {
 
 	// 사원 리스트
 	@Override
-	public List<Member> ListMember(Map<String, Object> map) {
+	public List<Member> ListMember(Map<String, Object> map) throws Exception {
 		List<Member> listmember = null;
 
 		try {
@@ -130,7 +131,7 @@ public class MemberServiceImpl implements MemberService {
 	
 	//자격정보 가져오기
 	@Override
-	public List<Map<String, Object>> qualifyList(String memberNum) {
+	public List<Map<String, Object>> qualifyList(String memberNum) throws Exception {
 		List<Map<String, Object>> listqualify = null;
 
 		try {
@@ -144,7 +145,7 @@ public class MemberServiceImpl implements MemberService {
 
 	// 부서 DB 데이터 가져오기
 	@Override
-	public List<Map<String, Object>> departmentList() {
+	public List<Map<String, Object>> departmentList() throws Exception {
 		List<Map<String, Object>> departmentList = null;
 		try {
 			departmentList = dao.selectList("member.departmentList");
@@ -156,7 +157,7 @@ public class MemberServiceImpl implements MemberService {
 
 	// 직급 DB 데이터 가져오기
 	@Override
-	public List<Map<String, Object>> positionList() {
+	public List<Map<String, Object>> positionList() throws Exception {
 		List<Map<String, Object>> positionList=null;
 			try {
 				positionList=dao.selectList("member.positionList");
@@ -229,6 +230,7 @@ public class MemberServiceImpl implements MemberService {
 		try {
 			
 			dao.updateData("member.updateAdmin",dto);
+			dao.updateData("member.updateBasicpay",dto);
 			if(dto.getQualifyName()!=null) {
 				dao.updateData("member.insertQualify",dto);
 			}
@@ -259,6 +261,18 @@ public class MemberServiceImpl implements MemberService {
 			System.out.println(e.toString());
 		}
 		return 1;
+	}
+
+	@Override
+	public int readBasicpay(String memberNum) throws Exception {
+		int basicpay = 0;
+		try {
+			basicpay = dao.selectOne("member.readBaiscpay", memberNum);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return basicpay;
 	}
 
 }

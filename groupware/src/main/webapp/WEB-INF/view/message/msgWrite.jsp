@@ -38,9 +38,9 @@
 	// 조직도 내에서 부서 클릭시 처리
 	function deptCheck(deptNum) {
 		if ($("#" + deptNum).is(':checked')) {
-			$("." + deptNum).attr("checked", true);
+			$("." + deptNum).prop("checked", true);
 		} else {
-			$("." + deptNum).attr("checked", false);
+			$("." + deptNum).prop("checked", false);
 		}		
 	}
 	// 조직도 버튼(button name="organizationChart") 클릭 시
@@ -61,7 +61,10 @@
 							deptClass = "dept" + val.deptNum + " ";
 						} else {
 							var deptArray = deptClass.split(" ");
-							deptClass = deptArray[val.deptOrder - 2] + " ";
+							deptClass = "";
+							for (var i = 0; i < val.deptOrder; i++) {
+								deptClass += deptArray[i] + " ";
+							}
 							deptClass+= "dept" + val.deptNum + " ";
 						}
 						
@@ -79,13 +82,13 @@
 						} 
 
 						if(val.memberName != undefined) {
+							var name = val.memberName + val.positionName;
 							h += "<tr><td>";
 							ws += "&nbsp;&nbsp;&nbsp;&nbsp;"
 							h += ws;
-							h += "<input type='checkbox' id='" + val.memberNum + "' class='memberChk " + deptClass + "' data-member-num='" + val.memberNum + "'>";
-							h += val.memberName;
-							h += "&nbsp;";
-							h += val.positionName;
+							h += "<input type='checkbox' id='" + val.memberNum + "' class='memberChk " + deptClass + "' data-member-num='" 
+							  + val.memberNum + "' data-member-name='"+ name +"'>";
+							h += name
 							h += "</td></tr>";
 						}
 					});
@@ -113,13 +116,16 @@
 								// 조직도에서 선택된 값을 받을 input object에 넣도록 처리
 								// 여기서는 <input type="text" id="toMember" name="toMember"..>
 								var memberList = "";
+								var memberNameList = "";
 								$(".memberChk").each(function() {
 									if (this.checked) {
 										memberList += $(this).data("memberNum") + ";";
+										memberNameList += $(this).data("memberName") + ";";
 									} 
 								});
 								
 								$("#toMember").val(memberList);
+								$("#toMemberView").val(memberNameList);
 								$(this).dialog("close");
 							},
 							"취소" : function() {
@@ -153,7 +159,7 @@
 			<tr>
 				<td style="border-bottom: 1px dotted #dfdfdf; padding:5px; background: #f7f7f7; color: #595959; text-align:center; width: 15%;">받는이</td>
 				<td style="background: #fff; width: 85%;">
-					<span><input type="text" id="toMember" name="toMember" style="background: #fff; color: #333; width: 80%; border: 1px solid #d7d7d7;" readOnly="readOnly"></span>
+					<span><input type="text" id="toMemberView" style="background: #fff; color: #333; width: 80%; border: 1px solid #d7d7d7;" readOnly="readOnly"></span>
 					<span><input type="button" id="organizationChart" value="&nbsp;조직도&nbsp;" class="butn"></span>
 				</td>
 			</tr>
@@ -162,6 +168,7 @@
 			</tr>
 		</table>
 		<span><input type="button" value="&nbsp;전송&nbsp;" onclick="send();" class="butn"></span>
+		<input type="hidden" id="toMember" name="toMember">
 	</form>
 </div>
 <div id="organizationLayout" title="조직도"></div>

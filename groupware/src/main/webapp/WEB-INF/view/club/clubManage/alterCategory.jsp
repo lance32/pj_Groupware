@@ -166,13 +166,14 @@ jQuery(function(){
 			<span style="font-size: 19px;">카테고리 추가</span><br>
 			<div style="clear: both; width: 270px; height: 1px; border-bottom: 2px solid black;"></div>
 		</div>
-		<div style="clear: both; padding:20px 0px 70px 10px; height: 210px;">
+		<div style="clear: both; padding:20px 0px 70px 10px; height: 230px;">
 			<form name="createCategoryForm">&nbsp;
 				<label><input type="radio" name="separate" id="phase1" value="1">&nbsp;1단계</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				<label><input type="radio" name="separate" id="phase2" value="2">&nbsp;2단계</label><br>
 				<input name="categoryName" type="text" style="border: none; border:1px solid #848484; border-radius: 3px; height: 28px; padding-left: 5px;">
-				<button id="addCategoryButn" class="clubButn">추가</button><br><br>
-				<div class="chooseParentCategory" style="margin-bottom: 10px;">
+				<button id="addCategoryButn" class="clubButn">추가</button>
+				<div class="chooseParentCategory" style="margin-bottom: 10px; margin-top: 10px;">
+					<div style="margin-bottom: 15px; padding-left: 5px;"><input type="checkbox" name="authority" value="1"><span>회원 글쓰기 금지</span>	</div>
 					<span style="font-weight: 600; color: #6E6E6E;">상위 카테고리 :&nbsp;&nbsp;</span>
 					<span id="choosingParentCategory" style="border-bottom: 0.3px solid #BDBDBD; padding: 0px 5px;">선택한 상위 카테고리가 없습니다.</span>
 				</div>
@@ -199,7 +200,7 @@ jQuery(function(){
 						<td><input id="parentCategoryName" type="text" style="border:1px solid #848484; border-radius: 3px; height: 25px; padding-left: 5px;" readonly="readonly"></td>
 					</tr>
 					<tr height="40">
-						<td colspan="2">댓글, 답변형, 좋아요 등..</td>
+						<td colspan="2" style="font-size: 13px; color: #A4A4A4;">※ 기본으로 생성된 카테고리는 수정 및 삭제가 불가능합니다.</td>
 					</tr>
 				</table>
 				<input type="hidden" id="choosingCategoryNum" name="categoryNum">

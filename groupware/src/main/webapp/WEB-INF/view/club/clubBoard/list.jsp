@@ -200,6 +200,12 @@ jQuery(function(){
 			jQuery("#manageBox").hide();
 		}
 	});
+	
+	//선택된 카테고리 백그라운드 추가
+	jQuery(document).on("ready", function(){
+		jQuery("#li${categoryNum}").css("background","#D8D8D8");
+	});
+	
  });
  
 jQuery(function(){
@@ -282,6 +288,13 @@ jQuery(function(){
 	
 	//게시글 작성 버튼 클릭시
 	jQuery("#createClubBoardButn").click(function(){
+		var categoryAuthority="${categoryAuthority}";
+		var founder="${clubInfo.memberNum}";
+		var userId="${sessionScope.member.userId}";
+		if(categoryAuthority==1 && founder!=userId){
+			alert("이 게시판은 동호회 관리자만 글작성이 허용됩니다.");
+			return;
+		}
 		location.href="<%=cp%>/clubBoard/createBoard?clubNum=${clubInfo.clubNum}&categoryNum=${categoryNum}";
 		return;
 	});

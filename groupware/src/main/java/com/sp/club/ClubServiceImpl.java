@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.sp.clubBoard.Board;
 import com.sp.common.FileManager;
 import com.sp.common.dao.CommonDAO;
 
@@ -29,6 +30,8 @@ public class ClubServiceImpl implements ClubService{
 			dao.insertData("club.insertFounder", dto.getMemberNum());
 			dao.insertData("club.insertBasicCategory");
 			dao.insertData("club.insertBasicCategory_notice");
+			dao.insertData("club.insertBasicCategory2");
+			dao.insertData("club.insertBasicCategory2_photo");
 			result=1;
 		} catch (Exception e) {
 			System.out.println(e.toString());
@@ -116,6 +119,15 @@ public class ClubServiceImpl implements ClubService{
 				String filename=filemanager.doFileUpload(dto.getUpload(), pathname);
 				dto.setClubImg(filename);
 			}
+			if(dto.getUpload2()!=null && !dto.getUpload2().isEmpty()) {
+				if(dto.getClubMainImg()!=null && dto.getClubMainImg().length()!=0) {
+					filemanager.doFileDelete(dto.getClubMainImg(), pathname);
+				}
+				String filename=filemanager.doFileUpload(dto.getUpload2(), pathname);
+				dto.setClubMainImg(filename);
+			}
+			System.out.println(dto.getClubMainImg());
+			
 			dao.updateData("club.updateClubInfo", dto);
 			result=1;
 		} catch (Exception e) {
@@ -208,7 +220,37 @@ public class ClubServiceImpl implements ClubService{
 		return result;
 	}
 
+	@Override
+	public int readClubCategory(int categoryNum) {
+		int result=0;
+		try {
+			result=dao.selectOne("club.readClubCategory", categoryNum);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return result;
+	}
 
-	
+	@Override
+	public List<com.sp.clubBoard.Board> listClubNotice_main(int clubNum) {
+		List<com.sp.clubBoard.Board> list=null;
+		try {
+			list=dao.selectList("club.listClubNotice_main", clubNum);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return list;
+	}
+
+	@Override
+	public List<Board> listClubPhoto_main(int clubNum) {
+		List<com.sp.clubBoard.Board> list=null;
+		try {
+			list=dao.selectList("club.listClubPhoto_main", clubNum);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return list;
+	}
 
 }

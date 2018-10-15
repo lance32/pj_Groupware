@@ -58,10 +58,10 @@ jQuery(function(){
 	//머릿글 결재 문서함 클릭시
 	//결재 문서함 more버튼 클릭시
 	jQuery("#approvalTop").click(function(){
-		location.href="#";
+		location.href="<%=cp%>/approval/approval_detail_list?param=1";
 	});
 	jQuery("#approvalTopMoreButn").click(function(){
-		location.href="#";
+		location.href="<%=cp%>/approval/approval_detail_list?param=1";
 	});
 	
 	//머릿글 받은 쪽지 클릭시
@@ -169,8 +169,8 @@ jQuery(function(){
 				<table style="width: 99%; border-spacing: 0px; border-collapse: collapse; font-size: 15px; table-layout:fixed;">
 					<tr height="20" style="border-bottom:1px solid #CDDCE4; text-align: center; font-size: 11px; color: #A4A4A4;">
 						<td width="60%" style="text-align: left; padding-left: 20px;">제목</td>
-						<td width="20%">작성자</td>
 						<td width="20%">상태</td>
+						<td width="20%">작성일</td>
 					</tr>
 					<tr height="5">
 					</tr>
@@ -179,15 +179,15 @@ jQuery(function(){
 						<td colspan="3" style="text-align: center; color:#6E6E6E;">등록된 내용이 없습니다.</td>
 					</tr>
 					</c:if>
-					<%-- <c:forEach var="approvalList" items="${approvalList_main}">
+					<c:forEach var="approvalList" items="${approvalList_main}">
 						<tr class="mainTableTr">
 							<td style="text-align: left; padding-left: 10px;">
-								<a href="<%=cp%>//?num=${approvalList.num}&page=1" style="color: #6E6E6E;">${approvalList.subject}</a>
+								<a href="<%=cp%>/approval/approval_viewer?param=${approvalList.docuNum}" style="color: #6E6E6E;">${approvalList.subject}</a>
 							</td>
-							<td>${approvalList.name}</td>
+							<td>${approvalList.documentState == 1 ? "결재 대기" : "기타"}</td>
 							<td>${approvalList.created}</td>
 						</tr>
-					</c:forEach> --%>
+					</c:forEach>
 				</table>
 			</div>
 		</div>

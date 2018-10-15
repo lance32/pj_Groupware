@@ -51,6 +51,7 @@ public class ClubBoardController {
 		String isMember=null;
 		List<com.sp.club.Category> clubCategory=null;
 		List<com.sp.club.Category> clubCategoryItem=null;
+		int authority=0;
 		try {
 			SessionInfo info = (SessionInfo) session.getAttribute("member");
 			clubInfo=clubService.readClubInfo(clubNum);
@@ -61,6 +62,8 @@ public class ClubBoardController {
 			map.put("clubNum", clubNum);
 			map.put("memberNum", info.getUserId());
 			isMember=clubService.isClubMember(map);
+			
+			authority=clubService.readClubCategory(categoryNum);
 			
 		} catch (Exception e) {
 			return "error/error";
@@ -73,6 +76,7 @@ public class ClubBoardController {
 		model.addAttribute("modeScroll", modeScroll);
 		model.addAttribute("updateBoardNum", updateBoardNum);
 		model.addAttribute("pageNo", pageNo);
+		model.addAttribute("categoryAuthority", authority);
 		return ".club.clubBoard.list";
 	}
 

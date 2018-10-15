@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sp.common.MyUtil;
-import com.sp.member.Member;
 import com.sp.member.SessionInfo;
 
 @Controller("pay.payController")
@@ -44,6 +43,10 @@ public class PayController {
 		
 		if(info==null) {
 			return "member/login";
+		}
+		
+		if(info.getUserId().equalsIgnoreCase("admin")) {
+			return "redirect:/pay/adminMain";
 		}
 		
 		String memberNum=info.getUserId();
@@ -232,7 +235,7 @@ public class PayController {
 		DecimalFormat df= new DecimalFormat("###,###");
 		String basicpay=df.format((dto.getBasicpay()));
 		int allTax=dto.getHealthTax()+dto.getEmployTax()+dto.getAccidentTax()+dto.getPensionTax()+dto.getIncomeTax();
-		int allPay=dto.getBasicpay()+dto.getExtrapay();
+		int allPay=dto.getBasicpay()+dto.getExtraPay();
 		dto.setRealPay(allPay-allTax);
 		
 		model.addAttribute("allTax",allTax);
@@ -257,21 +260,34 @@ public class PayController {
 	}
 	
 	@RequestMapping(value="/pay/insertPay",method=RequestMethod.POST)
-	public String insertPaySubmit(Pay dto,Model model) {
+	public String insertPaySubmit(Pay dto,Model model,HttpSession session) {
+		SessionInfo info=(SessionInfo) session.getAttribute("member");
+		if(info==null) {
+			return "member/login";
+		}
+		Map<String, Object> map = new HashMap<>();
+		map.put("memberNum", dto.getMemberNum());
+		map.put("year", dto.getYear());
+		map.put("month",dto.getMonth());
+		map.put("day", dto.getDay());
+		
+		Pay pay=service.readSalary(map);
 		
 		
-		return ".workhelper.main";
+		try {
+			if(pay==null) {
+				service.insertPay(dto);
+			}else {
+				service.updateMember(dto);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return "redirect:/pay/adminMain";
 		
 		
 	}
-	
-	@RequestMapping(value="/pay/insertTax",method=RequestMethod.GET)
-	public String insertTax() {
-		
-		return ".workhelper.insertTax";
-	}
-	
-	
 	
 	public String updatePay()throws Exception{
 		return null;
@@ -290,7 +306,6 @@ public class PayController {
 		Map<String, Object> map=new HashMap<>();
 		map.put("passed", passed);
 		map.put("basicpay", basicpay);
-		System.out.println(basicpay);
 		return map;
 	}
 }

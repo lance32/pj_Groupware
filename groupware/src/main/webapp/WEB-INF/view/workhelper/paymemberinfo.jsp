@@ -26,8 +26,8 @@
     padding-top: 12px;
     padding-bottom: 12px;
     text-align: center;
-    background-color: #4CAF50;
-    color: white;
+    color: black;
+    
 }
 </style>
 <script type="text/javascript"
@@ -66,7 +66,7 @@
 		</tr>
 		<tr>
 			<td>수당</td>
-			<td align="right"><fmt:formatNumber value="${dto.extrapay}" pattern="#,###"/> 원</td>
+			<td align="right"><fmt:formatNumber value="${dto.extraPay}" pattern="#,###"/> 원</td>
 			<td>고용보험</td>
 			<td align="right"><fmt:formatNumber value="${dto.employTax}" pattern="#,###"/>원</td>
 		</tr>

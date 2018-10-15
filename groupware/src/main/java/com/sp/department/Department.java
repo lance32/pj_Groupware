@@ -7,7 +7,14 @@ public class Department {
 	private int departmentType;
 	private int deptOrder;
 	private int deptGroup;
+	private int idx;
 	
+	public int getIdx() {
+		return idx;
+	}
+	public void setIdx(int idx) {
+		this.idx = idx;
+	}
 	public int getDepartmentNum() {
 		return departmentNum;
 	}

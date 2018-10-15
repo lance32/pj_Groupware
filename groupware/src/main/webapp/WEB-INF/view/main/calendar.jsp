@@ -37,10 +37,11 @@
 }
 
 .calendarBody {
-	height: 220px;
+	height: 243px;
 	width: 196px;
 	padding-top: 10px;
-	
+	position: relative;
+	border-bottom: 1px solid #D8D8D8;
 }
 
 /* */
@@ -76,11 +77,6 @@
 	width: 20px;
 }
 
-.calendar .prev-month,
-.calendar .next-month {
-	color: #cbd1d2;
-}
-
 .current-day {
 	background: #00addf;
 	color: #f9f9f9;
@@ -98,6 +94,7 @@
 	position: absolute;
 	top: 50%;
 	width: 17px;
+	cursor: pointer;
 }
 
 .btn-prev:hover,
@@ -113,43 +110,13 @@
 .btn-next {
 	right: 30px;
 }
-
 </style>
+
 <script type="text/javascript" src="<%=cp%>/resource/jquery/js/jquery-1.12.4.min.js"></script>
 <script type="text/javascript">
-/* var calendar = new Date();
-
-var year = calendar.getFullYear();		// yyyy 년도
-var month = calendar.getMonth();		// 0~11 (1~12월)
-var monthDay = calendar.getDate();	// 1~31 (1~31일)
-var weekday = calendar.getDay();		// 0 ~ 6 (월~ 일)
-
-var dayOfWeek=["Su","Mo","Tu","We","Th","Fr","Sa"];
-var monthOfYear=["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
-calendar.setDate(1);
-
-var days_of_week = 7;
-var days_of_month = 31;
-
-jQuery("#monthName").html(monthOfYear[month]);
-
-var str="";
-
-str+="<tr>"
-for(var i=0; i<calendar.getDay(); ++i){
-	str +="<td class='prev-month'>&nbsp;</td>"
-	if(i==6){
-		str += "</tr>"
-	}
-}
-
-for(var i=0; i<days_of_month; ++i){
-	if(calendar.getDate()>i){
-		
-	}
-}
-//미완 */
+jQuery(function(){
+	buildCalendar();
+});
 var monthOfYear=["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 var today = new Date();
@@ -182,16 +149,21 @@ function buildCalendar(){
 		cell.innerHTML = i;
 		cnt = cnt + 1;
 	}
+	for(i=0; i<7; i++){
+		if(cnt%7!=0){
+			cell = row.insertCell();
+			cnt = cnt + 1;
+		}
+	}
 	if (today.getFullYear() == date.getFullYear() && today.getMonth() == date.getMonth()) {
-		jQuery("#tbCalendar td").text(today.getDate()).addClass("current-day event");
+		jQuery("#tbCalendar td:Contains("+today.getDate()+")").addClass("current-day event");
 	}
 }
-	
-
 </script>
 
 </head>
 <body>
+
 	<div class="calendarBody">
 		<div class="calendar">
 			<header>				
@@ -202,76 +174,27 @@ function buildCalendar(){
 			<table>
 				<thead>
 					<tr>
-						<td>Su</td>
+						<td style="color: #DF0101;">Su</td>
 						<td>Mo</td>
 						<td>Tu</td>
 						<td>We</td>
 						<td>Th</td>
 						<td>Fr</td>
-						<td>Sa</td>
+						<td style="color: #A4A4A4;">Sa</td>
 					</tr>
 				</thead>
 
 				<tbody id="tbCalendar">
 					
-					<tr>
-						<td class="prev-month">30</td>
-						<td>1</td>
-						<td>2</td>
-						<td>3</td>
-						<td>4</td>
-						<td>5</td>
-						<td>6</td>
-					</tr>
-					<tr>
-						<td>7</td>
-						<td>8</td>
-						<td class="current-day event">9</td>
-						<td>10</td>
-						<td>11</td>
-						<td>12</td>
-						<td>13</td>
-					</tr>
-					<tr>
-						<td>14</td>
-						<td>15</td>
-						<td>16</td>
-						<td>17</td>
-						<td>18</td>
-						<td>19</td>
-						<td>20</td>
-					</tr>
-					<tr>
-						<td>21</td>
-						<td>22</td>
-						<td>23</td>
-						<td>24</td>
-						<td>25</td>
-						<td>26</td>
-						<td>27</td>
-					</tr>
-					<tr>
-						<td>28</td>
-						<td>29</td>
-						<td>30</td>
-						<td>31</td>
-						<td class="next-month">1</td>
-						<td class="next-month">2</td>
-						<td class="next-month">3</td>
-					</tr>
-					<tr>
-						<td class="next-month">4</td>
-						<td class="next-month">5</td>
-						<td class="next-month">6</td>
-						<td class="next-month">7</td>
-						<td class="next-month">8</td>
-						<td class="next-month">9</td>
-						<td class="next-month">10</td>
-					</tr>
 				</tbody>
+				
 			</table>
 		</div> <!-- end calendar -->
-		<div id="calendar_year" style="clear: both; float: right; font-size: 11px; color:#848484; margin-right: 5px;">2018</div>
+		<div id="calendar_year" style="clear:both; width:100%; text-align:right; font-size: 11px; color:#848484; position:absolute; right:0px; bottom:0px; padding: 0px 5px 3px 0px; border-top: 1px solid #0F89B9; background: #F2F2F2;">
+			2018
+		</div>
 	</div> <!-- end calendarBody -->
+	
+	
 </body>
 </html>

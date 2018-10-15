@@ -3,7 +3,6 @@ package com.sp.member;
 import java.io.File;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -202,13 +201,6 @@ public class MemberController {
 			return ".member.member";
 		}
 		
-		StringBuffer sb=new StringBuffer();
-		sb.append(dto.getName()+ "님의 회원 가입이 정상적으로 처리되었습니다.<br>");
-		sb.append("로그인화면에서  로그인 하시기 바랍니다.<br>");
-		
-		model.addAttribute("title", "회원 가입");
-		model.addAttribute("message", sb.toString());
-		
 		return "redirect:/member/main";
 	}
 	
@@ -220,13 +212,16 @@ public class MemberController {
 		// 아이디 중복 검사
 		
 		Member member = service.readMember(memberNum);
-		
+		int basicpay = service.readBasicpay(memberNum);
+		String name = member.getName();
 		String passed = "true";
 		if(member != null)
 			passed = "false";
 		
 		Map<String, Object> map=new HashMap<>();
 		map.put("passed", passed);
+		map.put("name", name);
+		map.put("basicpay", basicpay);
 		return map;
 	}
 	
@@ -315,7 +310,6 @@ public class MemberController {
 		if(qualifyList!=null) {
 			model.addAttribute("qualifyList",qualifyList);
 		}
-		System.out.println("====================="+dto.getSerialNum());
 		
 		//기본급 출력시 값에 , 추가
 		

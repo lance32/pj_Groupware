@@ -14,7 +14,7 @@ public class Pay {
 	
 	//기본급 , 수당
 	private int basicpay;
-	private int extrapay;
+	private int extraPay;
 	
 	//세금 차감액
 	private int healthTax; //건강
@@ -28,6 +28,12 @@ public class Pay {
 	private String departmentName;
 	private String positionName;
 	
+	public int getExtraPay() {
+		return extraPay;
+	}
+	public void setExtraPay(int extraPay) {
+		this.extraPay = extraPay;
+	}
 	public String getPayday() {
 		return payday;
 	}
@@ -93,12 +99,6 @@ public class Pay {
 	}
 	public void setBasicpay(int basicpay) {
 		this.basicpay = basicpay;
-	}
-	public int getExtrapay() {
-		return extrapay;
-	}
-	public void setExtrapay(int extrapay) {
-		this.extrapay = extrapay;
 	}
 	public int getHealthTax() {
 		return healthTax;

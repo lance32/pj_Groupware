@@ -10,11 +10,11 @@
 	<tr>
     	<th>게 시 판 목 록</th>
     </tr>
-    <c:if test="${sessionScope.member.userId == 'admin'}">
-	    <tr>
-	    	<td><a href="<%=cp%>/boardManage/list">게시판 관리</a></td>
-	    </tr>
-    </c:if>
+
+	<tr>
+		<td><a href="<%=cp%>/boardManage/list">게시판 관리</a></td>
+	</tr>
+
     <tr>
     	<td><a href="<%=cp%>/notice/list">공 지 사 항</a></td>
     </tr>

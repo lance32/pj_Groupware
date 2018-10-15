@@ -1,17 +1,24 @@
 package com.sp.member;
 
 public class OrganizationChart {
-	int departmentNum;
-	int parentDepartment;
-	String parentDeptName;
-	String departmentName;
-	int deptGroup;
-	int deptOrder;
-	String memberNum;
-	String name;
-	String positionName;
-	int positionStep;
+	private int departmentNum;
+	private int parentDepartment;
+	private String parentDeptName;
+	private String departmentName;
+	private int deptGroup;
+	private int deptOrder;
+	private String memberNum;
+	private String name;
+	private String positionName;
+	private int positionStep;
+	private int idx;
 	
+	public int getIdx() {
+		return idx;
+	}
+	public void setIdx(int idx) {
+		this.idx = idx;
+	}
 	public int getDepartmentNum() {
 		return departmentNum;
 	}
