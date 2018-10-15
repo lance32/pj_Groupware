@@ -145,7 +145,7 @@ function rename() {
 				var deptName = $("#departmentName").val();
 				$("#dept" + id).text(deptName);
 				updateRenameDept(id, deptName);
-				//deptManage("dept" + deptNum);
+				
 				$(this).dialog("close");
 			},
 			"취소":function() {
@@ -163,6 +163,7 @@ function updateRenameDept(deptNum, deptName) {
 		type:"get",
 		success:function() {
 			alert(deptName + '로 변경되었습니다.');
+			deptManage("dept" + deptNum);
 		}, 
 		error:function(jqHXR) {
 			console.log(jqHXR.responseText);
