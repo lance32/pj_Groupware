@@ -37,19 +37,24 @@ li {
 
 <script type="text/javascript">
 function deptManage(id) {
+	var deptName = $("#" + id).text();
 	id = id.replace("dept", "");
 	$.ajax({
 		url:"<%=cp%>/department/deptInfo?id=" + id,
 		type: "get",
 		dataType: "json",
 		success: function(data) {
-			var tb = "<table id='tb' style='margin-left: 10px;'><tr class='cf'><td width='50'>&nbsp;</td><td width='200'><h4>부서</h4></td><td width='200'><h4>직위</h4></td><td width='200'><h4>이름</h4></td></tr>";
+			var tb = "<p style='font-weight:bold; font-size: 20px; margin-left: 10px;'>" + deptName + "</p>";  
+			tb += "<table id='tb' style='margin-left: 10px;'><tr class='cf'><td width='50'>&nbsp;</td><td width='200'><h4>부서</h4></td><td width='200'><h4>직위</h4></td><td width='200'><h4>이름</h4></td></tr>";
 			$.each(data.deptInfo, function(idx, val) {
+				if (val.name == null)
+					return true;
 				tb += "<tr class='tr'><td><input type='checkbox' class='chkMemNum' data-member-num ='"+val.memberNum+"'></td><td style='text-align: left;'><h4>" 
 				   + val.departmentName + "</h4></td><td><h4>" + val.positionName + "</h></td><td><h4>" + val.name + "</h4></td></tr>";
 			});
 			tb += "</table><input type='hidden' id='deptId' value='" + id + "'>";
 			$("#deptInfoLayer").html(tb);
+			$("#dept_Info").css("display", "block");
 		},
 		error: function(jqHXR) {
 			console.log(jqHXR.responseText);
@@ -300,7 +305,7 @@ function remove() {
 			</ul>
 		</div>
 	
-		<div id="dept_Info" style="width:80%;">
+		<div id="dept_Info" style="width:80%; display:none;">
 			<div id="deptInfoLayer">
 			<table id="tb" style="margin-left: 10px;"><%-- 테이블 길이 수정 가능 --%>
 				<tr class="cf">
@@ -329,11 +334,11 @@ function remove() {
 				<a href="#">다음</a>
 			</div>
 			<br>
-			<div style="width: 100%;">
-				<button style="float:left; margin-left:10px;" class="butn" onclick="add();">&nbsp;부서 추가&nbsp;</button>&nbsp;&nbsp;
-				<button style="float:left; margin-left:10px;" class="butn" onclick="remove();">&nbsp;부서 삭제&nbsp;</button>&nbsp;&nbsp;
-				<button style="float:right;" class="butn" onclick="rename();">&nbsp;부서명 변경&nbsp;</button>
-				<button style="float:right; margin-right:10px;" class="butn" onclick="move();">&nbsp;부서원 이동&nbsp;</button>&nbsp;&nbsp;
+			<div style="padding:10px auto 10px;" align="center">
+				<button style="margin-left:10px;" class="butn" onclick="add();">&nbsp;부서 추가&nbsp;</button>&nbsp;&nbsp;
+				<button class="butn" onclick="remove();">&nbsp;부서 삭제&nbsp;</button>&nbsp;&nbsp;
+				<button class="butn" onclick="rename();">&nbsp;부서명 변경&nbsp;</button>&nbsp;&nbsp;
+				<button class="butn" onclick="move();">&nbsp;부서원 이동&nbsp;</button>&nbsp;&nbsp;
 			</div>
 		</div>
 	</div>
