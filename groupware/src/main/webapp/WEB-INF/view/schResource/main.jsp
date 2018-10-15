@@ -40,12 +40,12 @@ var calendar=null;
 
 $(function() {
 	calendar=$('#calendar').fullCalendar({
-		editable: true, // enable draggable events
-		selectable: true, // click하거나 select 할때의 events
+		editable: true, 
+		selectable: true,
 		selectHelper: true,
 		locale: 'ko',
 		aspectRatio: 1.8,
-		scrollTime: '09:00', // undo default 6am scrollTime
+		scrollTime: '09:00',
 		header: {
 			left: 'today prev,next',
 			center: 'title',
@@ -108,7 +108,6 @@ $(function() {
 	});
 });
 
-// ---------------------------------------------
 // 입력 폼
 function insertForm(start, end, resource) {
 	var groupNum="";
@@ -380,7 +379,6 @@ function validCheck() {
 	return true;
 }
 
-//---------------------------------------------
 // 상세 일정 보기
 function articleForm(calEvent) {
 	var num=calEvent.id;

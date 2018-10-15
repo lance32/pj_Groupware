@@ -103,7 +103,9 @@ public class NoticeController {
 			) {
 		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		if(! info.getUserId().equals("admin")) {
-			return "redirect:/notice/list";
+			String message = "접근 권한 없음";
+			model.addAttribute("message", message);
+			return ".error.error";
 		}
 		model.addAttribute("mode", "created");
 		return ".notice.created";
@@ -174,8 +176,16 @@ public class NoticeController {
 	public String delete(
 			@RequestParam(value="num") int num,
 			@RequestParam(value="page") String page,
-			HttpSession session
+			HttpSession session,
+			Model model
 			) {
+		
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		if(! info.getUserId().equals("admin")) {
+			String message = "접근 권한 없음";
+			model.addAttribute("message", message);
+			return ".error.error";
+		}
 		
 		String root = session.getServletContext().getRealPath("/");
 		String pathname = root+"uploads"+File.separator+"notice";

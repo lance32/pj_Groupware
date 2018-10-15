@@ -57,9 +57,6 @@ $(function() {
 			selectable: true,
 			selectHelper: true,
 			select: function(start, end, allDay) {
-				// start, end : moment 객체
-				// 일정하나를 선택하는 경우 종일일정인경우 end는 start 보다 1일이 크다.
-				//  캘런더에 start<=일정날짜또는시간<end 까지 표시함
 				
 				// 달력의 빈공간을 클릭하거나 선택할 경우 입력 화면
 				insertForm(start, end);
@@ -626,7 +623,6 @@ function deleteOk(num) {
 	 $("#scheduleModal").dialog("close");
 }
 
-// -------------------------------------------------
 // 입력 및 수정 화면에서 일정 분류를 선택 한 경우
 function classifyChange(classify) {
 	$("#scheduleModal input[name='color']").val(classify);
