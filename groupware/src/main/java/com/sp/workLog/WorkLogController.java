@@ -39,7 +39,7 @@ public class WorkLogController {
 			HttpServletRequest req,
 			Model model) throws Exception {
 		
-		int rows=5; 
+		int rows=10; 
 		int dataCount=0; 
 		int total_page=0; 
 		

@@ -27,7 +27,7 @@ function getData(memberNum) {
 				data.list.grants=data.authority.grants;
 				var aut = ""; //authority
 				if (idx == 'authority') {
-					aut = "<table style = 'width:100%; border: 1px;'>";
+					aut = "<table border='1' style = 'width:100%; margin-bottom:10px'>";
 							aut+= "<tr>";
 							aut+= "<td rowspan='2' style='width:130px; height:150px;'>";
 							aut+= "<img src=";
@@ -47,25 +47,24 @@ function getData(memberNum) {
 					console.log(grants);
 					grants = grants.toString(2);		//10진수를 2진수로 변환			
 					var inf = ""; //list
-					inf ="<table style='width: 70%;'>";
-					inf+= "<td style='border-bottom:1px;'>권한</td>";
-				
+					inf= "<h4>권한설정</h4><br>";
+					inf+="<table border='1' style= 'margin-top : 10px; margin-left: 30px; width: 90%;'>";
 					for(var i=0; i<val.length; i++){
-						inf+= "<tr><td>"+val[i].comments+"</td>";
-						inf+= "<td><input type='checkbox' id='auth1"+i+"' name='auth1"+i+"' class='check'>읽기</td>";
-						inf+= "<td><input type='checkbox' id='auth2"+i+"' name='auth1"+i+"' class='check'>쓰기</td></tr>";
+						inf+= "<tr class='clas'><td class='clas'>"+val[i].comments+"</td>";
+						inf+= "<td class='clas'><input type='checkbox' id='auth1"+i+"' name='auth1"+i+"' class='check'>읽기</td>";
+						inf+= "<td class='clas'><input type='checkbox' id='auth2"+i+"' name='auth1"+i+"' class='check'>쓰기</td></tr>";
 					}
 						inf+="<input type='hidden' name='page' value='${page}''>";						
 						inf+="<input type='hidden' id = 'grants' name='grants'>";						
 					
-					inf+= "</table><button type='button' id = 'btnsend' onclick='s();'>수정</button></form>";
+					inf+= "</table>";
+					inf+= "<div style = 'width:95%; margin-top:20px;'><button style='float:right' type='button' id = 'btnsend' onclick='s();'>수정</button></div></form>";
 					tot+=inf;
 					chk = grants;
 					if(grants.length != (val.length*2)){//2진수로 변환시 자리수 맞추기
 						var zero="";
 						for(var i=0; i<(val.length*2)-chk.length; i++){
 							zero +="0";
-							console.log(zero);
 							}
 						chk = zero+chk;
 						}						
@@ -121,35 +120,6 @@ function s() {
 
 	
 </script>
-<table style='width: 70%;'>		
-<tr>
-<td>1</td>
-<td><input type='checkbox' id='auth1"+i+"' name='auth1"+i+"' class='check'>읽기</td>
-<td><input type='checkbox' id='auth2"+i+"' name='auth1"+i+"' class='check'>쓰기</td></tr>
-<tr><td>2</td>
-<td><input type='checkbox' id='auth1"+i+"' name='auth1"+i+"' class='check'>읽기</td>
-<td><input type='checkbox' id='auth2"+i+"' name='auth1"+i+"' class='check'>쓰기</td></tr>
-<tr><td>3</td>
-<td><input type='checkbox' id='auth1"+i+"' name='auth1"+i+"' class='check'>읽기</td>
-<td><input type='checkbox' id='auth2"+i+"' name='auth1"+i+"' class='check'>쓰기</td></tr>
-<tr><td>4</td>
-<td><input type='checkbox' id='auth1"+i+"' name='auth1"+i+"' class='check'>읽기</td>
-<td><input type='checkbox' id='auth2"+i+"' name='auth1"+i+"' class='check'>쓰기</td></tr>
-<tr><td>5</td>
-<td><input type='checkbox' id='auth1"+i+"' name='auth1"+i+"' class='check'>읽기</td>
-<td><input type='checkbox' id='auth2"+i+"' name='auth1"+i+"' class='check'>쓰기</td></tr>
-<tr><td>6</td>
-<td><input type='checkbox' id='auth1"+i+"' name='auth1"+i+"' class='check'>읽기</td>
-<td><input type='checkbox' id='auth2"+i+"' name='auth1"+i+"' class='check'>쓰기</td></tr>
-<tr><td>7</td>
-<td><input type='checkbox' id='auth1"+i+"' name='auth1"+i+"' class='check'>읽기</td>
-<td><input type='checkbox' id='auth2"+i+"' name='auth1"+i+"' class='check'>쓰기</td></tr>
-<tr><td>8</td>
-<td><input type='checkbox' id='auth1"+i+"' name='auth1"+i+"' class='check'>읽기</td>
-<td><input type='checkbox' id='auth2"+i+"' name='auth1"+i+"' class='check'>쓰기</td></tr>
-</table>
-
-<button style="float: left;" type='button' id = 'btnsend' onclick='s();'>수정</button>	
 
 
 <div style="clear: both; margin: 10px 0px 15px 10px;">
@@ -163,7 +133,6 @@ function s() {
 	<table id="tb" style="width: 70%;"><%-- 테이블 길이 수정 가능 --%>
 		<tr>
 			<td id="count" colspan="2">
-				3개(1/1 페이지)
 			</td>
 			<td></td><td></td>
 		</tr>

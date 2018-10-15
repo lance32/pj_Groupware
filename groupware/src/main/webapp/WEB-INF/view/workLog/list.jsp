@@ -13,6 +13,12 @@
 #paginate .numBox {border:1px solid #ccc;height:28px;text-decoration:none;padding:4px 7px 4px 7px;margin-left:3px;line-height:normal;vertical-align:middle;}
 
 </style>
+<style type="text/css">
+span {
+	cursor: pointer;
+}
+</style>
+
 
 <script type="text/javascript">
 
