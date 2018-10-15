@@ -7,7 +7,7 @@
 %>
 <!-- 근태 신청서 페이지  -->
 
-<script type="text/javascript" src="<%=cp%>/resource/se/js/HuskyEZCreator.js" charset="utf-8"></script>
+
 
 <script type="text/javascript">
 	function Click_table(obj)
@@ -134,16 +134,16 @@ $(function() {
 									memberNameList += $(this).data("memberName") + ";";
 								} 
 							});
-							var memberSibal = memberList.split(';');
-							var memberSibalName = memberNameList.split(';');
+							var member = memberList.split(';');
+							var memberName = memberNameList.split(';');
 
-							if(memberSibal.length > 8){
+							if(member.length > 8){
 								alert("too much member");
 							}
 							else {							
-							for(var i = 0; i <  memberSibal.length; i++){
-								$("#toMember"+i).val(memberSibal[i]);
-								$("#lbtoMember"+i).val(memberSibalName[i]);
+							for(var i = 0; i <  member.length; i++){
+								$("#toMember"+i).val(member[i]);
+								$("#lbtoMember"+i).val(memberName[i]);
 							}
 							}
 							
@@ -221,35 +221,35 @@ $(function() {
 						</br></center>
 					</th>
 					<th scope="col" class="ebtn1" style="padding-left: 5px;">
-						<span><input type="text" id="toMember0" name="toMember" style="background-color:transparent; width: 80%; border:none #d7d7d7; text-align:center;" readOnly="readOnly"></span>
+						<span><center><input type="text" id="toMember0" name="toMember" style="background-color:transparent; width: 80%; border:none #d7d7d7; text-align:center;" readOnly="readOnly"></center></span>
 						<div id="app_class1"></div>
 					</th>
 					<th scope="col" class="ebtn1">
-						<span><input type="text" id="toMember1" name="toMember" style="background-color:transparent; width: 80%; border:none #d7d7d7; text-align:center;" readOnly="readOnly"></span>
+						<span><center><input type="text" id="toMember1" name="toMember" style="background-color:transparent; width: 80%; border:none #d7d7d7; text-align:center;" readOnly="readOnly"></center></span>
 						<div id="app_class2"></div>
 					</th>
 					<th scope="col" class="ebtn1">
-						<span><input type="text" id="toMember2" name="toMember" style="background-color:transparent; width: 80%; border:none #d7d7d7; text-align:center;" readOnly="readOnly"></span>
+						<span><center><input type="text" id="toMember2" name="toMember" style="background-color:transparent; width: 80%; border:none #d7d7d7; text-align:center;" readOnly="readOnly"></center></span>
 						<div id="app_class3"></div>
 					</th>
 					<th scope="col" class="ebtn1">
-						<span><input type="text" id="toMember3" name="toMember" style="background-color:transparent; width: 80%; border:none #d7d7d7; text-align:center;" readOnly="readOnly"></span>
+						<span><center><input type="text" id="toMember3" name="toMember" style="background-color:transparent; width: 80%; border:none #d7d7d7; text-align:center;" readOnly="readOnly"></center></span>
 						<div id="app_class4"></div>
 					</th>
 					<th scope="col" class="ebtn1">
-						<span><input type="text" id="toMember4" name="toMember" style="background-color:transparent; width: 80%; border:none #d7d7d7; text-align:center;" readOnly="readOnly"></span>
+						<span><center><input type="text" id="toMember4" name="toMember" style="background-color:transparent; width: 80%; border:none #d7d7d7; text-align:center;" readOnly="readOnly"></center></span>
 						<div id="app_class5"></div>
 					</th>
 					<th scope="col" class="ebtn1">
-						<span><input type="text" id="toMember5" name="toMember" style="background-color:transparent; width: 80%; border:none #d7d7d7; text-align:center;" readOnly="readOnly"></span>
+						<span><center><input type="text" id="toMember5" name="toMember" style="background-color:transparent; width: 80%; border:none #d7d7d7; text-align:center;" readOnly="readOnly"></center></span>
 						<div id="app_class6"></div>
 					</th>
 					<th scope="col" class="ebtn1">
-						<span><input type="text" id="toMember6" name="toMember" style="background-color:transparent; width: 80%; border:none #d7d7d7; text-align:center;" readOnly="readOnly"></span>
+						<span><center><input type="text" id="toMember6" name="toMember" style="background-color:transparent; width: 80%; border:none #d7d7d7; text-align:center;" readOnly="readOnly"></center></span>
 						<div id="app_class7"></div>
 					</th>
 					<th scope="col" class="ebtn1">
-						<span><input type="text" id="toMember7" name="toMember" style="background-color:transparent; width: 80%; border:none #d7d7d7; text-align:center;" readOnly="readOnly"></span>
+						<span><center><input type="text" id="toMember7" name="toMember" style="background-color:transparent; width: 80%; border:none #d7d7d7; text-align:center;" readOnly="readOnly"></center></span>
 						<div id="app_class8"></div>
 					</th>
 				</tr>
@@ -316,7 +316,7 @@ $(function() {
 								name="content" id="content" title="내용"
 								style="width: 98%; height: 300px; padding: 0px; margin: 0px; visibility: hidden; display: none;">
 								&lt;style type="text/css"&gt;
-table.tableStyle1 {width:100%; text-align:center; border-collapse:collapse}
+ <!-- table.tableStyle1 {width:100%; text-align:center; border-collapse:collapse}
 table.tableStyle1 caption {text-align:right;}
 table.tableStyle1 td {padding:7px 7px; border:1px solid #909090; background:#fff;}
 table.tableStyle1 .alignRight {text-align:right;}
@@ -325,7 +325,7 @@ table.tableStyle1 td.tbth {background:#efefef;}
 table.tableStyle1 td.tbth2 {background:#fafafa;}
 div.form {position:relative;}
 table.smallTable td {height:20px; background:#fff;}
-table.tableStyle1 p.p5 {padding:5px;}&lt;/style&gt;
+table.tableStyle1 p.p5 {padding:5px;} -->  &lt;/style&gt;
 &lt;table cellpadding="1" cellspacing="1" class="tableStyle1"&gt;
 	&lt;colgroup&gt;
 		&lt;col width="20%" /&gt;
@@ -385,7 +385,6 @@ table.tableStyle1 p.p5 {padding:5px;}&lt;/style&gt;
 		&lt;tr&gt;
 			&lt;td colspan="4" style="text-align: left;"&gt;
 				&lt;p class="p5" style="text-align: center;"&gt;
-					*첨 부 : 증명가능한 서류&lt;/p&gt;
 			&lt;/td&gt;
 		&lt;/tr&gt;
 	&lt;/tbody&gt;
@@ -809,7 +808,7 @@ table.tableStyle1 p.p5 {padding:5px;}&lt;/style&gt;
 		</span>
 	</div>
 </form>
-
+<script type="text/javascript" src="<%=cp%>/resource/se/js/HuskyEZCreator.js" charset="utf-8"></script>
  <script type="text/javascript">
 var oEditors = [];
 nhn.husky.EZCreator.createInIFrame({

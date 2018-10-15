@@ -243,10 +243,6 @@ $(function() {
 						<div id="contents"></div>
 											</tbody>
 										</table>
-</span></span></span></td>
-					</tr>
-				</tbody>
-			</table>
 		</div>
 	</div>
 	

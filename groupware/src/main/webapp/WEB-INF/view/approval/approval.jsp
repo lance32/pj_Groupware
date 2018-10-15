@@ -30,7 +30,7 @@ $(document).ready(function () {
 	                    html = html + "<td><center>" + this["docuNum"] + "</center></td>"; // output each Row as
 	                    html = html + "<td>" + this["subject"] + "</td>";
 	                    html = html + "<td><center>" + this["documentState"] + "</center></td>";
-	                    html = html + "<td>" + this["created"] + "</td>";
+	                    html = html + "<td><center>" + this["created"] + "</center></td>";
 	                
 	                html = html + "</tr>"; // output each row with end of line
 	                
@@ -65,7 +65,7 @@ $(document).ready(function () {
                     html = html + "<td><center>" + this["docuNum"] + "</center></td>"; // output each Row as
                     html = html + "<td>" + this["subject"] + "</td>";
                     html = html + "<td><center>" + this["documentState"] + "</center></td>";
-                    html = html + "<td>" + this["created"] + "</td>";
+                    html = html + "<td><center>" + this["created"] + "</center></td>";
                 
                 html = html + "</tr>"; // output each row with end of line
                 
@@ -100,7 +100,7 @@ $(document).ready(function () {
 	                    html = html + "<td><center>" + this["docuNum"] + "</center></td>"; // output each Row as
 	                    html = html + "<td>" + this["subject"] + "</td>";
 	                    html = html + "<td><center>" + this["documentState"] + "</center></td>";
-	                    html = html + "<td>" + this["created"] + "</td>";
+	                    html = html + "<td><center>" + this["created"] + "</center></td>";
 	                
 	                html = html + "</tr>"; // output each row with end of line
 	                
@@ -135,7 +135,7 @@ $(document).ready(function () {
 	                    html = html + "<td><center>" + this["docuNum"] + "</center></td>"; // output each Row as
 	                    html = html + "<td>" + this["subject"] + "</td>";
 	                    html = html + "<td><center>" + this["documentState"] + "</center></td>";
-	                    html = html + "<td>" + this["created"] + "</td>";
+	                    html = html + "<td><center>" + this["created"] + "</center></td>";
 	                
 	                html = html + "</tr>"; // output each row with end of line
 	                
