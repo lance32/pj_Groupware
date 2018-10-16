@@ -59,4 +59,8 @@
 	<update id="deptRename" parameterType="com.sp.department.Department">
 		UPDATE department SET departmentName = #{departmentName} WHERE departmentNum = #{departmentNum}
 	</update>
+	
+	<delete id="deptDelete" parameterType="Integer">
+		DELETE FROM department WHERE departmentNum = #{deptNum}
+	</delete>
 </mapper>

@@ -94,6 +94,8 @@ public class DepartmentController {
 			dept.setDepartmentName(data);
 			dept.setDepartmentNum(Integer.parseInt(key));
 			service.updateRename(dept);
+		} else if (type.equals("remove")) {
+			service.delete(Integer.parseInt(key));
 		}
 	}
 	

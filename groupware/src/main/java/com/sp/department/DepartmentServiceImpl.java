@@ -42,8 +42,11 @@ public class DepartmentServiceImpl implements DepartmentService{
 
 	@Override
 	public void delete(int deptNum) throws Exception {
-		// TODO Auto-generated method stub
-		
+		try {
+			dao.deleteData("department.deptDelete", deptNum);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override

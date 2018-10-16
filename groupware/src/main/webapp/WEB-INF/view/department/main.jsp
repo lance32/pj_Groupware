@@ -122,7 +122,8 @@ function updateAddDept(extraData, deptName) {
 		type:"get",
 		success:function() {
 			alert(deptName + '가 생성 되었습니다.');
-			//deptManage(deptNum);
+			var arrExtra = extraData.split(":");
+			deptManage("dept" + arrExtra[4]); 
 		}, 
 		error:function(jqHXR) {
 			console.log(jqHXR.responseText);
@@ -131,7 +132,7 @@ function updateAddDept(extraData, deptName) {
 }
 
 function rename() {
-	var id = $("#deptId").val();
+	var id = $("#deptId").val(); 
 	$("#createDeptLayer").dialog({
 		title:"부서명 변경",
 		height: 200,
@@ -232,47 +233,32 @@ function updateMoveDept(deptNum, memNums) {
 }
 
 function remove() {
-	var id = $("#deptId").val();
-	$("#dept" + id).remove();
+	var id = $("#deptId").val();	// 19
 	
-/*	
-	$("#moveDeptLayer").dialog({
-		title:"부서 삭제",
-		height: 230,
-		width: 400,
-		modal: true,
-		open:function() {
-			$("#dept_organization li").each(function() {
-				var num = $(this).attr("id");
-				var name= $(this).text();
-				if (name != "(회사)" && num != id) {
-					var option = "<option value='"+ num +"'>" + name + "</option>";
-					$("#deptNum").append(option);
-				}
-			});
-		}, 
-		buttons:{
-			"이동":function() {
-				$("#" + id).text($("#departmentName").val());
-				$(this).dialog("close");
-				var memNums = "";
-				$(".chkMemNum").each(function() {
-					if (this.checked) {
-						//console.log($(this).data('memberNum'));
-						if (memNums != "") 
-							memNums += ",";
-						memNums += $(this).data("memberNum");
-					}
-				});
-				var deptNum = $("#deptNum").val();
-				updateMoveDept(deptNum, memNums);
-			},
-			"취소":function() {
-				$(this).dialog("close");
-			}
+	if ($("#dept" + id).next("ul").length != 0) {
+		alert("하위 부서가 있습니다.");
+		return false;
+	}
+	
+	if ($(".tr").length != 0) {
+		alert("부서원이 있습니다.");
+		return false;
+	}
+	
+	$.ajax({
+		url:"<%=cp%>/department/updateDeptInfo?type=remove&key=" + id + "&data=",
+		type:"get",
+		success:function() {
+			alert("부서를 삭제 하였습니다.");
+			var extra = $("#dept" + id).data("extra").split(":");
+			$("#dept" + id).remove();
+			deptManage("dept" + extra[0]); 
+		},
+		error:function(jqHXR) {
+			console.log(jqHXR.responseText);
 		}
 	});
-	*/
+		
 }
 </script>
 
