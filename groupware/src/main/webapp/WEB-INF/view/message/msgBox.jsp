@@ -104,8 +104,8 @@
 				<td width="200" align="left">보낸(받는) 사람</td>
 			</c:if>
 			<td width="auto" align="left">제목</td>
-			<td width="200">발송시간</td>
-			<td width="200">확인시간</td>
+			<td width="200">발송 시간</td>
+			<td width="200">확인 시간</td>
 		</tr>
 		<c:forEach var="dto" items="${list}">
 			<tr class="tr">
